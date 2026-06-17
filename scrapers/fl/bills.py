@@ -747,15 +747,21 @@ class HouseSearchPage(HtmlListPage):
             "//title[contains(text(), 'Request Rejected')]"
         )
         if len(text_not_found_msg) > 0:
+            # Bill simply doesn't exist on flhouse.gov — accept the empty page
+            # so process_page yields nothing rather than crashing the scrape.
             self.logger.info(
-                f"Encountered text-based Not Found message at {response.url}"
+                f"Bill not found on flhouse.gov at {response.url}; skipping house committee votes"
             )
-            return False
+            return True
         elif len(request_rejected_msg) > 0:
-            self.logger.info(
-                f"Encountered text-based Rejected message at {response.url}"
+            # Bot detection triggered. Sleep to back off, then accept the page —
+            # process_page will find no bill links and yield nothing, keeping
+            # flhouse.gov off the critical path while the rest of the scrape continues.
+            self.logger.warning(
+                f"flhouse.gov bot detection at {response.url}; backing off 60s"
             )
-            return False
+            time.sleep(60)
+            return True
         else:
             return True
 
@@ -896,7 +902,7 @@ class FlBillScraper(Scraper):
         # Set up a circuit breaker to track consecutive failures
         self._consecutive_failures = 0
         self._max_consecutive_failures = 3
-        self._circuit_breaker_timeout = 120  # 2 minutes
+        self._circuit_breaker_timeout = 300  # 5 minutes
 
         self.headers["User-Agent"] = get_random_user_agent()
 
@@ -977,7 +983,7 @@ class FlBillScraper(Scraper):
                 self._reset_connection_pool_if_needed()
 
                 # Add a random delay between processing items
-                add_random_delay(1, 3)
+                add_random_delay(5, 10)
 
                 # If we've had too many consecutive failures, pause for a while
                 if self._consecutive_failures >= self._max_consecutive_failures:
