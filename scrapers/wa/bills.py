@@ -238,7 +238,13 @@ class WABillScraper(Scraper, LXMLMixin):
 
         return self._bill_id_list
 
-    def scrape(self, chamber=None, session=None):
+    def scrape(self, chamber=None, session=None, start=None):
+        self._start_dt = None
+        if start:
+            try:
+                self._start_dt = datetime.datetime.strptime(start, "%Y-%m-%dT%H:%M:%S")
+            except ValueError:
+                self.warning(f"Invalid start= '{start}', doing full scrape")
         chambers = [chamber] if chamber else ["upper", "lower"]
 
         year = int(session[0:4])
@@ -317,6 +323,16 @@ class WABillScraper(Scraper, LXMLMixin):
         page = self.get(url)
         page = lxml.etree.fromstring(page.content)
         page = xpath(page, "//wa:Legislation")[0]
+
+        if self._start_dt:
+            action_date_str = xpath(page, "string(wa:CurrentStatus/wa:ActionDate)")
+            if action_date_str:
+                try:
+                    action_dt = datetime.datetime.fromisoformat(action_date_str.rstrip("Z"))
+                    if action_dt <= self._start_dt:
+                        return
+                except ValueError:
+                    pass
 
         xml_chamber = xpath(page, "string(wa:OriginalAgency)")
         chamber = self._chamber_map[xml_chamber]
