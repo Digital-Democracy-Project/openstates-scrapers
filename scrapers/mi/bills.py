@@ -44,11 +44,18 @@ class MIBillScraper(Scraper):
         match = re.search(r"objectName=([^&]+)", url)
         return f"https://legislature.mi.gov/Bills/Bill?ObjectName={match.group(1)}"
 
-    def scrape(self, session):
+    def scrape(self, session, start=None):
         self.headers = {
             "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/118.0"
         }
-        search_url = f"https://legislature.mi.gov/Search/ExecuteSearch?chamber=&docTypesList=HB%2CSB&docTypesList=HR%2CSR&docTypesList=HCR%2CSCR&docTypesList=HJR%2CSJR&sessions={session}&sponsor=&number=&dateFrom=&dateTo=&contentFullText="
+        date_from = ""
+        if start:
+            try:
+                dt = dateutil.parser.parse(start)
+                date_from = dt.strftime("%Y-%m-%d")
+            except ValueError:
+                pass
+        search_url = f"https://legislature.mi.gov/Search/ExecuteSearch?chamber=&docTypesList=HB%2CSB&docTypesList=HR%2CSR&docTypesList=HCR%2CSCR&docTypesList=HJR%2CSJR&sessions={session}&sponsor=&number=&dateFrom={date_from}&dateTo=&contentFullText="
         page = self.get(search_url, headers=self.headers).content
         page = lxml.html.fromstring(page)
         page.make_links_absolute(search_url)
