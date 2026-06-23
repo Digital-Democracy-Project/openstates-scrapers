@@ -96,10 +96,10 @@ class USBillScraper(Scraper):
         "SCONRES": "resolution",
     }
 
-    # to scrape everything UPDATED after a given date/time, start="2020-01-01 22:01:01"
+    # to scrape everything UPDATED after a given date/time, start="2020-01-01T22:01:01"
     def scrape(self, chamber=None, session=None, start=None, hearings=True):
         if start:
-            start = datetime.datetime.strptime(start, "%Y-%m-%d %H:%I:%S")
+            start = datetime.datetime.strptime(start, "%Y-%m-%dT%H:%M:%S")
         else:
             start = datetime.datetime(1980, 1, 1, 0, 0, 1)
 
