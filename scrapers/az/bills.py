@@ -23,7 +23,7 @@ class AZBillScraper(Scraper):
         "SS": "Secretary of State",
     }
 
-    def scrape_bill(self, chamber, session, bill_id, session_id):
+    def scrape_bill(self, chamber, session, bill_id, session_id, start_dt=None):
         bill_json_url = (
             "https://apps.azleg.gov/api/Bill/?billNumber={}&sessionId={}&"
             "legislativeBody={}".format(bill_id, session_id, self.chamber_map[chamber])
@@ -34,6 +34,26 @@ class AZBillScraper(Scraper):
         if not page:
             self.warning("null page for %s", bill_id)
             return
+
+        if start_dt:
+            all_dates = []
+            for action in page.get("BillStatusAction") or []:
+                d = action.get("ReportDate", "")
+                if d:
+                    all_dates.append(d.split(".")[0])
+            for key in ("IntroducedDate", "PreFileDate", "GovernorActionDate"):
+                if page.get(key):
+                    all_dates.append(page[key].split(".")[0])
+            if all_dates:
+                try:
+                    latest = max(
+                        datetime.datetime.strptime(d, "%Y-%m-%dT%H:%M:%S")
+                        for d in all_dates
+                    )
+                    if latest <= start_dt:
+                        return
+                except ValueError:
+                    pass
 
         bill_title = page["ShortTitle"]
         bill_id = page["Number"]
@@ -383,7 +403,13 @@ class AZBillScraper(Scraper):
                 vote.dedupe_key = f"{resp.url}{action['ReferralNumber']}"
                 yield vote
 
-    def scrape(self, chamber=None, session=None):
+    def scrape(self, chamber=None, session=None, start=None):
+        start_dt = None
+        if start:
+            try:
+                start_dt = datetime.datetime.strptime(start, "%Y-%m-%dT%H:%M:%S")
+            except (ValueError, AttributeError):
+                pass
         meta = get_session_meta(self, session)
         session_id = meta.get("extras", {}).get("session_id", None)
 
@@ -429,7 +455,7 @@ class AZBillScraper(Scraper):
                 bill_rows = page.xpath('//div[@name="SBTable"]//tbody//tr')
             for row in bill_rows:
                 bill_id = row.xpath("th/a/text()")[0]
-                yield from self.scrape_bill(chamber, session, bill_id, session_id)
+                yield from self.scrape_bill(chamber, session, bill_id, session_id, start_dt=start_dt)
 
         # TODO: MBTable - Non-bill Misc Motions?
 
