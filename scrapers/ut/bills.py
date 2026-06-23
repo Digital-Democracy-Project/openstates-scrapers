@@ -36,7 +36,8 @@ class UTBillScraper(Scraper, LXMLMixin):
     categorizer = Categorizer()
     _TZ = pytz.timezone("America/Denver")
 
-    def scrape(self, session=None, chamber=None):
+    def scrape(self, session=None, chamber=None, start=None):
+        self._start = start
         if session in SPECIAL_SLUGS:
             session_slug = SPECIAL_SLUGS[session]
         elif "S" in session:
@@ -216,6 +217,15 @@ class UTBillScraper(Scraper, LXMLMixin):
         )
         response = self.get(api_url, verify=False)
         data = json.loads(response.content)
+
+        if self._start and data.get("actionHistoryList"):
+            try:
+                start_dt = datetime.datetime.strptime(self._start, "%Y-%m-%dT%H:%M:%S")
+                most_recent_date = parser.parse(data["actionHistoryList"][0]["actionDate"])
+                if most_recent_date.replace(tzinfo=None) <= start_dt:
+                    return
+            except (ValueError, TypeError, KeyError):
+                pass
 
         # Sponsorships
         if "primeSponsorName" in data and data["primeSponsorName"]:
