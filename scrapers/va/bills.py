@@ -43,7 +43,13 @@ class VaBillScraper(Scraper):
     # chunks are available to split up this long, slow scrape into 12 smaller scrapes
     # os-update ma bills --scrape scrape_chunk_number=1
     # this trades off comprehensivity for limited scope of failure/faster time to recovery
-    def scrape(self, session=None, scrape_chunk_number=None):
+    def scrape(self, session=None, scrape_chunk_number=None, start=None):
+        start_dt = None
+        if start:
+            try:
+                start_dt = dateutil.parser.parse(start).replace(tzinfo=None)
+            except Exception:
+                self.warning(f"Invalid start= '{start}', doing full scrape")
 
         for i in self.jurisdiction.legislative_sessions:
             if i["identifier"] == session:
@@ -111,7 +117,22 @@ class VaBillScraper(Scraper):
                 classification=self.classify_bill(row),
             )
 
-            self.add_actions(bill, row["LegislationID"])
+            events = self._fetch_events(row["LegislationID"])
+            self.add_actions(bill, events)
+
+            if start_dt:
+                event_dates = [e["EventDate"] for e in events if e.get("EventDate")]
+                if event_dates:
+                    latest = max(
+                        dateutil.parser.parse(d).replace(tzinfo=None) for d in event_dates
+                    )
+                    if latest <= start_dt:
+                        bill.add_source(
+                            f"https://lis.virginia.gov/bill-details/{self.session_code}/{row['LegislationNumber']}"
+                        )
+                        yield bill
+                        continue
+
             self.add_versions(bill, row["LegislationID"])
             self.add_carryover_related_bill(bill)
             self.add_sponsors(bill, row["LegislationID"])
@@ -129,20 +150,21 @@ class VaBillScraper(Scraper):
 
             yield bill
 
-    def add_actions(self, bill: Bill, legislation_id: str):
+    def _fetch_events(self, legislation_id: str):
         body = {
             "sessionCode": self.session_code,
             "legislationID": legislation_id,
         }
-
         page = requests.get(
             f"{self.base_url}/LegislationEvent/api/getlegislationeventbylegislationidasync",
             params=body,
             headers=self.headers,
             verify=False,
         ).json()
+        return page["LegislationEvents"]
 
-        for row in page["LegislationEvents"]:
+    def add_actions(self, bill: Bill, events: list):
+        for row in events:
             when = dateutil.parser.parse(row["EventDate"]).date()
             description = row["Description"]
             if not description and row["VoteTally"]:
