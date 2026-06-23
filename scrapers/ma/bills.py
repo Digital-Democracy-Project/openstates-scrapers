@@ -284,7 +284,7 @@ class MABillScraper(Scraper):
                 "Bill Text", version_url, media_type="application/pdf"
             )
 
-        self.scrape_actions(bill, bill_url, session)
+        yield from self.scrape_actions(bill, bill_url, session)
         yield bill
 
     def scrape_cosponsors(self, bill, bill_url):
@@ -323,8 +323,7 @@ class MABillScraper(Scraper):
         # scrape_action_page adds the actions, and also returns the Page xpath object
         # so that we can check for a paginator
         page = self.get_action_page(bill_url, 1)
-        # XXX: yield from
-        self.scrape_action_page(bill, page)
+        yield from self.scrape_action_page(bill, page)
 
         max_page = page.xpath(
             '//ul[contains(@class,"pagination-sm")]/li[last()]/a/@onclick'
@@ -333,8 +332,7 @@ class MABillScraper(Scraper):
             max_page = re.sub(r"[^\d]", "", max_page[0]).strip()
             for counter in range(2, int(max_page) + 1):
                 page = self.get_action_page(bill_url, counter)
-                # XXX: yield from
-                self.scrape_action_page(bill, page)
+                yield from self.scrape_action_page(bill, page)
                 # https://malegislature.gov/Bills/189/S3/BillHistory?pageNumber=2
 
     def get_action_page(self, bill_url, page_number):
@@ -397,9 +395,7 @@ class MABillScraper(Scraper):
 
                 cached_vote.dedupe_key = "{}#{}".format(housevote_pdf, n_supplement)
 
-                # XXX: disabled house votes on 8/1 to try to get MA importing again
-                # will leaving this in and commented out once we resolve the ID issue
-                # yield cached_vote
+                yield cached_vote
 
             # Senate votes
             if "Roll Call" in action_name:
@@ -409,7 +405,7 @@ class MABillScraper(Scraper):
                 # 2019 H86 Breaks our regex,
                 # Ordered to a third reading --
                 # see Senate   Roll Call #25 and House Roll Call 56
-                if "yeas" in action_name and "nays" in action_name:
+                if "yeas" in action_name.lower() and "nays" in action_name.lower():
                     try:
                         y, n = re.search(
                             r"(\d+) yeas .*? (\d+) nays", action_name.lower()
@@ -442,8 +438,7 @@ class MABillScraper(Scraper):
                     self.scrape_senate_vote(cached_vote, rollcall_pdf)
                     cached_vote.add_source(rollcall_pdf)
                     cached_vote.dedupe_key = rollcall_pdf
-                    # XXX: also disabled, see above note
-                    # yield cached_vote
+                    yield cached_vote
 
             attrs = self.categorizer.categorize(action_name)
             action = bill.add_action(
