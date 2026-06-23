@@ -65,9 +65,9 @@ class MABillScraper(Scraper):
     # os-update ma bills --scrape scrape_chunk_number=1
     # this trades off comprehensivity for limited scope of failure/faster time to recovery
     def scrape(
-        self, chamber=None, session=None, bill_no=None, scrape_chunk_number=None
+        self, chamber=None, session=None, bill_no=None, scrape_chunk_number=None, start=None
     ):
-        self.scrape_bill_list(session)
+        self.scrape_bill_list(session, start=start)
 
         # optionally scrape a single bill then exit
         if bill_no:
@@ -84,12 +84,19 @@ class MABillScraper(Scraper):
         else:
             yield from self.scrape_chamber(chamber, session, scrape_chunk_number)
 
-    def scrape_bill_list(self, session):
+    def scrape_bill_list(self, session, start=None):
         session_numeric = re.sub(r"[^0-9]", "", session)
         # note -- this returns XML to a browser, but json to curl/python
         api_url = (
             f"https://malegislature.gov/api/GeneralCourts/{session_numeric}/Documents"
         )
+
+        start_dt = None
+        if start:
+            try:
+                start_dt = datetime.strptime(start, "%Y-%m-%dT%H:%M:%S")
+            except ValueError:
+                pass
 
         list_data = self.get(api_url, verify=False).content
         for row in json.loads(list_data):
@@ -103,6 +110,27 @@ class MABillScraper(Scraper):
                 self.error(
                     f"Unknown bill type - bill {row['BillNumber']} - docket {row['DocketNumber']}"
                 )
+
+            if start_dt:
+                response_dates = []
+                primary = row.get("PrimarySponsor") or {}
+                if primary.get("ResponseDate"):
+                    try:
+                        response_dates.append(
+                            datetime.fromisoformat(primary["ResponseDate"].split(".")[0])
+                        )
+                    except ValueError:
+                        pass
+                for cs in row.get("Cosponsors") or []:
+                    if cs.get("ResponseDate"):
+                        try:
+                            response_dates.append(
+                                datetime.fromisoformat(cs["ResponseDate"].split(".")[0])
+                            )
+                        except ValueError:
+                            pass
+                if response_dates and max(response_dates) <= start_dt:
+                    continue
 
             self.bill_list.append(
                 {"BillNumber": row["BillNumber"], "DocketNumber": row["DocketNumber"]}
