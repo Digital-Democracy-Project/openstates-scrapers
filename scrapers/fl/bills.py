@@ -13,7 +13,7 @@ import requests
 from openstates.scrape import Bill, VoteEvent, Scraper
 from openstates.utils import format_datetime
 from requests.exceptions import ConnectionError, Timeout, RequestException
-from spatula import HtmlPage, HtmlListPage, XPath, SelectorError, PdfPage, URL
+from spatula import HtmlPage, HtmlListPage, XPath, SelectorError, PdfPage, URL, SkipItem
 
 from .actions import Categorizer
 from .utils import (
@@ -167,6 +167,18 @@ class BillList(HtmlListPage):
         bill_id = item.text.strip()
         title = item.xpath("string(../following-sibling::td[1])").strip()
         bill_url = item.attrib["href"] + "/ByCategory"
+
+        start = self.input.get("start")
+        if start is not None:
+            last_action_str = item.xpath("string(../following-sibling::td[3])").strip()
+            date_matches = re.findall(r"\d{1,2}/\d{1,2}/\d{4}", last_action_str)
+            if date_matches:
+                try:
+                    last_action = datetime.datetime.strptime(date_matches[0], "%m/%d/%Y")
+                    if last_action < start:
+                        raise SkipItem(f"{bill_id} last action {date_matches[0]} <= cutoff")
+                except ValueError:
+                    pass
 
         if bill_id.startswith(("SB ", "HB ", "SPB ", "HPB ")):
             bill_type = "bill"
@@ -893,11 +905,18 @@ class FlBillScraper(Scraper):
             "scrapers/fl/__init__.py"
         )
 
-    def scrape(self, session=None):
+    def scrape(self, session=None, start=None):
         self.raise_errors = False
         self.retry_attempts = 5
         self.retry_wait_seconds = 5
         house_session_number = self.get_house_session_number(session)
+
+        start_dt = None
+        if start:
+            try:
+                start_dt = datetime.datetime.strptime(start, "%Y-%m-%dT%H:%M:%S")
+            except ValueError:
+                self.warning(f"Invalid start= '{start}', doing full scrape")
 
         # Set up a circuit breaker to track consecutive failures
         self._consecutive_failures = 0
@@ -918,7 +937,7 @@ class FlBillScraper(Scraper):
 
         def do_scrape_with_retry():
             bill_list = BillList(
-                {"session": session, "house_session_number": house_session_number}
+                {"session": session, "house_session_number": house_session_number, "start": start_dt}
             )
             yield from self._process_bill_list(bill_list)
 
