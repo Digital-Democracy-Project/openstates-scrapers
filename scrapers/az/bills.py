@@ -4,6 +4,7 @@ import re
 
 from lxml import html
 from openstates.scrape import Scraper, Bill, VoteEvent
+from classify_motion import classify_motion
 from utils import get_session_meta
 
 from . import utils
@@ -360,7 +361,7 @@ class AZBillScraper(Scraper):
                 vote = VoteEvent(
                     chamber={"S": "upper", "H": "lower"}[header["LegislativeBody"]],
                     motion_text=action["Action"],
-                    classification="passage",
+                    classification=classify_motion("az", action["Action"]),
                     result=result,
                     start_date=action_date.strftime("%Y-%m-%d"),
                     bill=bill,

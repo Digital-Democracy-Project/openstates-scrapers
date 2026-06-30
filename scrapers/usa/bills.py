@@ -8,6 +8,7 @@ import requests
 import xml.etree.ElementTree as ET
 
 from openstates.scrape import Bill, Scraper, VoteEvent, Event
+from classify_motion import classify_motion
 
 
 # NOTE: This is a US federal bill scraper designed to output bills in the
@@ -725,7 +726,7 @@ class USBillScraper(Scraper):
             start_date=when,
             bill_chamber="lower" if doc_type[0] == "H" else "upper",
             motion_text=motion,
-            classification="passage",  # TODO
+            classification=classify_motion("us", motion),
             result=result,
             legislative_session=session,
             identifier=vote_id,
@@ -802,7 +803,7 @@ class USBillScraper(Scraper):
             start_date=when,
             bill_chamber="lower" if bill_id[0] == "H" else "upper",
             motion_text=motion,
-            classification="passage",  # TODO
+            classification=classify_motion("us", motion),
             result=result,
             legislative_session=session,
             identifier=vote_id,

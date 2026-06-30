@@ -6,6 +6,7 @@ import json
 from datetime import datetime
 import lxml.html
 from openstates.scrape import Scraper, Bill, VoteEvent
+from classify_motion import classify_motion
 from openstates.utils import convert_pdf
 
 from .actions import Categorizer
@@ -379,7 +380,7 @@ class MABillScraper(Scraper):
                     start_date=action_date,
                     motion_text=vote_action,
                     result="pass" if y > n else "fail",
-                    classification="passage",
+                    classification=classify_motion("ma", vote_action),
                     bill=bill,
                 )
                 cached_vote.set_count("yes", y)
@@ -426,7 +427,7 @@ class MABillScraper(Scraper):
                         start_date=action_date,
                         motion_text=vote_action,
                         result="pass" if y > n else "fail",
-                        classification="passage",
+                        classification=classify_motion("ma", vote_action),
                         bill=bill,
                     )
                     cached_vote.set_count("yes", y)

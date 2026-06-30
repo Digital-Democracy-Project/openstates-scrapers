@@ -1,0 +1,102 @@
+# Motion passage classification patterns per jurisdiction.
+# Loaded once at import time by classify_motion.py.
+#
+# All patterns use re.search. Anchor with ^ for prefix matching.
+# Evaluation order per jurisdiction: bill_action → not_passage → committee_passage → passage → default.
+# default: null returns [] for unrecognised texts; default: passage returns ["passage"].
+
+jurisdictions:
+  us:
+    not_passage:
+      - "^on cloture on the motion to proceed"   # scheduling vote, not passage cloture
+      - "^measure laid before"
+      - "^resolving differences"
+      - "^postponed proceedings"
+      - "^ordered to be reported"
+    passage:
+      - "^on passage"
+      - "^on motion to suspend the rules and"
+      - "^on agreeing to the resolution"
+      - "^on the joint resolution"
+      - "^on the concurrent resolution"
+      - "^on the resolution [a-z]"
+      - "^on the cloture motion"                 # "On the Cloture Motion (S.XXX)" — genuine passage cloture
+      - "^passed senate"
+      - "^passed house"
+      - "^passage,"
+    default: null
+
+  az:
+    committee_passage:
+      - "^do pass"                               # "do pass", "do pass amended" — committee votes
+    passage:
+      - "^passed$"
+      - "^failed to pass$"
+    default: null
+
+  ut:
+    not_passage:
+      - "2nd reading"                            # advancement vote, not passage
+      - "second reading"
+      - "concurr"
+      - "concur"
+    passage:
+      - "^house/ passed 3rd reading"
+      - "^senate/ passed 3rd reading"
+      - "^house/ passed on 3rd reading"
+      - "^senate/ passed on 3rd reading"
+      - "^final passage"
+    default: null
+
+  fl:
+    # floor-vote site only — committee-passage sites are already correctly hardcoded
+    # the complete audit of this site found fewer than 12 non-passage texts
+    # unknown future floor texts default to passage and surface in validate_scorecards check #9
+    not_passage:
+      - "second reading"
+      - "2nd reading"
+      - "placed on"
+      - "amendment"
+    default: passage                             # catch-all for floor-vote site
+
+  mi:
+    not_passage:
+      - "concurr"
+      - "concur"
+      - "conference report"
+    passage:
+      - "^passed"                                # roll call# embedded after the verb
+      - "^passage"
+      - "^the bill"
+    default: null
+
+  ma:
+    not_passage:
+      - "^amendment"                             # amendment adopted/rejected
+      - "^item .+ passed over veto"              # budget line-item veto override
+    passage:
+      - "^passed to be engrossed"
+      - "^enacted"
+      - "^adopted"
+      - "^committee of conference report accepted"
+    default: null
+
+  wa:
+    preprocess: strip_sequence_number            # "Final Passage (#7)" → "final passage"
+    passage:
+      - "^3rd reading & final passage"
+      - "^final passage"
+    default: null
+    # NOTE: "Motion to Place Measure on 3rd Reading & Final Passage" starts with "Motion"
+    # and does NOT match these anchored patterns — confirmed by explicit test.
+
+  va:
+    bill_action:                                 # bill_action field is the reliable committee signal
+      committee_passage:
+        - "^reported from"
+        - "^subcommittee recommends"
+    passage:
+      - "^passage"                               # "Passage  R", "Passage-Enrolled Bill  R"
+      - "^h vote:"                               # House floor passage (VoteActionDescription fallback)
+      - "^s vote:"                               # Senate floor passage
+    default: null

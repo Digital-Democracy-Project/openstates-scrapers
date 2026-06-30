@@ -3,6 +3,7 @@ import datetime
 from dateutil import parser
 
 from openstates.scrape import Scraper, Bill, VoteEvent as Vote
+from classify_motion import classify_motion
 from .actions import Categorizer
 from utils import LXMLMixin
 
@@ -507,7 +508,7 @@ class UTBillScraper(Scraper, LXMLMixin):
             motion_text=motion,
             identifier=str(uniqid),
             result="pass" if (yes_count > no_count) else "fail",
-            classification="passage",
+            classification=classify_motion("ut", motion),
             bill=bill,
         )
         vote.extras = {"_vote_id": uniqid}
@@ -587,7 +588,7 @@ class UTBillScraper(Scraper, LXMLMixin):
             motion_text=motion,
             result="pass" if passed else "fail",
             bill=bill,
-            classification="passage",
+            classification=classify_motion("ut", motion),
             identifier=str(uniqid),
         )
         vote.set_count("yes", vdict["Yeas"]["count"])
@@ -634,7 +635,7 @@ class UTBillScraper(Scraper, LXMLMixin):
             motion_text=motion,
             result="pass" if passed else "fail",
             identifier=str(uniqid),
-            classification="passage",
+            classification=classify_motion("ut", motion),
             bill=bill,
         )
         vote.add_source(url)

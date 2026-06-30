@@ -9,6 +9,7 @@ import requests
 import urllib3
 
 from openstates.scrape import Scraper, Bill, VoteEvent
+from classify_motion import classify_motion
 from .actions import Categorizer
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -343,7 +344,9 @@ class VaBillScraper(Scraper):
                     result="fail",  # placeholder for now
                     chamber=self.chamber_map[row["ChamberCode"]],
                     bill=bill,
-                    classification=[],
+                    classification=classify_motion(
+                        "va", motion_text, bill_action=row["LegislationActionDescription"]
+                    ),
                 )
 
                 if not row["VoteID"]:

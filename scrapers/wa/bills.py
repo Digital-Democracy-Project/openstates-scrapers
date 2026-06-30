@@ -8,6 +8,7 @@ from collections import defaultdict
 from .actions import Categorizer
 from .utils import xpath
 from openstates.scrape import Scraper, Bill, VoteEvent as Vote
+from classify_motion import classify_motion
 from utils import LXMLMixin
 
 import lxml.etree
@@ -641,7 +642,7 @@ class WABillScraper(Scraper, LXMLMixin):
                 motion_text="{} (#{})".format(motion, seq_no),
                 result="pass" if yes_count > non_yes_count else "fail",
                 bill=bill,
-                classification=[],
+                classification=classify_motion("wa", "{} (#{})".format(motion, seq_no)),
             )
             vote.set_count("yes", yes_count)
             vote.set_count("no", no_count)

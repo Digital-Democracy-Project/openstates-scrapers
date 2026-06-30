@@ -7,6 +7,7 @@ from datetime import date
 from utils.media import get_media_type
 
 from openstates.scrape import Scraper, Bill, VoteEvent
+from classify_motion import classify_motion
 
 _categorizers = {
     "approved by governor with line item(s) vetoed": "executive-veto-line-item",
@@ -247,7 +248,7 @@ class MIBillScraper(Scraper):
                         bill=bill,
                         motion_text=action,
                         result="pass" if vote_passed else "fail",
-                        classification="passage",
+                        classification=classify_motion("mi", action),
                     )
 
                     # Verify vote count matching the expected count in the action string

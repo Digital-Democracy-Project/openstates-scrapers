@@ -11,6 +11,7 @@ from urllib.parse import urlencode
 import lxml.html
 import requests
 from openstates.scrape import Bill, VoteEvent, Scraper
+from classify_motion import classify_motion
 from openstates.utils import format_datetime
 from requests.exceptions import ConnectionError, Timeout, RequestException
 from spatula import HtmlPage, HtmlListPage, XPath, SelectorError, PdfPage, URL, SkipItem
@@ -540,7 +541,7 @@ class FloorVote(PdfPage):
             bill=self.input["bill"],
             motion_text=motion,
             result=result,
-            classification="passage",
+            classification=classify_motion("fl", motion),
         )
         vote.add_source(self.source.url)
         vote.set_count("yes", yes_count)
