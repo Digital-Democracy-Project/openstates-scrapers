@@ -96,7 +96,15 @@ class VaBillScraper(Scraper):
 
             bill_list = bill_chunks[chunk_number - 1]
 
+        seen_bill_ids = set()
         for row in bill_list:
+            if row["LegislationNumber"] in seen_bill_ids:
+                self.warning(
+                    f"Duplicate bill {row['LegislationNumber']} in API response, skipping"
+                )
+                continue
+            seen_bill_ids.add(row["LegislationNumber"])
+
             # the short title on the VA site is 'description',
             # LegislationTitle is on top of all the versions
             title = row["Description"]
