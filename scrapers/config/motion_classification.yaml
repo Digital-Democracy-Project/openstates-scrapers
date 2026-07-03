@@ -36,16 +36,18 @@ jurisdictions:
 
   ut:
     not_passage:
-      - "2nd reading"                            # advancement vote, not passage
-      - "second reading"
-      - "concurr"
-      - "concur"
+      - "passed 2nd reading$"                    # standalone 2nd-reading advancement vote (not final)
     passage:
       - "^house/ passed 3rd reading"
       - "^senate/ passed 3rd reading"
       - "^house/ passed on 3rd reading"
       - "^senate/ passed on 3rd reading"
-      - "^final passage"
+      - "^house/ passed 2nd & 3rd readings"      # suspension of rules = combined final passage
+      - "^senate/ passed 2nd & 3rd readings"
+      - "^house/ failed$"                        # failed passage vote
+      - "^senate/ failed$"
+      - "concurs with"                            # chamber concurrence = passage
+      - "conference committee - final passage"    # "House/Senate Conference Committee - Final Passage"
     default: null
 
   fl:
@@ -56,18 +58,17 @@ jurisdictions:
       - "second reading"
       - "2nd reading"
       - "placed on"
-      - "amendment"
+      - "^amendment"                             # anchored so "Favorable with 1 amendment" still defaults to passage
     default: passage                             # catch-all for floor-vote site
 
   mi:
-    not_passage:
-      - "concurr"
-      - "concur"
-      - "conference report"
     passage:
       - "^passed"                                # roll call# embedded after the verb
       - "^passage"
       - "^the bill"
+      - "concurred in"                           # chamber concurrence = passage
+      - "^conference report adopted"             # conference committee resolution
+      - "^senate adopted conference report"      # Senate variant
     default: null
 
   ma:
@@ -86,6 +87,8 @@ jurisdictions:
     passage:
       - "^3rd reading & final passage"
       - "^final passage"
+      - "^adoption"                              # "Adoption as Recommended by Conference Committee", "Adoption as Amended"
+      - "^concur in"                             # chamber concurrence in amendments
     default: null
     # NOTE: "Motion to Place Measure on 3rd Reading & Final Passage" starts with "Motion"
     # and does NOT match these anchored patterns — confirmed by explicit test.
@@ -95,8 +98,28 @@ jurisdictions:
       committee_passage:
         - "^reported from"
         - "^subcommittee recommends"
+    not_passage:
+      - "^constitutional reading dispensed"      # procedural reading waiver, not a vote on passage
+      - "^continued to next session"             # carried over to next session
+      - "^reconsider"                            # motion to reconsider
+      - "^insist"                                # insist & request = bicameral disagreement motion
+      - "^subcommittee recommends laying"        # laid on table = killed in committee
+      - "^subcommittee recommends striking"      # struck from docket = killed
+      - "^subcommittee recommends passing by"    # passed by indefinitely = killed
+      - "^subcommittee recommends continuing"    # continued = not passage
+      - "^subcommittee recommends referring"     # referred to another committee
+      - "^subcommittee recommends incorporating" # incorporated into another bill
+    committee_passage:
+      - "^subcommittee recommends reporting"     # reported out of subcommittee
+      - "^reported from"                         # reported out of full committee (motion_text fallback)
     passage:
       - "^passage"                               # "Passage  R", "Passage-Enrolled Bill  R"
       - "^h vote:"                               # House floor passage (VoteActionDescription fallback)
       - "^s vote:"                               # Senate floor passage
+      - "^adopt conference committee report"     # conference committee resolution
+      - "^adopt governor"                        # adopting governor's recommendation
+      - "^concur house"                          # concurrence in House amendments
+      - "^concur senate"                         # concurrence in Senate amendments
+      - "^accede conference committee"           # accepting conference committee recommendation
+      - "^agree to\b"                            # "Agree to R" = adopted recommendation
     default: null
