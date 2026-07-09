@@ -609,9 +609,13 @@ class UpperComVote(PdfPage):
             return
 
         motion_regex = re.compile(r"final action:", re.IGNORECASE)
+        motion = None
         for line in lines:
             if motion_regex.search(line):
-                (_, motion) = motion_regex.split(line)
+                # maxsplit=1: a line can contain "final action:" more than once,
+                # which made the 2-tuple unpack raise ValueError and abort the whole
+                # FL scrape. Take everything after the first occurrence as the motion.
+                (_, motion) = motion_regex.split(line, maxsplit=1)
                 motion = motion.strip()
         if not motion:
             self.logger.warning("Vote appears to be empty")
