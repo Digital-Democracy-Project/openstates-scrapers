@@ -283,6 +283,12 @@ class MIBillScraper(Scraper):
                                 if len(name.split()) < 5:
                                     vote.vote(pvr, name.strip())
 
+                    # Emit the parsed roll-call number so downstream consumers can
+                    # tell a real recorded vote from an empty/summary passage motion
+                    # (mirrors usa/votes.py's house/senate-rollcall-num extras).
+                    vote.extras[
+                        "senate-rollcall-num" if actor == "upper" else "house-rollcall-num"
+                    ] = rc_num
                     vote.add_source(vote_url)
                     yield vote
 
