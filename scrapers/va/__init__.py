@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from openstates.scrape import State
 from .csv_bills import VaCSVBillScraper
 from .events import VaEventScraper
@@ -317,5 +318,32 @@ class Virginia(State):
         ).json()
         session_list = []
         for row in response["Sessions"]:
+            # Skip sessions that haven't started yet. VA lists an upcoming regular
+            # session (with a future "Session Start" date) months before it
+            # convenes. Reporting it here would force it to be declared/ignored in
+            # metadata prematurely — and until then openstates-core aborts the whole
+            # VA scrape with a "session not found" CommandError. A future session
+            # reappears here automatically once its start date passes, at which
+            # point it can be added to legislative_sessions normally.
+            if self._session_not_started(row):
+                continue
             session_list.append(f"{row['SessionYear']} {row['DisplayName']}")
         return session_list
+
+    @staticmethod
+    def _session_not_started(row):
+        """True only when the session's "Session Start" date is in the future.
+
+        Fail open: if no start date is present or it can't be parsed, treat the
+        session as started so a genuinely active session is never dropped.
+        """
+        for event in row.get("SessionEvents", []):
+            if event.get("DisplayName") == "Session Start":
+                raw = event.get("ActualDate") or event.get("ProjectedDate")
+                if not raw:
+                    return False
+                try:
+                    return datetime.fromisoformat(raw) > datetime.now()
+                except ValueError:
+                    return False
+        return False
