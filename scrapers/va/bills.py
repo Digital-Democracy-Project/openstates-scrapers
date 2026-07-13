@@ -264,6 +264,17 @@ class VaBillScraper(Scraper):
 
         page = response.json()
 
+        # The API occasionally returns an unexpected shape (e.g. a bare string or
+        # error body) instead of the expected object. Guard so one malformed
+        # response skips versions for this bill instead of aborting the whole
+        # VA scrape with `TypeError: string indices must be integers`.
+        if not isinstance(page, dict) or not isinstance(page.get("TextsList"), list):
+            self.warning(
+                f"unexpected legislation-text response for {legislation_id}; "
+                f"skipping versions"
+            )
+            return
+
         for row in page["TextsList"]:
             if (row["PDFFile"] and len(row["PDFFile"]) > 1) or (
                 row["HTMLFile"] and len(row["HTMLFile"]) > 1
