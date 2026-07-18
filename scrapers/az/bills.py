@@ -343,6 +343,15 @@ class AZBillScraper(Scraper):
                 """
                 ayes = action["Ayes"] if "Ayes" in action and action["Ayes"] else 0
                 nays = action["Nays"] if "Nays" in action and action["Nays"] else 0
+                # Skip summary/procedural passage actions that carry no recorded
+                # vote: AZ's feed includes "Passed" lines with no Ayes/Nays and an
+                # empty Votes[] list. Emitting a VoteEvent for those creates an empty
+                # motion that can shadow the real recorded vote downstream.
+                votes_list = (
+                    action["Votes"] if "Votes" in action and action["Votes"] else []
+                )
+                if not votes_list and ayes == 0 and nays == 0:
+                    continue
                 """
                 safer to fall back to negative results than
                 to incorrectly mark votes as passed
