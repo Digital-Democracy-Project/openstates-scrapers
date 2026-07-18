@@ -647,6 +647,15 @@ class WABillScraper(Scraper, LXMLMixin):
             vote.set_count("yes", yes_count)
             vote.set_count("no", no_count)
             vote.set_count("other", other_count)
+            # Emit the roll-call sequence number so downstream consumers can tell a
+            # real recorded vote from an empty/summary passage motion (mirrors
+            # usa/votes.py's house/senate-rollcall-num extras). Guard against an
+            # empty SequenceNumber (xpath string() returns "") so we never write a
+            # falsey presence signal.
+            if seq_no:
+                vote.extras[
+                    "senate-rollcall-num" if chamber == "upper" else "house-rollcall-num"
+                ] = seq_no
             vote.add_source(url)
             for sv in xpath(rc, "wa:Votes/wa:Vote"):
                 name = xpath(sv, "string(wa:Name)")
