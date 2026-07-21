@@ -44,6 +44,7 @@ def categorize_action(action: str) -> str:
 
 class MIBillScraper(Scraper):
     headers = {}
+    verify = False
 
     # convert from MI's redirector to a bill permalink
     def make_bill_url(self, url: str) -> str:
@@ -60,7 +61,7 @@ class MIBillScraper(Scraper):
             except ValueError:
                 pass
         search_url = f"https://legislature.mi.gov/Search/ExecuteSearch?chamber=&docTypesList=HB%2CSB&docTypesList=HR%2CSR&docTypesList=HCR%2CSCR&docTypesList=HJR%2CSJR&sessions={session}&sponsor=&number=&dateFrom={date_from}&dateTo=&contentFullText="
-        page = self.get(search_url, headers=self.headers).content
+        page = self.get(search_url, headers=self.headers, verify=False).content
         page = lxml.html.fromstring(page)
         page.make_links_absolute(search_url)
 
@@ -87,7 +88,7 @@ class MIBillScraper(Scraper):
             yield from self.scrape_bill(session, bill_id, bill_url)
 
     def scrape_bill(self, session: str, bill_id: str, url: str) -> None:
-        page = self.get(url, headers=self.headers).content
+        page = self.get(url, headers=self.headers, verify=False).content
         page = lxml.html.fromstring(page)
         page.make_links_absolute(url)
 
@@ -324,7 +325,7 @@ class MIBillScraper(Scraper):
 
     def parse_roll_call(self, url, rc_num, session):
         try:
-            resp = self.get(url, headers=self.headers)
+            resp = self.get(url, headers=self.headers, verify=False)
         except scrapelib.HTTPError:
             self.warning(
                 f"Could not fetch roll call document at {url}, unable to extract vote"
