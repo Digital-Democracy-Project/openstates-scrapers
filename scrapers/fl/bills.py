@@ -431,7 +431,7 @@ class BillDetail(HtmlPage):
                 actor = None
 
             act_text = tr.xpath("string(td[3])").strip()
-            for action in act_text.split("\u2022"):
+            for action in act_text.split("•"):
                 action = action.strip()
                 if not action:
                     continue
@@ -583,7 +583,20 @@ class FloorVote(PdfPage):
                 nv_count -= 1
 
         if yes_count != 0 or no_count != 0:
-            raise ValueError("vote count incorrect: " + self.source.url)
+            # A vote PDF occasionally has font-encoding corruption or an
+            # unparsable row that throws the reconciled yes/no tally off by a
+            # few votes (seen live on FL 2024's HB 5001 vote #18). Previously
+            # this raised and crashed the entire multi-hour session scrape
+            # over one bad vote record. Matches the log-and-skip convention
+            # already used elsewhere in this file for other malformed FL PDF
+            # data (UpperComVote's missing-totals case, HouseSearchPage's
+            # WAF/404 handling).
+            self.logger.warning(
+                f"Vote count doesn't reconcile at {self.source.url} "
+                f"(yes={yes_count}, no={no_count} after subtracting parsed "
+                "votes); skipping this vote"
+            )
+            return
 
         if nv_count != 0:
             # On a rare occasion, a member won't have a vote code,
