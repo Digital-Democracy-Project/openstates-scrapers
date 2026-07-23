@@ -583,7 +583,7 @@ class FloorVote(PdfPage):
                 nv_count -= 1
 
         if yes_count != 0 or no_count != 0:
-            raise ValueError("vote count incorrect: " + self.url)
+            raise ValueError("vote count incorrect: " + self.source.url)
 
         if nv_count != 0:
             # On a rare occasion, a member won't have a vote code,
