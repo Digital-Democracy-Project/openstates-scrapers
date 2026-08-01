@@ -1,12 +1,16 @@
 import dateutil
 import re
 import lxml.html
+import requests
 import scrapelib
 import collections
+import typing
 from datetime import date
 from utils.media import get_media_type
 
 from openstates.scrape import Scraper, Bill, VoteEvent
+from openstates.utils.cookie_provider import WafBlockDetected, content_matches_block_markers
+from openstates.utils.mi_cookies import MI_COOKIE_PROVIDER
 from classify_motion import classify_motion
 
 _categorizers = {
@@ -36,6 +40,33 @@ BASE_URL = "https://legislature.mi.gov"
 USER_AGENT = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/118.0"
 
 
+def mi_waf_get(request_func: typing.Callable[[dict], typing.Any]) -> typing.Any:
+    """
+    Attach legislature.mi.gov's cached WAF cookies (OPEN-19 -- see
+    openstates.utils.mi_cookies for the "sufficient in our testing" framing) to a request
+    and retry exactly once, with a fresh cookie warm-up, if a block is detected.
+
+    request_func(cookies: dict) -> response -- everything about the request except the
+    cookies should already be bound (e.g. via a lambda) by the caller. Used identically by
+    bills.py, events.py, and __init__.py's get_session_list() so the attach-cookies +
+    invalidate-and-retry-once contract lives in exactly one place.
+    """
+
+    def do_request(cookies: dict) -> typing.Any:
+        try:
+            resp = request_func(cookies)
+        except requests.exceptions.ConnectionError as e:
+            raise WafBlockDetected(str(e)) from e
+        content = getattr(resp, "content", None)
+        if content is None:
+            content = getattr(resp, "text", "").encode()
+        if content_matches_block_markers(content):
+            raise WafBlockDetected("response matched known WAF block-page heuristic")
+        return resp
+
+    return MI_COOKIE_PROVIDER.fetch_with_retry(do_request)
+
+
 def categorize_action(action: str) -> str:
     for prefix, atype in _categorizers.items():
         if action.lower().startswith(prefix):
@@ -61,7 +92,11 @@ class MIBillScraper(Scraper):
             except ValueError:
                 pass
         search_url = f"https://legislature.mi.gov/Search/ExecuteSearch?chamber=&docTypesList=HB%2CSB&docTypesList=HR%2CSR&docTypesList=HCR%2CSCR&docTypesList=HJR%2CSJR&sessions={session}&sponsor=&number=&dateFrom={date_from}&dateTo=&contentFullText="
-        page = self.get(search_url, headers=self.headers, verify=False).content
+        page = mi_waf_get(
+            lambda cookies: self.get(
+                search_url, headers=self.headers, cookies=cookies, verify=False
+            )
+        ).content
         page = lxml.html.fromstring(page)
         page.make_links_absolute(search_url)
 
@@ -88,7 +123,11 @@ class MIBillScraper(Scraper):
             yield from self.scrape_bill(session, bill_id, bill_url)
 
     def scrape_bill(self, session: str, bill_id: str, url: str) -> None:
-        page = self.get(url, headers=self.headers, verify=False).content
+        page = mi_waf_get(
+            lambda cookies: self.get(
+                url, headers=self.headers, cookies=cookies, verify=False
+            )
+        ).content
         page = lxml.html.fromstring(page)
         page.make_links_absolute(url)
 
@@ -325,8 +364,12 @@ class MIBillScraper(Scraper):
 
     def parse_roll_call(self, url, rc_num, session):
         try:
-            resp = self.get(url, headers=self.headers, verify=False)
-        except scrapelib.HTTPError:
+            resp = mi_waf_get(
+                lambda cookies: self.get(
+                    url, headers=self.headers, cookies=cookies, verify=False
+                )
+            )
+        except (scrapelib.HTTPError, WafBlockDetected):
             self.warning(
                 f"Could not fetch roll call document at {url}, unable to extract vote"
             )

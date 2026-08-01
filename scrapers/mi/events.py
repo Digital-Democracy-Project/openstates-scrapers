@@ -7,6 +7,7 @@ from utils.events import match_coordinates
 from collections.abc import Generator
 from openstates.scrape import Scraper, Event
 from openstates.exceptions import EmptyScrape
+from .bills import mi_waf_get
 
 
 class MIEventScraper(Scraper):
@@ -16,7 +17,7 @@ class MIEventScraper(Scraper):
 
     def scrape(self):
         url = "https://legislature.mi.gov/Committees/Meetings?sortBy=Calendar"
-        page = self.get(url, verify=False).content
+        page = mi_waf_get(lambda cookies: self.get(url, cookies=cookies, verify=False)).content
         page = lxml.html.fromstring(page)
         page.make_links_absolute(url)
 
@@ -33,7 +34,7 @@ class MIEventScraper(Scraper):
     def scrape_event_page(self, url) -> Generator[Event]:
         status = "tentative"
 
-        page = self.get(url, verify=False).content
+        page = mi_waf_get(lambda cookies: self.get(url, cookies=cookies, verify=False)).content
         page = lxml.html.fromstring(page)
         page.make_links_absolute(url)
 
