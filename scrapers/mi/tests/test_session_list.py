@@ -36,7 +36,8 @@ class FakeResponse:
 
 def test_get_session_list_returns_scraped_sessions_on_success(monkeypatch):
     monkeypatch.setattr(
-        "mi.requests.get", lambda url, headers=None: FakeResponse(SUCCESS_HTML)
+        "mi.requests.get",
+        lambda url, headers=None, verify=None: FakeResponse(SUCCESS_HTML),
     )
 
     sessions = Michigan().get_session_list()
@@ -46,7 +47,7 @@ def test_get_session_list_returns_scraped_sessions_on_success(monkeypatch):
 
 
 def test_get_session_list_falls_back_when_request_fails(monkeypatch):
-    def raise_connection_error(url, headers=None):
+    def raise_connection_error(url, headers=None, verify=None):
         raise requests.exceptions.ConnectionError("could not connect")
 
     monkeypatch.setattr("mi.requests.get", raise_connection_error)
@@ -61,7 +62,8 @@ def test_get_session_list_falls_back_when_waf_challenge_page_returned(monkeypatc
     # Reproduces the actual OPEN-17 failure: a 200 response whose body is a
     # CAPTCHA challenge page with zero <option> elements.
     monkeypatch.setattr(
-        "mi.requests.get", lambda url, headers=None: FakeResponse(CAPTCHA_HTML)
+        "mi.requests.get",
+        lambda url, headers=None, verify=None: FakeResponse(CAPTCHA_HTML),
     )
 
     sessions = Michigan().get_session_list()
