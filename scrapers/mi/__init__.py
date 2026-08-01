@@ -4,7 +4,8 @@ import requests
 import lxml.html
 
 from openstates.scrape import State
-from .bills import MIBillScraper, USER_AGENT
+from openstates.utils.cookie_provider import WafBlockDetected
+from .bills import MIBillScraper, USER_AGENT, mi_waf_get
 from .events import MIEventScraper
 
 logger = logging.getLogger("openstates")
@@ -113,13 +114,25 @@ class Michigan(State):
             # runs for MI -- neither on its own is a reliable fix for this
             # blocking, just a best effort -- the fallback below is what actually
             # keeps get_session_list() from raising CommandError.
-            response = requests.get(
-                url, headers={"User-Agent": USER_AGENT}, verify=False
+            #
+            # OPEN-19: also attaches legislature.mi.gov's cached WAF cookies and retries
+            # once (fresh cookie warm-up) if a block is detected -- see mi_waf_get in
+            # bills.py and openstates.utils.mi_cookies for the "sufficient in our
+            # testing" framing. A block that survives the retry raises WafBlockDetected,
+            # caught below alongside RequestException so the existing known-sessions
+            # fallback still triggers exactly as before.
+            response = mi_waf_get(
+                lambda cookies: requests.get(
+                    url,
+                    headers={"User-Agent": USER_AGENT},
+                    cookies=cookies,
+                    verify=False,
+                )
             )
             response.raise_for_status()
             doc = lxml.html.fromstring(response.text)
             sessions = [s.strip() for s in doc.xpath("//option/text()") if s.strip()]
-        except requests.exceptions.RequestException:
+        except (requests.exceptions.RequestException, WafBlockDetected):
             sessions = []
 
         if not sessions:
