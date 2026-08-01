@@ -108,10 +108,14 @@ class Michigan(State):
             # same UA bills.py already uses helps sometimes, but legislature.mi.gov's
             # bot-detection is inconsistent: live testing 2026-08-01 got a dropped
             # connection (RemoteDisconnected) instead, the same symptom the MI
-            # archiver hits independently and often. This isn't a reliable fix for
-            # that blocking, just a best effort -- the fallback below, not this UA,
-            # is what actually keeps get_session_list() from raising CommandError.
-            response = requests.get(url, headers={"User-Agent": USER_AGENT})
+            # archiver hits independently and often. verify=False (upstream
+            # 3266109, 2026-07-21) is the other half of what upstream OpenStates
+            # runs for MI -- neither on its own is a reliable fix for this
+            # blocking, just a best effort -- the fallback below is what actually
+            # keeps get_session_list() from raising CommandError.
+            response = requests.get(
+                url, headers={"User-Agent": USER_AGENT}, verify=False
+            )
             response.raise_for_status()
             doc = lxml.html.fromstring(response.text)
             sessions = [s.strip() for s in doc.xpath("//option/text()") if s.strip()]
