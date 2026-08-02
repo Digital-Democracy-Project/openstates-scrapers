@@ -8,8 +8,13 @@ import typing
 from datetime import date
 from utils.media import get_media_type
 
+from openstates.exceptions import ScrapeError
 from openstates.scrape import Scraper, Bill, VoteEvent
-from openstates.utils.cookie_provider import WafBlockDetected, content_matches_block_markers
+from openstates.utils.cookie_provider import (
+    WafBlockDetected,
+    content_matches_block_markers,
+    content_matches_fake_404_block,
+)
 from openstates.utils.mi_cookies import MI_COOKIE_PROVIDER
 from classify_motion import classify_motion
 
@@ -39,6 +44,16 @@ BASE_URL = "https://legislature.mi.gov"
 # directly instead of keeping their own hand-copied duplicate that can drift out of sync.
 USER_AGENT = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/118.0"
 
+# OPEN-18: after this many consecutive individual-bill fetches come back as a detected WAF
+# block (even after mi_waf_get's own one-time cookie re-warm), abort the whole scrape rather
+# than silently skipping bill after bill -- a fully-blocked run should fail fast and loudly.
+# New convention, not a port of an existing abort mechanism: neither the archiver's
+# (openstates-core's text_extract.py) "blocked" counter nor Scraper.request_resiliently's
+# generic _max_consecutive_failures=3 (openstates/scrape/base.py) actually abort a run today --
+# both just count/pause -- so "3" here matches their naming/threshold convention, not copied
+# abort logic.
+MAX_CONSECUTIVE_WAF_BLOCKS = 3
+
 
 def mi_waf_get(request_func: typing.Callable[[dict], typing.Any]) -> typing.Any:
     """
@@ -57,6 +72,19 @@ def mi_waf_get(request_func: typing.Callable[[dict], typing.Any]) -> typing.Any:
             resp = request_func(cookies)
         except requests.exceptions.ConnectionError as e:
             raise WafBlockDetected(str(e)) from e
+        except scrapelib.HTTPError as e:
+            body = getattr(e.response, "content", None)
+            if body is None:
+                body = (e.body or "").encode()
+            if content_matches_fake_404_block(body):
+                raise WafBlockDetected(
+                    f"{e.response.status_code if e.response else '?'} response matched "
+                    "fake-404 WAF block-page heuristic"
+                ) from e
+            # Not the known block-page signature -- a genuine HTTPError (e.g. a real dead
+            # link/malformed ObjectName) must keep propagating unchanged (OPEN-18 AC: don't
+            # suppress real 404s).
+            raise
         content = getattr(resp, "content", None)
         if content is None:
             content = getattr(resp, "text", "").encode()
@@ -76,6 +104,7 @@ def categorize_action(action: str) -> str:
 class MIBillScraper(Scraper):
     headers = {}
     verify = False
+    _consecutive_waf_blocks = 0
 
     # convert from MI's redirector to a bill permalink
     def make_bill_url(self, url: str) -> str:
@@ -123,11 +152,27 @@ class MIBillScraper(Scraper):
             yield from self.scrape_bill(session, bill_id, bill_url)
 
     def scrape_bill(self, session: str, bill_id: str, url: str) -> None:
-        page = mi_waf_get(
-            lambda cookies: self.get(
-                url, headers=self.headers, cookies=cookies, verify=False
+        try:
+            page = mi_waf_get(
+                lambda cookies: self.get(
+                    url, headers=self.headers, cookies=cookies, verify=False
+                )
+            ).content
+        except WafBlockDetected as e:
+            self._consecutive_waf_blocks += 1
+            self.warning(
+                f"Skipping {bill_id} ({url}): WAF block detected even after cookie "
+                f"re-warm ({e}) -- consecutive blocks: {self._consecutive_waf_blocks}"
             )
-        ).content
+            if self._consecutive_waf_blocks >= MAX_CONSECUTIVE_WAF_BLOCKS:
+                raise ScrapeError(
+                    f"MI bill scrape aborted: {self._consecutive_waf_blocks} consecutive "
+                    "WAF blocks detected fetching bill pages -- legislature.mi.gov is "
+                    "likely blocking this run entirely (OPEN-18)"
+                ) from e
+            return
+        self._consecutive_waf_blocks = 0
+
         page = lxml.html.fromstring(page)
         page.make_links_absolute(url)
 
