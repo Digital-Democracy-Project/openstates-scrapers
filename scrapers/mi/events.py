@@ -7,10 +7,10 @@ from utils.events import match_coordinates
 from collections.abc import Generator
 from openstates.scrape import Scraper, Event
 from openstates.exceptions import EmptyScrape
-from .bills import mi_waf_get
+from .bills import mi_waf_get, MIResilientScraperMixin
 
 
-class MIEventScraper(Scraper):
+class MIEventScraper(MIResilientScraperMixin, Scraper):
     _tz = pytz.timezone("US/Eastern")
     current_page = None
     verify = False

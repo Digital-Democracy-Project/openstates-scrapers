@@ -1,4 +1,5 @@
 import dateutil
+import os
 import re
 import lxml.html
 import requests
@@ -54,6 +55,54 @@ USER_AGENT = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 F
 # abort logic.
 MAX_CONSECUTIVE_WAF_BLOCKS = 3
 
+# OPEN-21: MI is the one jurisdiction with a confirmed, escalating reputation-based WAF
+# block (see mi_cookies.py's docstring -- cached cookies alone stopped being sufficient
+# after a day of heavy traffic), so it gets its own, more conservative request pacing
+# instead of the platform-wide default (openstates.settings.SCRAPELIB_RPM, 60/min) applied
+# uniformly to every other jurisdiction. 10/min (~1 request every 6s) is a deliberately
+# conservative starting point -- roughly 1/6th of the platform default -- chosen to put
+# several real seconds of spacing between requests (on top of http_resilience_mode's own
+# 1-3s jittered per-request delay) without making a full scrape impractically slow. Not
+# derived from a measured threshold (none exists yet); expected to be revisited once
+# OPEN-22's sustained-blocking-escalation investigation has more data. Env-configurable
+# (like the platform's own SCRAPELIB_RPM/STATS_BATCH_SIZE-style settings) so it can be
+# tuned without a redeploy.
+MI_SCRAPELIB_RPM = int(os.environ.get("MI_SCRAPELIB_RPM", 10))
+
+
+class MIResilientScraperMixin:
+    """Shared http_resilience_mode configuration for MI's scrapers (OPEN-21).
+
+    Both MIBillScraper and MIEventScraper opt into openstates.scrape.base.Scraper's
+    http_resilience_mode unconditionally -- regardless of what the CLI/State
+    scraper-instantiation path passes for other jurisdictions -- and use MI's own
+    conservative MI_SCRAPELIB_RPM instead of the platform-wide default.
+
+    They also exclude scrapelib.HTTPError and requests.exceptions.ConnectionError from
+    request_resiliently's own retry-on-connection-error loop (via the base class's
+    _resilience_retry_excluded_exceptions opt-out). Both are already handled by
+    mi_waf_get()'s do_request, which retries them itself via a fresh cookie
+    invalidate-and-rewarm, exactly once (OPEN-19). Left unexcluded, they'd also be caught
+    by request_resiliently's own broad except clause -- scrapelib.HTTPError inherits
+    requests.exceptions.RequestException -- and retried there too, up to 3x with
+    10s/20s/40s backoff, *before* mi_waf_get ever saw them: doubling MI's request volume
+    on every WAF block instead of reducing it, which is the opposite of this ticket's
+    point. Excluding just these two keeps mi_waf_get's invalidate-and-retry-once dance as
+    the only retry layer for WAF-related failures, while still letting
+    http_resilience_mode's other benefits (jittered delay, circuit breaker, connection
+    pool reset, and retry-with-backoff for genuine timeouts/URL errors/connection resets
+    unrelated to the WAF) apply as normal.
+    """
+
+    def __init__(self, *args, **kwargs):
+        kwargs["http_resilience_mode"] = True
+        super().__init__(*args, **kwargs)
+        self.requests_per_minute = MI_SCRAPELIB_RPM
+        self._resilience_retry_excluded_exceptions = (
+            scrapelib.HTTPError,
+            requests.exceptions.ConnectionError,
+        )
+
 
 def mi_waf_get(request_func: typing.Callable[[dict], typing.Any]) -> typing.Any:
     """
@@ -101,7 +150,7 @@ def categorize_action(action: str) -> str:
             return atype
 
 
-class MIBillScraper(Scraper):
+class MIBillScraper(MIResilientScraperMixin, Scraper):
     headers = {}
     verify = False
     _consecutive_waf_blocks = 0
