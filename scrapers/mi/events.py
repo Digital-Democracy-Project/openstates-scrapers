@@ -6,18 +6,34 @@ import lxml
 from utils.events import match_coordinates
 from collections.abc import Generator
 from openstates.scrape import Scraper, Event
-from openstates.exceptions import EmptyScrape
+from openstates.exceptions import EmptyScrape, ScrapeError
+from openstates.utils.cookie_provider import WafBlockDetected
+from ._waf_circuit_breaker import MIWafCircuitBreakerMixin
 from .bills import mi_waf_get, MIResilientScraperMixin
 
 
-class MIEventScraper(MIResilientScraperMixin, Scraper):
+class MIEventScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
     _tz = pytz.timezone("US/Eastern")
     current_page = None
     verify = False
 
     def scrape(self):
         url = "https://legislature.mi.gov/Committees/Meetings?sortBy=Calendar"
-        page = mi_waf_get(lambda cookies: self.get(url, cookies=cookies, verify=False)).content
+        # Unlike scrape_event_page() below, this fetch happens exactly once per run (not in
+        # a per-item loop), so there's nothing to count to MAX_CONSECUTIVE_WAF_BLOCKS against
+        # -- a block surviving mi_waf_get's own retry here means the run can't start at all,
+        # so abort immediately (OPEN-22 AC7) instead of letting WafBlockDetected propagate
+        # uncaught, as it did before this fix.
+        try:
+            page = mi_waf_get(
+                lambda cookies: self.get(url, cookies=cookies, verify=False)
+            ).content
+        except WafBlockDetected as e:
+            raise ScrapeError(
+                "MI event scrape aborted: WAF block detected even after cookie re-warm "
+                "fetching the committee calendar page -- legislature.mi.gov is likely "
+                "blocking this run entirely (OPEN-18)"
+            ) from e
         page = lxml.html.fromstring(page)
         page.make_links_absolute(url)
 
@@ -34,7 +50,20 @@ class MIEventScraper(MIResilientScraperMixin, Scraper):
     def scrape_event_page(self, url) -> Generator[Event]:
         status = "tentative"
 
-        page = mi_waf_get(lambda cookies: self.get(url, cookies=cookies, verify=False)).content
+        try:
+            page = mi_waf_get(
+                lambda cookies: self.get(url, cookies=cookies, verify=False)
+            ).content
+        except WafBlockDetected as e:
+            self._register_waf_block_or_abort(
+                e,
+                item_label=f"event page ({url})",
+                scrape_label="MI event scrape",
+                fetch_description="fetching event pages",
+            )
+            return
+        self._register_waf_success()
+
         page = lxml.html.fromstring(page)
         page.make_links_absolute(url)
 

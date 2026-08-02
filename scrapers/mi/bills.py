@@ -9,7 +9,6 @@ import typing
 from datetime import date
 from utils.media import get_media_type
 
-from openstates.exceptions import ScrapeError
 from openstates.scrape import Scraper, Bill, VoteEvent
 from openstates.utils.cookie_provider import (
     WafBlockDetected,
@@ -18,6 +17,7 @@ from openstates.utils.cookie_provider import (
 )
 from openstates.utils.mi_cookies import MI_COOKIE_PROVIDER
 from classify_motion import classify_motion
+from ._waf_circuit_breaker import MIWafCircuitBreakerMixin
 
 _categorizers = {
     "approved by governor with line item(s) vetoed": "executive-veto-line-item",
@@ -45,15 +45,9 @@ BASE_URL = "https://legislature.mi.gov"
 # directly instead of keeping their own hand-copied duplicate that can drift out of sync.
 USER_AGENT = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/118.0"
 
-# OPEN-18: after this many consecutive individual-bill fetches come back as a detected WAF
-# block (even after mi_waf_get's own one-time cookie re-warm), abort the whole scrape rather
-# than silently skipping bill after bill -- a fully-blocked run should fail fast and loudly.
-# New convention, not a port of an existing abort mechanism: neither the archiver's
-# (openstates-core's text_extract.py) "blocked" counter nor Scraper.request_resiliently's
-# generic _max_consecutive_failures=3 (openstates/scrape/base.py) actually abort a run today --
-# both just count/pause -- so "3" here matches their naming/threshold convention, not copied
-# abort logic.
-MAX_CONSECUTIVE_WAF_BLOCKS = 3
+# OPEN-18's consecutive-WAF-block circuit breaker (abort the whole scrape rather than
+# silently skipping item after item) lives in _waf_circuit_breaker.py -- extended to
+# MIEventScraper by OPEN-22 (AC7), so both scrapers share one threshold/message.
 
 # OPEN-21: MI is the one jurisdiction with a confirmed, escalating reputation-based WAF
 # block (see mi_cookies.py's docstring -- cached cookies alone stopped being sufficient
@@ -150,10 +144,9 @@ def categorize_action(action: str) -> str:
             return atype
 
 
-class MIBillScraper(MIResilientScraperMixin, Scraper):
+class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
     headers = {}
     verify = False
-    _consecutive_waf_blocks = 0
 
     # convert from MI's redirector to a bill permalink
     def make_bill_url(self, url: str) -> str:
@@ -208,19 +201,14 @@ class MIBillScraper(MIResilientScraperMixin, Scraper):
                 )
             ).content
         except WafBlockDetected as e:
-            self._consecutive_waf_blocks += 1
-            self.warning(
-                f"Skipping {bill_id} ({url}): WAF block detected even after cookie "
-                f"re-warm ({e}) -- consecutive blocks: {self._consecutive_waf_blocks}"
+            self._register_waf_block_or_abort(
+                e,
+                item_label=f"{bill_id} ({url})",
+                scrape_label="MI bill scrape",
+                fetch_description="fetching bill pages",
             )
-            if self._consecutive_waf_blocks >= MAX_CONSECUTIVE_WAF_BLOCKS:
-                raise ScrapeError(
-                    f"MI bill scrape aborted: {self._consecutive_waf_blocks} consecutive "
-                    "WAF blocks detected fetching bill pages -- legislature.mi.gov is "
-                    "likely blocking this run entirely (OPEN-18)"
-                ) from e
             return
-        self._consecutive_waf_blocks = 0
+        self._register_waf_success()
 
         page = lxml.html.fromstring(page)
         page.make_links_absolute(url)
