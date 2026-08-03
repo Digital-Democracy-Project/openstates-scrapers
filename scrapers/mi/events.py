@@ -8,6 +8,7 @@ from collections.abc import Generator
 from openstates.scrape import Scraper, Event
 from openstates.exceptions import EmptyScrape, ScrapeError
 from openstates.utils.cookie_provider import WafBlockDetected
+from openstates.utils.mi_cookies import MI_COOKIE_PROVIDER
 from ._waf_circuit_breaker import MIWafCircuitBreakerMixin
 from .bills import mi_waf_get, MIResilientScraperMixin
 
@@ -18,6 +19,10 @@ class MIEventScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper)
     verify = False
 
     def scrape(self):
+        # Introspection/logging hygiene only (OPEN-23) -- see bills.py's scrape() for why
+        # this isn't the actual correctness mechanism (every mi_waf_get()-built request
+        # already carries its own explicit, freshly-fetched User-Agent header).
+        self.headers["User-Agent"] = MI_COOKIE_PROVIDER.get_user_agent()
         url = "https://legislature.mi.gov/Committees/Meetings?sortBy=Calendar"
         # Unlike scrape_event_page() below, this fetch happens exactly once per run (not in
         # a per-item loop), so there's nothing to count to MAX_CONSECUTIVE_WAF_BLOCKS against
@@ -26,7 +31,9 @@ class MIEventScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper)
         # uncaught, as it did before this fix.
         try:
             page = mi_waf_get(
-                lambda cookies: self.get(url, cookies=cookies, verify=False)
+                lambda cookies, user_agent: self.get(
+                    url, headers={"User-Agent": user_agent}, cookies=cookies, verify=False
+                )
             ).content
         except WafBlockDetected as e:
             raise ScrapeError(
@@ -52,7 +59,9 @@ class MIEventScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper)
 
         try:
             page = mi_waf_get(
-                lambda cookies: self.get(url, cookies=cookies, verify=False)
+                lambda cookies, user_agent: self.get(
+                    url, headers={"User-Agent": user_agent}, cookies=cookies, verify=False
+                )
             ).content
         except WafBlockDetected as e:
             self._register_waf_block_or_abort(

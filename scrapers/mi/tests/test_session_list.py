@@ -35,11 +35,15 @@ class FakeResponse:
             raise requests.exceptions.HTTPError(f"{self.status_code} error")
 
 
-def _stub_cookie_provider(monkeypatch, cookies=None):
+DEFAULT_USER_AGENT = "Mozilla/5.0 (Real Warm-Up Chromium)"
+
+
+def _stub_cookie_provider(monkeypatch, cookies=None, user_agent=DEFAULT_USER_AGENT):
     """Bypass the real disk cache / Playwright warm-up entirely -- get_session_list's own
     logic is what's under test here, not CookieProvider (see test_cookie_provider.py for
     that)."""
     monkeypatch.setattr(MI_COOKIE_PROVIDER, "get_cookies", lambda: cookies or {})
+    monkeypatch.setattr(MI_COOKIE_PROVIDER, "get_user_agent", lambda: user_agent)
     monkeypatch.setattr(MI_COOKIE_PROVIDER, "invalidate", lambda: None)
 
 

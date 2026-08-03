@@ -5,7 +5,7 @@ import lxml.html
 
 from openstates.scrape import State
 from openstates.utils.cookie_provider import WafBlockDetected
-from .bills import MIBillScraper, USER_AGENT, mi_waf_get
+from .bills import MIBillScraper, mi_waf_get
 from .events import MIEventScraper
 
 logger = logging.getLogger("openstates")
@@ -121,10 +121,14 @@ class Michigan(State):
             # testing" framing. A block that survives the retry raises WafBlockDetected,
             # caught below alongside RequestException so the existing known-sessions
             # fallback still triggers exactly as before.
+            # OPEN-23: the User-Agent sent here comes from mi_waf_get's own do_request
+            # parameter -- the real UA MI_COOKIE_PROVIDER captured alongside these same
+            # cookies -- not a separate hardcoded/guessed string, so this plain requests.get
+            # call presents the same identity that actually minted the cookies it attaches.
             response = mi_waf_get(
-                lambda cookies: requests.get(
+                lambda cookies, user_agent: requests.get(
                     url,
-                    headers={"User-Agent": USER_AGENT},
+                    headers={"User-Agent": user_agent},
                     cookies=cookies,
                     verify=False,
                 )

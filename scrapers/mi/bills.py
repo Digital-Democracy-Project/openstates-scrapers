@@ -41,9 +41,12 @@ _categorizers = {
 BASE_URL = "https://legislature.mi.gov"
 # legislature.mi.gov's WAF blocks a generic/bare User-Agent (found 2026-07-28, via
 # ddp-open-states's bill-document archive step -- see that repo's PLAN-bill-document-
-# provenance.md). Module-level so it's a single source of truth other tools can import
-# directly instead of keeping their own hand-copied duplicate that can drift out of sync.
-USER_AGENT = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/118.0"
+# provenance.md). OPEN-23: a *hardcoded* User-Agent here was itself a bug -- it claimed to
+# be Firefox on Linux while the cookies it rode along with were minted by a real headless
+# Chromium (MI_COOKIE_PROVIDER's Playwright warm-up), a three-way identity mismatch bot
+# mitigation is built to flag. Every request that reuses the cached cookie pair now sources
+# its User-Agent from mi_waf_get()'s do_request parameter -- the real UA MI_COOKIE_PROVIDER
+# captured alongside those same cookies -- instead of a separate hardcoded/guessed string.
 
 # OPEN-18's consecutive-WAF-block circuit breaker (abort the whole scrape rather than
 # silently skipping item after item) lives in _waf_circuit_breaker.py -- extended to
@@ -86,7 +89,22 @@ class MIResilientScraperMixin:
     http_resilience_mode's other benefits (jittered delay, circuit breaker, connection
     pool reset, and retry-with-backoff for genuine timeouts/URL errors/connection resets
     unrelated to the WAF) apply as normal.
+
+    Also opts out of http_resilience_mode's get_random_user_agent() rotation (OPEN-23),
+    via the base class's _resilience_user_agent_rotation_enabled flag -- set False as a
+    CLASS attribute here (not inside __init__: the base class's own __init__-time rotation
+    call fires during super().__init__() itself, before this mixin's post-super() __init__
+    body would run, so only a class-level override takes effect for that call site; see
+    base.py's own comment on Scraper._resilience_user_agent_rotation_enabled). Without this,
+    a cookie session minted by MI_COOKIE_PROVIDER's Playwright warm-up (OPEN-19) would get
+    reused by requests presenting three-plus different, randomly-rotated browser/OS
+    identities within a single scrape attempt -- exactly the kind of inconsistency
+    bot-mitigation products are built to flag. The rest of http_resilience_mode (jittered
+    delay, circuit breaker pause, connection-pool reset) stays intact for MI; only the
+    self.headers["User-Agent"] mutation itself is suppressed.
     """
+
+    _resilience_user_agent_rotation_enabled = False
 
     def __init__(self, *args, **kwargs):
         kwargs["http_resilience_mode"] = True
@@ -98,21 +116,28 @@ class MIResilientScraperMixin:
         )
 
 
-def mi_waf_get(request_func: typing.Callable[[dict], typing.Any]) -> typing.Any:
+def mi_waf_get(
+    request_func: typing.Callable[[dict, str], typing.Any]
+) -> typing.Any:
     """
     Attach legislature.mi.gov's cached WAF cookies (OPEN-19 -- see
-    openstates.utils.mi_cookies for the "sufficient in our testing" framing) to a request
-    and retry exactly once, with a fresh cookie warm-up, if a block is detected.
+    openstates.utils.mi_cookies for the "sufficient in our testing" framing) *and* the real
+    User-Agent that warmed them up (OPEN-23) to a request, and retry exactly once, with a
+    fresh cookie+UA warm-up, if a block is detected.
 
-    request_func(cookies: dict) -> response -- everything about the request except the
-    cookies should already be bound (e.g. via a lambda) by the caller. Used identically by
-    bills.py, events.py, and __init__.py's get_session_list() so the attach-cookies +
-    invalidate-and-retry-once contract lives in exactly one place.
+    request_func(cookies: dict, user_agent: str) -> response -- everything about the
+    request except the cookies/user_agent should already be bound (e.g. via a lambda) by
+    the caller. request_func must build its own headers from the user_agent parameter (not
+    a hardcoded/independently-derived string) so the outgoing request always presents the
+    same identity that actually minted the cookies it's attaching, even across a mid-scrape
+    re-warm. Used identically by bills.py, events.py, and __init__.py's get_session_list()
+    so the attach-cookies-and-UA + invalidate-and-retry-once contract lives in exactly one
+    place.
     """
 
-    def do_request(cookies: dict) -> typing.Any:
+    def do_request(cookies: dict, user_agent: str) -> typing.Any:
         try:
-            resp = request_func(cookies)
+            resp = request_func(cookies, user_agent)
         except requests.exceptions.ConnectionError as e:
             raise WafBlockDetected(str(e)) from e
         except scrapelib.HTTPError as e:
@@ -154,7 +179,14 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         return f"https://legislature.mi.gov/Bills/Bill?ObjectName={match.group(1)}"
 
     def scrape(self, session, start=None):
-        self.headers = {"User-Agent": USER_AGENT}
+        # Every actual request built via mi_waf_get() already gets its own explicit
+        # headers={"User-Agent": user_agent} from the do_request parameter (the real
+        # correctness mechanism, immune to whatever self.headers holds -- scrapelib merges
+        # explicit per-call headers over session-level self.headers). This assignment is
+        # for introspection/logging hygiene only, so self.headers reflects the same
+        # consistent, cookie-matched identity a live debugger or log line would expect
+        # (OPEN-23), instead of scrapelib's own generic default.
+        self.headers["User-Agent"] = MI_COOKIE_PROVIDER.get_user_agent()
         date_from = ""
         if start:
             try:
@@ -164,8 +196,11 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
                 pass
         search_url = f"https://legislature.mi.gov/Search/ExecuteSearch?chamber=&docTypesList=HB%2CSB&docTypesList=HR%2CSR&docTypesList=HCR%2CSCR&docTypesList=HJR%2CSJR&sessions={session}&sponsor=&number=&dateFrom={date_from}&dateTo=&contentFullText="
         page = mi_waf_get(
-            lambda cookies: self.get(
-                search_url, headers=self.headers, cookies=cookies, verify=False
+            lambda cookies, user_agent: self.get(
+                search_url,
+                headers={"User-Agent": user_agent},
+                cookies=cookies,
+                verify=False,
             )
         ).content
         page = lxml.html.fromstring(page)
@@ -196,8 +231,11 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
     def scrape_bill(self, session: str, bill_id: str, url: str) -> None:
         try:
             page = mi_waf_get(
-                lambda cookies: self.get(
-                    url, headers=self.headers, cookies=cookies, verify=False
+                lambda cookies, user_agent: self.get(
+                    url,
+                    headers={"User-Agent": user_agent},
+                    cookies=cookies,
+                    verify=False,
                 )
             ).content
         except WafBlockDetected as e:
@@ -447,8 +485,11 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
     def parse_roll_call(self, url, rc_num, session):
         try:
             resp = mi_waf_get(
-                lambda cookies: self.get(
-                    url, headers=self.headers, cookies=cookies, verify=False
+                lambda cookies, user_agent: self.get(
+                    url,
+                    headers={"User-Agent": user_agent},
+                    cookies=cookies,
+                    verify=False,
                 )
             )
         except (scrapelib.HTTPError, WafBlockDetected):
