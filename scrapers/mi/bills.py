@@ -179,14 +179,16 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         return f"https://legislature.mi.gov/Bills/Bill?ObjectName={match.group(1)}"
 
     def scrape(self, session, start=None):
-        # Every actual request built via mi_waf_get() already gets its own explicit
-        # headers={"User-Agent": user_agent} from the do_request parameter (the real
-        # correctness mechanism, immune to whatever self.headers holds -- scrapelib merges
-        # explicit per-call headers over session-level self.headers). This assignment is
-        # for introspection/logging hygiene only, so self.headers reflects the same
-        # consistent, cookie-matched identity a live debugger or log line would expect
-        # (OPEN-23), instead of scrapelib's own generic default.
-        self.headers["User-Agent"] = MI_COOKIE_PROVIDER.get_user_agent()
+        # self.headers is deliberately left alone here (OPEN-23): every actual request
+        # built via mi_waf_get() gets its own explicit headers={"User-Agent": user_agent}
+        # from the do_request parameter -- the real correctness mechanism, immune to
+        # whatever self.headers holds (scrapelib merges explicit per-call headers over
+        # session-level self.headers). Syncing self.headers here too, purely for log
+        # readability, was tried and reverted: it forces a MI_COOKIE_PROVIDER warm-up at
+        # the top of scrape() itself, before any request actually needs one, which is both
+        # an extra unscheduled hit against a WAF-sensitive site and a footgun for any test
+        # that calls scrape() without stubbing get_user_agent() (confirmed: broke
+        # MIEventScraper's own existing test suite this exact way).
         date_from = ""
         if start:
             try:
