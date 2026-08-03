@@ -42,7 +42,7 @@ def bypass_real_cookie_provider(monkeypatch):
     """
 
     def fake_fetch_with_retry(do_request):
-        return do_request({})
+        return do_request({}, "test-agent")
 
     monkeypatch.setattr(mi_bills.MI_COOKIE_PROVIDER, "fetch_with_retry", fake_fetch_with_retry)
 

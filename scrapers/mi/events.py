@@ -26,7 +26,9 @@ class MIEventScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper)
         # uncaught, as it did before this fix.
         try:
             page = mi_waf_get(
-                lambda cookies: self.get(url, cookies=cookies, verify=False)
+                lambda cookies, user_agent: self.get(
+                    url, headers={"User-Agent": user_agent}, cookies=cookies, verify=False
+                )
             ).content
         except WafBlockDetected as e:
             raise ScrapeError(
@@ -52,7 +54,9 @@ class MIEventScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper)
 
         try:
             page = mi_waf_get(
-                lambda cookies: self.get(url, cookies=cookies, verify=False)
+                lambda cookies, user_agent: self.get(
+                    url, headers={"User-Agent": user_agent}, cookies=cookies, verify=False
+                )
             ).content
         except WafBlockDetected as e:
             self._register_waf_block_or_abort(

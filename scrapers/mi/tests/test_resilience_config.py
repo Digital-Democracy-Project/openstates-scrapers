@@ -110,9 +110,9 @@ def test_retry_stacking_resolution_does_not_double_retry_waf_block(monkeypatch):
         # contract without touching disk/Playwright (same convention as
         # test_waf_get.py's own stubbing).
         try:
-            return do_request({})
+            return do_request({}, "test-agent")
         except WafBlockDetected:
-            return do_request({})
+            return do_request({}, "test-agent")
 
     monkeypatch.setattr(
         mi_bills.MI_COOKIE_PROVIDER,
