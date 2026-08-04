@@ -365,6 +365,7 @@ class VaBillScraper(Scraper):
                 v = VoteEvent(
                     start_date=vote_date,
                     motion_text=motion_text,
+                    identifier=str(row["VoteID"]),
                     bill_action=row["LegislationActionDescription"],
                     result="fail",  # placeholder for now
                     chamber=self.chamber_map[row["ChamberCode"]],
@@ -424,10 +425,10 @@ class VaBillScraper(Scraper):
                 # or
                 # vote-details/{identifier}/{session}/{vote ID}
                 # https://lis.virginia.gov/vote-details/HB1549/20251/SV565
-                if "BatchNumber" in row:
-                    vote_identifier_url_part = row["BatchNumber"]
-                else:
-                    vote_identifier_url_part = row["VoteID"]
+                # BatchNumber can be a key that's present but None-valued, not just absent --
+                # `in` doesn't catch that, so check truthiness instead (else the URL literally
+                # ends in "/None").
+                vote_identifier_url_part = row.get("BatchNumber") or row["VoteID"]
                 v.add_source(
                     f"https://lis.virginia.gov/vote-details/"
                     f"{bill.identifier}/"
