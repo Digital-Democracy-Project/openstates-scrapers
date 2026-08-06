@@ -8,10 +8,14 @@ after item forever. OPEN-22 (AC7) extends the same mechanism to
 MIEventScraper so the two scrapers don't drift into two different
 abort conventions -- see mi_waf_get's own docstring in bills.py for the
 precedent on keeping this kind of shared contract in exactly one place.
+
+OPEN-30 extends registration to MIBillScraper.parse_roll_call(), which
+(unlike the two call sites above) catches both scrapelib.HTTPError and
+WafBlockDetected in one except block -- so _register_waf_block_or_abort()
+below accepts either exception type.
 """
 
 from openstates.exceptions import ScrapeError
-from openstates.utils.cookie_provider import WafBlockDetected
 
 MAX_CONSECUTIVE_WAF_BLOCKS = 3
 
@@ -19,9 +23,10 @@ MAX_CONSECUTIVE_WAF_BLOCKS = 3
 class MIWafCircuitBreakerMixin:
     """Gives a Scraper subclass a per-instance consecutive-WAF-block counter.
 
-    Call _register_waf_block_or_abort() from a WafBlockDetected except-block
-    (for a call site that runs in a per-item loop -- e.g. one bill or one
-    event per call), and _register_waf_success() after a fetch succeeds.
+    Call _register_waf_block_or_abort() from a WafBlockDetected (or, for
+    parse_roll_call(), scrapelib.HTTPError) except-block -- for a call site
+    that runs in a per-item loop -- e.g. one bill, one event, or one vote
+    document per call -- and _register_waf_success() after a fetch succeeds.
     Raises ScrapeError once MAX_CONSECUTIVE_WAF_BLOCKS consecutive blocks
     have been registered without an intervening success.
     """
@@ -30,7 +35,7 @@ class MIWafCircuitBreakerMixin:
 
     def _register_waf_block_or_abort(
         self,
-        exc: WafBlockDetected,
+        exc: Exception,
         item_label: str,
         scrape_label: str,
         fetch_description: str,
