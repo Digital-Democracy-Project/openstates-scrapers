@@ -494,11 +494,23 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
                     verify=False,
                 )
             )
-        except (scrapelib.HTTPError, WafBlockDetected):
-            self.warning(
-                f"Could not fetch roll call document at {url}, unable to extract vote"
+        except (scrapelib.HTTPError, WafBlockDetected) as e:
+            # OPEN-30: this fetch used to swallow both exception types with a
+            # bare self.warning()+return -- invisible to the consecutive-block
+            # counter, the ScrapeError abort threshold, and OPEN-22's
+            # escalation history, permanently dropping the one vote on every
+            # retry with no other signal. Now shares scrape_bill()'s own
+            # _consecutive_waf_blocks counter (same MIBillScraper instance),
+            # so a block hitting this per-vote fetch is just as visible as one
+            # hitting the main bill-page fetch.
+            self._register_waf_block_or_abort(
+                e,
+                item_label=f"roll call #{rc_num} document ({url})",
+                scrape_label="MI bill scrape",
+                fetch_description="fetching roll call vote documents",
             )
             return
+        self._register_waf_success()
         html = resp.text
         vote_doc = lxml.html.fromstring(html)
         vote_doc_textonly = vote_doc.text_content()
