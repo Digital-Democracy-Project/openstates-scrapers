@@ -291,8 +291,11 @@ class MABillScraper(Scraper):
     def scrape_cosponsors(self, bill, bill_url):
         # https://malegislature.gov/Bills/189/S1194/CoSponsor
         cosponsor_url = "{}/CoSponsor".format(bill_url)
-        html = self.get_as_ajax(cosponsor_url).text
-        page = lxml.html.fromstring(html)
+        response = self.get_as_ajax(cosponsor_url)
+        if response is None:
+            self.warning("Skipping cosponsors for {} -- fetch failed".format(bill_url))
+            return
+        page = lxml.html.fromstring(response.text)
         cosponsor_rows = page.xpath("//tbody/tr")
         for row in cosponsor_rows:
             # careful, not everyone is a linked representative
@@ -324,6 +327,9 @@ class MABillScraper(Scraper):
         # scrape_action_page adds the actions, and also returns the Page xpath object
         # so that we can check for a paginator
         page = self.get_action_page(bill_url, 1)
+        if page is None:
+            self.warning("Skipping actions for {} -- fetch failed".format(bill_url))
+            return
         yield from self.scrape_action_page(bill, page)
 
         max_page = page.xpath(
@@ -333,12 +339,22 @@ class MABillScraper(Scraper):
             max_page = re.sub(r"[^\d]", "", max_page[0]).strip()
             for counter in range(2, int(max_page) + 1):
                 page = self.get_action_page(bill_url, counter)
+                if page is None:
+                    self.warning(
+                        "Skipping action page {} for {} -- fetch failed".format(
+                            counter, bill_url
+                        )
+                    )
+                    continue
                 yield from self.scrape_action_page(bill, page)
                 # https://malegislature.gov/Bills/189/S3/BillHistory?pageNumber=2
 
     def get_action_page(self, bill_url, page_number):
         actions_url = "{}/BillHistory?pageNumber={}".format(bill_url, page_number)
-        return lxml.html.fromstring(self.get_as_ajax(actions_url).text)
+        response = self.get_as_ajax(actions_url)
+        if response is None:
+            return None
+        return lxml.html.fromstring(response.text)
 
     def scrape_action_page(self, bill, page):
         action_rows = page.xpath("//tbody/tr")
@@ -391,12 +407,20 @@ class MABillScraper(Scraper):
                         bill.legislative_session, action_year
                     )
                 )
-                self.scrape_house_vote(cached_vote, housevote_pdf, n_supplement)
-                cached_vote.add_source(housevote_pdf)
-
-                cached_vote.dedupe_key = "{}#{}".format(housevote_pdf, n_supplement)
-
-                yield cached_vote
+                if (
+                    self.scrape_house_vote(cached_vote, housevote_pdf, n_supplement)
+                    is False
+                ):
+                    self.warning(
+                        "Skipping vote {} supplement #{} -- roll call fetch "
+                        "failed".format(housevote_pdf, n_supplement)
+                    )
+                else:
+                    cached_vote.add_source(housevote_pdf)
+                    cached_vote.dedupe_key = "{}#{}".format(
+                        housevote_pdf, n_supplement
+                    )
+                    yield cached_vote
 
             # Senate votes
             if "Roll Call" in action_name:
@@ -436,10 +460,16 @@ class MABillScraper(Scraper):
                     rollcall_pdf = "http://malegislature.gov" + row.xpath(
                         "string(td[3]/a/@href)"
                     )
-                    self.scrape_senate_vote(cached_vote, rollcall_pdf)
-                    cached_vote.add_source(rollcall_pdf)
-                    cached_vote.dedupe_key = rollcall_pdf
-                    yield cached_vote
+                    if self.scrape_senate_vote(cached_vote, rollcall_pdf) is False:
+                        self.warning(
+                            "Skipping vote {} -- roll call fetch failed".format(
+                                rollcall_pdf
+                            )
+                        )
+                    else:
+                        cached_vote.add_source(rollcall_pdf)
+                        cached_vote.dedupe_key = rollcall_pdf
+                        yield cached_vote
 
             attrs = self.categorizer.categorize(action_name)
             action = bill.add_action(
@@ -455,7 +485,11 @@ class MABillScraper(Scraper):
     def get_house_pdf(self, vurl):
         """cache house PDFs since they are done by year"""
         if vurl not in self.house_pdf_cache:
-            (path, resp) = self.urlretrieve(vurl)
+            try:
+                (path, resp) = self.urlretrieve(vurl)
+            except requests.exceptions.RequestException:
+                self.warning("Server Error on {}".format(vurl))
+                return None
             pdflines = convert_pdf(path, "text")
             os.remove(path)
             self.house_pdf_cache[vurl] = pdflines.decode("utf-8").replace("\u2019", "'")
@@ -463,6 +497,8 @@ class MABillScraper(Scraper):
 
     def scrape_house_vote(self, vote, vurl, supplement):
         pdflines = self.get_house_pdf(vurl)
+        if pdflines is None:
+            return False
         # get pdf data from supplement number
         try:
             vote_text = pdflines.split("No. " + str(supplement))[1].split(
@@ -514,7 +550,11 @@ class MABillScraper(Scraper):
 
     def scrape_senate_vote(self, vote, vurl):
         # download file to server
-        (path, resp) = self.urlretrieve(vurl)
+        try:
+            (path, resp) = self.urlretrieve(vurl)
+        except requests.exceptions.RequestException:
+            self.warning("Server Error on {}".format(vurl))
+            return False
         pdflines = convert_pdf(path, "text")
         os.remove(path)
 
@@ -566,7 +606,11 @@ class MABillScraper(Scraper):
         s = requests.Session()
         s.verify = False
         s.headers.update({"X-Requested-With": "XMLHttpRequest"})
-        return s.get(url)
+        try:
+            return s.get(url)
+        except requests.exceptions.RequestException:
+            self.warning("Server Error on {}".format(url))
+            return None
 
     def replace_non_digits(self, str):
         return re.sub(r"[^\d]", "", str).strip()
