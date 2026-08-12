@@ -761,6 +761,15 @@ class HouseSearchPage(HtmlListPage):
     )
     selector = XPath('//a[contains(@href, "/Bills/billsdetail.aspx?BillId=")]/@href')
 
+    # Bounded retry budget for accept_response's transient-failure branches below
+    # (OPEN-63). Passed as _FLHouseWAFSource's own `retries` so spatula's built-in
+    # retry loop (Page._fetch_data) has a matching total budget -- accept_response
+    # always gives up (returns True) with at least one spatula attempt to spare,
+    # so it can never let spatula's own retries run out and raise RejectedResponse
+    # (which would crash the whole scrape). See accept_response for the actual
+    # retry/give-up logic.
+    HOUSE_SEARCH_MAX_ATTEMPTS = 3
+
     def get_source_from_input(self):
         url = "https://flhouse.gov/Sections/Bills/bills.aspx"
         # Keep the digits, as of 2025 flhouse.gov seems to be stripping any trailing letters
@@ -785,7 +794,7 @@ class HouseSearchPage(HtmlListPage):
                 "Host": "flhouse.gov",
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
             },
-            retries=3,
+            retries=self.HOUSE_SEARCH_MAX_ATTEMPTS,
             verify=False,
         )
 
@@ -809,27 +818,64 @@ class HouseSearchPage(HtmlListPage):
                 f"Bill not found on flhouse.gov at {response.url}; skipping house committee votes"
             )
             return True
-        elif len(request_rejected_msg) > 0:
-            # F5 WAF still rejected us despite the fresh session minted by
-            # _FLHouseWAFSource. Accept the empty page so the scrape continues
-            # (spatula would otherwise raise RejectedResponse and crash the run);
-            # House votes for this bill are skipped. This should now be rare —
-            # the stale-cookie case that used to make this fire on every request
-            # past the 1-hour mark is handled by dropping cookies per request.
+
+        # attempts is 1-indexed: this is the Nth time accept_response has been
+        # called for this page's source (spatula re-invokes it once per retry).
+        attempts = getattr(self, "_house_search_attempts", 0) + 1
+        self._house_search_attempts = attempts
+        is_final_attempt = attempts >= self.HOUSE_SEARCH_MAX_ATTEMPTS
+
+        if len(request_rejected_msg) > 0:
+            if not is_final_attempt:
+                # F5 WAF rejected us despite the fresh session minted by
+                # _FLHouseWAFSource (OPEN-27's stale-cookie fix). Reject the
+                # response (spatula retries: fresh get_response() call, which
+                # re-triggers _FLHouseWAFSource's cookie-drop, after a short
+                # sleep) instead of always accepting on the first try — that
+                # accept-everything behavior is exactly the OPEN-63 gap: a
+                # transient, one-off WAF challenge unrelated to cookie
+                # staleness permanently zeroed this bill's House committee
+                # votes with zero retries at any level.
+                self.logger.warning(
+                    f"flhouse.gov WAF rejection at {response.url}; "
+                    f"retrying (attempt {attempts}/{self.HOUSE_SEARCH_MAX_ATTEMPTS})"
+                )
+                return False
+            # Retries exhausted -- accept so spatula doesn't raise RejectedResponse
+            # and crash the run; House votes for this bill are skipped, same as
+            # before this fix, just only after really trying.
             self.logger.warning(
-                f"flhouse.gov WAF rejection persists at {response.url}; "
-                "skipping house committee votes for this bill"
+                f"flhouse.gov WAF rejection persists at {response.url} after "
+                f"{attempts} attempts; skipping house committee votes for this bill"
             )
             return True
-        else:
-            return True
+
+        # Neither a genuine 404 nor a recognized WAF block page, but also check
+        # whether it actually contains what process_page's selector expects
+        # (OPEN-41's note recorded a "could not find bill in House Search"
+        # SelectorError miss even on a scrape with no WAF rejections at all --
+        # a search-page-shaped response that just came back empty). Retry that
+        # too, bounded the same way, before falling through to let process_page's
+        # existing SelectorError handling log the final skip.
+        has_results = bool(page.xpath(self.selector.xpath))
+        if not has_results and not is_final_attempt:
+            self.logger.warning(
+                f"flhouse.gov search returned no matching results at {response.url}; "
+                f"retrying (attempt {attempts}/{self.HOUSE_SEARCH_MAX_ATTEMPTS})"
+            )
+            return False
+        return True
 
     def process_item(self, item):
         source = URL(f"{item}", verify=False)
         return HouseBillPage(self.input, source=source)
 
     # Override so that we can handle occasional bill that does not show up in search
-    # by catching SelectorError
+    # by catching SelectorError. By the time we get here, accept_response has
+    # already retried an empty-results page HOUSE_SEARCH_MAX_ATTEMPTS times
+    # (OPEN-63) -- this is the defensive final catch for whatever's left after
+    # those retries: a bill genuinely absent from House's search, or (rarely)
+    # still-empty results despite retrying.
     def process_page(self) -> typing.Iterable[typing.Any]:
         if not self.selector:
             raise NotImplementedError("must either provide selector or override scrape")
