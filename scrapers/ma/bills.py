@@ -373,35 +373,14 @@ class MABillScraper(Scraper):
 
             action_name = row.xpath("string(td[3])")
 
-            # The action-history table's own hrefs carry MA's real
-            # multi-version-stage vocabulary (OPEN-36/OPEN-69): a "Signed by
-            # the Governor" row may link the enacted Chapter of the Acts,
-            # and other rows may cross-reference a different bill number
-            # that is a committee-substitute/amendment/conference-report
-            # stage of this bill.
+            # The action-history table's own hrefs cross-reference a
+            # different bill number that is a committee-substitute/
+            # amendment/conference-report stage of this bill (OPEN-36/
+            # OPEN-69 Tier 2). The enacted Chapter-of-the-Acts link on
+            # "Signed by the Governor" rows is intentionally NOT handled
+            # here -- that's OPEN-37's scope (needs add_version_link() to
+            # feed OPEN-34's diff pipeline, not a citation).
             for href in row.xpath("td[3]//a/@href"):
-                chapter_match = re.search(
-                    r"^/Laws/SessionLaws/Acts/(\d{4})/Chapter(\d+)$", href
-                )
-                if chapter_match:
-                    # That page is plain HTML with no PDF, so it's captured
-                    # as a citation (mirroring scrapers/de/bills.py's
-                    # SessionLaws/Chapter handling) rather than a
-                    # version_link -- folding it into bill.versions would
-                    # risk it being swept into OPEN-34's PDF-diffing
-                    # pipeline, which only makes sense for bill-text PDFs.
-                    chapter_year, chapter_number = chapter_match.groups()
-                    bill.add_citation(
-                        "Acts of Massachusetts",
-                        "Chapter {} of the Acts of {}".format(
-                            chapter_number, chapter_year
-                        ),
-                        "chapter",
-                        url="https://malegislature.gov{}".format(href),
-                        effective=action_date,
-                    )
-                    continue
-
                 bill_ref_match = re.match(r"^/Bills/\d+/([A-Za-z]+\d+)/?$", href)
                 if bill_ref_match:
                     # relation_type="related" (not "replaces"/"replaced-by"):
