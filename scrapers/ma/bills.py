@@ -8,6 +8,7 @@ import lxml.html
 from openstates.scrape import Scraper, Bill, VoteEvent
 from classify_motion import classify_motion
 from openstates.utils import convert_pdf
+from openstates.utils.transformers import fix_bill_id
 
 from .actions import Categorizer
 
@@ -371,6 +372,58 @@ class MABillScraper(Scraper):
                 action_actor = self.chamber_map_reverse[action_actor.strip()]
 
             action_name = row.xpath("string(td[3])")
+
+            # The action-history table's own hrefs carry MA's real
+            # multi-version-stage vocabulary (OPEN-36/OPEN-69): a "Signed by
+            # the Governor" row may link the enacted Chapter of the Acts,
+            # and other rows may cross-reference a different bill number
+            # that is a committee-substitute/amendment/conference-report
+            # stage of this bill.
+            for href in row.xpath("td[3]//a/@href"):
+                chapter_match = re.search(
+                    r"^/Laws/SessionLaws/Acts/(\d{4})/Chapter(\d+)$", href
+                )
+                if chapter_match:
+                    # That page is plain HTML with no PDF, so it's captured
+                    # as a citation (mirroring scrapers/de/bills.py's
+                    # SessionLaws/Chapter handling) rather than a
+                    # version_link -- folding it into bill.versions would
+                    # risk it being swept into OPEN-34's PDF-diffing
+                    # pipeline, which only makes sense for bill-text PDFs.
+                    chapter_year, chapter_number = chapter_match.groups()
+                    bill.add_citation(
+                        "Acts of Massachusetts",
+                        "Chapter {} of the Acts of {}".format(
+                            chapter_number, chapter_year
+                        ),
+                        "chapter",
+                        url="https://malegislature.gov{}".format(href),
+                        effective=action_date,
+                    )
+                    continue
+
+                bill_ref_match = re.match(r"^/Bills/\d+/([A-Za-z]+\d+)/?$", href)
+                if bill_ref_match:
+                    # relation_type="related" (not "replaces"/"replaced-by"):
+                    # OPEN-36 found these cross-references form a directed
+                    # stage chain, not a clean linear supersession, and
+                    # picking a direction here would presuppose the
+                    # canonical-bill answer OPEN-69 explicitly defers (see
+                    # notes/ma-open-69-stage-chain-design-*.md).
+                    ref_bill_id = fix_bill_id(bill_ref_match.group(1))
+                    if ref_bill_id == fix_bill_id(bill.identifier):
+                        continue
+                    already_related = any(
+                        rb["identifier"] == ref_bill_id
+                        and rb["relation_type"] == "related"
+                        for rb in bill.related_bills
+                    )
+                    if not already_related:
+                        bill.add_related_bill(
+                            bill_ref_match.group(1),
+                            legislative_session=bill.legislative_session,
+                            relation_type="related",
+                        )
 
             # House votes
             if "Supplement" in action_name:
