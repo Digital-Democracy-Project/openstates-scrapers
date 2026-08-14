@@ -372,6 +372,25 @@ class MABillScraper(Scraper):
 
             action_name = row.xpath("string(td[3])")
 
+            # OPEN-37: a "Signed by the Governor" action row links the enacted
+            # Chapter-of-the-Acts text (e.g. /Laws/SessionLaws/Acts/2025/Chapter15) --
+            # capture it as a second, distinctly-noted bill version so OPEN-34's diff
+            # pipeline can diff introduced text against enacted text. The chapter page is
+            # plain HTML with no PDF variant (verified 2026-08-14 against all 3 bills this
+            # ticket names -- H972/Ch.15, H4100/Ch.3, H4004/Ch.18 of 2025 -- plus two more
+            # real examples from other years).
+            for href in row.xpath("td[3]//a/@href"):
+                chapter_match = re.search(
+                    r"^/Laws/SessionLaws/Acts/(\d{4})/Chapter(\d+)$", href
+                )
+                if chapter_match:
+                    bill.add_version_link(
+                        "Chapter Law Text (Enacted)",
+                        "https://malegislature.gov{}".format(href),
+                        media_type="text/html",
+                    )
+                    break
+
             # House votes
             if "Supplement" in action_name:
                 actor = "lower"

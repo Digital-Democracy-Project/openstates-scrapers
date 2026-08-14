@@ -13,7 +13,9 @@ import os
 import sys
 from unittest import mock
 
+import lxml.html
 import requests
+from openstates.scrape import Bill
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
 
@@ -162,3 +164,95 @@ def test_scrape_house_vote_returns_false_when_pdf_fetch_fails(monkeypatch):
     )
 
     assert result is False
+
+
+# ── scrape_action_page (OPEN-37: enacted Chapter-of-the-Acts version link) ──
+#
+# Real malegislature.gov BillHistory markup (fetched 2026-08-14) for H972 (session 194,
+# enacted Chapter 15 of the Acts of 2025 -- one of the exact bills OPEN-37 names):
+#
+#   <td>Executive</td>
+#   <td>Signed by the Governor, <a href='/Laws/SessionLaws/Acts/2025/Chapter15'>
+#   Chapter 15 of the Acts of 2025</a></td>
+#
+# Fixtures use a real Bill object (not a bare Mock) because add_version_link populates
+# bill.versions, which a Mock doesn't do realistically.
+
+def _action_page(row_html):
+    return lxml.html.fromstring("<table><tbody>{}</tbody></table>".format(row_html))
+
+
+def _bill(identifier="H972", legislative_session="194th"):
+    return Bill(
+        identifier,
+        legislative_session=legislative_session,
+        title="test bill",
+        classification="bill",
+    )
+
+
+def test_scrape_action_page_captures_chapter_law_version_link():
+    scraper = make_scraper()
+    bill = _bill("H972", "194th")
+    page = _action_page(
+        "<tr><td>8/5/2025</td><td>Executive</td>"
+        "<td>Signed by the Governor, "
+        "<a href='/Laws/SessionLaws/Acts/2025/Chapter15'>"
+        "Chapter 15 of the Acts of 2025</a></td></tr>"
+    )
+
+    list(scraper.scrape_action_page(bill, page))
+
+    versions = [v for v in bill.versions if v["note"] == "Chapter Law Text (Enacted)"]
+    assert len(versions) == 1
+    assert versions[0]["links"] == [
+        {
+            "url": "https://malegislature.gov/Laws/SessionLaws/Acts/2025/Chapter15",
+            "media_type": "text/html",
+        }
+    ]
+
+
+def test_scrape_action_page_h4100_chapter3_example():
+    scraper = make_scraper()
+    bill = _bill("H4100", "194th")
+    page = _action_page(
+        "<tr><td>5/15/2025</td><td>Executive</td>"
+        "<td>Signed by the Governor, "
+        "<a href='/Laws/SessionLaws/Acts/2025/Chapter3'>"
+        "Chapter 3 of the Acts of 2025</a></td></tr>"
+    )
+
+    list(scraper.scrape_action_page(bill, page))
+
+    versions = [v for v in bill.versions if v["note"] == "Chapter Law Text (Enacted)"]
+    assert len(versions) == 1
+    assert versions[0]["links"][0]["url"] == (
+        "https://malegislature.gov/Laws/SessionLaws/Acts/2025/Chapter3"
+    )
+
+
+def test_scrape_action_page_skips_version_link_for_governor_row_without_chapter_link():
+    scraper = make_scraper()
+    bill = _bill()
+    page = _action_page(
+        "<tr><td>7/29/2024</td><td>Executive</td>"
+        "<td>Signed by the Governor</td></tr>"
+    )
+
+    list(scraper.scrape_action_page(bill, page))
+
+    assert [v for v in bill.versions if v["note"] == "Chapter Law Text (Enacted)"] == []
+
+
+def test_scrape_action_page_skips_version_link_for_ordinary_action_row():
+    scraper = make_scraper()
+    bill = _bill()
+    page = _action_page(
+        "<tr><td>6/15/2022</td><td>House</td>"
+        "<td>Referred to the committee on Ways and Means</td></tr>"
+    )
+
+    list(scraper.scrape_action_page(bill, page))
+
+    assert bill.versions == []
