@@ -166,17 +166,25 @@ def test_scrape_house_vote_returns_false_when_pdf_fetch_fails(monkeypatch):
     assert result is False
 
 
-# ── scrape_action_page (OPEN-37: enacted Chapter-of-the-Acts version link) ──
+# ── scrape_action_page (OPEN-37: enacted Chapter-of-the-Acts version link;
+# OPEN-69: stage cross-reference related_bill edges) ──
 #
-# Real malegislature.gov BillHistory markup (fetched 2026-08-14) for H972 (session 194,
-# enacted Chapter 15 of the Acts of 2025 -- one of the exact bills OPEN-37 names):
+# Real malegislature.gov BillHistory markup (fetched 2026-08-13/14) for H972 (session 194,
+# enacted Chapter 15 of the Acts of 2025 -- one of the exact bills OPEN-37 names) and S2584
+# (session 192, whose history cross-references S2572/H4879/H4891/S3097 as stage documents):
 #
 #   <td>Executive</td>
 #   <td>Signed by the Governor, <a href='/Laws/SessionLaws/Acts/2025/Chapter15'>
 #   Chapter 15 of the Acts of 2025</a></td>
 #
-# Fixtures use a real Bill object (not a bare Mock) because add_version_link populates
-# bill.versions, which a Mock doesn't do realistically.
+#   <td>House</td>
+#   <td>...the amendment (<a href='/Bills/192/H4879'>H4879</a>) pending</td>
+#
+# Note the single-quoted href attributes -- lxml parses it the same either way, but fixtures
+# below mirror the real markup rather than double-quoting it. Fixtures use a real Bill object
+# (not a bare Mock) because add_version_link populates bill.versions and the cross-reference
+# logic reads bill.identifier/bill.related_bills, neither of which a Mock populates
+# realistically.
 
 def _action_page(row_html):
     return lxml.html.fromstring("<table><tbody>{}</tbody></table>".format(row_html))
@@ -256,3 +264,103 @@ def test_scrape_action_page_skips_version_link_for_ordinary_action_row():
     list(scraper.scrape_action_page(bill, page))
 
     assert bill.versions == []
+
+
+def test_scrape_action_page_adds_related_bill_for_stage_cross_reference():
+    scraper = make_scraper()
+    bill = _bill("S2584", "192nd")
+    page = _action_page(
+        "<tr><td>6/16/2022</td><td>House</td>"
+        "<td>For text of amendment, see "
+        "<a href='/Bills/192/H4891'>H4891</a></td></tr>"
+    )
+
+    list(scraper.scrape_action_page(bill, page))
+
+    assert bill.related_bills == [
+        {
+            "identifier": "H 4891",
+            "legislative_session": "192nd",
+            "relation_type": "related",
+        }
+    ]
+
+
+def test_scrape_action_page_dedupes_repeated_stage_cross_reference():
+    # The same referenced bill-id can appear across multiple action rows
+    # (e.g. a pending amendment mentioned more than once) -- must only add
+    # one related_bill edge.
+    scraper = make_scraper()
+    bill = _bill("S2584", "192nd")
+    page = _action_page(
+        "<tr><td>6/15/2022</td><td>House</td>"
+        "<td>Amendment (<a href='/Bills/192/H4879'>H4879</a>) pending</td></tr>"
+        "<tr><td>6/16/2022</td><td>House</td>"
+        "<td>Reconsideration of <a href='/Bills/192/H4879'>H4879</a></td></tr>"
+    )
+
+    list(scraper.scrape_action_page(bill, page))
+
+    assert bill.related_bills == [
+        {
+            "identifier": "H 4879",
+            "legislative_session": "192nd",
+            "relation_type": "related",
+        }
+    ]
+
+
+def test_scrape_action_page_skips_self_reference_for_stage_cross_reference():
+    scraper = make_scraper()
+    bill = _bill("H4879", "192nd")
+    page = _action_page(
+        "<tr><td>6/15/2022</td><td>House</td>"
+        "<td>Text of <a href='/Bills/192/H4879'>H4879</a>, printed as amended"
+        "</td></tr>"
+    )
+
+    list(scraper.scrape_action_page(bill, page))
+
+    assert bill.related_bills == []
+
+
+def test_scrape_action_page_ignores_rollcall_and_committee_links():
+    # RollCall PDF hrefs and Committee-detail hrefs are already handled
+    # elsewhere in the file (Senate vote scraping, categorizer committees)
+    # and must not be misidentified as bill cross-references.
+    scraper = make_scraper()
+    bill = _bill("S3097", "192nd")
+    page = _action_page(
+        "<tr><td>8/1/2022</td><td>Senate</td>"
+        "<td>Committee of conference report accepted -see "
+        "<a href='/RollCall/192/SenateRollCall260.pdf'>Roll Call #260</a>"
+        " (Yeas 39 to Nays 0)</td></tr>"
+        "<tr><td>8/1/2022</td><td>House</td>"
+        "<td>Referred to the committee on "
+        "<a href='/Committees/Detail/H52'>House Steering</a></td></tr>"
+    )
+
+    list(scraper.scrape_action_page(bill, page))
+
+    assert bill.related_bills == []
+
+
+def test_scrape_action_page_adds_related_bill_for_conference_report_backreference():
+    # Real S3097 markup: a conference-report bill's own history links back
+    # to the bill it reconciles ("Reported on S2584").
+    scraper = make_scraper()
+    bill = _bill("S3097", "192nd")
+    page = _action_page(
+        "<tr><td>8/1/2022</td><td>Senate</td>"
+        "<td>Reported on <a href='/Bills/192/S2584'>S2584</a></td></tr>"
+    )
+
+    list(scraper.scrape_action_page(bill, page))
+
+    assert bill.related_bills == [
+        {
+            "identifier": "S 2584",
+            "legislative_session": "192nd",
+            "relation_type": "related",
+        }
+    ]
