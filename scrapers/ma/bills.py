@@ -373,14 +373,26 @@ class MABillScraper(Scraper):
 
             action_name = row.xpath("string(td[3])")
 
-            # The action-history table's own hrefs cross-reference a
-            # different bill number that is a committee-substitute/
-            # amendment/conference-report stage of this bill (OPEN-36/
-            # OPEN-69 Tier 2). The enacted Chapter-of-the-Acts link on
-            # "Signed by the Governor" rows is intentionally NOT handled
-            # here -- that's OPEN-37's scope (needs add_version_link() to
-            # feed OPEN-34's diff pipeline, not a citation).
+            # The action-history table's own hrefs carry two independent signals:
+            # OPEN-37's enacted Chapter-of-the-Acts link (captured as a second,
+            # distinctly-noted bill version so OPEN-34's diff pipeline can diff
+            # introduced text against enacted text), and OPEN-36/OPEN-69 Tier 2's
+            # cross-references to a different bill number that is a committee-
+            # substitute/amendment/conference-report stage of this bill (captured
+            # as a related_bill edge, not a version -- see
+            # notes/ma-open-69-stage-chain-design-*.md for why).
             for href in row.xpath("td[3]//a/@href"):
+                chapter_match = re.search(
+                    r"^/Laws/SessionLaws/Acts/(\d{4})/Chapter(\d+)$", href
+                )
+                if chapter_match:
+                    bill.add_version_link(
+                        "Chapter Law Text (Enacted)",
+                        "https://malegislature.gov{}".format(href),
+                        media_type="text/html",
+                    )
+                    continue
+
                 bill_ref_match = re.match(r"^/Bills/\d+/([A-Za-z]+\d+)/?$", href)
                 if bill_ref_match:
                     # relation_type="related" (not "replaces"/"replaced-by"):
