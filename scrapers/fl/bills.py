@@ -719,6 +719,79 @@ class UpperComVote(PdfPage):
         yield vote
 
 
+# Shared bounded-retry budget for the flhouse.gov House-vote chain's three
+# sequential hops (HouseSearchPage -> HouseBillPage -> HouseComVote). OPEN-63
+# gave HouseSearchPage its own retry against the F5 WAF's transient
+# "Request Rejected" page; OPEN-66 found the same stale-cookie/WAF condition
+# can hit hops 2 and 3 just as easily, but neither had any retry or logging at
+# all -- a bill's House committee votes could vanish completely silently. One
+# shared constant/helper (below) instead of three independent copies, so a
+# future 4th hop (or a change to the WAF's block-page markup) only needs
+# updating in one place -- mirrors scrapers/mi/_waf_circuit_breaker.py, which
+# exists for the same reason (OPEN-18 -> OPEN-22 -> OPEN-30 kept extending a
+# fix that started out living in only one call site).
+FLHOUSE_WAF_MAX_ATTEMPTS = 3
+
+
+def _flhouse_bill_label(page) -> str:
+    """Bill identifier for a House-vote-chain Page's log messages, tolerating
+    a missing/placeholder `.input` (e.g. a unit test constructing the Page
+    directly to exercise accept_response in isolation)."""
+    return getattr(page.input, "identifier", "unknown bill")
+
+
+def _is_flhouse_not_found_page(page) -> bool:
+    """True if `page` is flhouse.gov's genuine "page not found" response.
+
+    Distinct from a WAF block: this means the requested bill/vote really
+    doesn't exist at this URL, not that the WAF is (transiently) rejecting a
+    legitimate request -- so callers should accept it immediately with no
+    retry.
+    """
+    return len(page.xpath("//div[@class='page-404']")) > 0
+
+
+def _flhouse_waf_retry_verdict(
+    response: requests.Response,
+    page,
+    attempts: int,
+    max_attempts: int,
+    logger,
+    label: str,
+) -> typing.Optional[bool]:
+    """Shared WAF-"Request Rejected"-block detection for the House-vote
+    chain's accept_response hooks (OPEN-66, extending OPEN-63's HouseSearchPage
+    fix to all 3 hops).
+
+    `attempts` must already reflect this call (1-indexed; the caller
+    increments its own per-page attempt counter before calling this).
+    Returns True to accept the response, False to reject it (spatula retries:
+    a fresh get_response() call, which re-triggers _FLHouseWAFSource's
+    cookie-drop, after a short sleep), or None if this isn't a recognized WAF
+    block page -- callers should then apply their own page-specific judgment
+    about an otherwise-clean but unexpectedly empty response.
+    """
+    request_rejected_msg = page.xpath("//title[contains(text(), 'Request Rejected')]")
+    if len(request_rejected_msg) == 0:
+        return None
+
+    is_final_attempt = attempts >= max_attempts
+    if not is_final_attempt:
+        logger.warning(
+            f"flhouse.gov WAF rejection at {response.url} for {label}; "
+            f"retrying (attempt {attempts}/{max_attempts})"
+        )
+        return False
+    # Retries exhausted -- accept so spatula doesn't raise RejectedResponse
+    # and crash the run; this hop's data is skipped, same as before this fix,
+    # just only after really trying.
+    logger.warning(
+        f"flhouse.gov WAF rejection persists at {response.url} for {label} "
+        f"after {attempts} attempts; giving up"
+    )
+    return True
+
+
 class _FLHouseWAFSource(URL):
     """Source for flhouse.gov, which sits behind an F5 BIG-IP ASM WAF.
 
@@ -767,8 +840,10 @@ class HouseSearchPage(HtmlListPage):
     # always gives up (returns True) with at least one spatula attempt to spare,
     # so it can never let spatula's own retries run out and raise RejectedResponse
     # (which would crash the whole scrape). See accept_response for the actual
-    # retry/give-up logic.
-    HOUSE_SEARCH_MAX_ATTEMPTS = 3
+    # retry/give-up logic. Aliases the shared FLHOUSE_WAF_MAX_ATTEMPTS constant
+    # (OPEN-66) -- kept as its own class attribute since it predates that constant
+    # and existing tests reference it by this name.
+    HOUSE_SEARCH_MAX_ATTEMPTS = FLHOUSE_WAF_MAX_ATTEMPTS
 
     def get_source_from_input(self):
         url = "https://flhouse.gov/Sections/Bills/bills.aspx"
@@ -805,13 +880,7 @@ class HouseSearchPage(HtmlListPage):
         # <div class="page-404">
         # We're Sorry, the page you requested can not <br/> be located within FLHouse.gov
         page = lxml.html.fromstring(response.content)
-        # also can be a "request rejected" page that looks like
-        # <html><head><title>Request Rejected</title></head>
-        text_not_found_msg = page.xpath("//div[@class='page-404']")
-        request_rejected_msg = page.xpath(
-            "//title[contains(text(), 'Request Rejected')]"
-        )
-        if len(text_not_found_msg) > 0:
+        if _is_flhouse_not_found_page(page):
             # Bill simply doesn't exist on flhouse.gov — accept the empty page
             # so process_page yields nothing rather than crashing the scrape.
             self.logger.info(
@@ -823,32 +892,21 @@ class HouseSearchPage(HtmlListPage):
         # called for this page's source (spatula re-invokes it once per retry).
         attempts = getattr(self, "_house_search_attempts", 0) + 1
         self._house_search_attempts = attempts
-        is_final_attempt = attempts >= self.HOUSE_SEARCH_MAX_ATTEMPTS
 
-        if len(request_rejected_msg) > 0:
-            if not is_final_attempt:
-                # F5 WAF rejected us despite the fresh session minted by
-                # _FLHouseWAFSource (OPEN-27's stale-cookie fix). Reject the
-                # response (spatula retries: fresh get_response() call, which
-                # re-triggers _FLHouseWAFSource's cookie-drop, after a short
-                # sleep) instead of always accepting on the first try — that
-                # accept-everything behavior is exactly the OPEN-63 gap: a
-                # transient, one-off WAF challenge unrelated to cookie
-                # staleness permanently zeroed this bill's House committee
-                # votes with zero retries at any level.
-                self.logger.warning(
-                    f"flhouse.gov WAF rejection at {response.url}; "
-                    f"retrying (attempt {attempts}/{self.HOUSE_SEARCH_MAX_ATTEMPTS})"
-                )
-                return False
-            # Retries exhausted -- accept so spatula doesn't raise RejectedResponse
-            # and crash the run; House votes for this bill are skipped, same as
-            # before this fix, just only after really trying.
-            self.logger.warning(
-                f"flhouse.gov WAF rejection persists at {response.url} after "
-                f"{attempts} attempts; skipping house committee votes for this bill"
-            )
-            return True
+        # F5 WAF rejection ("Request Rejected" page) despite the fresh session
+        # minted by _FLHouseWAFSource (OPEN-27's stale-cookie fix) -- OPEN-66
+        # shares this detection+retry decision across all 3 House-vote hops
+        # (see _flhouse_waf_retry_verdict).
+        verdict = _flhouse_waf_retry_verdict(
+            response,
+            page,
+            attempts,
+            self.HOUSE_SEARCH_MAX_ATTEMPTS,
+            self.logger,
+            f"House search for {_flhouse_bill_label(self)}",
+        )
+        if verdict is not None:
+            return verdict
 
         # Neither a genuine 404 nor a recognized WAF block page, but also check
         # whether it actually contains what process_page's selector expects
@@ -856,7 +914,11 @@ class HouseSearchPage(HtmlListPage):
         # SelectorError miss even on a scrape with no WAF rejections at all --
         # a search-page-shaped response that just came back empty). Retry that
         # too, bounded the same way, before falling through to let process_page's
-        # existing SelectorError handling log the final skip.
+        # existing SelectorError handling log the final skip. This "empty result
+        # is worth retrying" judgment is local to HouseSearchPage, not shared --
+        # unlike here, HouseBillPage's equivalent empty case (no "See Votes"
+        # links) is a normal, common, non-error state (OPEN-66).
+        is_final_attempt = attempts >= self.HOUSE_SEARCH_MAX_ATTEMPTS
         has_results = bool(page.xpath(self.selector.xpath))
         if not has_results and not is_final_attempt:
             self.logger.warning(
@@ -867,7 +929,12 @@ class HouseSearchPage(HtmlListPage):
         return True
 
     def process_item(self, item):
-        source = URL(f"{item}", verify=False)
+        # _FLHouseWAFSource (not plain URL) so hop 2 gets the same
+        # stale-cookie-drop treatment as hop 1 before each request, matching
+        # HouseBillPage.accept_response's retry budget below (OPEN-66).
+        source = _FLHouseWAFSource(
+            f"{item}", verify=False, retries=FLHOUSE_WAF_MAX_ATTEMPTS
+        )
         return HouseBillPage(self.input, source=source)
 
     # Override so that we can handle occasional bill that does not show up in search
@@ -898,8 +965,54 @@ class HouseBillPage(HtmlListPage):
         "https://www.myfloridahouse.gov/Sections/Bills/billsdetail.aspx?BillId=69746"
     )
 
+    def accept_response(self, response: requests.Response):
+        # OPEN-66: this hop had no accept_response at all before -- a stale
+        # WAF cookie or transient rejection here silently yielded zero "See
+        # Votes" links (selector has min_items=0), indistinguishable in logs
+        # from a bill that genuinely had no House committee action.
+        page = lxml.html.fromstring(response.content)
+        if _is_flhouse_not_found_page(page):
+            self.logger.info(
+                f"House bill detail page not found on flhouse.gov at "
+                f"{response.url}; skipping house committee votes for "
+                f"{_flhouse_bill_label(self)}"
+            )
+            return True
+
+        attempts = getattr(self, "_house_bill_attempts", 0) + 1
+        self._house_bill_attempts = attempts
+
+        verdict = _flhouse_waf_retry_verdict(
+            response,
+            page,
+            attempts,
+            FLHOUSE_WAF_MAX_ATTEMPTS,
+            self.logger,
+            f"House bill detail for {_flhouse_bill_label(self)}",
+        )
+        if verdict is not None:
+            return verdict
+
+        # Zero "See Votes" links after passing the WAF/404 checks is a normal,
+        # common state (a bill with no House committee action) -- not itself
+        # an error, so it's accepted and not retried. Logged (info, not
+        # warning) so it's distinguishable from a WAF-drop, which now always
+        # logs its own warning above -- closing the observability gap AC2's
+        # multi-run sampling needs to tell "genuinely no votes" apart from
+        # "silently dropped."
+        if not page.xpath(self.selector.xpath):
+            self.logger.info(
+                f"No 'See Votes' links found for {_flhouse_bill_label(self)} at "
+                f"{response.url}; likely no House committee action recorded"
+            )
+        return True
+
     def process_item(self, item):
-        source = URL(f"{item}", verify=False)
+        # _FLHouseWAFSource (not plain URL) so hop 3 gets the same
+        # stale-cookie-drop treatment as hops 1/2 before each request (OPEN-66).
+        source = _FLHouseWAFSource(
+            f"{item}", verify=False, retries=FLHOUSE_WAF_MAX_ATTEMPTS
+        )
         return HouseComVote(self.input, source=source)
 
 
@@ -911,6 +1024,34 @@ class HouseComVote(HtmlPage):
         "https://www.myfloridahouse.gov/Sections/Committees/billvote.aspx?"
         "VoteId=54381&IsPCB=0&BillId=69746"
     )
+
+    def accept_response(self, response: requests.Response):
+        # OPEN-66: this hop (like HouseBillPage) had no accept_response at
+        # all before -- a stale WAF cookie or transient rejection here
+        # silently produced a page with no lblTotal span, which process_page
+        # already guards against but never explained.
+        page = lxml.html.fromstring(response.content)
+        if _is_flhouse_not_found_page(page):
+            self.logger.info(
+                f"House committee vote page not found on flhouse.gov at "
+                f"{response.url}; skipping vote for {_flhouse_bill_label(self)}"
+            )
+            return True
+
+        attempts = getattr(self, "_house_com_vote_attempts", 0) + 1
+        self._house_com_vote_attempts = attempts
+
+        verdict = _flhouse_waf_retry_verdict(
+            response,
+            page,
+            attempts,
+            FLHOUSE_WAF_MAX_ATTEMPTS,
+            self.logger,
+            f"House committee vote for {_flhouse_bill_label(self)}",
+        )
+        if verdict is not None:
+            return verdict
+        return True
 
     def process_page(self):
         # Checks to see if any vote totals are provided
@@ -981,6 +1122,17 @@ class HouseComVote(HtmlPage):
                     raise ValueError("Unknown vote type found: {}".format(member_vote))
 
             return vote
+        else:
+            # OPEN-66: this was fully silent before -- reaching this page at
+            # all means a real "See Votes" link was already followed
+            # (HouseBillPage's selector isn't min_items=0-empty-tolerant the
+            # way it is for the "no links at all" case), so an empty result
+            # here is more suspicious than HouseBillPage's equivalent case.
+            self.logger.warning(
+                f"No vote totals found on House committee vote page "
+                f"{self.source.url} for {_flhouse_bill_label(self)}; passed "
+                "WAF/404 checks but expected vote-tally spans are missing"
+            )
 
 
 class FlBillScraper(Scraper):
