@@ -13,11 +13,21 @@ OPEN-30 extends registration to MIBillScraper.parse_roll_call(), which
 (unlike the two call sites above) catches both scrapelib.HTTPError and
 WafBlockDetected in one except block -- so _register_waf_block_or_abort()
 below accepts either exception type.
+
+OPEN-54: the actual threshold-check/abort decision now lives in
+openstates.utils.waf_circuit_breaker (shared with the archiver's own circuit
+breaker, OPEN-52), and the threshold value itself comes from MI's resilience
+profile rather than being hardcoded here -- this module is now a thin,
+MI-specific wrapper kept for its existing call sites (bills.py/events.py's
+self._register_waf_block_or_abort()/self._register_waf_success()) and its
+existing per-instance `_consecutive_waf_blocks` attribute, both left
+unchanged so nothing calling into this mixin needed to change.
 """
 
-from openstates.exceptions import ScrapeError
+from openstates.utils.resilience_profiles import RESILIENCE_PROFILES
+from openstates.utils.waf_circuit_breaker import raise_if_waf_block_threshold_reached
 
-MAX_CONSECUTIVE_WAF_BLOCKS = 3
+MAX_CONSECUTIVE_WAF_BLOCKS = RESILIENCE_PROFILES["mi"].circuit_breaker_max_consecutive_blocks
 
 
 class MIWafCircuitBreakerMixin:
@@ -45,12 +55,13 @@ class MIWafCircuitBreakerMixin:
             f"Skipping {item_label}: WAF block detected even after cookie "
             f"re-warm ({exc}) -- consecutive blocks: {self._consecutive_waf_blocks}"
         )
-        if self._consecutive_waf_blocks >= MAX_CONSECUTIVE_WAF_BLOCKS:
-            raise ScrapeError(
-                f"{scrape_label} aborted: {self._consecutive_waf_blocks} consecutive "
-                f"WAF blocks detected {fetch_description} -- legislature.mi.gov is "
-                "likely blocking this run entirely (OPEN-18)"
-            ) from exc
+        raise_if_waf_block_threshold_reached(
+            self._consecutive_waf_blocks,
+            MAX_CONSECUTIVE_WAF_BLOCKS,
+            exc,
+            scrape_label=scrape_label,
+            fetch_description=fetch_description,
+        )
 
     def _register_waf_success(self) -> None:
         self._consecutive_waf_blocks = 0
