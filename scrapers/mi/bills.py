@@ -66,6 +66,27 @@ BASE_URL = "https://legislature.mi.gov"
 # tuned without a redeploy.
 MI_SCRAPELIB_RPM = int(os.environ.get("MI_SCRAPELIB_RPM", 10))
 
+# OPEN-81: normalizes search-result link text (already short form, e.g. "HB 0001", "SJR A" --
+# scrape()'s own " of <year>" split already happened by the time this is called) into the same
+# compact bill_no shape a bill_no= request uses (HB1, SJRA -- leading zeros stripped from a
+# numeric suffix so "HB 0001" and a requested "HB1" compare equal regardless of which one has
+# padding). Longest-prefix-first so a 3-letter prefix (HJR/SJR/HCR/SCR) is never mis-split as a
+# 2-letter one (HB/SB/HR/SR) plus a leftover letter -- not actually ambiguous for this specific
+# prefix set (no 2-letter prefix is a string-prefix of any 3-letter one here), but checking
+# longest first is the safer general habit regardless.
+_MI_KNOWN_PREFIXES = ("HJR", "SJR", "HCR", "SCR", "HB", "SB", "HR", "SR")
+
+
+def _mi_bill_id_to_no(raw_bill_id: str) -> str:
+    compact = re.sub(r"\s", "", raw_bill_id).upper()
+    for prefix in _MI_KNOWN_PREFIXES:
+        if compact.startswith(prefix):
+            rest = compact[len(prefix):]
+            if rest.isdigit():
+                rest = str(int(rest))
+            return f"{prefix}{rest}"
+    return compact
+
 
 class MIResilientScraperMixin:
     """Shared http_resilience_mode configuration for MI's scrapers (OPEN-21).
@@ -178,7 +199,21 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         match = re.search(r"objectName=([^&]+)", url)
         return f"https://legislature.mi.gov/Bills/Bill?ObjectName={match.group(1)}"
 
-    def scrape(self, session, start=None):
+    # OPEN-81: bill_no can be set to one bill or a comma-separated list to target just those,
+    # e.g. os-update mi --scrape bills session=2025-2026 bill_no=HB4023,SB205
+    # Unlike FL (OPEN-77), MI has no separate list-page URL to filter server-side -- the single
+    # ExecuteSearch results page already returns every matching bill's link in one fetch, so
+    # bill_no just skips scrape_bill() (the expensive per-bill fetch) for non-matching links
+    # within that one search-results page, all still inside this one scrape()/circuit-breaker
+    # context, matching FL's same rationale (a real WAF block still gets the normal
+    # consecutive-failure handling, not a fresh cold-start process per bill).
+    def scrape(self, session, start=None, bill_no=None):
+        bill_nos = None
+        if bill_no:
+            # Normalized the same way as the real search-result links (_mi_bill_id_to_no) so
+            # e.g. a requested "HB1" matches a real link's "HB 0001" regardless of which side
+            # has the leading-zero padding.
+            bill_nos = {_mi_bill_id_to_no(b) for b in bill_no.split(",") if b.strip()}
         # self.headers is deliberately left alone here (OPEN-23): every actual request
         # built via mi_waf_get() gets its own explicit headers={"User-Agent": user_agent}
         # from the do_request parameter -- the real correctness mechanism, immune to
@@ -228,6 +263,8 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         ):
             bill_url = self.make_bill_url(link.xpath("@href")[0])
             bill_id = link.xpath("text()")[0].split(" of ")[0]
+            if bill_nos and _mi_bill_id_to_no(bill_id) not in bill_nos:
+                continue
             yield from self.scrape_bill(session, bill_id, bill_url)
 
     def scrape_bill(self, session: str, bill_id: str, url: str) -> None:
