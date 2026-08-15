@@ -233,3 +233,95 @@ def test_scrape_votes_skips_vote_on_persistent_fetch_failure_but_continues(monke
 
     assert votes == []
     assert scraper._consecutive_waf_blocks == 1
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# OPEN-81: bill_no= targeting -- scopes scrape() to just the requested bill(s)
+# within the one search-results fetch, instead of every matching bill.
+# ═══════════════════════════════════════════════════════════════════════════
+
+# Real search-result link text is short form ("HB 0001 of 2025"), confirmed live against
+# legislature.mi.gov -- distinct from the bill *detail* page's <h1 id="BillHeading"> long-form
+# heading ("House Bill No. 1") used elsewhere in this file. Conflating the two was a real bug
+# caught by a live test (OPEN-81): the original version of this fixture used the long form,
+# which made _mi_bill_id_to_no() match nothing against a real search page and yielded zero bills.
+SEARCH_RESULTS_HTML = b"""
+<html><body>
+<div class="tableScrollWrapper">
+<table><tbody>
+<tr><td><a href="/Bills/Bill?objectName=2025-HB-4023">HB 4023 of 2025</a></td></tr>
+<tr><td><a href="/Bills/Bill?objectName=2025-SB-0205">SB 0205 of 2025</a></td></tr>
+<tr><td><a href="/Bills/Bill?objectName=2025-HB-9999">HB 9999 of 2025</a></td></tr>
+</tbody></table>
+</div>
+</body></html>
+"""
+
+
+def _mock_search_page(monkeypatch):
+    class FakeResponse:
+        content = SEARCH_RESULTS_HTML
+
+    monkeypatch.setattr("mi.bills.mi_waf_get", lambda request_func: FakeResponse())
+
+
+def test_mi_bill_id_to_no_normalizes_search_result_text():
+    from mi.bills import _mi_bill_id_to_no
+
+    assert _mi_bill_id_to_no("HB 4023") == "HB4023"
+    assert _mi_bill_id_to_no("SB 0205") == "SB205"
+    assert _mi_bill_id_to_no("HB 0001") == "HB1"
+    assert _mi_bill_id_to_no("HJR A") == "HJRA"
+    assert _mi_bill_id_to_no("SCR 0003") == "SCR3"
+
+
+def test_scrape_with_bill_no_only_scrapes_the_matching_bill(monkeypatch):
+    scraper = _make_scraper()
+    _mock_search_page(monkeypatch)
+
+    scraped_ids = []
+    monkeypatch.setattr(
+        scraper,
+        "scrape_bill",
+        lambda session, bill_id, url: scraped_ids.append(bill_id) or iter(()),
+    )
+
+    list(scraper.scrape("2025-2026", bill_no="HB4023"))
+
+    assert scraped_ids == ["HB 4023"]
+
+
+def test_scrape_with_multi_bill_no_scrapes_all_requested_bills_only(monkeypatch):
+    scraper = _make_scraper()
+    _mock_search_page(monkeypatch)
+
+    scraped_ids = []
+    monkeypatch.setattr(
+        scraper,
+        "scrape_bill",
+        lambda session, bill_id, url: scraped_ids.append(bill_id) or iter(()),
+    )
+
+    list(scraper.scrape("2025-2026", bill_no="HB4023,SB205"))
+
+    assert scraped_ids == ["HB 4023", "SB 0205"]
+
+
+def test_scrape_without_bill_no_scrapes_every_bill_unchanged(monkeypatch):
+    scraper = _make_scraper()
+    _mock_search_page(monkeypatch)
+
+    scraped_ids = []
+    monkeypatch.setattr(
+        scraper,
+        "scrape_bill",
+        lambda session, bill_id, url: scraped_ids.append(bill_id) or iter(()),
+    )
+
+    list(scraper.scrape("2025-2026"))
+
+    assert scraped_ids == [
+        "HB 4023",
+        "SB 0205",
+        "HB 9999",
+    ]
