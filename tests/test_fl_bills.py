@@ -23,6 +23,7 @@ import sys
 from types import SimpleNamespace
 
 import lxml.html
+import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
 
@@ -32,6 +33,7 @@ from fl.bills import (  # noqa: E402
     HouseComVote,
     FLHOUSE_WAF_MAX_ATTEMPTS,
     _FLHouseWAFSource,
+    _FLHouseCookieProviderSource,
 )
 
 
@@ -295,8 +297,14 @@ def test_house_com_vote_missing_totals_logs_warning_via_process_page(caplog):
 
 # ═══════════════════════════════════════════════════════════════════════════
 # OPEN-66: regression guard -- hop 2 and hop 3 must construct their sources via
-# _FLHouseWAFSource, not plain URL, or the exact asymmetry that caused this
+# a WAF-aware source, not plain URL, or the exact asymmetry that caused this
 # ticket (fix landing on hop 1 only) will silently reappear.
+#
+# OPEN-84: that WAF-aware source is now _FLHouseCookieProviderSource (FL's real
+# resilience profile, OPEN-54) rather than _FLHouseWAFSource's blind
+# cookie-drop-and-retry -- these tests were updated in place rather than left
+# asserting the superseded class, since the whole point of OPEN-84 is that
+# _FLHouseWAFSource is no longer what any of the 3 hops actually fetch through.
 # ═══════════════════════════════════════════════════════════════════════════
 
 def test_house_search_page_builds_house_bill_page_source_via_waf_source():
@@ -305,7 +313,7 @@ def test_house_search_page_builds_house_bill_page_source_via_waf_source():
     bill_page = page.process_item("https://flhouse.gov/Sections/Bills/billsdetail.aspx?BillId=1")
 
     assert isinstance(bill_page, HouseBillPage)
-    assert isinstance(bill_page.source, _FLHouseWAFSource)
+    assert isinstance(bill_page.source, _FLHouseCookieProviderSource)
     assert bill_page.source.retries == FLHOUSE_WAF_MAX_ATTEMPTS
 
 
@@ -317,5 +325,71 @@ def test_house_bill_page_builds_house_com_vote_source_via_waf_source():
     )
 
     assert isinstance(vote_page, HouseComVote)
-    assert isinstance(vote_page.source, _FLHouseWAFSource)
+    assert isinstance(vote_page.source, _FLHouseCookieProviderSource)
     assert vote_page.source.retries == FLHOUSE_WAF_MAX_ATTEMPTS
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# OPEN-84: _FLHouseCookieProviderSource itself -- fetches via FL's resilience
+# profile (RESILIENCE_PROFILES["fl"]/FL_COOKIE_PROVIDER) instead of blindly
+# dropping/retrying cookies.
+# ═══════════════════════════════════════════════════════════════════════════
+
+def test_house_search_page_builds_its_own_source_via_cookie_provider():
+    page = HouseSearchPage(
+        SimpleNamespace(
+            identifier="HB 1",
+            legislative_session="2026",
+            _fl_house_session_number="113",
+        )
+    )
+    source = page.get_source_from_input()
+    assert isinstance(source, _FLHouseCookieProviderSource)
+    assert source.retries == HouseSearchPage.HOUSE_SEARCH_MAX_ATTEMPTS
+
+
+def test_cookie_provider_source_attaches_cached_cookies_and_real_user_agent():
+    from unittest import mock
+
+    source = _FLHouseCookieProviderSource(
+        "https://flhouse.gov/Sections/Bills/billsdetail.aspx?BillId=1", verify=False
+    )
+    fake_scraper = mock.Mock()
+    fake_scraper.request.return_value = mock.Mock(content=b"real content, no block markers")
+
+    with mock.patch(
+        "fl.bills.RESILIENCE_PROFILES"
+    ) as fake_profiles:
+        fake_profile = fake_profiles.__getitem__.return_value
+        fake_profile.cookie_provider.fetch_with_retry.side_effect = (
+            lambda do_request: do_request(
+                {"session_cookie_mfhp": "real-cookie-value"}, "Real Chrome UA"
+            )
+        )
+        response = source.get_response(fake_scraper)
+
+    assert response.content == b"real content, no block markers"
+    fake_scraper.request.assert_called_once()
+    call_kwargs = fake_scraper.request.call_args.kwargs
+    assert call_kwargs["cookies"] == {"session_cookie_mfhp": "real-cookie-value"}
+    assert call_kwargs["headers"]["User-Agent"] == "Real Chrome UA"
+
+
+def test_cookie_provider_source_raises_wafblockdetected_on_block_page():
+    from unittest import mock
+    from openstates.utils.cookie_provider import WafBlockDetected
+
+    source = _FLHouseCookieProviderSource(
+        "https://flhouse.gov/Sections/Bills/billsdetail.aspx?BillId=1", verify=False
+    )
+    fake_scraper = mock.Mock()
+    fake_scraper.request.return_value = mock.Mock(content=b"Request Rejected")
+
+    with mock.patch("fl.bills.RESILIENCE_PROFILES") as fake_profiles:
+        fake_profile = fake_profiles.__getitem__.return_value
+        fake_profile.cookie_provider.fetch_with_retry.side_effect = (
+            lambda do_request: do_request({"session_cookie_mfhp": "stale"}, "Some UA")
+        )
+
+        with pytest.raises(WafBlockDetected):
+            source.get_response(fake_scraper)

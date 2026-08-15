@@ -13,6 +13,8 @@ import requests
 from openstates.scrape import Bill, VoteEvent, Scraper
 from classify_motion import classify_motion
 from openstates.utils import format_datetime
+from openstates.utils.resilience_profiles import RESILIENCE_PROFILES
+from openstates.utils.cookie_provider import WafBlockDetected, content_matches_block_markers
 from requests.exceptions import ConnectionError, Timeout, RequestException
 from spatula import HtmlPage, HtmlListPage, XPath, SelectorError, PdfPage, URL, SkipItem
 
@@ -143,7 +145,15 @@ class BillList(HtmlListPage):
     dependencies = {"subjects": SubjectPDF}
 
     def get_source_from_input(self):
-        # to test scrape an individual bill, add &billNumber=1351
+        # Deliberately does NOT use flsenate.gov's own billNumber= filter (a substring
+        # match on a single bare number -- can't express a multi-bill target list, and
+        # narrowing to a single real item per process would also skip straight past
+        # _process_bill_list's consecutive-failure circuit breaker below, since that
+        # only ever sees one real item and never gets a chance to trigger its 5-minute
+        # WAF cooldown the way a real multi-bill scrape does). Exact matching against
+        # bill_no happens in process_item() instead; the extra list-page pagination
+        # cost of walking the full unfiltered session list is small next to the
+        # per-bill House-page cost it lets us skip for everything not requested.
         return URL(
             f"https://flsenate.gov/Session/Bills/{self.input['session']}?chamber=both",
             verify=False,
@@ -168,6 +178,10 @@ class BillList(HtmlListPage):
         bill_id = item.text.strip()
         title = item.xpath("string(../following-sibling::td[1])").strip()
         bill_url = item.attrib["href"] + "/ByCategory"
+
+        bill_nos = self.input.get("bill_nos")
+        if bill_nos and re.sub(r"\s", "", bill_id).upper() not in bill_nos:
+            raise SkipItem(f"{bill_id} does not match requested bill_no")
 
         start = self.input.get("start")
         if start is not None:
@@ -818,6 +832,54 @@ class _FLHouseWAFSource(URL):
         return super().get_response(scraper)
 
 
+class _FLHouseCookieProviderSource(URL):
+    """OPEN-84: fetches flhouse.gov via FL's resilience profile (OPEN-54's
+    RESILIENCE_PROFILES["fl"]/FL_COOKIE_PROVIDER) instead of _FLHouseWAFSource's blind
+    cookie-drop-and-retry above.
+
+    A live test (2026-08-15, OPEN-66's backfill investigation) found _FLHouseWAFSource's
+    approach fails 100% of the time against a real sustained WAF block: 3 rapid hits to the
+    identical URL within ~13-14 seconds is itself a plausible bot signature (this WAF blocks
+    on User-Agent alone, see fl_cookies.py), and that retry loop had never actually fired
+    against the live WAF before that test. A real Playwright-warmed cookie + matching
+    User-Agent (CookieProvider.fetch_with_retry -- the same invalidate-and-rewarm-once
+    contract MI's mi_waf_get() uses) got real content on the first attempt against bills that
+    100% failed via the old approach moments earlier.
+
+    accept_response()'s own WAF-classification/logging (_flhouse_waf_retry_verdict) is
+    unchanged and still gets a chance to retry -- spatula re-invokes get_response() on a
+    False verdict, which re-runs fetch_with_retry() here too, so a still-failing request gets
+    a fresh cookie re-warm on each spatula-level retry as well, not just fetch_with_retry's
+    own single internal one.
+    """
+
+    def get_response(self, scraper):
+        profile = RESILIENCE_PROFILES["fl"]
+
+        def do_request(cookies: dict, user_agent: str) -> requests.Response:
+            headers = dict(self.headers or {})
+            headers["User-Agent"] = user_agent
+            try:
+                resp = scraper.request(
+                    method=self.method,
+                    url=self.url,
+                    data=self.data,
+                    headers=headers,
+                    verify=self.verify,
+                    timeout=self.timeout,
+                    cookies=cookies,
+                )
+            except (ConnectionError, RemoteDisconnected, URLError, RequestException) as e:
+                raise WafBlockDetected(str(e)) from e
+            if content_matches_block_markers(resp.content):
+                raise WafBlockDetected(
+                    "response matched known WAF block-page heuristic"
+                )
+            return resp
+
+        return profile.cookie_provider.fetch_with_retry(do_request)
+
+
 class HouseSearchPage(HtmlListPage):
     """
     House committee roll calls are not available on the Senate's
@@ -861,12 +923,15 @@ class HouseSearchPage(HtmlListPage):
             ) from e
 
         form = {"Chamber": "B", "SessionId": session_number, "BillNumber": bill_number}
-        return _FLHouseWAFSource(
+        return _FLHouseCookieProviderSource(
             url + "?" + urlencode(form),
             method="GET",
             headers={
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
                 "Host": "flhouse.gov",
+                # OPEN-84: the actual outgoing User-Agent is now overridden per-request by
+                # _FLHouseCookieProviderSource with FL_COOKIE_PROVIDER's real captured UA --
+                # this one is only a fallback default for do_request's headers.update() base.
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
             },
             retries=self.HOUSE_SEARCH_MAX_ATTEMPTS,
@@ -929,10 +994,10 @@ class HouseSearchPage(HtmlListPage):
         return True
 
     def process_item(self, item):
-        # _FLHouseWAFSource (not plain URL) so hop 2 gets the same
-        # stale-cookie-drop treatment as hop 1 before each request, matching
-        # HouseBillPage.accept_response's retry budget below (OPEN-66).
-        source = _FLHouseWAFSource(
+        # _FLHouseCookieProviderSource (OPEN-84) so hop 2 fetches through FL's real
+        # resilience profile, same as hop 1, matching HouseBillPage.accept_response's
+        # retry budget below (OPEN-66).
+        source = _FLHouseCookieProviderSource(
             f"{item}", verify=False, retries=FLHOUSE_WAF_MAX_ATTEMPTS
         )
         return HouseBillPage(self.input, source=source)
@@ -1008,9 +1073,9 @@ class HouseBillPage(HtmlListPage):
         return True
 
     def process_item(self, item):
-        # _FLHouseWAFSource (not plain URL) so hop 3 gets the same
-        # stale-cookie-drop treatment as hops 1/2 before each request (OPEN-66).
-        source = _FLHouseWAFSource(
+        # _FLHouseCookieProviderSource (OPEN-84) so hop 3 fetches through FL's real
+        # resilience profile, same as hops 1/2 (OPEN-66).
+        source = _FLHouseCookieProviderSource(
             f"{item}", verify=False, retries=FLHOUSE_WAF_MAX_ATTEMPTS
         )
         return HouseComVote(self.input, source=source)
@@ -1150,7 +1215,12 @@ class FlBillScraper(Scraper):
             "scrapers/fl/__init__.py"
         )
 
-    def scrape(self, session=None, start=None):
+    # bill_no can be set to one bill or a comma-separated list to target just those,
+    # e.g. os-update fl --scrape bills session=2026 bill_no=HB53,HB99,HB243
+    # Deliberately a single scrape() call/circuit-breaker context for the whole list
+    # (not one process per bill) so a real WAF block still gets _process_bill_list's
+    # normal 3-consecutive-failures/5-minute cooldown, same as a full session scrape.
+    def scrape(self, session=None, start=None, bill_no=None):
         self.raise_errors = False
         self.retry_attempts = 5
         self.retry_wait_seconds = 5
@@ -1180,8 +1250,17 @@ class FlBillScraper(Scraper):
         # spatula's logging is better than scrapelib's
         logging.getLogger("scrapelib").setLevel(logging.WARNING)
 
+        bill_nos = None
+        if bill_no:
+            bill_nos = {re.sub(r"\s", "", b).upper() for b in bill_no.split(",") if b.strip()}
+
         bill_list = BillList(
-            {"session": session, "house_session_number": house_session_number, "start": start_dt}
+            {
+                "session": session,
+                "house_session_number": house_session_number,
+                "start": start_dt,
+                "bill_nos": bill_nos,
+            }
         )
 
         # Retry the bill-list walk itself without collapsing every bill into a list first
