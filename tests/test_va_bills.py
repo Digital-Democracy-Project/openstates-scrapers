@@ -88,3 +88,117 @@ def test_vote_source_url_falls_back_to_vote_id_when_batch_number_falsy(
         f"https://lis.virginia.gov/vote-details/HB30/20262/{expected_url_part}"
     )
     assert not source["url"].endswith("/None")
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# OPEN-80: bill_no= targeting -- scopes scrape() to just the requested bill(s)
+# within the one shared getlegislationlistasync list call, instead of every
+# bill in the session.
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+def _make_bill_row(number: str, legislation_id=None) -> dict:
+    return {
+        "LegislationNumber": number,
+        "Description": f"A bill about {number}",
+        "LegislationTitle": None,
+        "LegislationSummary": None,
+        "ChamberCode": "H" if number.startswith("H") else "S",
+        "LegislationID": legislation_id or number,
+    }
+
+
+BILL_LIST_ROWS = [
+    _make_bill_row("HB30"),
+    _make_bill_row("SB12"),
+    _make_bill_row("HB99"),
+]
+
+
+def _mock_bill_list(monkeypatch, rows=BILL_LIST_ROWS):
+    fake_response = mock.Mock()
+    fake_response.json.return_value = {"Legislations": rows}
+    monkeypatch.setattr(
+        "va.bills.requests.post", mock.Mock(return_value=fake_response)
+    )
+
+
+def _stub_detail_calls(monkeypatch, scraper) -> list:
+    """Stubs the four expensive per-bill calls; records the LegislationID passed
+    to _fetch_events (the first of the four) as a proxy for "this bill reached
+    full detail processing" -- fixture rows above set LegislationID equal to
+    LegislationNumber so assertions can compare directly against bill numbers.
+    """
+    reached_detail_processing = []
+    monkeypatch.setattr(
+        scraper,
+        "_fetch_events",
+        lambda legislation_id: reached_detail_processing.append(legislation_id) or [],
+    )
+    monkeypatch.setattr(scraper, "add_versions", lambda bill, legislation_id: None)
+    monkeypatch.setattr(scraper, "add_sponsors", lambda bill, legislation_id: None)
+    monkeypatch.setattr(scraper, "add_votes", lambda bill, legislation_id: iter(()))
+    return reached_detail_processing
+
+
+def _make_scraper_with_env(monkeypatch) -> VaBillScraper:
+    monkeypatch.setenv("VA_API_KEY", "test-key")
+    return VaBillScraper(Virginia(), "/tmp/")
+
+
+def test_scrape_with_bill_no_only_scrapes_the_matching_bill(monkeypatch):
+    scraper = _make_scraper_with_env(monkeypatch)
+    _mock_bill_list(monkeypatch)
+    reached_detail_processing = _stub_detail_calls(monkeypatch, scraper)
+
+    bills = list(scraper.scrape("2026S1", bill_no="HB30"))
+
+    assert reached_detail_processing == ["HB30"]
+    assert [b.identifier for b in bills] == ["HB30"]
+
+
+def test_scrape_with_multi_bill_no_scrapes_all_requested_bills_only(monkeypatch):
+    scraper = _make_scraper_with_env(monkeypatch)
+    _mock_bill_list(monkeypatch)
+    reached_detail_processing = _stub_detail_calls(monkeypatch, scraper)
+
+    bills = list(scraper.scrape("2026S1", bill_no="HB30,SB12"))
+
+    assert reached_detail_processing == ["HB30", "SB12"]
+    assert [b.identifier for b in bills] == ["HB30", "SB12"]
+
+
+def test_scrape_without_bill_no_scrapes_every_bill_unchanged(monkeypatch):
+    scraper = _make_scraper_with_env(monkeypatch)
+    _mock_bill_list(monkeypatch)
+    reached_detail_processing = _stub_detail_calls(monkeypatch, scraper)
+
+    bills = list(scraper.scrape("2026S1"))
+
+    assert reached_detail_processing == ["HB30", "SB12", "HB99"]
+    assert [b.identifier for b in bills] == ["HB30", "SB12", "HB99"]
+
+
+def test_scrape_with_bill_no_normalizes_case_and_whitespace(monkeypatch):
+    scraper = _make_scraper_with_env(monkeypatch)
+    _mock_bill_list(monkeypatch)
+    reached_detail_processing = _stub_detail_calls(monkeypatch, scraper)
+
+    bills = list(scraper.scrape("2026S1", bill_no=" hb30 , Sb12 "))
+
+    assert reached_detail_processing == ["HB30", "SB12"]
+    assert [b.identifier for b in bills] == ["HB30", "SB12"]
+
+
+def test_scrape_warns_on_unmatched_bill_no(monkeypatch):
+    scraper = _make_scraper_with_env(monkeypatch)
+    _mock_bill_list(monkeypatch)
+    _stub_detail_calls(monkeypatch, scraper)
+
+    warnings = []
+    monkeypatch.setattr(scraper, "warning", lambda msg: warnings.append(msg))
+
+    list(scraper.scrape("2026S1", bill_no="HB30,HB404"))
+
+    assert any("HB404" in msg for msg in warnings)
+    assert not any("HB30" in msg for msg in warnings)
