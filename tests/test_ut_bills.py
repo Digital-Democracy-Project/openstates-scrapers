@@ -244,6 +244,44 @@ def test_incremental_scrape_with_no_new_activity_raises_empty_scrape():
         )
 
 
+def test_incremental_scrape_with_zero_candidates_does_not_raise_empty_scrape():
+    # candidates_seen stays 0 here (bill_no matches nothing in the fixture
+    # list) -- this is the "billlist.jsp itself came back broken/empty" case,
+    # not "found real bills, all pre-dating start=", so it must NOT be
+    # treated as a legitimate empty scrape.
+    scraper = make_scraper()
+
+    bills = run_scrape_with_bill_results(
+        scraper,
+        bill_results={},
+        session="2026",
+        start="2026-08-09T01:02:43",
+        bill_no="HB9999",
+    )
+
+    assert bills == []
+
+
+def test_incremental_scrape_with_a_real_failure_does_not_raise_empty_scrape():
+    # A genuine per-bill failure (a malformed/rejected detail page, a parse
+    # error) must surface as-is, not be swallowed as a legitimate empty
+    # scrape just because nothing ended up yielded.
+    scraper = make_scraper()
+
+    def fake_lxmlize(url, raise_exceptions=False, verify=None):
+        return lxml.html.fromstring(FIXTURE_HTML)
+
+    def failing_scrape_bill(chamber, session, url, session_slug):
+        raise ValueError("boom: malformed detail page")
+        yield  # pragma: no cover -- makes this a generator function
+
+    scraper.lxmlize = fake_lxmlize
+    scraper.scrape_bill = failing_scrape_bill
+
+    with pytest.raises(ValueError, match="boom"):
+        list(scraper.scrape(session="2025S2", start="2026-08-09T01:02:43"))
+
+
 def test_incremental_scrape_with_some_new_activity_yields_it_without_raising():
     scraper = make_scraper()
     bill_results = {

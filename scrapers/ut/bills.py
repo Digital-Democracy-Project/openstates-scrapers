@@ -166,6 +166,14 @@ class UTBillScraper(Scraper, LXMLMixin):
         # active_sessions loop in openstates-core). EmptyScrape is the existing,
         # designed-for-this escape hatch: it tells do_scrape() this session's silence
         # was expected, so it warns and moves on instead of aborting the run.
+        #
+        # This relies on scrape_bill() only ever completing without yielding via
+        # scrape_bill_details_from_api()'s skip=True return, which itself only fires
+        # after successfully parsing actionHistoryList and confirming the bill's most
+        # recent action predates start= -- any other failure (a malformed/rejected
+        # detail page, a parse error) raises out of scrape_bill() instead of
+        # completing quietly, so it is not swallowed here. See
+        # test_incremental_scrape_with_a_real_failure_does_not_raise_empty_scrape.
         if self._start and candidates_seen and not yielded_count:
             raise EmptyScrape
 

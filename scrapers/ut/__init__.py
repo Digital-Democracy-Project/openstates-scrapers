@@ -484,6 +484,7 @@ class Utah(State):
     def get_session_list(self):
         last_error = None
         for attempt in range(1, _SESSION_LIST_MAX_ATTEMPTS + 1):
+            last_error = None
             try:
                 sessions = url_xpath(
                     "https://le.utah.gov/bills/billSearch.jsp",

@@ -73,8 +73,10 @@ def test_get_session_list_sends_a_browser_shaped_user_agent(monkeypatch):
 def test_get_session_list_retries_after_a_transient_empty_result(monkeypatch):
     _no_sleep(monkeypatch)
     responses = [[], ["2026 General Session", "2025 Second Special Session "]]
+    seen_user_agents = []
 
     def fake_url_xpath(url, path, verify=None, user_agent=None):
+        seen_user_agents.append(user_agent)
         return responses.pop(0)
 
     monkeypatch.setattr(ut, "url_xpath", fake_url_xpath)
@@ -83,6 +85,9 @@ def test_get_session_list_retries_after_a_transient_empty_result(monkeypatch):
 
     assert result == ["2026 General Session", "2025 Second Special Session"]
     assert responses == []  # both queued responses were consumed
+    # every attempt, not just the first, must send a browser-shaped UA
+    assert len(seen_user_agents) == 2
+    assert all(ua and "Mozilla" in ua for ua in seen_user_agents)
 
 
 def test_get_session_list_retries_after_a_raised_exception(monkeypatch):
@@ -129,3 +134,26 @@ def test_get_session_list_raises_scrape_error_naming_persistent_exception(monkey
 
     with pytest.raises(ScrapeError, match="le.utah.gov timed out"):
         make_jurisdiction().get_session_list()
+
+
+def test_get_session_list_error_message_does_not_cite_a_stale_earlier_exception(
+    monkeypatch,
+):
+    # attempt 1 raises, but attempts 2 and 3 fail cleanly (empty result, no
+    # exception) -- the final error should not misleadingly blame attempt 1's
+    # exception for a failure that, by the last attempt, had none.
+    attempts = []
+
+    def fake_url_xpath(url, path, verify=None, user_agent=None):
+        attempts.append(1)
+        if len(attempts) == 1:
+            raise ConnectionError("attempt-1-only transient error")
+        return []
+
+    monkeypatch.setattr(ut, "url_xpath", fake_url_xpath)
+    monkeypatch.setattr(ut.time, "sleep", lambda seconds: None)
+
+    with pytest.raises(ScrapeError) as excinfo:
+        make_jurisdiction().get_session_list()
+
+    assert "attempt-1-only transient error" not in str(excinfo.value)
