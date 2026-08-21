@@ -1,8 +1,31 @@
 import re
+import time
+import logging
 from utils import url_xpath
+from openstates.exceptions import ScrapeError
 from openstates.scrape import State
+from openstates.scrape.base import get_random_user_agent
 from .events import UTEventScraper
 from .bills import UTBillScraper
+
+logger = logging.getLogger("openstates")
+
+# OPEN-106: get_session_list() runs on the Jurisdiction, not a Scraper
+# instance, so it has never gone through self.get()/self.headers -- it calls
+# url_xpath() directly, which (with no user_agent= passed) falls back to
+# requests' bare default "python-requests/X.Y" User-Agent. Confirmed live:
+# le.utah.gov's WAF sometimes returns a 200 "Request Rejected" page (no
+# sessions found, not an exception) for that default UA, and repeated
+# identical requests to this same endpoint are independently
+# flaky/rate-limited regardless of UA. A browser-shaped UA (the same
+# get_random_user_agent() FL/MI already reuse for the same kind of
+# bot-detection) removes one confirmed, avoidable source of rejections;
+# retrying with backoff on top absorbs the remaining, genuinely transient
+# failures, and turns a persistent failure into a specific, diagnostic error
+# instead of falling through to check_session_list()'s generic "no sessions
+# from Utah.get_session_list()" message.
+_SESSION_LIST_MAX_ATTEMPTS = 3
+_SESSION_LIST_BACKOFF_SECONDS = 2
 
 
 class Utah(State):
@@ -459,9 +482,35 @@ class Utah(State):
     ]
 
     def get_session_list(self):
-        sessions = url_xpath(
-            "https://le.utah.gov/bills/billSearch.jsp",
-            "//select[@id='sess']/option/text()",
-            verify=False,
+        last_error = None
+        for attempt in range(1, _SESSION_LIST_MAX_ATTEMPTS + 1):
+            last_error = None
+            try:
+                sessions = url_xpath(
+                    "https://le.utah.gov/bills/billSearch.jsp",
+                    "//select[@id='sess']/option/text()",
+                    verify=False,
+                    user_agent=get_random_user_agent(),
+                )
+            except Exception as e:
+                last_error = e
+                sessions = None
+
+            if sessions:
+                return [re.sub(r"\s+", " ", session.strip()) for session in sessions]
+
+            if attempt < _SESSION_LIST_MAX_ATTEMPTS:
+                logger.warning(
+                    "Utah.get_session_list(): billSearch.jsp returned no sessions "
+                    "on attempt %s/%s%s, retrying...",
+                    attempt,
+                    _SESSION_LIST_MAX_ATTEMPTS,
+                    f" ({last_error})" if last_error else "",
+                )
+                time.sleep(_SESSION_LIST_BACKOFF_SECONDS * attempt)
+
+        raise ScrapeError(
+            "Utah.get_session_list(): billSearch.jsp returned no sessions after "
+            f"{_SESSION_LIST_MAX_ATTEMPTS} attempts"
+            + (f" (last error: {last_error})" if last_error else "")
         )
-        return [re.sub(r"\s+", " ", session.strip()) for session in sessions]
