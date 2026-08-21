@@ -32,12 +32,39 @@ SPONSOR_HOUSE_TO_CHAMBER = {
     "S": "upper",
 }
 
+# Matches the dotted type prefix + number at the start of a bill-list label
+# (e.g. "H.B. 5", "S.C.R. 1") or a free-form bill_no= value (e.g. "HB5",
+# "hb 5", "HB0005"). Stops at the first digit run, so list-page labels'
+# trailing "First Substitute"/"Second Substitute"/etc. text is ignored by
+# construction rather than needing SUB_BLACKLIST's stripping (which has a gap:
+# it only lists "Second Substitute".."Ninth Substitute" plus a bare
+# "Substitute", so "First Substitute" isn't fully stripped by that list).
+BILL_NO_RE = re.compile(r"^([A-Z.]+)\s*0*(\d+)")
+
+
+def _normalize_bill_no(raw):
+    """Canonical form for matching a bill_no= target against a bill-list
+    label, e.g. "H.B. 5 First Substitute", "hb5", and "HB0005" all normalize
+    to "HB5"."""
+    match = BILL_NO_RE.match(raw.strip().upper())
+    if not match:
+        return re.sub(r"[^A-Z0-9]", "", raw.upper())
+    prefix, number = match.groups()
+    return "{}{}".format(prefix.replace(".", ""), number)
+
 
 class UTBillScraper(Scraper, LXMLMixin):
     categorizer = Categorizer()
     _TZ = pytz.timezone("America/Denver")
 
-    def scrape(self, session=None, chamber=None, start=None):
+    # bill_no can be set to one bill or a comma-separated list to target just
+    # those, e.g. os-update ut --scrape bills session=2026 bill_no=HB53,SB12
+    # Only those bill(s) get scrape_bill()'s full detail-page processing --
+    # everything else is skipped before that fetch, using the label text
+    # already present on the one bill-list page fetch below (no extra
+    # requests). All targeted bills still flow through this single scrape()
+    # call, not one process per bill.
+    def scrape(self, session=None, chamber=None, start=None, bill_no=None):
         self._start = start
         if session in SPECIAL_SLUGS:
             session_slug = SPECIAL_SLUGS[session]
@@ -46,13 +73,11 @@ class UTBillScraper(Scraper, LXMLMixin):
         else:
             session_slug = "{}GS".format(session)
 
-        # if you need to test on an individual bill...
-        # yield from self.scrape_bill(
-        #             'lower',
-        #             '2019',
-        #             'https://le.utah.gov/~2025/bills/static/SR0002.html',
-        #             session_slug,
-        #         )
+        bill_nos = None
+        if bill_no:
+            bill_nos = {
+                _normalize_bill_no(b) for b in bill_no.split(",") if b.strip()
+            }
 
         session_url = "https://le.utah.gov/billlist.jsp?session={}".format(session_slug)
 
@@ -73,6 +98,8 @@ class UTBillScraper(Scraper, LXMLMixin):
                     "Failed to find bill list ID out of JS show/hide elem"
                 )
 
+        matched_bill_nos = set()
+
         # Capture the bills from each of the bill lists
         for list_id in bill_list_ids:
             bill_link_containers = doc.cssselect(f"#{list_id}")
@@ -87,12 +114,27 @@ class UTBillScraper(Scraper, LXMLMixin):
                             "Unknown bill type found: {}".format(bill_link.text)
                         )
 
+                    if bill_nos is not None:
+                        candidate = _normalize_bill_no(bill_link.text)
+                        if candidate not in bill_nos:
+                            continue
+                        matched_bill_nos.add(candidate)
+
                     yield from self.scrape_bill(
                         chamber=chamber,
                         session=session,
                         url=bill_link.get("href"),
                         session_slug=session_slug,
                     )
+
+        if bill_nos is not None:
+            unmatched = bill_nos - matched_bill_nos
+            if unmatched:
+                self.warning(
+                    "bill_no target(s) not found in session {}: {}".format(
+                        session, ", ".join(sorted(unmatched))
+                    )
+                )
 
     def scrape_bill(self, chamber, session, url, session_slug):
         page = self.lxmlize(url)
