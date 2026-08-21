@@ -147,7 +147,9 @@ class MOBillScraper(Scraper, LXMLMixin):
                 bill_id = bill_id.text_content().strip()
                 self._subjects[bill_id].append(subject)
 
-    def _parse_senate_billpage(self, bill_url, bill_identifier, year):
+    def _parse_senate_billpage(
+        self, bill_url, bill_identifier, bill_sponsor_link, year
+    ):
         try:
             bill_page = self.get(bill_url).content
         except HTTPError:
@@ -199,7 +201,7 @@ class MOBillScraper(Scraper, LXMLMixin):
 
         bill = Bill(
             bill_identifier,
-            title=bill_desc,
+            title=bill_title,
             chamber="upper",
             legislative_session=self._session_id,
             classification=bill_type,
@@ -216,9 +218,6 @@ class MOBillScraper(Scraper, LXMLMixin):
         bill_sponsor = bill_page.xpath(
             '//div[contains(@class, "detail-grid__item") and contains(string(.), "Sponsor")]/div[1]'
         )[0].text_content()
-        bill_sponsor_link = bill_page.xpath(
-            '//div[contains(@class, "detail-grid__item") and contains(string(.), "Sponsor")]/div[1]/a/@href'
-        )[0]
 
         if "Senators" in bill_sponsor_link:
             chamber = "upper"
@@ -236,21 +235,20 @@ class MOBillScraper(Scraper, LXMLMixin):
         if bill_lr:
             bill.extras["MO_BILL_LR"] = bill_lr
 
-        for cosponsor_link in bill_page.xpath(
-            '//div[contains(@class, "detail-grid__item") and contains(string(.), "Co-Sponsors")]/div[1]/a'
-        ):
-            if "Senators" in cosponsor_link.xpath("@href")[0]:
-                chamber = "upper"
-            else:
-                chamber = None
-
-            bill.add_sponsorship(
-                cosponsor_link.text_content(),
-                entity_type="person",
-                classification="cosponsor",
-                primary=False,
-                chamber=chamber,
-            )
+        # MO Senate website lists Senate sponsors, so we assume chamber is upper
+        chamber = "upper"
+        co_spons = '//div[contains(@class, "detail-grid__item") and contains(string(.), "Co-Sponsors")]/div/span'
+        co_sponsors_elements = bill_page.xpath(co_spons)
+        if co_sponsors_elements:
+            for element in co_sponsors_elements:
+                name = element.text_content()
+                bill.add_sponsorship(
+                    name,
+                    entity_type="person",
+                    classification="cosponsor",
+                    primary=False,
+                    chamber=chamber,
+                )
 
         # get the actions
         actions_url = f"{bill_url}&handler=Actions"
@@ -344,10 +342,30 @@ class MOBillScraper(Scraper, LXMLMixin):
         index_page = self.get(index_url).text
         index_page = lxml.html.fromstring(index_page)
 
-        for link in index_page.cssselect("div.bill-number a"):
-            bill_identifier = link.text_content().strip()
+        for card_header in index_page.cssselect("div.bill-card-header"):
+            bill_sponsor_link = None
+            bill_identifier_element = card_header.cssselect("div.bill-number a")
+            if not bill_identifier_element:
+                self.warning("Missing bill identifier element. Skipping.")
+                continue
+
+            link_el = bill_identifier_element[0]
+            bill_identifier = link_el.text_content().strip()
+            bill_identifier_link = link_el.get("href")  # None-safe, no IndexError
+
+            # Extract sponsor handler link if present
+            sponsor_elements = card_header.cssselect("div.bill-sponsor-handler div a")
+            if sponsor_elements:
+                bill_sponsor_link = sponsor_elements[0].get("href")
+
+            if bill_identifier_link is None:
+                self.warning(
+                    f"Missing bill identifier link for bill {bill_identifier}. Skipping."
+                )
+                continue
+
             yield from self._parse_senate_billpage(
-                link.xpath("@href")[0], bill_identifier, session
+                bill_identifier_link, bill_identifier, bill_sponsor_link, session
             )
 
     def _scrape_lower_chamber(self, session):
