@@ -416,13 +416,26 @@ class AZBillScraper(Scraper):
                 vote.dedupe_key = f"{resp.url}{action['ReferralNumber']}"
                 yield vote
 
-    def scrape(self, chamber=None, session=None, start=None):
+    # bill_no can be set to one bill or a comma-separated list to target just those,
+    # e.g. os-update az --scrape bills session=57th-2nd-regular bill_no=HB2001,SB1075
+    # bill_id is already in hand from the single, shared bill-list page fetch below
+    # (no extra request), so non-matching bills are skipped before scrape_bill()'s
+    # ~5 per-bill API calls -- same single scrape()-call circuit as a full scrape,
+    # just fewer detail-page fetches.
+    def scrape(self, chamber=None, session=None, start=None, bill_no=None):
         start_dt = None
         if start:
             try:
                 start_dt = datetime.datetime.strptime(start, "%Y-%m-%dT%H:%M:%S")
             except (ValueError, AttributeError):
                 pass
+
+        bill_nos = None
+        if bill_no:
+            bill_nos = {
+                re.sub(r"\s", "", b).upper() for b in bill_no.split(",") if b.strip()
+            }
+
         meta = get_session_meta(self, session)
         session_id = meta.get("extras", {}).get("session_id", None)
 
@@ -470,6 +483,8 @@ class AZBillScraper(Scraper):
                 bill_rows = page.xpath('//div[@name="SBTable"]//tbody//tr')
             for row in bill_rows:
                 bill_id = row.xpath("th/a/text()")[0]
+                if bill_nos and re.sub(r"\s", "", bill_id).upper() not in bill_nos:
+                    continue
                 yield from self.scrape_bill(chamber, session, bill_id, session_id, start_dt=start_dt)
 
         # TODO: MBTable - Non-bill Misc Motions?
