@@ -42,15 +42,27 @@ class VaBillScraper(Scraper):
 
     # we can also scrape a "chunk" of all available bills by specifying an integer 1-12 (inclusive)
     # chunks are available to split up this long, slow scrape into 12 smaller scrapes
-    # os-update ma bills --scrape scrape_chunk_number=1
+    # os-update va bills --scrape scrape_chunk_number=1
     # this trades off comprehensivity for limited scope of failure/faster time to recovery
-    def scrape(self, session=None, scrape_chunk_number=None, start=None):
+
+    # bill_no can be set to one bill or a comma-separated list to target just those,
+    # skipping the four expensive per-bill detail calls for every other bill in the session
+    # os-update va bills --scrape session=<code> bill_no=HB30,SB12
+    # not expected to be combined with scrape_chunk_number -- each is an independent,
+    # alternative way to narrow a scrape
+    def scrape(self, session=None, scrape_chunk_number=None, start=None, bill_no=None):
         start_dt = None
         if start:
             try:
                 start_dt = dateutil.parser.parse(start).replace(tzinfo=None)
             except Exception:
                 self.warning(f"Invalid start= '{start}', doing full scrape")
+
+        bill_nos = None
+        if bill_no:
+            bill_nos = {
+                re.sub(r"\s", "", b).upper() for b in bill_no.split(",") if b.strip()
+            }
 
         for i in self.jurisdiction.legislative_sessions:
             if i["identifier"] == session:
@@ -97,6 +109,7 @@ class VaBillScraper(Scraper):
             bill_list = bill_chunks[chunk_number - 1]
 
         seen_bill_ids = set()
+        matched_bill_nos = set()
         for row in bill_list:
             if row["LegislationNumber"] in seen_bill_ids:
                 self.warning(
@@ -104,6 +117,12 @@ class VaBillScraper(Scraper):
                 )
                 continue
             seen_bill_ids.add(row["LegislationNumber"])
+
+            normalized_bill_no = re.sub(r"\s", "", row["LegislationNumber"]).upper()
+            if bill_nos:
+                if normalized_bill_no not in bill_nos:
+                    continue
+                matched_bill_nos.add(normalized_bill_no)
 
             # the short title on the VA site is 'description',
             # LegislationTitle is on top of all the versions
@@ -164,6 +183,12 @@ class VaBillScraper(Scraper):
             )
 
             yield bill
+
+        if bill_nos:
+            for missing in sorted(bill_nos - matched_bill_nos):
+                self.warning(
+                    f"Requested bill_no '{missing}' not found in session {session}"
+                )
 
     def _fetch_events(self, legislation_id: str):
         body = {
