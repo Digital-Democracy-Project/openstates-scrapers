@@ -15,6 +15,28 @@ import lxml.etree
 import lxml.html
 
 
+# OPEN-78: normalizes both an incoming bill_no= identifier and WA's own internal bill_id
+# strings (e.g. "HB 1146", built from wa:BillId in scrape_chamber() / the raw prefile-page
+# text in get_prefiles()) into the same compact shape, so "HB1146" and "HB 1146" compare
+# equal regardless of spacing. Mirrors MI's _mi_bill_id_to_no (OPEN-81) but built off WA's
+# own prefix set, derived from WABillScraper.norm_bill_id_re: chamber (S|H) + one of
+# B/CR/JM/JR/R. Longest-prefix-first (3-letter CR/JM/JR before 1-letter B/R) is checked out
+# of habit, matching MI's convention -- not actually ambiguous for this set, since no
+# 1-letter suffix here is a string-prefix of a 3-letter one.
+_WA_KNOWN_PREFIXES = ("HCR", "SCR", "HJM", "SJM", "HJR", "SJR", "HB", "SB", "HR", "SR")
+
+
+def _wa_bill_id_to_no(raw_bill_id):
+    compact = re.sub(r"\s", "", raw_bill_id).upper()
+    for prefix in _WA_KNOWN_PREFIXES:
+        if compact.startswith(prefix):
+            rest = compact[len(prefix) :]
+            if rest.isdigit():
+                rest = str(int(rest))
+            return f"{prefix}{rest}"
+    return compact
+
+
 class WABillScraper(Scraper, LXMLMixin):
     # TODO:
     # - only on passed bills
@@ -239,7 +261,16 @@ class WABillScraper(Scraper, LXMLMixin):
 
         return self._bill_id_list
 
-    def scrape(self, chamber=None, session=None, start=None):
+    # OPEN-78: bill_no can be set to one bill or a comma-separated list to target just
+    # those, e.g. os-update wa bills --scrape session=2025-2026 bill_no=HB1146,SB5000
+    # Like MI (OPEN-81), WA has no separate list-page URL to filter server-side -- building
+    # self._bill_id_list (get_prefiles + scrape_chamber's GetLegislationByYear calls) is
+    # cheap, metadata-only, and stays unfiltered/unavoidable just like FL's list-walk. Only
+    # scrape_bill() -- the expensive per-bill fetch (GetLegislation, GetSponsors, the
+    # actions HTML page, GetRollCalls, chapter, cites) -- is skipped for non-targets, all
+    # still inside this one scrape() call so a real failure still gets normal handling
+    # instead of a fresh cold-start process per bill.
+    def scrape(self, chamber=None, session=None, start=None, bill_no=None):
         self._start_dt = None
         if start:
             try:
@@ -250,17 +281,21 @@ class WABillScraper(Scraper, LXMLMixin):
 
         year = int(session[0:4])
 
+        bill_nos = None
+        if bill_no:
+            bill_nos = {_wa_bill_id_to_no(b) for b in bill_no.split(",") if b.strip()}
+
         self._bill_id_list = self.get_prefiles(chamber, session, year)
         self.biennium = "%s-%s" % (session[0:4], session[7:9])
 
         for chamber in chambers:
             self.scrape_chamber(chamber, session)
 
-        # uncomment the line below to scrape a single bill
-        # self._bill_id_list = ["HB 1146"]
-
         # de-dup bill_id
-        for bill_id in list(set(self._bill_id_list)):
+        bill_ids = list(set(self._bill_id_list))
+        if bill_nos:
+            bill_ids = [b for b in bill_ids if _wa_bill_id_to_no(b) in bill_nos]
+        for bill_id in bill_ids:
             yield from self.scrape_bill(chamber, session, bill_id, year)
 
     def scrape_chamber(self, chamber, session):
