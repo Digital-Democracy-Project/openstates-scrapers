@@ -18,6 +18,30 @@ from classify_motion import classify_motion
 # https://github.com/unitedstates/congress which offers more backdata.
 
 
+# OPEN-79: a sitemap <url>/<loc> entry already encodes the bill type and number in its
+# filename, e.g. https://www.govinfo.gov/bulkdata/BILLSTATUS/119/hr/BILLSTATUS-119hr160.xml
+# -> congress 119, type "hr", num "160". That means bill_no matching can happen against the
+# sitemap listing itself (already fetched to walk the session) with zero extra requests --
+# cheaper than FL's/MI's approach, which still fetch a full bill/search list to filter against.
+_US_BILL_URL_RE = re.compile(r"BILLSTATUS-\d+([a-zA-Z]+)(\d+)\.xml$")
+
+
+def _us_bill_no_key(bill_type: str, bill_num) -> str:
+    # Leading zeros stripped via int() so e.g. a requested "HR0160" and a real "HR160"
+    # compare equal regardless of which side has the padding.
+    return f"{bill_type.upper()}{int(bill_num)}"
+
+
+def _normalize_bill_no_input(raw: str) -> str:
+    # Accepts "HR160", "HR 160", "H.R. 160", "hr0160" -- all reduce to the same "HR160" key
+    # a sitemap URL's (type, num) pair also reduces to via _us_bill_no_key.
+    compact = re.sub(r"[.\s]", "", raw).upper()
+    match = re.match(r"^([A-Z]+)(\d+)$", compact)
+    if not match:
+        return compact
+    return _us_bill_no_key(match.group(1), match.group(2))
+
+
 class USBillScraper(Scraper):
     # https://www.govinfo.gov/rss/billstatus-batch.xml
     # https://github.com/usgpo/bill-status/blob/master/BILLSTATUS-XML_User_User-Guide.md
@@ -98,11 +122,22 @@ class USBillScraper(Scraper):
     }
 
     # to scrape everything UPDATED after a given date/time, start="2020-01-01T22:01:01"
-    def scrape(self, chamber=None, session=None, start=None, hearings=True):
+    # OPEN-79: bill_no can be set to one bill or a comma-separated list to target just those,
+    # e.g. os-update us --scrape bills session=119 bill_no=HR160,S325
+    # All targeted bills still flow through this one scrape()/parse_bill_list() generator
+    # chain (not one process per bill) -- parse_bill_list() does the actual per-entry
+    # skip against the sitemap listing it already walks.
+    def scrape(self, chamber=None, session=None, start=None, hearings=True, bill_no=None):
         if start:
             start = datetime.datetime.strptime(start, "%Y-%m-%dT%H:%M:%S")
         else:
             start = datetime.datetime(1980, 1, 1, 0, 0, 1)
+
+        bill_nos = None
+        if bill_no:
+            bill_nos = {
+                _normalize_bill_no_input(b) for b in bill_no.split(",") if b.strip()
+            }
 
         # "hearings" flag determines whether we scrape hearing data found amongst bill data
         # this is problematic in Plural Open usage because the import pipeline wants one
@@ -133,18 +168,28 @@ class USBillScraper(Scraper):
                     continue
 
             if session in link.text:
-                yield from self.parse_bill_list(link.text, start, hearings)
+                yield from self.parse_bill_list(link.text, start, hearings, bill_nos)
 
-    def parse_bill_list(self, url, start, scrape_hearings=True):
+    def parse_bill_list(self, url, start, scrape_hearings=True, bill_nos=None):
         sitemap = self.get(url).content
         root = ET.fromstring(sitemap)
         for row in root.findall("us:url", self.ns):
+            bill_url = self.get_xpath(row, "us:loc")
+
+            # OPEN-79: matched against the sitemap entry's own URL (already fetched, no
+            # extra request) so a non-targeted bill never reaches parse_bill()'s expensive
+            # detail-XML fetch -- and skipped/kept independent of the start-date cutoff
+            # below, since an explicit target should be fetched regardless of staleness.
+            if bill_nos is not None:
+                match = _US_BILL_URL_RE.search(bill_url)
+                if not match or _us_bill_no_key(*match.groups()) not in bill_nos:
+                    continue
+
             date = datetime.datetime.fromisoformat(
                 self.get_xpath(row, "us:lastmod")[:-1]
             )
 
-            if date > start:
-                bill_url = self.get_xpath(row, "us:loc")
+            if bill_nos is not None or date > start:
                 self.debug(
                     f"{datetime.datetime.strftime(date, '%c')} > {datetime.datetime.strftime(start, '%c')}, scraping {bill_url}"
                 )
