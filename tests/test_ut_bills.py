@@ -25,11 +25,13 @@ import os
 import sys
 
 import lxml.html
+import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
 
 from ut import Utah  # noqa: E402
 from ut.bills import UTBillScraper, _normalize_bill_no  # noqa: E402
+from openstates.exceptions import EmptyScrape  # noqa: E402
 
 
 def make_scraper() -> UTBillScraper:
@@ -202,3 +204,85 @@ def test_unmatched_bill_no_target_is_logged():
 
     assert calls == [("lower", "https://le.utah.gov/~2026/bills/static/HB0001.html")]
     assert any("HB9999" in msg for msg in warnings)
+
+
+# ── OPEN-106: incremental scrape of a closed session with no new activity ───
+#
+# A session's bill-list page can parse fine (real bill links found) while
+# every one of those bills' most recent action predates an incremental
+# start= cutoff -- e.g. a closed special session scraped alongside a current,
+# active one. That's not a broken scraper; it's a legitimately empty result,
+# and should surface as EmptyScrape (which the base Scraper.do_scrape() turns
+# into a warning-and-continue) rather than let zero output fall through to a
+# hard ScrapeError that would abort the whole run, including whatever
+# session was queued to scrape right after it.
+
+
+def run_scrape_with_bill_results(scraper, bill_results, **scrape_kwargs):
+    """Like run_scrape(), but scrape_bill() yields whatever bill_results maps
+    each fixture URL to (an empty list simulates the incremental-cutoff skip
+    path; a non-empty list simulates a bill with real, new activity)."""
+
+    def fake_lxmlize(url, raise_exceptions=False, verify=None):
+        return lxml.html.fromstring(FIXTURE_HTML)
+
+    def fake_scrape_bill(chamber, session, url, session_slug):
+        return iter(bill_results.get(url, []))
+
+    scraper.lxmlize = fake_lxmlize
+    scraper.scrape_bill = fake_scrape_bill
+
+    return list(scraper.scrape(**scrape_kwargs))
+
+
+def test_incremental_scrape_with_no_new_activity_raises_empty_scrape():
+    scraper = make_scraper()
+
+    with pytest.raises(EmptyScrape):
+        run_scrape_with_bill_results(
+            scraper, bill_results={}, session="2025S2", start="2026-08-09T01:02:43"
+        )
+
+
+def test_incremental_scrape_with_some_new_activity_yields_it_without_raising():
+    scraper = make_scraper()
+    bill_results = {
+        "https://le.utah.gov/~2026/bills/static/HB0001.html": ["HB1-bill-object"],
+    }
+
+    bills = run_scrape_with_bill_results(
+        scraper,
+        bill_results=bill_results,
+        session="2026",
+        start="2026-08-09T01:02:43",
+    )
+
+    assert bills == ["HB1-bill-object"]
+
+
+def test_non_incremental_scrape_with_no_new_activity_does_not_raise():
+    # start= not provided (a full, non-incremental scrape) -- zero output here
+    # is not the "closed session, nothing changed" case EmptyScrape covers,
+    # so behavior is unchanged: let it fall through to do_scrape()'s normal
+    # "no objects returned" handling rather than mask it.
+    scraper = make_scraper()
+
+    bills = run_scrape_with_bill_results(scraper, bill_results={}, session="2026")
+
+    assert bills == []
+
+
+# ── OPEN-106: default User-Agent ────────────────────────────────────────────
+
+
+def test_scraper_defaults_to_a_browser_shaped_user_agent():
+    # Confirmed live: le.utah.gov's WAF rejects some requests carrying
+    # scrapelib's own default UA (which advertises "python-requests") with a
+    # 200 "Request Rejected" page -- no exception, just empty content. A
+    # browser-shaped UA must be set by default, not opt-in.
+    scraper = make_scraper()
+
+    user_agent = scraper.headers["User-Agent"]
+
+    assert "python-requests" not in user_agent
+    assert "Mozilla" in user_agent

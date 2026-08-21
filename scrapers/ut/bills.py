@@ -3,6 +3,8 @@ import datetime
 from dateutil import parser
 
 from openstates.scrape import Scraper, Bill, VoteEvent as Vote
+from openstates.exceptions import EmptyScrape
+from openstates.scrape.base import get_random_user_agent
 from classify_motion import classify_motion
 from .actions import Categorizer
 from utils import LXMLMixin
@@ -57,6 +59,19 @@ class UTBillScraper(Scraper, LXMLMixin):
     categorizer = Categorizer()
     _TZ = pytz.timezone("America/Denver")
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # OPEN-106: confirmed live that le.utah.gov's WAF will reject some
+        # requests carrying scrapelib's own default User-Agent (which
+        # advertises "python-requests") with a 200 "Request Rejected" page --
+        # i.e. a request that looks successful at the HTTP layer but carries
+        # none of the expected content, no exception raised. A browser-shaped
+        # UA (same helper FL/MI already use for their own bot-detection
+        # issues) avoids that. This doesn't make le.utah.gov reliable -- it
+        # remains independently flaky/rate-limited regardless of UA -- but it
+        # removes one confirmed, avoidable source of empty responses.
+        self.headers["User-Agent"] = get_random_user_agent()
+
     # bill_no can be set to one bill or a comma-separated list to target just
     # those, e.g. os-update ut --scrape bills session=2026 bill_no=HB53,SB12
     # Only those bill(s) get scrape_bill()'s full detail-page processing --
@@ -99,6 +114,8 @@ class UTBillScraper(Scraper, LXMLMixin):
                 )
 
         matched_bill_nos = set()
+        candidates_seen = 0
+        yielded_count = 0
 
         # Capture the bills from each of the bill lists
         for list_id in bill_list_ids:
@@ -120,12 +137,15 @@ class UTBillScraper(Scraper, LXMLMixin):
                             continue
                         matched_bill_nos.add(candidate)
 
-                    yield from self.scrape_bill(
+                    candidates_seen += 1
+                    for obj in self.scrape_bill(
                         chamber=chamber,
                         session=session,
                         url=bill_link.get("href"),
                         session_slug=session_slug,
-                    )
+                    ):
+                        yielded_count += 1
+                        yield obj
 
         if bill_nos is not None:
             unmatched = bill_nos - matched_bill_nos
@@ -135,6 +155,19 @@ class UTBillScraper(Scraper, LXMLMixin):
                         session, ", ".join(sorted(unmatched))
                     )
                 )
+
+        # OPEN-106: a session we found real bill listings for (candidates_seen > 0,
+        # so billlist.jsp parsed fine -- this isn't a page-structure break) can still
+        # legitimately yield nothing under an incremental start= cutoff, e.g. a closed
+        # special session with no activity since the last successful run. Left alone,
+        # the base Scraper.do_scrape() sees zero output and raises a hard ScrapeError,
+        # which aborts this whole `os-update ut` invocation -- including any other,
+        # still-active session queued right after it (see check_session_list()'s
+        # active_sessions loop in openstates-core). EmptyScrape is the existing,
+        # designed-for-this escape hatch: it tells do_scrape() this session's silence
+        # was expected, so it warns and moves on instead of aborting the run.
+        if self._start and candidates_seen and not yielded_count:
+            raise EmptyScrape
 
     def scrape_bill(self, chamber, session, url, session_slug):
         page = self.lxmlize(url)
