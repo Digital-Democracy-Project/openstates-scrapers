@@ -24,6 +24,17 @@ logger = logging.getLogger("openstates")
 # failures, and turns a persistent failure into a specific, diagnostic error
 # instead of falling through to check_session_list()'s generic "no sessions
 # from Utah.get_session_list()" message.
+#
+# upstream/main (openstates#5764, merged here 2026-08-21) took a different
+# approach to the same underlying "default python-requests UA gets rejected"
+# problem: a fixed, honestly-identifying `user_agent = os.getenv("USER_AGENT",
+# "openstates.org <contact@openstates.org>")` -- per an explicit request from
+# Utah's legislature to identify scraper traffic, not a WAF-evasion move.
+# Kept OPEN-106's retry+browser-UA fix here since it's already deployed and
+# handles a transient-failure case upstream's fix doesn't, but the two goals
+# (blend in vs. self-identify) are in real tension -- worth a human decision
+# on whether DDP should honor Utah's identification request going forward
+# rather than silently picking one side during this routine upstream merge.
 _SESSION_LIST_MAX_ATTEMPTS = 3
 _SESSION_LIST_BACKOFF_SECONDS = 2
 
