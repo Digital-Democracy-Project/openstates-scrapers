@@ -164,3 +164,81 @@ def test_scrape_with_bill_no_bypasses_start_cutoff():
     list(scraper2.scrape(session="119", start="2020-01-01T00:00:00", bill_no="HR76"))
 
     assert processed2 == [HR76_URL]
+
+
+# --- OPEN-123: warn when a requested bill_no matched nothing ---
+#
+# US does its per-entry filtering in parse_bill_list(), which scrape() may call
+# once per chamber sitemap, so the matched set is threaded into it and diffed
+# back in scrape(). Members are keyed with the same _us_bill_no_key() the filter
+# uses, so a padding/case difference can't produce a false "not found".
+
+
+def _capture_warnings(scraper):
+    warnings = []
+    scraper.warning = lambda msg: warnings.append(msg)
+    return warnings
+
+
+def test_scrape_warns_on_unmatched_bill_no():
+    scraper = make_scraper()
+    _mock_sitemaps(scraper)
+    _record_parse_bill(scraper)
+    warnings = _capture_warnings(scraper)
+
+    list(scraper.scrape(session="119", bill_no="HR160,HR40404"))
+
+    assert any("HR40404" in msg for msg in warnings)
+    assert not any("HR160" in msg for msg in warnings)
+    assert any("119" in msg for msg in warnings)
+
+
+def test_scrape_does_not_warn_when_every_requested_bill_no_matched():
+    scraper = make_scraper()
+    _mock_sitemaps(scraper)
+    _record_parse_bill(scraper)
+    warnings = _capture_warnings(scraper)
+
+    list(scraper.scrape(session="119", bill_no="HR160,S325"))
+
+    assert warnings == []
+
+
+def test_scrape_does_not_warn_for_matches_spread_across_chamber_sitemaps():
+    # HR160 is found walking the 119hr sitemap and S325 the 119s one -- two
+    # separate parse_bill_list() calls. Diffing per call would warn about
+    # whichever chamber was walked first. Guards that regression.
+    scraper = make_scraper()
+    _mock_sitemaps(scraper)
+    processed = _record_parse_bill(scraper)
+    warnings = _capture_warnings(scraper)
+
+    list(scraper.scrape(session="119", bill_no="S325"))
+
+    assert processed == [S325_URL]
+    assert warnings == []
+
+
+def test_scrape_does_not_warn_on_padding_or_punctuation_difference():
+    # "H.R. 0160" must satisfy the sitemap's own hr160 entry.
+    scraper = make_scraper()
+    _mock_sitemaps(scraper)
+    _record_parse_bill(scraper)
+    warnings = _capture_warnings(scraper)
+
+    list(scraper.scrape(session="119", bill_no="H.R. 0160"))
+
+    assert warnings == []
+
+
+def test_scrape_without_bill_no_never_warns():
+    # bill_no is unset on every scheduled production run -- that path must not
+    # gain any new warning behaviour.
+    scraper = make_scraper()
+    _mock_sitemaps(scraper)
+    _record_parse_bill(scraper)
+    warnings = _capture_warnings(scraper)
+
+    list(scraper.scrape(session="119"))
+
+    assert warnings == []

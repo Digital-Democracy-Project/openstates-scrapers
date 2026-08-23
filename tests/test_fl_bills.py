@@ -393,3 +393,159 @@ def test_cookie_provider_source_raises_wafblockdetected_on_block_page():
 
         with pytest.raises(WafBlockDetected):
             source.get_response(fake_scraper)
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# OPEN-123: warn when a requested bill_no matched nothing.
+#
+# FL is the awkward one of the five this ticket covers: it is a spatula
+# page-based scraper, so the bill_no comparison lives in
+# BillList.process_item() (which raises SkipItem per non-matching row), not in
+# FlBillScraper.scrape(). The matched set therefore has to travel back out to
+# scrape() to be diffed. It does so via the BillList input dict, which spatula
+# hands to every paginated page *by reference* (Page._paginate does
+# `type(self)(self.input, source=next_source)`), so one shared set collects
+# matches from every list page. test_matched_bill_nos_accumulates_across_
+# paginated_list_pages below pins that reference-sharing property, since the
+# whole approach depends on it.
+# ═══════════════════════════════════════════════════════════════════════════
+
+import collections  # noqa: E402
+
+from fl.bills import BillList, FlBillScraper  # noqa: E402
+from fl import Florida  # noqa: E402
+from spatula.pages import SkipItem  # noqa: E402
+from spatula import URL  # noqa: E402
+
+
+BILL_LIST_ROW_HTML = """
+<table><tbody>
+<tr>
+  <th><a href="/Session/Bill/2026/53">{bill_id}</a></th>
+  <td>A bill about testing</td>
+  <td>Some committee</td>
+  <td>3/1/2026</td>
+</tr>
+</tbody></table>
+"""
+
+
+def _bill_list_anchor(bill_id):
+    root = lxml.html.fromstring(BILL_LIST_ROW_HTML.format(bill_id=bill_id))
+    return root.xpath("//th/a")[0]
+
+
+def _make_bill_list(bill_nos, matched_bill_nos):
+    page = BillList(
+        {
+            "session": "2026",
+            "house_session_number": "104",
+            "start": None,
+            "bill_nos": bill_nos,
+            "matched_bill_nos": matched_bill_nos,
+        }
+    )
+    # Normally injected by spatula's `dependencies` machinery (SubjectPDF);
+    # process_item() reads it after the bill_no check to set bill.subject.
+    page.subjects = collections.defaultdict(set)
+    return page
+
+
+def test_process_item_records_a_matching_bill_no_as_matched():
+    matched = set()
+    page = _make_bill_list({"HB53"}, matched)
+
+    page.process_item(_bill_list_anchor("HB 53"))
+
+    assert matched == {"HB53"}
+
+
+def test_process_item_skips_and_does_not_record_a_non_matching_bill_no():
+    matched = set()
+    page = _make_bill_list({"HB53"}, matched)
+
+    with pytest.raises(SkipItem):
+        page.process_item(_bill_list_anchor("HB 999"))
+
+    assert matched == set()
+
+
+def test_process_item_records_match_despite_spacing_and_case_difference():
+    # The list page's own "HB 53" must satisfy a requested "hb53" -- the matched
+    # set has to be keyed the same way the comparison is, or the diff in scrape()
+    # would warn about a bill it actually just scraped.
+    matched = set()
+    page = _make_bill_list({"HB53"}, matched)
+
+    page.process_item(_bill_list_anchor("HB   53"))
+
+    assert matched == {"HB53"}
+
+
+def test_matched_bill_nos_accumulates_across_paginated_list_pages():
+    # Reproduces what spatula's Page._paginate does between list pages, to prove
+    # matches found on page 2 land in the same set FlBillScraper.scrape() holds.
+    matched = set()
+    page_one = _make_bill_list({"HB53", "SB99"}, matched)
+    page_two = type(page_one)(page_one.input, source=URL("https://example.invalid/2"))
+    page_two.subjects = collections.defaultdict(set)
+
+    page_one.process_item(_bill_list_anchor("HB 53"))
+    page_two.process_item(_bill_list_anchor("SB 99"))
+
+    assert matched == {"HB53", "SB99"}
+
+
+def _make_scraper_for_scrape(monkeypatch, walk):
+    """FlBillScraper.scrape() with everything before/around the list walk stubbed.
+
+    `walk` receives the BillList and stands in for _process_bill_list, letting a
+    test say exactly which requested numbers the walk managed to match.
+    """
+    scraper = FlBillScraper(Florida(), "/tmp/")
+    monkeypatch.setattr(scraper, "get_house_session_number", lambda session: "104")
+    monkeypatch.setattr(scraper, "_create_fresh_session", lambda: None)
+    monkeypatch.setattr(scraper, "_process_bill_list", walk)
+
+    warnings = []
+    monkeypatch.setattr(scraper, "warning", lambda msg: warnings.append(msg))
+    return scraper, warnings
+
+
+def test_scrape_warns_on_unmatched_bill_no(monkeypatch):
+    def walk(bill_list):
+        bill_list.input["matched_bill_nos"].add("HB53")
+        return iter(())
+
+    scraper, warnings = _make_scraper_for_scrape(monkeypatch, walk)
+
+    list(scraper.scrape(session="2026", bill_no="HB53,HB404"))
+
+    assert any("HB404" in msg for msg in warnings)
+    assert not any("HB53" in msg for msg in warnings)
+    assert any("2026" in msg for msg in warnings)
+
+
+def test_scrape_does_not_warn_when_every_requested_bill_no_matched(monkeypatch):
+    def walk(bill_list):
+        bill_list.input["matched_bill_nos"].update({"HB53", "SB99"})
+        return iter(())
+
+    scraper, warnings = _make_scraper_for_scrape(monkeypatch, walk)
+
+    list(scraper.scrape(session="2026", bill_no="HB53,SB99"))
+
+    assert warnings == []
+
+
+def test_scrape_without_bill_no_never_warns(monkeypatch):
+    # bill_no is unset on every scheduled production run -- that path must not
+    # gain any new warning behaviour.
+    def walk(bill_list):
+        return iter(())
+
+    scraper, warnings = _make_scraper_for_scrape(monkeypatch, walk)
+
+    list(scraper.scrape(session="2026"))
+
+    assert warnings == []
