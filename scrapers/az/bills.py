@@ -476,6 +476,10 @@ class AZBillScraper(Scraper):
 
         bill_rows = []
         chambers = [chamber] if chamber else ["upper", "lower"]
+        # Accumulated across both chamber tables before the diff below, since a requested
+        # bill_no only appears in one of them -- diffing per chamber would warn about every
+        # Senate target while scraping the House table, and vice versa.
+        matched_bill_nos = set()
         for chamber in chambers:
             if chamber == "lower":
                 bill_rows = page.xpath('//div[@name="HBTable"]//tbody//tr')
@@ -483,9 +487,24 @@ class AZBillScraper(Scraper):
                 bill_rows = page.xpath('//div[@name="SBTable"]//tbody//tr')
             for row in bill_rows:
                 bill_id = row.xpath("th/a/text()")[0]
-                if bill_nos and re.sub(r"\s", "", bill_id).upper() not in bill_nos:
-                    continue
+                if bill_nos:
+                    # Same inline normalization used to build bill_nos above, so the diff
+                    # can't fire off a spacing/case difference.
+                    bill_no_key = re.sub(r"\s", "", bill_id).upper()
+                    if bill_no_key not in bill_nos:
+                        continue
+                    matched_bill_nos.add(bill_no_key)
                 yield from self.scrape_bill(chamber, session, bill_id, session_id, start_dt=start_dt)
+
+        # OPEN-123: a requested bill_no matching nothing used to produce a clean exit with
+        # zero bills scraped, which during a targeted backfill is indistinguishable from
+        # "that bill had nothing to recover". Warns rather than raises so one bad number
+        # doesn't abort the rest of the requested set.
+        if bill_nos:
+            for missing in sorted(bill_nos - matched_bill_nos):
+                self.warning(
+                    f"Requested bill_no '{missing}' not found in session {session}"
+                )
 
         # TODO: MBTable - Non-bill Misc Motions?
 

@@ -295,6 +295,18 @@ class WABillScraper(Scraper, LXMLMixin):
         bill_ids = list(set(self._bill_id_list))
         if bill_nos:
             bill_ids = [b for b in bill_ids if _wa_bill_id_to_no(b) in bill_nos]
+            # OPEN-123: a requested bill_no that matched nothing used to leave the scrape
+            # silently yielding zero bills and exiting successfully, which in a targeted
+            # backfill is indistinguishable from "that bill had nothing to recover".
+            # Derived from the already-filtered list via the same _wa_bill_id_to_no() used
+            # to filter, so the diff can't produce a false warning off a spacing/padding
+            # difference. Warns rather than raises -- a typo in one of several requested
+            # bills must not abort recovery of the others.
+            matched_bill_nos = {_wa_bill_id_to_no(b) for b in bill_ids}
+            for missing in sorted(bill_nos - matched_bill_nos):
+                self.warning(
+                    f"Requested bill_no '{missing}' not found in session {session}"
+                )
         for bill_id in bill_ids:
             yield from self.scrape_bill(chamber, session, bill_id, year)
 

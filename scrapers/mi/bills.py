@@ -351,6 +351,7 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         #     bill_id = link.xpath("text()")[0].split(" of ")[0]
         #     yield from self.scrape_bill(session, bill_id, bill_url)
 
+        matched_bill_nos = set()
         links = page.xpath(
             "//div[contains(@class,'tableScrollWrapper')]/table[1]/tbody/tr/td[1]/a"
         )
@@ -402,9 +403,25 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         for link in links:
             bill_url = self.make_bill_url(link.xpath("@href")[0])
             bill_id = link.xpath("text()")[0].split(" of ")[0]
-            if bill_nos and _mi_bill_id_to_no(bill_id) not in bill_nos:
-                continue
+            if bill_nos:
+                # Recorded with the same _mi_bill_id_to_no() used to filter, so the
+                # unmatched diff below can't fire off a leading-zero/spacing difference
+                # between a requested "HB1" and the real link's "HB 0001".
+                bill_no_key = _mi_bill_id_to_no(bill_id)
+                if bill_no_key not in bill_nos:
+                    continue
+                matched_bill_nos.add(bill_no_key)
             yield from self.scrape_bill(session, bill_id, bill_url)
+
+        # OPEN-123: without this, a requested bill_no matching nothing (a typo, a stale
+        # number) just yielded zero bills and exited successfully -- in a targeted
+        # backfill that looks exactly like "nothing to recover". Warns rather than
+        # raises so one bad number doesn't abort the rest of the requested set.
+        if bill_nos:
+            for missing in sorted(bill_nos - matched_bill_nos):
+                self.warning(
+                    f"Requested bill_no '{missing}' not found in session {session}"
+                )
 
     def scrape_bill(self, session: str, bill_id: str, url: str) -> None:
         try:
