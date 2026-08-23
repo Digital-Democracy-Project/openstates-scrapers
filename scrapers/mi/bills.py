@@ -368,9 +368,16 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
                     f"{bill_id} ({bill_url}) -- scraping the landed page as the single "
                     f"result (OPEN-132)"
                 )
-                if bill_nos and _mi_bill_id_to_no(bill_id) not in bill_nos:
-                    return
-                yield from self.scrape_bill(session, bill_id, bill_url)
+                bill_no_key = _mi_bill_id_to_no(bill_id)
+                if not bill_nos or bill_no_key in bill_nos:
+                    matched_bill_nos.add(bill_no_key)
+                    yield from self.scrape_bill(session, bill_id, bill_url)
+                # This branch returns before the end-of-scrape() unmatched check, so
+                # OPEN-123's warning has to fire here too. Without it, a targeted request
+                # the redirect didn't land on is a silent no-op -- the same failure class
+                # both OPEN-123 and OPEN-132 exist to remove, recurring in the one path
+                # OPEN-123 never saw, because this branch didn't exist yet when it merged.
+                self._warn_unmatched_bill_nos(session, bill_nos, matched_bill_nos)
                 return
             if page.xpath("//div[contains(@class,'tableScrollWrapper')]"):
                 # A real results page that really is empty -- a genuine no-op.
@@ -413,15 +420,23 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
                 matched_bill_nos.add(bill_no_key)
             yield from self.scrape_bill(session, bill_id, bill_url)
 
+        self._warn_unmatched_bill_nos(session, bill_nos, matched_bill_nos)
+
+    def _warn_unmatched_bill_nos(self, session, bill_nos, matched_bill_nos) -> None:
         # OPEN-123: without this, a requested bill_no matching nothing (a typo, a stale
         # number) just yielded zero bills and exited successfully -- in a targeted
         # backfill that looks exactly like "nothing to recover". Warns rather than
         # raises so one bad number doesn't abort the rest of the requested set.
-        if bill_nos:
-            for missing in sorted(bill_nos - matched_bill_nos):
-                self.warning(
-                    f"Requested bill_no '{missing}' not found in session {session}"
-                )
+        #
+        # Extracted to a helper when OPEN-132 merged: its single-match-redirect branch
+        # returns early, so there are now two exits that need this check and only one
+        # place it should be written.
+        if not bill_nos:
+            return
+        for missing in sorted(bill_nos - matched_bill_nos):
+            self.warning(
+                f"Requested bill_no '{missing}' not found in session {session}"
+            )
 
     def scrape_bill(self, session: str, bill_id: str, url: str) -> None:
         try:

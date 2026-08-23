@@ -538,6 +538,8 @@ def test_malformed_object_name_is_not_scraped(monkeypatch, caplog):
         assert list(scraper.scrape("2025-2026")) == []
 
     assert "looks like a bill page" in caplog.text
+
+
 # ═══════════════════════════════════════════════════════════════════════════
 # OPEN-123: warn when a requested bill_no matched nothing. Before this, a typo
 # or stale number in a targeted backfill (MI's own OPEN-30/OPEN-81 vote
@@ -599,3 +601,53 @@ def test_scrape_without_bill_no_never_warns(monkeypatch):
     list(scraper.scrape("2025-2026"))
 
     assert warnings == []
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# OPEN-132 x OPEN-123 interaction. The single-match-redirect branch returns
+# before scrape()'s end-of-run unmatched check, so it needs its own call to
+# the same warning. Without these tests, a targeted request the redirect
+# didn't land on is a silent no-op -- the very failure class both tickets
+# exist to remove, reintroduced in the one path OPEN-123 predates.
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+def test_single_match_redirect_warns_when_it_is_not_the_requested_bill(monkeypatch):
+    scraper = _make_scraper()
+    _mock_response(monkeypatch, _fixture("mi_search_single_match_redirect.html"))
+    warnings = _capture_warnings(scraper, monkeypatch)
+
+    # The redirect lands on SR 0135; HB9999 is what the operator asked for.
+    yielded = list(scraper.scrape("2025-2026", bill_no="HB9999"))
+
+    assert yielded == []
+    assert any("HB9999" in msg for msg in warnings)
+    assert any("2025-2026" in msg for msg in warnings)
+
+
+def test_single_match_redirect_warns_only_about_the_bills_it_did_not_land_on(
+    monkeypatch,
+):
+    scraper = _make_scraper()
+    _mock_response(monkeypatch, _fixture("mi_search_single_match_redirect.html"))
+    warnings = _capture_warnings(scraper, monkeypatch)
+
+    list(scraper.scrape("2025-2026", bill_no="SR135,HB9999"))
+
+    # SR135 is the bill the redirect resolved to, so it must not be reported missing.
+    assert any("HB9999" in msg for msg in warnings)
+    assert not any("SR135" in msg for msg in warnings)
+
+
+def test_single_match_redirect_still_scrapes_the_requested_bill(monkeypatch):
+    # The guard above must not cost us the bill when it IS the one requested.
+    scraper = _make_scraper()
+    _mock_response(monkeypatch, _fixture("mi_search_single_match_redirect.html"))
+
+    bills = [
+        obj
+        for obj in scraper.scrape("2025-2026", bill_no="SR135")
+        if isinstance(obj, Bill)
+    ]
+
+    assert len(bills) == 1
