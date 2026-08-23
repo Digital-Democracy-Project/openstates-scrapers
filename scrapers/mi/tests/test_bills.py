@@ -1,3 +1,5 @@
+import logging
+import os
 import tempfile
 
 import lxml.html
@@ -325,3 +327,124 @@ def test_scrape_without_bill_no_scrapes_every_bill_unchanged(monkeypatch):
         "SB 0205",
         "HB 9999",
     ]
+
+
+# ---------------------------------------------------------------------------
+# OPEN-132: a single-match search redirects to the bill page
+#
+# Both fixtures are real, unmodified response bodies lifted out of the production
+# scrapelib cache (openstates-scrapers/_cache/), not hand-written approximations --
+# the point of the ticket is that the live site's actual behaviour was misread, so a
+# fixture that encoded our own assumption about the shape would prove nothing.
+#
+#   mi_search_single_match_redirect.html
+#     ExecuteSearch?...&dateFrom=2026-07-19&...  cached 2026-07-25 22:00
+#     This IS the response from the production run that silently dropped the bill:
+#     <title>Senate Resolution 135 of 2026</title>, zero tableScrollWrapper elements.
+#
+#   mi_search_empty_results.html
+#     ExecuteSearch?...&dateFrom=2026-08-16&...  cached 2026-08-22 22:00
+#     A genuinely empty window: a real <title>Search Results</title> page with one
+#     tableScrollWrapper and a header row only.
+# ---------------------------------------------------------------------------
+
+FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures")
+
+
+def _fixture(name):
+    with open(os.path.join(FIXTURES, name), "rb") as f:
+        return f.read()
+
+
+def _mock_response(monkeypatch, body):
+    class FakeResponse:
+        content = body
+
+    monkeypatch.setattr("mi.bills.mi_waf_get", lambda request_func: FakeResponse())
+
+
+def test_single_match_redirect_yields_the_dropped_bill(monkeypatch):
+    """The 2026-07-25 response must now produce SR 0135 instead of nothing."""
+    scraper = _make_scraper()
+    # The search request and the follow-up bill fetch both land on this same page,
+    # which is exactly what the redirect means.
+    _mock_response(monkeypatch, _fixture("mi_search_single_match_redirect.html"))
+
+    bills = [obj for obj in scraper.scrape("2025-2026") if isinstance(obj, Bill)]
+
+    assert len(bills) == 1
+    # Identical to what the results-table path yields for this bill: the same window's
+    # sibling searches list it as "SR 0135 of 2026" -> "SR 0135".
+    assert bills[0].identifier == "SR 0135"
+    assert bills[0].legislative_session == "2025-2026"
+
+
+def test_single_match_redirect_resolves_identity_from_the_page():
+    scraper = _make_scraper()
+    page = lxml.html.fromstring(_fixture("mi_search_single_match_redirect.html"))
+
+    assert scraper._redirected_single_bill(page) == (
+        "SR 0135",
+        "https://legislature.mi.gov/Bills/Bill?ObjectName=2026-SR-0135",
+    )
+
+
+def test_single_match_redirect_ignores_the_adjacent_bill_link():
+    """SR 0135's page also links to SR 0134 and to journal ObjectNames.
+
+    Reading identity from 'the first objectName= anywhere on the page' would pass on
+    this fixture purely because of document order, so pin the real requirement: the
+    bill we resolve is the page's own, never a neighbour.
+    """
+    scraper = _make_scraper()
+    body = _fixture("mi_search_single_match_redirect.html")
+    assert b"2026-SR-0134" in body, "fixture no longer exercises the neighbour hazard"
+
+    page = lxml.html.fromstring(body)
+    bill_id, bill_url = scraper._redirected_single_bill(page)
+
+    assert "0134" not in bill_id and "0134" not in bill_url
+
+
+def test_genuinely_empty_results_page_yields_nothing(monkeypatch):
+    scraper = _make_scraper()
+    _mock_response(monkeypatch, _fixture("mi_search_empty_results.html"))
+
+    assert list(scraper.scrape("2025-2026")) == []
+
+
+def test_empty_and_redirect_are_distinguishable(monkeypatch, caplog):
+    """The core of the ticket: the two zero-row cases must not look alike."""
+    caplog.set_level(logging.INFO)
+
+    scraper = _make_scraper()
+    _mock_response(monkeypatch, _fixture("mi_search_empty_results.html"))
+    with caplog.at_level(logging.INFO):
+        list(scraper.scrape("2025-2026"))
+    empty_log = caplog.text
+    caplog.clear()
+
+    scraper = _make_scraper()
+    _mock_response(monkeypatch, _fixture("mi_search_single_match_redirect.html"))
+    with caplog.at_level(logging.INFO):
+        list(scraper.scrape("2025-2026"))
+    redirect_log = caplog.text
+
+    assert "genuine empty result" in empty_log
+    assert "redirect" not in empty_log
+    assert "redirected to its page" in redirect_log
+    assert "SR 0135" in redirect_log
+    assert empty_log != redirect_log
+
+
+def test_unrecognised_response_shape_warns_instead_of_silent_no_op(monkeypatch, caplog):
+    """Neither a results table nor a bill page must not pass as a clean no-op."""
+    scraper = _make_scraper()
+    _mock_response(
+        monkeypatch, b"<html><body><p>nothing familiar here</p></body></html>"
+    )
+
+    with caplog.at_level(logging.WARNING):
+        assert list(scraper.scrape("2025-2026")) == []
+
+    assert "neither a results page nor a bill page" in caplog.text

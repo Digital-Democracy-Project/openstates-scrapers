@@ -199,6 +199,72 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         match = re.search(r"objectName=([^&]+)", url)
         return f"https://legislature.mi.gov/Bills/Bill?ObjectName={match.group(1)}"
 
+    # OPEN-132: when ExecuteSearch matches exactly one bill, legislature.mi.gov does not
+    # render a results table at all -- it serves that bill's own page instead. The results
+    # xpath then matches zero elements, which is byte-for-byte indistinguishable from a
+    # genuinely empty result set if you only look at the match count, so the run reported a
+    # clean no-op and dropped the bill. This happened in production on 2026-07-25 (SR 0135,
+    # recovered a week later only by luck) -- see OPEN-89's
+    # notes/open89-mi-date-signal-verification-plan-20260822.md for the full evidence trail.
+    #
+    # So classify the response by *what came back*, not by the absence of rows. Returns the
+    # (bill_id, bill_url) of the landed bill, or None if this is not a bill page.
+    #
+    # Identity is read out of the page body, deliberately NOT out of the response's final
+    # URL: scrapelib's FileCache.get() rebuilds a cached response with
+    # `resp.url = headers.get("content-location", orig_key)`, and MI sends no
+    # Content-Location, so on a cache hit resp.url is the *search* URL, not the redirect
+    # target. A resp.url-based fix would work on a live fetch and silently regress on
+    # replay -- which is exactly the class of bug this ticket is about.
+    def _redirected_single_bill(
+        self, page: lxml.html.HtmlElement
+    ) -> typing.Optional[typing.Tuple[str, str]]:
+        # h1#BillHeading is the element scrape_bill() itself keys on to decide chamber, so
+        # if it is present we know the page is one scrape_bill() can actually parse.
+        if not page.xpath("//h1[@id='BillHeading']"):
+            return None
+        # Read the ObjectName only from links that are *definitionally* self-referential:
+        # the printer-friendly view of this page, and this page's RSS feed. Scanning every
+        # href instead would be wrong, not merely loose -- a real MI bill page also links to
+        # the adjacent bill (SR 0135's page carries 2026-SR-0134) and to journal documents
+        # (2026-SJ-07-29-062, which even splits into a plausible-looking 3-part name). On
+        # the captured fixture the RSS link happens to come first in document order, so
+        # "first objectName= wins" would have passed the test while being one markup
+        # reordering away from silently importing the neighbouring bill.
+        object_name = None
+        for href in page.xpath(
+            "//a[contains(@href,'printerFriendly')]/@href"
+            " | //a[contains(@href,'GetRSSFile')]/@href"
+        ):
+            match = re.search(r"objectName=([0-9A-Za-z-]+)", href, re.I)
+            if match:
+                object_name = match.group(1)
+                break
+        if not object_name:
+            return None
+        # ObjectName is "<year>-<type>-<number>"; the results-table link text this replaces
+        # is "<type> <number> of <year>". Verified over all 7,044 result rows in the
+        # production scrapelib cache: "<type> <number>" reproduces the link text exactly,
+        # 7044/7044, zero-padding included (2026-SR-0135 -> "SR 0135", 2026-HJR-AA ->
+        # "HJR AA"), so the redirect path yields the identical bill_id the table path would.
+        parts = object_name.split("-", 2)
+        if len(parts) != 3:
+            return None
+        bill_id = f"{parts[1]} {parts[2]}"
+        # Cross-check the identity against an independent element before trusting it. The
+        # heading spells the type out ("Senate Resolution 135 of 2026") so it cannot confirm
+        # the type abbreviation, but it does carry the number, and an ObjectName whose number
+        # is absent from the heading means the link we read was not this page's own after all.
+        # Bail loudly rather than importing a bill under the wrong identifier.
+        heading = page.xpath("string(//h1[@id='BillHeading'])")
+        if parts[2].lstrip("0") not in heading.replace(",", ""):
+            self.warning(
+                f"MI single-match redirect: ObjectName {object_name} disagrees with page "
+                f"heading {heading.strip()!r} -- not scraping, this needs a look"
+            )
+            return None
+        return bill_id, self.make_bill_url(f"objectName={object_name}")
+
     # OPEN-81: bill_no can be set to one bill or a comma-separated list to target just those,
     # e.g. os-update mi --scrape bills session=2025-2026 bill_no=HB4023,SB205
     # Unlike FL (OPEN-77), MI has no separate list-page URL to filter server-side -- the single
@@ -258,9 +324,44 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         #     bill_id = link.xpath("text()")[0].split(" of ")[0]
         #     yield from self.scrape_bill(session, bill_id, bill_url)
 
-        for link in page.xpath(
+        links = page.xpath(
             "//div[contains(@class,'tableScrollWrapper')]/table[1]/tbody/tr/td[1]/a"
-        ):
+        )
+
+        # OPEN-132: zero result rows is ambiguous, so resolve it before acting on it. The
+        # three cases below must not look alike in the log -- a silently-dropped bill used to
+        # be indistinguishable from a quiet week, which is what let 2026-07-25 pass as clean.
+        if not links:
+            redirected = self._redirected_single_bill(page)
+            if redirected:
+                bill_id, bill_url = redirected
+                self.info(
+                    f"MI search matched exactly one bill and redirected to its page: "
+                    f"{bill_id} ({bill_url}) -- scraping the landed page as the single "
+                    f"result (OPEN-132)"
+                )
+                if bill_nos and _mi_bill_id_to_no(bill_id) not in bill_nos:
+                    return
+                yield from self.scrape_bill(session, bill_id, bill_url)
+                return
+            if page.xpath("//div[contains(@class,'tableScrollWrapper')]"):
+                # A real results page that really is empty -- a genuine no-op.
+                self.info(
+                    "MI search returned a results page with no matching bills -- genuine "
+                    "empty result for this window"
+                )
+                return
+            # Neither a results table nor a bill page. Previously this also fell through as
+            # a clean no-op; it is far more likely a site change or an unrecognised block
+            # page than a real absence of bills, so make it noisy instead of invisible.
+            self.warning(
+                "MI search response is neither a results page nor a bill page (no "
+                "tableScrollWrapper, no BillHeading) -- treating as no results, but this "
+                "is probably a site change or an unrecognised block page"
+            )
+            return
+
+        for link in links:
             bill_url = self.make_bill_url(link.xpath("@href")[0])
             bill_id = link.xpath("text()")[0].split(" of ")[0]
             if bill_nos and _mi_bill_id_to_no(bill_id) not in bill_nos:
