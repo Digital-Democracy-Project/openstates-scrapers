@@ -651,3 +651,28 @@ def test_single_match_redirect_still_scrapes_the_requested_bill(monkeypatch):
     ]
 
     assert len(bills) == 1
+
+
+def test_single_match_redirect_never_warns_when_no_bill_no_was_requested(monkeypatch):
+    # bill_no is unset on every scheduled production run. That path must gain no
+    # filtering and no new warnings from the helper the redirect branch now calls.
+    scraper = _make_scraper()
+    _mock_response(monkeypatch, _fixture("mi_search_single_match_redirect.html"))
+    warnings = _capture_warnings(scraper, monkeypatch)
+
+    list(scraper.scrape("2025-2026"))
+
+    assert warnings == []
+
+
+def test_single_match_redirect_matches_across_a_leading_zero_difference(monkeypatch):
+    # The redirect resolves "SR 0135"; a requested "SR135" must satisfy it. Both
+    # sides go through _mi_bill_id_to_no(), so the padding difference must not
+    # produce a bill that is scraped AND simultaneously reported missing.
+    scraper = _make_scraper()
+    _mock_response(monkeypatch, _fixture("mi_search_single_match_redirect.html"))
+    warnings = _capture_warnings(scraper, monkeypatch)
+
+    list(scraper.scrape("2025-2026", bill_no="sr 0135"))
+
+    assert warnings == []
