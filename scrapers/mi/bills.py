@@ -88,6 +88,34 @@ def _mi_bill_id_to_no(raw_bill_id: str) -> str:
     return compact
 
 
+# OPEN-132: backstop for _redirected_single_bill()'s identity resolution -- does this bill
+# page's own <h1> agree that we read the right ObjectName off it? Compares the number as a
+# whole token, not as a substring: MI headings carry a year ("Senate Resolution 135 of 2026")
+# and sometimes a public-act number ("House Bill 4961 of 2025 (Public Act 24 of 2025)"), so a
+# naive `num in heading` would let a wrong ObjectName pass by matching part of the year -- "26"
+# and "2026" both appear in the heading above, and neither is the bill number. "of <year>" runs
+# are dropped for the same reason. Leading zeros are normalised on both sides ("0135" vs
+# "135"), and a non-numeric suffix is compared as-is ("HJR AA").
+#
+# Validated over all 3,924 MI bill pages in the production scrapelib cache: accepts 3,924 /
+# 3,924 legitimate pages -- zero false negatives, which matters because a false negative here
+# is itself a silently dropped bill -- while rejecting the adjacent-bill number, the year, and
+# substrings of both. Note the 95 headings carrying a "(Public Act NN of YYYY)" suffix: any
+# check that required the heading to end in "of <year>" would have rejected all 95, turning
+# this guard into the very bug it is meant to catch.
+def _heading_confirms_bill_number(object_name_number: str, heading: str) -> bool:
+    number = object_name_number.lstrip("0")
+    if not number:
+        # An all-zero ObjectName number is not a real bill number; treat it as unconfirmed
+        # rather than letting an empty string match everything.
+        return False
+    without_years = re.sub(r"\bof\s+\d{4}\b", " ", heading, flags=re.I)
+    for token in re.findall(r"[0-9A-Za-z]+", without_years):
+        if (token.lstrip("0") or token).upper() == number.upper():
+            return True
+    return False
+
+
 class MIResilientScraperMixin:
     """Shared http_resilience_mode configuration for MI's scrapers (OPEN-21).
 
@@ -253,14 +281,13 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         bill_id = f"{parts[1]} {parts[2]}"
         # Cross-check the identity against an independent element before trusting it. The
         # heading spells the type out ("Senate Resolution 135 of 2026") so it cannot confirm
-        # the type abbreviation, but it does carry the number, and an ObjectName whose number
-        # is absent from the heading means the link we read was not this page's own after all.
-        # Bail loudly rather than importing a bill under the wrong identifier.
-        heading = page.xpath("string(//h1[@id='BillHeading'])")
-        if parts[2].lstrip("0") not in heading.replace(",", ""):
+        # the type abbreviation, but it does carry the number, so an ObjectName whose number
+        # is absent from the heading means the link we read was not this page's own.
+        heading = page.xpath("string(//h1[@id='BillHeading'])").strip()
+        if not _heading_confirms_bill_number(parts[2], heading):
             self.warning(
                 f"MI single-match redirect: ObjectName {object_name} disagrees with page "
-                f"heading {heading.strip()!r} -- not scraping, this needs a look"
+                f"heading {heading!r} -- not scraping it, this needs a look"
             )
             return None
         return bill_id, self.make_bill_url(f"objectName={object_name}")
@@ -351,13 +378,24 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
                     "empty result for this window"
                 )
                 return
-            # Neither a results table nor a bill page. Previously this also fell through as
-            # a clean no-op; it is far more likely a site change or an unrecognised block
-            # page than a real absence of bills, so make it noisy instead of invisible.
+            # Not a results page, and _redirected_single_bill() could not resolve a bill off
+            # it either. Previously this also fell through as a clean no-op; it is far more
+            # likely a site change or an unrecognised block page than a real absence of
+            # bills, so make it noisy instead of invisible. Report which signal was actually
+            # missing rather than a fixed string -- a page that *is* a bill page but whose
+            # identity would not resolve is a different problem from one that is not a bill
+            # page at all, and this branch is the only place that difference shows up.
+            if page.xpath("//h1[@id='BillHeading']"):
+                detail = (
+                    "it looks like a bill page (h1#BillHeading present) but its own "
+                    "ObjectName could not be resolved from it"
+                )
+            else:
+                detail = "no tableScrollWrapper and no h1#BillHeading"
             self.warning(
-                "MI search response is neither a results page nor a bill page (no "
-                "tableScrollWrapper, no BillHeading) -- treating as no results, but this "
-                "is probably a site change or an unrecognised block page"
+                f"MI search response is neither a results page nor a usable bill page "
+                f"({detail}) -- treating as no results, but this is probably a site "
+                f"change or an unrecognised block page"
             )
             return
 

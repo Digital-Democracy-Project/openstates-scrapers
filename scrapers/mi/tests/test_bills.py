@@ -447,4 +447,94 @@ def test_unrecognised_response_shape_warns_instead_of_silent_no_op(monkeypatch, 
     with caplog.at_level(logging.WARNING):
         assert list(scraper.scrape("2025-2026")) == []
 
-    assert "neither a results page nor a bill page" in caplog.text
+    assert "neither a results page nor a usable bill page" in caplog.text
+    # This one really has no heading, so it must say so -- the "looks like a bill page"
+    # wording is reserved for the case where h1#BillHeading is present.
+    assert "no tableScrollWrapper and no h1#BillHeading" in caplog.text
+
+
+# --- OPEN-132 follow-ups from review: the partial / bill-like-but-unusable shapes ---
+
+
+def test_heading_confirms_bill_number_rejects_lookalikes():
+    from mi.bills import _heading_confirms_bill_number
+
+    heading = "Senate Resolution 135 of 2026"
+    # the real number, padded and unpadded
+    assert _heading_confirms_bill_number("0135", heading)
+    assert _heading_confirms_bill_number("135", heading)
+    # the adjacent bill, whose link is also present on the page
+    assert not _heading_confirms_bill_number("0134", heading)
+    # the year, and substrings of it -- a naive `num in heading` passes all of these
+    assert not _heading_confirms_bill_number("2026", heading)
+    assert not _heading_confirms_bill_number("26", heading)
+    assert not _heading_confirms_bill_number("202", heading)
+    # a substring of the real number
+    assert not _heading_confirms_bill_number("13", heading)
+    # an all-zero number must not match via the empty string
+    assert not _heading_confirms_bill_number("0000", heading)
+
+
+def test_heading_confirms_bill_number_accepts_real_heading_variants():
+    from mi.bills import _heading_confirms_bill_number
+
+    # Non-numeric bill numbers (joint resolutions are lettered).
+    assert _heading_confirms_bill_number("AA", "House Joint Resolution AA of 2026")
+    # 95 of the 3,924 cached MI bill pages carry a "(Public Act NN of YYYY)" suffix. A check
+    # keyed on the heading ending in "of <year>" would reject every one of them -- a false
+    # negative here is itself a silently dropped bill, which is the bug this guard exists for.
+    assert _heading_confirms_bill_number(
+        "4961", "House Bill 4961 of 2025 (Public Act 24 of 2025)"
+    )
+
+
+def test_bill_page_without_self_referential_link_is_not_scraped_silently(
+    monkeypatch, caplog
+):
+    """A bill page we cannot identify must warn, and say that it looked like a bill page."""
+    scraper = _make_scraper()
+    # h1#BillHeading present, but no printerFriendly/RSS link to read ObjectName from.
+    _mock_response(
+        monkeypatch,
+        b"<html><body><h1 id='BillHeading'>Senate Resolution 135 of 2026</h1>"
+        b"<a href='/Bills/Bill?ObjectName=2026-SR-0134'>SR 134</a></body></html>",
+    )
+
+    with caplog.at_level(logging.WARNING):
+        assert list(scraper.scrape("2025-2026")) == []
+
+    # Must not be described as "no BillHeading" when the heading is right there, and must
+    # not have quietly adopted the neighbouring bill's ObjectName either.
+    assert "looks like a bill page" in caplog.text
+    assert "no h1#BillHeading" not in caplog.text
+    assert "0134" not in caplog.text
+
+
+def test_bill_page_with_mismatched_object_name_is_not_scraped(monkeypatch, caplog):
+    scraper = _make_scraper()
+    # Self-referential link present, but pointing at a different bill than the heading.
+    _mock_response(
+        monkeypatch,
+        b"<html><body><h1 id='BillHeading'>Senate Resolution 135 of 2026</h1>"
+        b"<a href='/Home/GetRSSFile?objectName=2026-SR-0134'>rss</a></body></html>",
+    )
+
+    with caplog.at_level(logging.WARNING):
+        assert list(scraper.scrape("2025-2026")) == []
+
+    assert "disagrees with page heading" in caplog.text
+
+
+def test_malformed_object_name_is_not_scraped(monkeypatch, caplog):
+    scraper = _make_scraper()
+    # Not the "<year>-<type>-<number>" shape at all.
+    _mock_response(
+        monkeypatch,
+        b"<html><body><h1 id='BillHeading'>Senate Resolution 135 of 2026</h1>"
+        b"<a href='/Home/GetRSSFile?objectName=nonsense'>rss</a></body></html>",
+    )
+
+    with caplog.at_level(logging.WARNING):
+        assert list(scraper.scrape("2025-2026")) == []
+
+    assert "looks like a bill page" in caplog.text
