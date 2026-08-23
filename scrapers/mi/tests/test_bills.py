@@ -325,3 +325,66 @@ def test_scrape_without_bill_no_scrapes_every_bill_unchanged(monkeypatch):
         "SB 0205",
         "HB 9999",
     ]
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# OPEN-123: warn when a requested bill_no matched nothing. Before this, a typo
+# or stale number in a targeted backfill (MI's own OPEN-30/OPEN-81 vote
+# backfill was exactly this workflow) scraped zero bills and exited cleanly.
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+def _capture_warnings(scraper, monkeypatch):
+    warnings = []
+    monkeypatch.setattr(scraper, "warning", lambda msg: warnings.append(msg))
+    monkeypatch.setattr(
+        scraper, "scrape_bill", lambda session, bill_id, url: iter(())
+    )
+    return warnings
+
+
+def test_scrape_warns_on_unmatched_bill_no(monkeypatch):
+    scraper = _make_scraper()
+    _mock_search_page(monkeypatch)
+    warnings = _capture_warnings(scraper, monkeypatch)
+
+    list(scraper.scrape("2025-2026", bill_no="HB4023,HB404"))
+
+    assert any("HB404" in msg for msg in warnings)
+    assert not any("HB4023" in msg for msg in warnings)
+    assert any("2025-2026" in msg for msg in warnings)
+
+
+def test_scrape_does_not_warn_when_every_requested_bill_no_matched(monkeypatch):
+    scraper = _make_scraper()
+    _mock_search_page(monkeypatch)
+    warnings = _capture_warnings(scraper, monkeypatch)
+
+    list(scraper.scrape("2025-2026", bill_no="HB4023,SB205"))
+
+    assert warnings == []
+
+
+def test_scrape_does_not_warn_on_leading_zero_difference(monkeypatch):
+    # The search page's "SB 0205" must satisfy a requested "SB205": the matched
+    # set is keyed with the same _mi_bill_id_to_no() used to filter, so the
+    # padding difference cannot produce a false "not found".
+    scraper = _make_scraper()
+    _mock_search_page(monkeypatch)
+    warnings = _capture_warnings(scraper, monkeypatch)
+
+    list(scraper.scrape("2025-2026", bill_no="SB205"))
+
+    assert warnings == []
+
+
+def test_scrape_without_bill_no_never_warns(monkeypatch):
+    # bill_no is unset on every scheduled production run -- that path must not
+    # gain any new warning behaviour.
+    scraper = _make_scraper()
+    _mock_search_page(monkeypatch)
+    warnings = _capture_warnings(scraper, monkeypatch)
+
+    list(scraper.scrape("2025-2026"))
+
+    assert warnings == []

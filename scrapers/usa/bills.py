@@ -134,6 +134,7 @@ class USBillScraper(Scraper):
             start = datetime.datetime(1980, 1, 1, 0, 0, 1)
 
         bill_nos = None
+        matched_bill_nos = set()
         if bill_no:
             bill_nos = {
                 _normalize_bill_no_input(b) for b in bill_no.split(",") if b.strip()
@@ -168,9 +169,26 @@ class USBillScraper(Scraper):
                     continue
 
             if session in link.text:
-                yield from self.parse_bill_list(link.text, start, hearings, bill_nos)
+                yield from self.parse_bill_list(
+                    link.text, start, hearings, bill_nos, matched_bill_nos
+                )
 
-    def parse_bill_list(self, url, start, scrape_hearings=True, bill_nos=None):
+        # OPEN-123: a requested bill_no matching nothing used to yield zero bills and exit
+        # successfully -- during a targeted backfill that is indistinguishable from "that
+        # bill had nothing to recover". The matched set is filled by parse_bill_list()
+        # (where the actual per-entry filtering happens, potentially across several
+        # per-chamber sitemaps) using the same _us_bill_no_key() normalization the filter
+        # itself uses, so the diff can't fire off a padding/case difference. Warns rather
+        # than raises so one bad number doesn't abort the rest of the requested set.
+        if bill_nos:
+            for missing in sorted(bill_nos - matched_bill_nos):
+                self.warning(
+                    f"Requested bill_no '{missing}' not found in session {session}"
+                )
+
+    def parse_bill_list(
+        self, url, start, scrape_hearings=True, bill_nos=None, matched_bill_nos=None
+    ):
         sitemap = self.get(url).content
         root = ET.fromstring(sitemap)
         for row in root.findall("us:url", self.ns):
@@ -182,8 +200,13 @@ class USBillScraper(Scraper):
             # below, since an explicit target should be fetched regardless of staleness.
             if bill_nos is not None:
                 match = _US_BILL_URL_RE.search(bill_url)
-                if not match or _us_bill_no_key(*match.groups()) not in bill_nos:
+                if not match:
                     continue
+                bill_no_key = _us_bill_no_key(*match.groups())
+                if bill_no_key not in bill_nos:
+                    continue
+                if matched_bill_nos is not None:
+                    matched_bill_nos.add(bill_no_key)
 
             date = datetime.datetime.fromisoformat(
                 self.get_xpath(row, "us:lastmod")[:-1]

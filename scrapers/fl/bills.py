@@ -180,8 +180,20 @@ class BillList(HtmlListPage):
         bill_url = item.attrib["href"] + "/ByCategory"
 
         bill_nos = self.input.get("bill_nos")
-        if bill_nos and re.sub(r"\s", "", bill_id).upper() not in bill_nos:
-            raise SkipItem(f"{bill_id} does not match requested bill_no")
+        if bill_nos:
+            bill_no_key = re.sub(r"\s", "", bill_id).upper()
+            if bill_no_key not in bill_nos:
+                raise SkipItem(f"{bill_id} does not match requested bill_no")
+            # OPEN-123: recorded here, the only place FL actually matches a bill_no, so
+            # scrape() can warn about requested numbers that never turned up. Keyed with
+            # the same inline normalization used for the comparison just above, so the
+            # diff can't fire off a spacing/case difference. The set lives in self.input,
+            # which spatula passes by reference to each paginated page it builds
+            # (Page._paginate -> type(self)(self.input, source=...)), so matches from
+            # every list page accumulate into the one set scrape() holds.
+            matched_bill_nos = self.input.get("matched_bill_nos")
+            if matched_bill_nos is not None:
+                matched_bill_nos.add(bill_no_key)
 
         start = self.input.get("start")
         if start is not None:
@@ -1254,12 +1266,17 @@ class FlBillScraper(Scraper):
         if bill_no:
             bill_nos = {re.sub(r"\s", "", b).upper() for b in bill_no.split(",") if b.strip()}
 
+        # OPEN-123: filled in by BillList.process_item() as it matches each requested
+        # number, then diffed against bill_nos once the list walk finishes below.
+        matched_bill_nos = set()
+
         bill_list = BillList(
             {
                 "session": session,
                 "house_session_number": house_session_number,
                 "start": start_dt,
                 "bill_nos": bill_nos,
+                "matched_bill_nos": matched_bill_nos,
             }
         )
 
@@ -1280,6 +1297,15 @@ class FlBillScraper(Scraper):
         while True:
             try:
                 yield from self._process_bill_list(bill_list)
+                # OPEN-123: only on a completed walk -- a walk that died partway and is
+                # about to be retried below hasn't finished looking, so warning here would
+                # be premature. A retry restarts the walk from the beginning but keeps the
+                # accumulated matches, so the diff stays correct across retries.
+                if bill_nos:
+                    for missing in sorted(bill_nos - matched_bill_nos):
+                        self.warning(
+                            f"Requested bill_no '{missing}' not found in session {session}"
+                        )
                 return
             except (
                 ConnectionError,

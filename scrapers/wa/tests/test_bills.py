@@ -82,3 +82,66 @@ def test_scrape_without_bill_no_scrapes_every_bill_unchanged(monkeypatch):
     list(scraper.scrape(chamber="lower", session="2025-2026"))
 
     assert sorted(scraped_ids) == ["HB 1146", "HB 9999", "SB 5000"]
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# OPEN-123: warn when a requested bill_no matched nothing. Before this, a typo
+# or stale number in a targeted backfill scraped zero bills and exited cleanly,
+# which is indistinguishable from "that bill had nothing to recover".
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+def _capture_warnings(scraper, monkeypatch):
+    warnings = []
+    monkeypatch.setattr(scraper, "warning", lambda msg: warnings.append(msg))
+    monkeypatch.setattr(scraper, "scrape_bill", lambda *args: iter(()))
+    return warnings
+
+
+def test_scrape_warns_on_unmatched_bill_no(monkeypatch):
+    scraper = _make_scraper()
+    _mock_bill_list(scraper, monkeypatch, ["HB 1146", "SB 5000", "HB 9999"])
+    warnings = _capture_warnings(scraper, monkeypatch)
+
+    list(scraper.scrape(chamber="lower", session="2025-2026", bill_no="HB1146,HB404"))
+
+    assert any("HB404" in msg for msg in warnings)
+    assert not any("HB1146" in msg for msg in warnings)
+    # VA's wording names the session, which is what makes the warning actionable
+    # when a number is valid in one session but not the one being scraped.
+    assert any("2025-2026" in msg for msg in warnings)
+
+
+def test_scrape_does_not_warn_when_every_requested_bill_no_matched(monkeypatch):
+    scraper = _make_scraper()
+    _mock_bill_list(scraper, monkeypatch, ["HB 1146", "SB 5000", "HB 9999"])
+    warnings = _capture_warnings(scraper, monkeypatch)
+
+    list(scraper.scrape(chamber="lower", session="2025-2026", bill_no="HB1146,SB5000"))
+
+    assert warnings == []
+
+
+def test_scrape_does_not_warn_on_padding_or_spacing_difference(monkeypatch):
+    # "SB 0205" on the list page must satisfy a requested "SB205": the matched set
+    # is built with the same _wa_bill_id_to_no() used to filter, so a padding
+    # difference cannot produce a false "not found".
+    scraper = _make_scraper()
+    _mock_bill_list(scraper, monkeypatch, ["SB 0205"])
+    warnings = _capture_warnings(scraper, monkeypatch)
+
+    list(scraper.scrape(chamber="lower", session="2025-2026", bill_no="SB205"))
+
+    assert warnings == []
+
+
+def test_scrape_without_bill_no_never_warns(monkeypatch):
+    # bill_no is unset on every scheduled production run -- that path must not
+    # gain any new warning behaviour.
+    scraper = _make_scraper()
+    _mock_bill_list(scraper, monkeypatch, ["HB 1146", "SB 5000"])
+    warnings = _capture_warnings(scraper, monkeypatch)
+
+    list(scraper.scrape(chamber="lower", session="2025-2026"))
+
+    assert warnings == []
