@@ -24,6 +24,7 @@ from mi.bills import (  # noqa: E402
     _mi_save_last_actions,
 )
 import mi.bills as mi_bills  # noqa: E402
+from openstates.exceptions import ScrapeError  # noqa: E402
 
 SESSION = "2025-2026"
 
@@ -208,18 +209,63 @@ ROWS = [
 ]
 
 
-def test_no_baseline_seeds_and_scrapes_nothing(scraper, cache_dir):
-    # The dangerous alternative is treating all ~3,752 bills as changed, i.e. a full walk at
-    # MI's 10 rpm cap against the fleet's most WAF-sensitive site. That must not happen on a
-    # missing-file path.
-    fetched = drive(scraper, ROWS)
-    assert fetched == []
-    assert _mi_load_last_actions(SESSION) == {
-        "HB4001": "referred to committee on rules",
-        "HB4002": "adopted",
-        "HB4003": "reported with recommendation",
-    }
-    assert scraper.warning.called
+def test_no_baseline_fails_closed_and_writes_nothing(scraper, cache_dir):
+    """Neither automatic option is acceptable on a cold start, so it must refuse.
+
+    Seeding from the sweep would record the site's state as "what we hold" and silently mark
+    every already-stale bill current -- on the real corpus that would have buried 187 genuine
+    differences including bills that had become Public Acts. Treating all bills as changed would
+    be a full walk at MI's 10 rpm WAF cap. So: stop, loudly, and write nothing.
+    """
+    with pytest.raises(ScrapeError, match="no usable last-action baseline"):
+        drive(scraper, ROWS)
+    assert _mi_load_last_actions(SESSION) is None
+    assert not os.listdir(cache_dir)
+
+
+def test_empty_baseline_is_not_treated_as_authoritative(scraper, cache_dir):
+    """A `{}` baseline must not mean "every bill changed".
+
+    That reading turns a stray or truncated file into ~3,900 per-bill fetches against a
+    rate-capped WAF -- a full walk arrived at by accident, which is the one outcome the design
+    must never reach on an error path.
+    """
+    (cache_dir / f"mi_last_actions_{SESSION}.json").write_text("{}")
+    assert _mi_load_last_actions(SESSION) is None
+    with pytest.raises(ScrapeError, match="no usable last-action baseline"):
+        drive(scraper, ROWS)
+
+
+def test_extraction_shortfall_fails_closed(scraper, cache_dir):
+    """If the page lists bills but their last actions stop parsing, refuse to skip anything.
+
+    This is the failure the whole change is most exposed to: a markup change shrinks
+    site_actions, changed_nos comes out empty, and the run skips every bill while looking
+    perfectly healthy -- the exact silent miss the ticket exists to remove.
+    """
+    _mi_save_last_actions(SESSION, {"HB4001": "x", "HB4002": "y", "HB4003": "z"})
+    broken = [
+        ("2025-HB-4001", "HB 4001 of 2025", "Last Action: referred to Committee on Rules"),
+        ("2025-HB-4002", "HB 4002 of 2025", "marker gone"),
+        ("2025-HB-4003", "HB 4003 of 2025", "marker gone"),
+    ]
+    with pytest.raises(ScrapeError, match="last actions could be parsed"):
+        drive(scraper, broken)
+
+
+def test_extraction_shortfall_does_not_touch_the_baseline(scraper, cache_dir):
+    before = {"HB4001": "x", "HB4002": "y", "HB4003": "z"}
+    _mi_save_last_actions(SESSION, before)
+    broken = [(f"2025-HB-400{i}", f"HB 400{i} of 2025", "marker gone") for i in (1, 2, 3)]
+    with pytest.raises(ScrapeError):
+        drive(scraper, broken)
+    assert _mi_load_last_actions(SESSION) == before
+
+
+def test_full_extraction_does_not_trip_the_coverage_guard(scraper, cache_dir):
+    # The guard must not fire on a healthy page -- otherwise it converts the fix into an outage.
+    _mi_save_last_actions(SESSION, {"HB4001": "referred to committee on rules"})
+    assert sorted(drive(scraper, ROWS)) == ["HB 4002", "HB 4003"]
 
 
 def test_only_bills_whose_last_action_changed_are_scraped(scraper, cache_dir):
@@ -314,7 +360,13 @@ def test_search_url_no_longer_sends_a_date_window(scraper, cache_dir):
     If a future change reintroduces a date window here, the ~80-bills-a-week hole silently
     reopens and every test above still passes, because they stub the page rather than the URL.
     """
-    _mi_save_last_actions(SESSION, {})
+    # A real baseline, not {} -- an empty one now fails closed by design, so it would abort
+    # before the URL was ever built and this guard would pass for the wrong reason.
+    _mi_save_last_actions(SESSION, {
+        "HB4001": "referred to committee on rules",
+        "HB4002": "adopted",
+        "HB4003": "reported with recommendation",
+    })
     seen = {}
 
     def capture(fn):

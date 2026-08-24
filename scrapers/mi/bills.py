@@ -11,6 +11,7 @@ from datetime import date
 from utils.media import get_media_type
 
 from openstates import settings
+from openstates.exceptions import ScrapeError
 from openstates.scrape import Scraper, Bill, VoteEvent
 from openstates.utils.cookie_provider import (
     WafBlockDetected,
@@ -111,7 +112,20 @@ def _mi_bill_id_to_no(raw_bill_id: str) -> str:
 # same string: checked across the cached full sweep against the production database, 3,685 of
 # 3,718 matched verbatim (99.1%), 0 bills absent. The 33 that differed were all cases where the
 # DATABASE was newer than the cache, not disagreements about the same moment.
+#
+# Known and accepted limitation: the last-action string is the ONLY recency signal. A change to
+# a bill that does not alter that string -- a document added, a sponsor list edited in a way the
+# summary row does not reflect -- is not detected by an incremental run. The periodic full
+# scrape is what covers that; this path is explicitly about the ~80/week that the date filter
+# made structurally invisible, not about every conceivable edit.
 _MI_LAST_ACTION_WS = re.compile(r"\s+")
+
+# Minimum fraction of listed bills whose last action must parse before the extraction is trusted
+# enough to skip anything. In practice this is 1.0 -- every row on a real results page carries a
+# "Last Action:" -- so anything materially below it means the page shape changed rather than that
+# a few bills genuinely lack one. Set loose enough not to trip on a handful of odd rows and tight
+# enough that a layout change cannot masquerade as "nothing moved".
+_MI_MIN_ACTION_COVERAGE = 0.95
 
 
 def _mi_last_action_path(session: str) -> str:
@@ -134,12 +148,13 @@ def _mi_normalize_last_action(text: str) -> str:
 
 
 def _mi_load_last_actions(session: str) -> typing.Optional[dict]:
-    """Previous run's {bill_no: last_action}, or None if there is no baseline yet.
+    """Previous run's {bill_no: last_action}, or None if there is no usable baseline.
 
-    None and {} mean different things and must not be conflated: None is "we have never
-    recorded this session, so we cannot tell what changed", which the caller answers by
-    seeding rather than by treating all 3,752 bills as changed and firing a full walk at a
-    WAF-sensitive site. {} would mean a recorded-but-empty session.
+    An EMPTY dict is deliberately returned as None rather than as itself. A `{}` baseline would
+    otherwise be treated as authoritative and make every bill on the page look changed, which
+    for MI means ~3,900 per-bill fetches against a 10 rpm WAF cap -- a full walk arrived at by
+    accident. There is no legitimate state in which we have recorded this session and know of
+    zero bills, so the two cases do not need telling apart.
     """
     path = _mi_last_action_path(session)
     if not os.path.exists(path):
@@ -148,21 +163,29 @@ def _mi_load_last_actions(session: str) -> typing.Optional[dict]:
         with open(path) as fh:
             data = json.load(fh)
     except (OSError, ValueError):
-        # A truncated or hand-edited file is not a reason to fall into the 3,752-request path.
-        # Report it and let the caller re-seed.
+        # A truncated or hand-edited file must not become "everything changed" either.
         return None
-    return data if isinstance(data, dict) else None
+    if not isinstance(data, dict) or not data:
+        return None
+    return data
 
 
 def _mi_save_last_actions(session: str, mapping: dict) -> None:
     path = _mi_last_action_path(session)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     # Write-then-rename so an interrupted run cannot leave a half-written baseline that the
-    # next run would read as authoritative.
-    tmp = f"{path}.tmp"
-    with open(tmp, "w") as fh:
-        json.dump(mapping, fh, indent=0, sort_keys=True)
-    os.replace(tmp, path)
+    # next run would read as authoritative. The temp name carries the pid so two overlapping
+    # runs cannot write the same scratch file and interleave each other's bytes -- MI is
+    # scheduled single-writer, but a manual run alongside the scheduled one is easy to do by
+    # hand and the failure would be a corrupt baseline rather than an error.
+    tmp = f"{path}.{os.getpid()}.tmp"
+    try:
+        with open(tmp, "w") as fh:
+            json.dump(mapping, fh, indent=0, sort_keys=True)
+        os.replace(tmp, path)
+    finally:
+        if os.path.exists(tmp):
+            os.remove(tmp)
 
 
 # OPEN-132: backstop for _redirected_single_bill()'s identity resolution -- does this bill
@@ -414,26 +437,47 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         # {bill_no: normalized last-action text} as the site reports it right now.
         site_actions = self._extract_last_actions(page)
 
+        # The skip decision is only as trustworthy as the extraction behind it. If the page
+        # still lists bills but their last actions stopped parsing -- a markup change, a moved
+        # column, a re-worded label -- then site_actions shrinks, changed_nos comes out empty,
+        # and the run skips everything while looking perfectly healthy. That is precisely the
+        # silent miss this ticket exists to remove, so fail closed instead: abort without
+        # touching the baseline, and let the run's normal failure alerting fire.
+        row_links = page.xpath(
+            "//div[contains(@class,'tableScrollWrapper')]/table[1]/tbody/tr/td[1]/a"
+        )
+        if row_links and len(site_actions) < _MI_MIN_ACTION_COVERAGE * len(row_links):
+            raise ScrapeError(
+                f"MI OPEN-134: results page lists {len(row_links)} bills but only "
+                f"{len(site_actions)} last actions could be parsed off it "
+                f"(< {_MI_MIN_ACTION_COVERAGE:.0%}). Refusing to make skip decisions from an "
+                f"extraction this incomplete -- it would silently skip bills that moved. The "
+                f"row layout or the 'Last Action:' label has probably changed; "
+                f"_extract_last_actions() needs updating."
+            )
+
         # changed_nos is None on a full run, meaning "no recency filter, scrape everything".
         changed_nos = None
         baseline = _mi_load_last_actions(session) if start else None
         if start:
             if baseline is None:
-                # No baseline: seed it and scrape nothing this run. The alternative -- treating
-                # all ~3,752 bills as changed -- is a full walk against the fleet's most
-                # WAF-sensitive jurisdiction (OPEN-52/53/54), which is not an acceptable
-                # accident to have on a missing-file path. A full run (`start` unset) seeds this
-                # for free, and the deploy seeds it from the database, so this branch should be
-                # rare and is loud when it happens.
-                _mi_save_last_actions(session, site_actions)
-                self.warning(
-                    f"MI OPEN-134: no last-action baseline for session {session} -- seeded "
-                    f"{len(site_actions)} bills from this sweep and scraped none. The next "
-                    f"incremental run will pick up everything that moves from here. To cover "
-                    f"the gap now, run a full scrape (omit start=) or seed "
-                    f"{_mi_last_action_path(session)} from the database."
+                # Fail closed rather than seeding from the site. Seeding would record the
+                # site's current state as "what we hold", silently marking every already-stale
+                # bill as current -- on this very corpus that would have buried 187 real
+                # differences, including bills that had become Public Acts. And treating all
+                # ~3,900 as changed instead would be a full walk at a 10 rpm WAF cap arrived at
+                # by accident. So neither automatic option is acceptable: stop, loudly, and let
+                # an operator choose. A full scrape (omit start=) seeds it correctly for free.
+                raise ScrapeError(
+                    f"MI OPEN-134: no usable last-action baseline at "
+                    f"{_mi_last_action_path(session)}, so an incremental run cannot tell what "
+                    f"changed. Refusing to guess: seeding from this sweep would mark every "
+                    f"already-stale bill as current, and treating all bills as changed would "
+                    f"be a full walk against a WAF-rate-capped site. Fix by running a full "
+                    f"scrape (omit start=), or seed the file from the database -- each bill's "
+                    f"most recent action description, whitespace-collapsed and lowercased, "
+                    f"keyed by compact bill number (e.g. HB4001)."
                 )
-                return
             changed_nos = {
                 no for no, action in site_actions.items() if baseline.get(no) != action
             }
