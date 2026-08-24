@@ -93,12 +93,45 @@ class MABillScraper(Scraper):
             f"https://malegislature.gov/api/GeneralCourts/{session_numeric}/Documents"
         )
 
-        start_dt = None
+        # OPEN-128: `start` is accepted (ddp-sync passes it on every incremental run) and
+        # deliberately NOT used to filter. It used to gate on the newest sponsor ResponseDate,
+        # which is wrong in a way that loses data silently: sponsorship is set at filing and a
+        # later action never touches it, so a bill that passed a chamber, was amended, or became
+        # a Public Act kept its original sponsor date, failed the filter, and was skipped every
+        # run. Its actions then went stale indefinitely. Measured against the production
+        # database, 8,098 of 11,289 MA bills (71%) have activity after their first action, i.e.
+        # activity the sponsor date structurally cannot reflect -- on the order of 80-100 bills
+        # a week.
+        #
+        # There is no cheaper signal to swap in, and this was checked rather than assumed:
+        #   * The list endpoint used here carries nine fields per bill and no date of any
+        #     activity -- the sponsor ResponseDate is the only date in the payload, which is
+        #     presumably why it was reached for (OPEN-133 enumerated this).
+        #   * malegislature.gov exposes no dated "recently acted on" surface. Michigan's
+        #     equivalent bug (OPEN-134) was fixable cheaply because MI's search results page
+        #     prints each bill's last action; MA's /Bills/Search is a keyword search that
+        #     returns nothing for empty terms and never lists last actions, so the same trick
+        #     does not transfer.
+        #   * Bill pages send `Cache-Control: no-cache, no-store` and neither ETag nor
+        #     Last-Modified, so conditional requests cannot make a walk cheap either.
+        #
+        # So the honest options were to accept the staleness or to stop filtering, and this
+        # takes the second. Cost, measured from a real full walk in the logs rather than
+        # estimated: 11,465 requests in 341 minutes, ~1.01 requests per bill. That is bounded by
+        # malegislature.gov's own ~2s response time, NOT by our rate limit -- probing 30 real
+        # bill pages paced at 3/sec still only sustained 0.4/sec, all 200s. Raising
+        # SCRAPELIB_RPM would therefore buy nothing.
+        #
+        # If ~6h per run proves too long, the lever already exists and needs no new code:
+        # scrape()'s `scrape_chunk_number` splits the corpus into 12 chunks, so a caller can
+        # cover everything across several shorter runs instead of one long one.
         if start:
-            try:
-                start_dt = datetime.strptime(start, "%Y-%m-%dT%H:%M:%S")
-            except ValueError:
-                pass
+            self.info(
+                "MA OPEN-128: ignoring start= and listing every bill. The sponsor ResponseDate "
+                "this used to filter on does not move when a bill acts, so filtering on it "
+                "silently skipped ~80-100 bills a week. See scrape_bill_list() for why no "
+                "cheaper signal exists."
+            )
 
         list_data = self.get(api_url, verify=False).content
         for row in json.loads(list_data):
@@ -112,27 +145,6 @@ class MABillScraper(Scraper):
                 self.error(
                     f"Unknown bill type - bill {row['BillNumber']} - docket {row['DocketNumber']}"
                 )
-
-            if start_dt:
-                response_dates = []
-                primary = row.get("PrimarySponsor") or {}
-                if primary.get("ResponseDate"):
-                    try:
-                        response_dates.append(
-                            datetime.fromisoformat(primary["ResponseDate"].split(".")[0])
-                        )
-                    except ValueError:
-                        pass
-                for cs in row.get("Cosponsors") or []:
-                    if cs.get("ResponseDate"):
-                        try:
-                            response_dates.append(
-                                datetime.fromisoformat(cs["ResponseDate"].split(".")[0])
-                            )
-                        except ValueError:
-                            pass
-                if response_dates and max(response_dates) <= start_dt:
-                    continue
 
             self.bill_list.append(
                 {"BillNumber": row["BillNumber"], "DocketNumber": row["DocketNumber"]}
