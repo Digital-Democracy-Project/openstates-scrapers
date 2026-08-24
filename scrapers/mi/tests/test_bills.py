@@ -247,13 +247,24 @@ def test_scrape_votes_skips_vote_on_persistent_fetch_failure_but_continues(monke
 # heading ("House Bill No. 1") used elsewhere in this file. Conflating the two was a real bug
 # caught by a live test (OPEN-81): the original version of this fixture used the long form,
 # which made _mi_bill_id_to_no() match nothing against a real search page and yielded zero bills.
+# OPEN-134: rows now carry the two further cells the real results page has -- Type in td[2] and
+# the description ending in "Last Action: <text>" in td[3]. Previously each row was a bare link
+# cell, which no longer models the page: the scraper reads recency off td[3] and refuses to make
+# skip decisions when a page that lists bills yields no parseable last actions. Adding them keeps
+# these fixtures a faithful model of the page rather than a shape the site never serves.
 SEARCH_RESULTS_HTML = b"""
 <html><body>
 <div class="tableScrollWrapper">
 <table><tbody>
-<tr><td><a href="/Bills/Bill?objectName=2025-HB-4023">HB 4023 of 2025</a></td></tr>
-<tr><td><a href="/Bills/Bill?objectName=2025-SB-0205">SB 0205 of 2025</a></td></tr>
-<tr><td><a href="/Bills/Bill?objectName=2025-HB-9999">HB 9999 of 2025</a></td></tr>
+<tr><td><a href="/Bills/Bill?objectName=2025-HB-4023">HB 4023 of 2025</a></td>
+    <td>House Bill</td>
+    <td>An act about something.<br />Last Action: referred to Committee on Rules</td></tr>
+<tr><td><a href="/Bills/Bill?objectName=2025-SB-0205">SB 0205 of 2025</a></td>
+    <td>Senate Bill</td>
+    <td>An act about something else.<br />Last Action: adopted</td></tr>
+<tr><td><a href="/Bills/Bill?objectName=2025-HB-9999">HB 9999 of 2025</a></td>
+    <td>House Bill</td>
+    <td>A third act.<br />Last Action: reported with recommendation</td></tr>
 </tbody></table>
 </div>
 </body></html>
@@ -265,6 +276,11 @@ def _mock_search_page(monkeypatch):
         content = SEARCH_RESULTS_HTML
 
     monkeypatch.setattr("mi.bills.mi_waf_get", lambda request_func: FakeResponse())
+    # OPEN-134: a full run persists its last-action baseline under settings.CACHE_DIR. Left
+    # unpatched that is the REAL cache directory, so a test run would overwrite the production
+    # baseline for the live session -- a scraper-correctness landmine set by a unit test.
+    # Redirect it per test; monkeypatch restores the original afterwards.
+    monkeypatch.setattr("mi.bills.settings.CACHE_DIR", tempfile.mkdtemp())
 
 
 def test_mi_bill_id_to_no_normalizes_search_result_text():

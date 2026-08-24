@@ -437,29 +437,45 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         # {bill_no: normalized last-action text} as the site reports it right now.
         site_actions = self._extract_last_actions(page)
 
-        # The skip decision is only as trustworthy as the extraction behind it. If the page
-        # still lists bills but their last actions stopped parsing -- a markup change, a moved
-        # column, a re-worded label -- then site_actions shrinks, changed_nos comes out empty,
-        # and the run skips everything while looking perfectly healthy. That is precisely the
-        # silent miss this ticket exists to remove, so fail closed instead: abort without
-        # touching the baseline, and let the run's normal failure alerting fire.
+        # Is the extraction complete enough to be trusted? Computed here, but acted on ONLY
+        # where an incomplete extraction could cause harm -- which is narrower than it first
+        # appears, and getting that scope wrong turns a working scrape into an outage:
+        #
+        #   * about to SKIP bills (incremental with a baseline): a shrunken site_actions makes
+        #     changed_nos come out empty and the run skips everything while looking healthy.
+        #     That is the silent miss this ticket exists to remove, so raise.
+        #   * a full run or a bill_no= request: nothing is skipped -- every listed bill (or
+        #     every requested one) is scraped regardless. Raising here would break a correct
+        #     scrape over a signal it does not use.
+        #
+        # The one residual risk on a full run is writing a partial baseline, which would make
+        # the NEXT incremental run treat the missing entries as changed. That is handled by
+        # declining to write the baseline rather than by aborting the scrape.
         row_links = page.xpath(
             "//div[contains(@class,'tableScrollWrapper')]/table[1]/tbody/tr/td[1]/a"
         )
-        if row_links and len(site_actions) < _MI_MIN_ACTION_COVERAGE * len(row_links):
-            raise ScrapeError(
-                f"MI OPEN-134: results page lists {len(row_links)} bills but only "
-                f"{len(site_actions)} last actions could be parsed off it "
-                f"(< {_MI_MIN_ACTION_COVERAGE:.0%}). Refusing to make skip decisions from an "
-                f"extraction this incomplete -- it would silently skip bills that moved. The "
-                f"row layout or the 'Last Action:' label has probably changed; "
-                f"_extract_last_actions() needs updating."
-            )
+        extraction_ok = (
+            not row_links
+            or len(site_actions) >= _MI_MIN_ACTION_COVERAGE * len(row_links)
+        )
+        coverage_detail = (
+            f"results page lists {len(row_links)} bills but only {len(site_actions)} last "
+            f"actions could be parsed off it (< {_MI_MIN_ACTION_COVERAGE:.0%}). The row layout "
+            f"or the 'Last Action:' label has probably changed; _extract_last_actions() needs "
+            f"updating."
+        )
 
         # changed_nos is None on a full run, meaning "no recency filter, scrape everything".
         changed_nos = None
         baseline = _mi_load_last_actions(session) if start else None
-        if start:
+        if start and not bill_nos and not extraction_ok:
+            # Checked before the missing-baseline case: if the page stopped parsing, seeding
+            # advice would be wrong too, and this is the more useful diagnosis.
+            raise ScrapeError(
+                f"MI OPEN-134: {coverage_detail} Refusing to make skip decisions from an "
+                f"extraction this incomplete -- it would silently skip bills that moved."
+            )
+        if start and not bill_nos:
             if baseline is None:
                 # Fail closed rather than seeding from the site. Seeding would record the
                 # site's current state as "what we hold", silently marking every already-stale
@@ -600,17 +616,29 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         # not rewrite the baseline -- doing so would mark every bill it didn't ask for as
         # current and hide their real changes from the next run.
         if not bill_nos:
-            merged = dict(baseline or {})
-            merged.update(scraped_actions)
-            if changed_nos is None:
-                # Full run: everything on the page was just scraped, so the whole sweep is the
-                # new truth, including bills whose scrape_bill() yielded nothing to change.
-                merged = dict(site_actions)
-            _mi_save_last_actions(session, merged)
-            self.info(
-                f"MI OPEN-134: last-action baseline now covers {len(merged)} bills "
-                f"({len(scraped_actions)} updated this run)"
-            )
+            if not extraction_ok:
+                # Full run with a partial extraction. The scrape itself was correct -- every
+                # listed bill was fetched -- but persisting this as the baseline would make the
+                # next incremental run treat every unparsed bill as changed. Keep the old
+                # baseline (stale but coherent) and say so loudly.
+                self.warning(
+                    f"MI OPEN-134: {coverage_detail} The scrape itself covered every listed "
+                    f"bill, but the last-action baseline was NOT updated -- writing a partial "
+                    f"one would make the next incremental run re-scrape everything it could "
+                    f"not parse."
+                )
+            else:
+                merged = dict(baseline or {})
+                merged.update(scraped_actions)
+                if changed_nos is None:
+                    # Full run: everything on the page was just scraped, so the whole sweep is
+                    # the new truth, including bills whose scrape_bill() changed nothing.
+                    merged = dict(site_actions)
+                _mi_save_last_actions(session, merged)
+                self.info(
+                    f"MI OPEN-134: last-action baseline now covers {len(merged)} bills "
+                    f"({len(scraped_actions)} updated this run)"
+                )
 
         self._warn_unmatched_bill_nos(session, bill_nos, matched_bill_nos)
 

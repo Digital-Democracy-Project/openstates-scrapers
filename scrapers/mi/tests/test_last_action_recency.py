@@ -8,23 +8,20 @@ baseline is allowed to advance.
 """
 import json
 import os
-import sys
 from unittest import mock
 
 import lxml.html
 import pytest
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
-
-from mi.bills import (  # noqa: E402
+from mi.bills import (
     MIBillScraper,
     _mi_last_action_path,
     _mi_load_last_actions,
     _mi_normalize_last_action,
     _mi_save_last_actions,
 )
-import mi.bills as mi_bills  # noqa: E402
-from openstates.exceptions import ScrapeError  # noqa: E402
+import mi.bills as mi_bills
+from openstates.exceptions import ScrapeError
 
 SESSION = "2025-2026"
 
