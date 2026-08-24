@@ -474,9 +474,13 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
                     f"changed. Refusing to guess: seeding from this sweep would mark every "
                     f"already-stale bill as current, and treating all bills as changed would "
                     f"be a full walk against a WAF-rate-capped site. Fix by running a full "
-                    f"scrape (omit start=), or seed the file from the database -- each bill's "
-                    f"most recent action description, whitespace-collapsed and lowercased, "
-                    f"keyed by compact bill number (e.g. HB4001)."
+                    f"scrape (omit start=), or seed the file from the database: keys are "
+                    f"compact bill numbers (e.g. HB4001), values are the action description "
+                    f"whitespace-collapsed and lowercased, taken from the action with the "
+                    f"HIGHEST `order` -- NOT the latest date. MI's own results page sequences "
+                    f"by `order`, and the two genuinely disagree (HB 4223 has order 14 dated "
+                    f"05-20 after order 13 dated 05-21), so seeding by date mis-seeds those "
+                    f"bills and costs a wasted re-fetch each."
                 )
             changed_nos = {
                 no for no, action in site_actions.items() if baseline.get(no) != action
