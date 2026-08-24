@@ -15,7 +15,12 @@ import scrapelib
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
 
 from mi import Michigan  # noqa: E402
-from mi.bills import MAX_CONSECUTIVE_WAF_BLOCKS, MIBillScraper  # noqa: E402
+# MAX_CONSECUTIVE_WAF_BLOCKS moved to mi._waf_circuit_breaker when the circuit breaker was
+# extracted; this import was left pointing at mi.bills, so the whole module failed to collect
+# and MI had no working test coverage at all. Fixed here because OPEN-134 changes bills.py and
+# needs these tests to prove it did not regress the WAF handling.
+from mi._waf_circuit_breaker import MAX_CONSECUTIVE_WAF_BLOCKS  # noqa: E402
+from mi.bills import MIBillScraper  # noqa: E402
 import mi.bills as mi_bills  # noqa: E402
 from openstates.exceptions import ScrapeError  # noqa: E402
 
