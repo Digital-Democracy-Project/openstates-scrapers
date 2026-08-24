@@ -1,4 +1,5 @@
 import dateutil
+import json
 import os
 import re
 import lxml.html
@@ -9,6 +10,8 @@ import typing
 from datetime import date
 from utils.media import get_media_type
 
+from openstates import settings
+from openstates.exceptions import ScrapeError
 from openstates.scrape import Scraper, Bill, VoteEvent
 from openstates.utils.cookie_provider import (
     WafBlockDetected,
@@ -86,6 +89,103 @@ def _mi_bill_id_to_no(raw_bill_id: str) -> str:
                 rest = str(int(rest))
             return f"{prefix}{rest}"
     return compact
+
+
+# OPEN-134: MI's search `dateFrom=` filters on INTRODUCTION date, not last-action date, so an
+# incremental run never returns a pre-existing bill that merely moved -- roughly 80 bills a
+# week (OPEN-89 measured it: median 88, 59.7% of active bill-weeks).
+#
+# The fix does not need a date filter at all. The unfiltered results page already carries every
+# bill's own "Last Action:" text in the row next to its link, so ONE request describes the
+# recency of the whole corpus. Diff that text against what the previous run saw and re-scrape
+# only the bills whose text changed.
+#
+# Why this beats the two options OPEN-134 contemplated:
+#   * Daily journals recover only 57% (OPEN-150) because they carry floor business and not
+#     committee reports or administrative rows. Measured against a cached full sweep, 1,547 of
+#     3,718 last actions are committee-ish and a further 1,432 administrative -- 80% of the
+#     corpus is exactly what journals structurally cannot see.
+#   * A periodic full walk costs ~3,752 per-bill fetches, ~6.3h at MI's 10 rpm cap.
+# This costs one request plus the bills that actually moved.
+#
+# The comparison is sound because the site's string and our stored action description are the
+# same string: checked across the cached full sweep against the production database, 3,685 of
+# 3,718 matched verbatim (99.1%), 0 bills absent. The 33 that differed were all cases where the
+# DATABASE was newer than the cache, not disagreements about the same moment.
+#
+# Known and accepted limitation: the last-action string is the ONLY recency signal. A change to
+# a bill that does not alter that string -- a document added, a sponsor list edited in a way the
+# summary row does not reflect -- is not detected by an incremental run. The periodic full
+# scrape is what covers that; this path is explicitly about the ~80/week that the date filter
+# made structurally invisible, not about every conceivable edit.
+_MI_LAST_ACTION_WS = re.compile(r"\s+")
+
+# Minimum fraction of listed bills whose last action must parse before the extraction is trusted
+# enough to skip anything. In practice this is 1.0 -- every row on a real results page carries a
+# "Last Action:" -- so anything materially below it means the page shape changed rather than that
+# a few bills genuinely lack one. Set loose enough not to trip on a handful of odd rows and tight
+# enough that a layout change cannot masquerade as "nothing moved".
+_MI_MIN_ACTION_COVERAGE = 0.95
+
+
+def _mi_last_action_path(session: str) -> str:
+    # Same home and shape as MI's WAF cookie jar (openstates/utils/mi_cookies.py) -- a small
+    # JSON file under CACHE_DIR. Keyed per session: bill numbers restart each session, so one
+    # shared file would let a new session's "HB 4001" inherit the previous one's last action
+    # and be silently treated as unchanged.
+    return os.path.join(settings.CACHE_DIR, f"mi_last_actions_{session}.json")
+
+
+def _mi_normalize_last_action(text: str) -> str:
+    """Collapse whitespace and case so cosmetic re-rendering is not read as a real change.
+
+    Deliberately nothing more than that. Anything cleverer (stripping dates, normalising
+    punctuation) risks erasing a genuine action change, and a false "changed" only costs one
+    extra bill fetch while a false "unchanged" is exactly the silent miss this ticket exists
+    to remove -- so the asymmetry says stay literal.
+    """
+    return _MI_LAST_ACTION_WS.sub(" ", (text or "")).strip().lower()
+
+
+def _mi_load_last_actions(session: str) -> typing.Optional[dict]:
+    """Previous run's {bill_no: last_action}, or None if there is no usable baseline.
+
+    An EMPTY dict is deliberately returned as None rather than as itself. A `{}` baseline would
+    otherwise be treated as authoritative and make every bill on the page look changed, which
+    for MI means ~3,900 per-bill fetches against a 10 rpm WAF cap -- a full walk arrived at by
+    accident. There is no legitimate state in which we have recorded this session and know of
+    zero bills, so the two cases do not need telling apart.
+    """
+    path = _mi_last_action_path(session)
+    if not os.path.exists(path):
+        return None
+    try:
+        with open(path) as fh:
+            data = json.load(fh)
+    except (OSError, ValueError):
+        # A truncated or hand-edited file must not become "everything changed" either.
+        return None
+    if not isinstance(data, dict) or not data:
+        return None
+    return data
+
+
+def _mi_save_last_actions(session: str, mapping: dict) -> None:
+    path = _mi_last_action_path(session)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    # Write-then-rename so an interrupted run cannot leave a half-written baseline that the
+    # next run would read as authoritative. The temp name carries the pid so two overlapping
+    # runs cannot write the same scratch file and interleave each other's bytes -- MI is
+    # scheduled single-writer, but a manual run alongside the scheduled one is easy to do by
+    # hand and the failure would be a corrupt baseline rather than an error.
+    tmp = f"{path}.{os.getpid()}.tmp"
+    try:
+        with open(tmp, "w") as fh:
+            json.dump(mapping, fh, indent=0, sort_keys=True)
+        os.replace(tmp, path)
+    finally:
+        if os.path.exists(tmp):
+            os.remove(tmp)
 
 
 # OPEN-132: backstop for _redirected_single_bill()'s identity resolution -- does this bill
@@ -317,14 +417,12 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         # an extra unscheduled hit against a WAF-sensitive site and a footgun for any test
         # that calls scrape() without stubbing get_user_agent() (confirmed: broke
         # MIEventScraper's own existing test suite this exact way).
-        date_from = ""
-        if start:
-            try:
-                dt = dateutil.parser.parse(start)
-                date_from = dt.strftime("%Y-%m-%d")
-            except ValueError:
-                pass
-        search_url = f"https://legislature.mi.gov/Search/ExecuteSearch?chamber=&docTypesList=HB%2CSB&docTypesList=HR%2CSR&docTypesList=HCR%2CSCR&docTypesList=HJR%2CSJR&sessions={session}&sponsor=&number=&dateFrom={date_from}&dateTo=&contentFullText="
+        # OPEN-134: `start` still means "incremental", but it is no longer passed to the site as
+        # `dateFrom=`. That parameter filters on introduction date, so it structurally cannot
+        # return a pre-existing bill that merely moved -- the ~80-bills-a-week hole. The sweep
+        # below is unfiltered and costs exactly the same one request; recency comes from diffing
+        # each row's own "Last Action:" text against the previous run's.
+        search_url = f"https://legislature.mi.gov/Search/ExecuteSearch?chamber=&docTypesList=HB%2CSB&docTypesList=HR%2CSR&docTypesList=HCR%2CSCR&docTypesList=HJR%2CSJR&sessions={session}&sponsor=&number=&dateFrom=&dateTo=&contentFullText="
         page = mi_waf_get(
             lambda cookies, user_agent: self.get(
                 search_url,
@@ -335,6 +433,88 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         ).content
         page = lxml.html.fromstring(page)
         page.make_links_absolute(search_url)
+
+        # {bill_no: normalized last-action text} as the site reports it right now.
+        site_actions = self._extract_last_actions(page)
+
+        # Is the extraction complete enough to be trusted? Computed here, but acted on ONLY
+        # where an incomplete extraction could cause harm -- which is narrower than it first
+        # appears, and getting that scope wrong turns a working scrape into an outage:
+        #
+        #   * about to SKIP bills (incremental with a baseline): a shrunken site_actions makes
+        #     changed_nos come out empty and the run skips everything while looking healthy.
+        #     That is the silent miss this ticket exists to remove, so raise.
+        #   * a full run or a bill_no= request: nothing is skipped -- every listed bill (or
+        #     every requested one) is scraped regardless. Raising here would break a correct
+        #     scrape over a signal it does not use.
+        #
+        # The one residual risk on a full run is writing a partial baseline, which would make
+        # the NEXT incremental run treat the missing entries as changed. That is handled by
+        # declining to write the baseline rather than by aborting the scrape.
+        row_links = page.xpath(
+            "//div[contains(@class,'tableScrollWrapper')]/table[1]/tbody/tr/td[1]/a"
+        )
+        extraction_ok = (
+            not row_links
+            or len(site_actions) >= _MI_MIN_ACTION_COVERAGE * len(row_links)
+        )
+        coverage_detail = (
+            f"results page lists {len(row_links)} bills but only {len(site_actions)} last "
+            f"actions could be parsed off it (< {_MI_MIN_ACTION_COVERAGE:.0%}). The row layout "
+            f"or the 'Last Action:' label has probably changed; _extract_last_actions() needs "
+            f"updating."
+        )
+
+        # changed_nos is None on a full run, meaning "no recency filter, scrape everything".
+        changed_nos = None
+        baseline = _mi_load_last_actions(session) if start else None
+        if start and not bill_nos and not extraction_ok:
+            # Checked before the missing-baseline case: if the page stopped parsing, seeding
+            # advice would be wrong too, and this is the more useful diagnosis.
+            raise ScrapeError(
+                f"MI OPEN-134: {coverage_detail} Refusing to make skip decisions from an "
+                f"extraction this incomplete -- it would silently skip bills that moved."
+            )
+        if start and not bill_nos:
+            if baseline is None:
+                # Fail closed rather than seeding from the site. Seeding would record the
+                # site's current state as "what we hold", silently marking every already-stale
+                # bill as current -- on this very corpus that would have buried 187 real
+                # differences, including bills that had become Public Acts. And treating all
+                # ~3,900 as changed instead would be a full walk at a 10 rpm WAF cap arrived at
+                # by accident. So neither automatic option is acceptable: stop, loudly, and let
+                # an operator choose. A full scrape (omit start=) seeds it correctly for free.
+                raise ScrapeError(
+                    f"MI OPEN-134: no usable last-action baseline at "
+                    f"{_mi_last_action_path(session)}, so an incremental run cannot tell what "
+                    f"changed. Refusing to guess: seeding from this sweep would mark every "
+                    f"already-stale bill as current, and treating all bills as changed would "
+                    f"be a full walk against a WAF-rate-capped site. Fix by running a full "
+                    f"scrape (omit start=), or seed the file from the database: keys are "
+                    f"compact bill numbers (e.g. HB4001), values are the action description "
+                    f"whitespace-collapsed and lowercased, taken from the action with the "
+                    f"HIGHEST `order` -- NOT the latest date. MI's own results page sequences "
+                    f"by `order`, and the two genuinely disagree (HB 4223 has order 14 dated "
+                    f"05-20 after order 13 dated 05-21), so seeding by date mis-seeds those "
+                    f"bills and costs a wasted re-fetch each."
+                )
+            changed_nos = {
+                no for no, action in site_actions.items() if baseline.get(no) != action
+            }
+            # Bills that vanished from the results page are not treated as changed: there is
+            # nothing to re-scrape, and the alternative reads a site-side filter change as
+            # thousands of events.
+            self.info(
+                f"MI OPEN-134: {len(site_actions)} bills on the results page, "
+                f"{len(changed_nos)} with a last action differing from the previous run "
+                f"({len(site_actions) - len(changed_nos)} unchanged, skipped). Diffing "
+                f"last-action text instead of filtering on introduction date."
+            )
+            if not changed_nos:
+                self.info(
+                    "MI OPEN-134: no bill's last action changed since the previous run -- "
+                    "genuine no-op, and a measured one rather than an empty date window."
+                )
 
         # UNCOMMENT TO TEST SINGLE BILL
         # Test one specific bill in scrape only
@@ -407,20 +587,86 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
             )
             return
 
+        # OPEN-134: only advance a bill's recorded last action once its own scrape_bill() has
+        # actually completed. Recording the whole sweep up front would repeat tonight's
+        # OPEN-152 mistake one level down -- a failed run would still "advance the watermark"
+        # and the bill would never be revisited.
+        scraped_actions = {}
         for link in links:
             bill_url = self.make_bill_url(link.xpath("@href")[0])
             bill_id = link.xpath("text()")[0].split(" of ")[0]
+            bill_no_key = _mi_bill_id_to_no(bill_id)
             if bill_nos:
                 # Recorded with the same _mi_bill_id_to_no() used to filter, so the
                 # unmatched diff below can't fire off a leading-zero/spacing difference
                 # between a requested "HB1" and the real link's "HB 0001".
-                bill_no_key = _mi_bill_id_to_no(bill_id)
                 if bill_no_key not in bill_nos:
                     continue
                 matched_bill_nos.add(bill_no_key)
+            elif changed_nos is not None and bill_no_key not in changed_nos:
+                # Incremental run and this bill's last action is byte-identical to the
+                # previous run's -- nothing to fetch. This skip IS the fix: it is what buys
+                # the corpus-wide sweep for the price of the bills that moved.
+                continue
             yield from self.scrape_bill(session, bill_id, bill_url)
+            if bill_no_key in site_actions:
+                scraped_actions[bill_no_key] = site_actions[bill_no_key]
+
+        # A bill_no= request is a targeted subset, not a statement about the corpus, so it must
+        # not rewrite the baseline -- doing so would mark every bill it didn't ask for as
+        # current and hide their real changes from the next run.
+        if not bill_nos:
+            if not extraction_ok:
+                # Full run with a partial extraction. The scrape itself was correct -- every
+                # listed bill was fetched -- but persisting this as the baseline would make the
+                # next incremental run treat every unparsed bill as changed. Keep the old
+                # baseline (stale but coherent) and say so loudly.
+                self.warning(
+                    f"MI OPEN-134: {coverage_detail} The scrape itself covered every listed "
+                    f"bill, but the last-action baseline was NOT updated -- writing a partial "
+                    f"one would make the next incremental run re-scrape everything it could "
+                    f"not parse."
+                )
+            else:
+                merged = dict(baseline or {})
+                merged.update(scraped_actions)
+                if changed_nos is None:
+                    # Full run: everything on the page was just scraped, so the whole sweep is
+                    # the new truth, including bills whose scrape_bill() changed nothing.
+                    merged = dict(site_actions)
+                _mi_save_last_actions(session, merged)
+                self.info(
+                    f"MI OPEN-134: last-action baseline now covers {len(merged)} bills "
+                    f"({len(scraped_actions)} updated this run)"
+                )
 
         self._warn_unmatched_bill_nos(session, bill_nos, matched_bill_nos)
+
+    # OPEN-134: {bill_no: normalized last-action text} from an ExecuteSearch results page.
+    # Reads the same rows scrape() already iterates -- the bill link is in td[1] and the
+    # description cell (td[3]) ends with "Last Action: <text>" -- so this costs no extra
+    # request. A row with no "Last Action:" marker is omitted rather than recorded as empty:
+    # empty would compare equal to a later genuinely-empty read and mask a change.
+    def _extract_last_actions(self, page) -> dict:
+        actions = {}
+        for row in page.xpath(
+            "//div[contains(@class,'tableScrollWrapper')]/table[1]/tbody/tr"
+        ):
+            link = row.xpath("./td[1]/a")
+            cells = row.xpath("./td[3]")
+            if not link or not cells:
+                continue
+            text = cells[0].text_content()
+            marker = text.rfind("Last Action:")
+            if marker == -1:
+                continue
+            bill_id = link[0].xpath("text()")
+            if not bill_id:
+                continue
+            actions[_mi_bill_id_to_no(bill_id[0].split(" of ")[0])] = (
+                _mi_normalize_last_action(text[marker + len("Last Action:"):])
+            )
+        return actions
 
     def _warn_unmatched_bill_nos(self, session, bill_nos, matched_bill_nos) -> None:
         # OPEN-123: without this, a requested bill_no matching nothing (a typo, a stale
