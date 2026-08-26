@@ -429,7 +429,26 @@ class MABillScraper(Scraper):
                         )
 
             # House votes
-            if "Supplement" in action_name:
+            #
+            # OPEN-169: the trigger used to be `"Supplement" in action_name` alone, and
+            # that string does not appear in Massachusetts action text any more. Across
+            # the 24 bills that failed the MA 194th coverage comparison, "Supplement"
+            # occurs ZERO times while "YEA and NAY" occurs 57 -- so every House roll call
+            # was skipped before a single request was made. Not a fetch failure and not a
+            # parse failure: the scraper never tried. The Senate branch below matched
+            # reality ("Roll Call", 41 occurrences), which is why MA had Senate votes and
+            # no House votes at all rather than an obvious total blank.
+            #
+            # Everything downstream already expects this format. scrape_house_vote()
+            # splits the roll-call PDF on "No. " + <number>, which is exactly how
+            # "(See YEA and NAY No. 62 )" numbers itself, and the motion/YEAS/NAYS
+            # regexes below parse the modern text unchanged. Only the gate was stale.
+            #
+            # "Supplement" is kept in the condition rather than replaced: older sessions
+            # may still use it, and dropping it would trade this bug for its mirror image.
+            if "Supplement" in action_name or re.search(
+                r"YEA and NAY", action_name, re.IGNORECASE
+            ):
                 actor = "lower"
 
                 if not re.findall(r"(.+)-\s*\d+\s*YEAS", action_name):
@@ -458,9 +477,21 @@ class MABillScraper(Scraper):
                 cached_vote.set_count("yes", y)
                 cached_vote.set_count("no", n)
 
+                # OPEN-169: the session goes into this URL WITHOUT its ordinal suffix.
+                # `bill.legislative_session` is "194th" and produced
+                # .../Journal/House/194th/2025/RollCalls, which is a 404. The site
+                # wants .../Journal/House/194/2025/RollCalls, which returns the real
+                # ~740KB year-aggregate PDF.
+                #
+                # The 404 was silent and that is the reason it survived: urlretrieve
+                # saved the 404 HTML error page, convert_pdf turned it into junk text,
+                # the "No. <n>" lookup in scrape_house_vote() missed, and that path
+                # `return`s (not `return False`) -- so the caller treated it as success
+                # and yielded a vote event with correct counts and ZERO voters. Tallies
+                # looked right while every individual House vote was quietly dropped.
                 housevote_pdf = (
                     "https://malegislature.gov/Journal/House/{}/{}/RollCalls".format(
-                        bill.legislative_session, action_year
+                        re.sub(r"\D+$", "", bill.legislative_session), action_year
                     )
                 )
                 if (
