@@ -16,6 +16,106 @@ from .actions import Categorizer
 requests.packages.urllib3.disable_warnings()
 
 
+# OPEN-176: a Senate roll call's PDF is named after the roll-call number the
+# action text itself cites, and that is the ONLY reliable way to find it.
+#
+# The scraper used to take `td[3]/a/@href` -- the first link in the action cell --
+# and treat it as the roll-call PDF. That cell carries several unrelated kinds of
+# link (Chapter-of-the-Acts text, cross-references to another bill number, and an
+# amendment's own content page), so the first one is frequently not the roll call.
+# Measured across MA 194th: of 118 Senate vote events that imported with a real
+# tally and zero voters, 115 had been pointed at
+# `/Bills/GetAmendmentContent/.../Preview` -- an 818-byte HTML modal, not a PDF.
+# `convert_pdf` on that HTML fails with "Couldn't find trailer dictionary", which
+# is why OPEN-176 was first filed as a malformed-PDF problem. The file is not a
+# malformed PDF; it was never a PDF.
+#
+# Deriving the URL from the cited number instead is not a guess -- it is the rule
+# the working data already follows, checked in both directions:
+#
+#   * All 110 Senate vote events that DID import voters cite a `Roll Call #<n>`
+#     whose number equals the number in the URL that worked. 110 of 110, so
+#     reconstruction reproduces every URL that currently succeeds.
+#   * Of the 236 roll-call actions in the 194th, 2 are quorum calls (excluded
+#     below) and all 234 that would produce a vote carry a `Roll Call #<n>` in
+#     their own text -- so the number is always available where it is read, and
+#     no same-date sibling lookup is needed.
+#
+# Note the number is not always written tight against the "#": S 2710 reads
+# `Roll Call # 97`, which is why `#\s*` is not `#`.
+_SENATE_ROLLCALL_URL = "http://malegislature.gov/RollCall/{}/SenateRollCall{}.pdf"
+_ROLLCALL_NUMBER_RE = re.compile(r"Roll\s+Call\s+#\s*(\d+)", re.I)
+
+# OPEN-177: Massachusetts writes the nay count three different ways, and the
+# scraper only accepted one of them.
+#
+# The gate used to require the literal substring "nays", so an action reading
+# "(Yeas 39 to Nay 0)" created no vote event at all -- not a tally-only vote, no
+# vote. Across MA 194th's 236 roll-call actions, 230 match the old condition and
+# 6 do not: 3 use the singular "Nay", 1 is a source-side typo that writes the nay
+# count as "Yeas" ("Yeas 39 to Yeas 0", S 2565), and 2 are quorum roll calls
+# handled separately below. Those 4 are 4 of the 6 bills in OPEN-177 that cite a
+# Senate roll call while holding no Senate vote.
+#
+# The second pattern accepts "Yeas" in the nay position deliberately. It is a
+# transcription error on the legislature's side, and the alternative -- dropping
+# the vote -- loses a real 39-0 roll call whose PDF is available and readable.
+# The count is recorded from the text, as it always was; the voters come from the
+# PDF, which is authoritative either way.
+_SENATE_TALLY_RES = (
+    # "39 yeas ... 0 nays" -- the older form, e.g. 2019 H86.
+    re.compile(r"(\d+)\s+yeas\b.*?(\d+)\s+nays\b", re.I),
+    # "Yeas 39 to Nays 0" / "Yeas 39 to Nay 0" / "Yeas 39 to Yeas 0".
+    # The second label is captured, not discarded, so the caller can tell a
+    # tally that Massachusetts labelled correctly from one it mislabelled.
+    re.compile(r"\byeas?\s+(\d+)\s+to\s+(nays?|yeas?)\s+(\d+)", re.I),
+)
+
+# A quorum roll call establishes that enough members are present. It is not a
+# vote on the bill, and the two in MA 194th ("Quorum Roll Call - 149 YEAS to 0
+# NAYS (See YEA and NAY No. 249 )") are House counts that were minting Senate
+# vote events -- they are the 2 remaining Senate events whose source URL points
+# at a *House* roll-call PDF.
+_QUORUM_RE = re.compile(r"Quorum\s+Roll\s+Call", re.I)
+
+
+def parse_senate_tally(action_name):
+    """Return (yes, no, nay_label_ok) from a Senate roll-call action, or None.
+
+    OPEN-177: accepts every spelling of the nay count Massachusetts actually
+    uses, not just "nays". See `_SENATE_TALLY_RES`.
+
+    `nay_label_ok` is False only for the malformed form -- "Yeas 39 to Yeas 0",
+    where the source labels the nay count as yeas (S 2565). Reading the second
+    number as the nay count there is an *inference* about a transcription error,
+    not something the text says, so the caller records that it inferred it. The
+    alternative, dropping the vote, loses a real 39-0 roll call whose PDF is
+    readable -- but a caller that cannot corroborate it against a PDF should not
+    present an inferred number as though the source supplied it.
+    """
+    text = action_name or ""
+    match = _SENATE_TALLY_RES[0].search(text)
+    if match:
+        return int(match.group(1)), int(match.group(2)), True
+    match = _SENATE_TALLY_RES[1].search(text)
+    if match:
+        nay_label_ok = match.group(2).lower().startswith("na")
+        return int(match.group(1)), int(match.group(3)), nay_label_ok
+    return None
+
+
+def senate_rollcall_url(action_name, session):
+    """Return the Senate roll-call PDF URL an action cites, or None.
+
+    OPEN-176: built from the roll-call number in the action's own text rather
+    than from whichever link happens to sit first in the action cell.
+    """
+    match = _ROLLCALL_NUMBER_RE.search(action_name or "")
+    if not match:
+        return None
+    return _SENATE_ROLLCALL_URL.format(re.sub(r"\D+$", "", session), match.group(1))
+
+
 class MABillScraper(Scraper):
     verify = False
 
@@ -67,7 +167,12 @@ class MABillScraper(Scraper):
     # os-update ma bills --scrape scrape_chunk_number=1
     # this trades off comprehensivity for limited scope of failure/faster time to recovery
     def scrape(
-        self, chamber=None, session=None, bill_no=None, scrape_chunk_number=None, start=None
+        self,
+        chamber=None,
+        session=None,
+        bill_no=None,
+        scrape_chunk_number=None,
+        start=None,
     ):
         self.scrape_bill_list(session, start=start)
 
@@ -494,43 +599,48 @@ class MABillScraper(Scraper):
                         re.sub(r"\D+$", "", bill.legislative_session), action_year
                     )
                 )
-                if (
-                    self.scrape_house_vote(cached_vote, housevote_pdf, n_supplement)
-                    is False
-                ):
+                # OPEN-176: same rule as the Senate branch below -- the tally is
+                # real, so record the vote either way and label it when the roll
+                # call could not be read.
+                #
+                # The 34 House events that imported tally-only in MA 194th are all
+                # 2026 supplements #237-#270, while every supplement up to #235
+                # resolved. The year-aggregate journal PDF simply had not been
+                # republished with the July sittings yet, so this is a source-side
+                # lag rather than a parse failure: the same bills will fill in on a
+                # later run, and until they do the gap is now visible instead of
+                # looking like a complete vote.
+                if not self.scrape_house_vote(cached_vote, housevote_pdf, n_supplement):
                     self.warning(
-                        "Skipping vote {} supplement #{} -- roll call fetch "
-                        "failed".format(housevote_pdf, n_supplement)
+                        "MA House roll call unreadable for {} supplement #{}: {} -- "
+                        "recording the tally with voters_unavailable".format(
+                            bill.identifier, n_supplement, housevote_pdf
+                        )
                     )
-                else:
-                    cached_vote.add_source(housevote_pdf)
-                    cached_vote.dedupe_key = "{}#{}".format(
-                        housevote_pdf, n_supplement
-                    )
-                    yield cached_vote
+                    cached_vote.extras[
+                        "voters_unavailable"
+                    ] = "house-rollcall-unreadable"
+
+                cached_vote.add_source(housevote_pdf)
+                cached_vote.dedupe_key = "{}#{}".format(housevote_pdf, n_supplement)
+                yield cached_vote
 
             # Senate votes
-            if "Roll Call" in action_name:
+            #
+            # OPEN-176: a quorum roll call is not a vote on the bill. The two in
+            # MA 194th are House counts, and they were minting Senate vote events
+            # pointed at a House roll-call PDF -- 2 of the 118 Senate events that
+            # imported a tally with nobody in it.
+            if "Roll Call" in action_name and not _QUORUM_RE.search(action_name):
                 actor = "upper"
                 # placeholder
                 vote_action = action_name.split(" -")[0]
                 # 2019 H86 Breaks our regex,
                 # Ordered to a third reading --
                 # see Senate   Roll Call #25 and House Roll Call 56
-                if "yeas" in action_name.lower() and "nays" in action_name.lower():
-                    try:
-                        y, n = re.search(
-                            r"(\d+) yeas .*? (\d+) nays", action_name.lower()
-                        ).groups()
-                        y = int(y)
-                        n = int(n)
-                    except AttributeError:
-                        y = int(
-                            re.search(r"yeas\s+(\d+)", action_name.lower()).group(1)
-                        )
-                        n = int(
-                            re.search(r"nays\s+(\d+)", action_name.lower()).group(1)
-                        )
+                tally = parse_senate_tally(action_name)
+                if tally is not None:
+                    y, n, nay_label_ok = tally
 
                     # TODO: other count isn't included, set later
                     cached_vote = VoteEvent(
@@ -544,19 +654,80 @@ class MABillScraper(Scraper):
                     cached_vote.set_count("yes", y)
                     cached_vote.set_count("no", n)
 
-                    rollcall_pdf = "http://malegislature.gov" + row.xpath(
-                        "string(td[3]/a/@href)"
+                    # OPEN-176: derive the roll-call PDF from the number this
+                    # action cites, not from the first link in the cell.
+                    rollcall_pdf = senate_rollcall_url(
+                        action_name, bill.legislative_session
                     )
-                    if self.scrape_senate_vote(cached_vote, rollcall_pdf) is False:
+                    read_voters = False
+                    if rollcall_pdf:
+                        read_voters = self.scrape_senate_vote(cached_vote, rollcall_pdf)
+
+                    # OPEN-176/OPEN-177: the tally came from the action text and
+                    # is real whatever the PDF does. Record the vote either way,
+                    # and say plainly when nobody could be read from it.
+                    #
+                    # Dropping it instead -- which is what this branch used to do
+                    # on a fetch failure -- is how OPEN-177's H 4530 and S 2903
+                    # ended up citing a Senate roll call while holding no Senate
+                    # vote at all: SenateRollCall70.pdf and SenateRollCall128.pdf
+                    # both failed to fetch during the 2026-08-12 run, and each
+                    # took its whole vote with it. A silent absence is worse than
+                    # a labelled gap, because only the labelled one can be found
+                    # again.
+                    if not read_voters:
                         self.warning(
-                            "Skipping vote {} -- roll call fetch failed".format(
-                                rollcall_pdf
+                            "MA Senate roll call unreadable for {} on {}: {} -- "
+                            "recording the tally with voters_unavailable".format(
+                                bill.identifier,
+                                action_date,
+                                rollcall_pdf or "no roll-call number in action text",
                             )
                         )
-                    else:
-                        cached_vote.add_source(rollcall_pdf)
-                        cached_vote.dedupe_key = rollcall_pdf
-                        yield cached_vote
+                        cached_vote.extras[
+                            "voters_unavailable"
+                        ] = "senate-rollcall-unreadable"
+
+                    # OPEN-177: S 2565 reads "Yeas 39 to Yeas 0" -- the source
+                    # labels its own nay count as yeas. The number is still
+                    # recorded, but say that we inferred what it meant. This
+                    # matters most in exactly the case above, where there are no
+                    # voters to corroborate it against: without this, an inferred
+                    # tally and a sourced one look identical.
+                    if not nay_label_ok:
+                        cached_vote.extras[
+                            "tally_label_inferred"
+                        ] = "source labelled the nay count as yeas"
+
+                    # A VoteEvent needs a source. When the action cites no
+                    # roll-call number there is no roll-call URL to give it, so
+                    # fall back to the bill's own page -- which is where the
+                    # claim actually came from.
+                    #
+                    # No Massachusetts action currently takes this path: of the
+                    # 236 roll-call actions in the 194th, 2 are quorum calls
+                    # (excluded above) and all 234 that would produce a vote
+                    # carry a `Roll Call #<n>`. It exists so a future change in
+                    # how the site cites roll calls degrades to a labelled vote
+                    # rather than to a crash or a silent drop.
+                    #
+                    # The dedupe key folds in the action text because date and
+                    # tally alone do not identify a roll call -- two votes on one
+                    # bill on one day can share a tally, and collapsing them
+                    # would silently merge two real votes. That is a worse
+                    # failure than the one this branch exists to handle.
+                    fallback_source = (
+                        bill.sources[0]["url"]
+                        if bill.sources
+                        else "https://malegislature.gov"
+                    )
+                    cached_vote.add_source(rollcall_pdf or fallback_source)
+                    cached_vote.dedupe_key = rollcall_pdf or "{}#senate-{}-{}".format(
+                        fallback_source,
+                        action_date,
+                        re.sub(r"\W+", "-", action_name.strip().lower())[:80],
+                    )
+                    yield cached_vote
 
             attrs = self.categorizer.categorize(action_name)
             action = bill.add_action(
@@ -583,6 +754,20 @@ class MABillScraper(Scraper):
         return self.house_pdf_cache[vurl]
 
     def scrape_house_vote(self, vote, vurl, supplement):
+        """Attach individual House voters to `vote`.
+
+        OPEN-176: returns True only when at least one voter was actually
+        attached. Every failure path now returns False.
+
+        This used to be three different answers to one question. A failed fetch
+        returned False, a missing supplement did a bare `return` (None), and a
+        parse that read the PDF but produced no voters returned None as well --
+        while the caller tested `is False`. So two of the three failures were
+        indistinguishable from success, and yielded a vote event carrying the
+        action's tally and an empty voter list. That is the mechanism behind
+        every one of the 152 tally-only Massachusetts roll calls, and it is why
+        they accumulated with nothing flagging them.
+        """
         pdflines = self.get_house_pdf(vurl)
         if pdflines is None:
             return False
@@ -593,7 +778,7 @@ class MABillScraper(Scraper):
             )[0]
         except IndexError:
             self.info("No vote found in supplement for vote #%s" % supplement)
-            return
+            return False
 
         # create list of independent items in vote_text
         rows = vote_text.splitlines()
@@ -635,7 +820,16 @@ class MABillScraper(Scraper):
             else:
                 vote.vote("other", tup1[0])
 
+        # OPEN-176: a PDF that read cleanly but named nobody is a failure, not a
+        # unanimous silence.
+        return bool(house_votes)
+
     def scrape_senate_vote(self, vote, vurl):
+        """Attach individual Senate voters to `vote`.
+
+        OPEN-176: returns True only when at least one voter was attached, for
+        the same reason as `scrape_house_vote()` above.
+        """
         # download file to server
         try:
             (path, resp) = self.urlretrieve(vurl)
@@ -647,6 +841,7 @@ class MABillScraper(Scraper):
 
         # for y, n
         mode = None
+        attached = 0
 
         lines = pdflines.splitlines()
 
@@ -683,10 +878,20 @@ class MABillScraper(Scraper):
                     # update vote object with names
                     if mode == "y":
                         vote.yes(clean_name)
+                        attached += 1
                     elif mode == "n":
                         vote.no(clean_name)
+                        attached += 1
                     elif mode == "o":
                         vote.vote("other", clean_name)
+                        attached += 1
+
+        # OPEN-176: an HTML error page or an amendment modal converts to text
+        # without raising, reaches this loop, and matches none of the YEAS/NAYS
+        # section headers -- so `attached` stays 0 and the caller is told the
+        # roll call could not be read, instead of being handed a vote with
+        # nobody in it.
+        return attached > 0
 
     def get_as_ajax(self, url):
         # set the X-Requested-With:XMLHttpRequest so the server only sends along the bits we want
