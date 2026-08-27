@@ -137,6 +137,63 @@ class TestSenateRollCallUrl:
         not a live one."""
         assert senate_rollcall_url("Passed to be engrossed", SESSION) is None
 
+    def test_prefers_the_number_the_action_gives_the_senate(self):
+        """The latent bug this guards, raised at review of OPEN-176.
+
+        An action can name a roll call in each chamber. The 2019 H86 shape,
+        cited in this module's own comments, is the example. Taking the first
+        number would build a Senate URL out of the HOUSE roll-call number --
+        and that URL resolves, returns a real PDF, and attaches the wrong
+        chamber's voters. A wrong source that works is worse than no source.
+        """
+        url = senate_rollcall_url(
+            "Ordered to a third reading -- see Senate   Roll Call #25 "
+            "and House Roll Call 56",
+            SESSION,
+        )
+        assert url == "http://malegislature.gov/RollCall/194/SenateRollCall25.pdf"
+
+    def test_house_number_first_does_not_win(self):
+        """The case that actually distinguishes the guard from what it replaced.
+
+        In H86's own wording the Senate number happens to come first, so taking
+        the first match gets the right answer by luck. Reverse the order and the
+        old behaviour builds SenateRollCall56.pdf -- the House's roll call,
+        served as the Senate's, with the wrong chamber's voters attached and
+        nothing to indicate it. Ordering must not decide this.
+        """
+        url = senate_rollcall_url(
+            "see House Roll Call #56 and Senate Roll Call #25", SESSION
+        )
+        assert url == "http://malegislature.gov/RollCall/194/SenateRollCall25.pdf"
+
+    def test_house_only_citation_yields_no_senate_url(self):
+        """No Senate number named, so there is no Senate URL to build. The
+        caller records the vote with voters_unavailable instead of fetching the
+        House roll call and calling its voters the Senate's."""
+        assert (
+            senate_rollcall_url(
+                "Passed to be engrossed -- see House Roll Call #56", SESSION
+            )
+            is None
+        )
+
+    def test_two_unqualified_numbers_are_ambiguous(self):
+        """Neither number is attributed to a chamber, so neither can be trusted.
+        Ambiguity resolves to None rather than to a coin flip."""
+        assert (
+            senate_rollcall_url("see Roll Call #25 and Roll Call #56", SESSION) is None
+        )
+
+    def test_one_number_repeated_is_not_ambiguous(self):
+        """The same roll call cited twice is still one roll call."""
+        assert (
+            senate_rollcall_url(
+                "see Roll Call #25 -- corrected, see Roll Call #25", SESSION
+            )
+            == "http://malegislature.gov/RollCall/194/SenateRollCall25.pdf"
+        )
+
     def test_never_returns_an_amendment_content_link(self):
         """The actual regression. This is the shape 115 of the 118 broken Senate
         events carried, and it can no longer be produced at all: the URL is now
