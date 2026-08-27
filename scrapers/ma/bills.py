@@ -66,7 +66,9 @@ _SENATE_TALLY_RES = (
     # "39 yeas ... 0 nays" -- the older form, e.g. 2019 H86.
     re.compile(r"(\d+)\s+yeas\b.*?(\d+)\s+nays\b", re.I),
     # "Yeas 39 to Nays 0" / "Yeas 39 to Nay 0" / "Yeas 39 to Yeas 0".
-    re.compile(r"\byeas?\s+(\d+)\s+to\s+(?:nays?|yeas?)\s+(\d+)", re.I),
+    # The second label is captured, not discarded, so the caller can tell a
+    # tally that Massachusetts labelled correctly from one it mislabelled.
+    re.compile(r"\byeas?\s+(\d+)\s+to\s+(nays?|yeas?)\s+(\d+)", re.I),
 )
 
 # A quorum roll call establishes that enough members are present. It is not a
@@ -78,15 +80,27 @@ _QUORUM_RE = re.compile(r"Quorum\s+Roll\s+Call", re.I)
 
 
 def parse_senate_tally(action_name):
-    """Return (yes, no) from a Senate roll-call action, or None if absent.
+    """Return (yes, no, nay_label_ok) from a Senate roll-call action, or None.
 
     OPEN-177: accepts every spelling of the nay count Massachusetts actually
     uses, not just "nays". See `_SENATE_TALLY_RES`.
+
+    `nay_label_ok` is False only for the malformed form -- "Yeas 39 to Yeas 0",
+    where the source labels the nay count as yeas (S 2565). Reading the second
+    number as the nay count there is an *inference* about a transcription error,
+    not something the text says, so the caller records that it inferred it. The
+    alternative, dropping the vote, loses a real 39-0 roll call whose PDF is
+    readable -- but a caller that cannot corroborate it against a PDF should not
+    present an inferred number as though the source supplied it.
     """
-    for pattern in _SENATE_TALLY_RES:
-        match = pattern.search(action_name or "")
-        if match:
-            return int(match.group(1)), int(match.group(2))
+    text = action_name or ""
+    match = _SENATE_TALLY_RES[0].search(text)
+    if match:
+        return int(match.group(1)), int(match.group(2)), True
+    match = _SENATE_TALLY_RES[1].search(text)
+    if match:
+        nay_label_ok = match.group(2).lower().startswith("na")
+        return int(match.group(1)), int(match.group(3)), nay_label_ok
     return None
 
 
@@ -626,7 +640,7 @@ class MABillScraper(Scraper):
                 # see Senate   Roll Call #25 and House Roll Call 56
                 tally = parse_senate_tally(action_name)
                 if tally is not None:
-                    y, n = tally
+                    y, n, nay_label_ok = tally
 
                     # TODO: other count isn't included, set later
                     cached_vote = VoteEvent(
@@ -673,6 +687,17 @@ class MABillScraper(Scraper):
                         cached_vote.extras[
                             "voters_unavailable"
                         ] = "senate-rollcall-unreadable"
+
+                    # OPEN-177: S 2565 reads "Yeas 39 to Yeas 0" -- the source
+                    # labels its own nay count as yeas. The number is still
+                    # recorded, but say that we inferred what it meant. This
+                    # matters most in exactly the case above, where there are no
+                    # voters to corroborate it against: without this, an inferred
+                    # tally and a sourced one look identical.
+                    if not nay_label_ok:
+                        cached_vote.extras[
+                            "tally_label_inferred"
+                        ] = "source labelled the nay count as yeas"
 
                     # A VoteEvent needs a source. When the action cites no
                     # roll-call number there is no roll-call URL to give it, so

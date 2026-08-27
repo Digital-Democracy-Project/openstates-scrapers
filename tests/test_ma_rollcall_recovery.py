@@ -40,32 +40,36 @@ class TestSenateTallyParsing:
         """The 230 of 236 that always worked must keep working."""
         assert parse_senate_tally(
             "Passed to be engrossed -see   Roll Call #70 (Yeas 39 to Nays 0)"
-        ) == (39, 0)
+        ) == (39, 0, True)
 
     def test_singular_nay_parses(self):
         """The bug. S 18, S 19 and S 2917 all read "Nay", and all three created
         no vote event at all."""
         assert parse_senate_tally(
             "Report accepted, as amended -- see   Roll Call #24 (Yeas 39 to Nay 0)"
-        ) == (39, 0)
+        ) == (39, 0, True)
 
     def test_singular_nay_with_nonzero_count(self):
         assert parse_senate_tally(
             "Passed to be engrossed -see   Roll Call #118 (Yeas 37 to Nay 1)"
-        ) == (37, 1)
+        ) == (37, 1, True)
 
     def test_source_typo_writing_nays_as_yeas(self):
         """S 2565. The legislature wrote "Yeas" twice; the second number is still
         the nay count, and the roll-call PDF behind it is readable."""
         assert parse_senate_tally(
             "Passed to be engrossed -- see   Roll Call #65 (Yeas 39 to Yeas 0)"
-        ) == (39, 0)
+        ) == (
+            39,
+            0,
+            False,
+        )  # False = the nay count was labelled "Yeas"
 
     def test_older_number_first_form(self):
         """2019 H86's shape, which the original regex was written for."""
         assert parse_senate_tally(
             "Ordered to a third reading -- 30 yeas to 8 nays"
-        ) == (30, 8)
+        ) == (30, 8, True)
 
     def test_action_with_no_tally_returns_none(self):
         assert parse_senate_tally("Referred to the committee on Ways and Means") is None
@@ -79,8 +83,8 @@ class TestSenateRollCallUrl:
     """OPEN-176: the URL comes from the number the action cites."""
 
     def test_builds_url_from_cited_number(self):
-        """109 of the 110 Senate votes that DID import voters follow exactly this
-        rule, which is why it is safe to rely on for the 115 that did not."""
+        """All 110 Senate votes that DID import voters follow exactly this rule,
+        which is why it is safe to rely on for the 115 that did not."""
         assert (
             senate_rollcall_url("Passed to be engrossed -- see Roll Call #128", SESSION)
             == "http://malegislature.gov/RollCall/194/SenateRollCall128.pdf"
@@ -222,3 +226,58 @@ class TestUnreadableRollCallReportsFailure:
         assert ("yes", "Smith") in vote.voters
         assert ("no", "Jones") in vote.voters
         assert len(vote.voters) == 3
+
+
+class TestSenateVoteReturnContract:
+    """`scrape_senate_vote()` must return a strict boolean on every path.
+
+    The caller now tests `not read_voters` rather than `is False`, which is only
+    safe if there is no third answer. That is the whole point of the change --
+    the old code's third answer (a bare `return`) is what let 152 empty votes
+    through -- so it is worth a test rather than an assumption. The reviewer of
+    this change asked exactly that question.
+    """
+
+    def _scraper(self, monkeypatch, pdf_text):
+        import ma.bills as ma_bills
+
+        scraper = MABillScraper.__new__(MABillScraper)
+        scraper.warning = lambda *a, **kw: None
+        scraper.info = lambda *a, **kw: None
+        scraper.urlretrieve = lambda url: ("/dev/null", None)
+        monkeypatch.setattr(ma_bills, "convert_pdf", lambda path, fmt: pdf_text)
+        monkeypatch.setattr(ma_bills.os, "remove", lambda path: None)
+        return scraper
+
+    def test_readable_roll_call_returns_true(self, monkeypatch):
+        pdf = b"YEAS\nSmith   Jones\nNAYS\nBrown\n"
+        scraper = self._scraper(monkeypatch, pdf)
+        vote = _FakeVote()
+        assert scraper.scrape_senate_vote(vote, "http://example/rc.pdf") is True
+        assert ("yes", "Smith") in vote.voters
+        assert ("no", "Brown") in vote.voters
+
+    def test_html_error_page_returns_false(self, monkeypatch):
+        """The actual 115-event failure: an HTML modal converts to text without
+        raising, matches no YEAS/NAYS header, and must not read as success."""
+        pdf = b'<div class="modal-header"><button>close</button></div>'
+        scraper = self._scraper(monkeypatch, pdf)
+        vote = _FakeVote()
+        assert scraper.scrape_senate_vote(vote, "http://example/rc.pdf") is False
+        assert vote.voters == []
+
+    def test_empty_document_returns_false(self, monkeypatch):
+        scraper = self._scraper(monkeypatch, b"")
+        assert scraper.scrape_senate_vote(_FakeVote(), "http://example/rc.pdf") is False
+
+    def test_fetch_error_returns_false(self, monkeypatch):
+        import ma.bills as ma_bills
+
+        scraper = MABillScraper.__new__(MABillScraper)
+        scraper.warning = lambda *a, **kw: None
+
+        def _raise(url):
+            raise ma_bills.requests.exceptions.RequestException("boom")
+
+        scraper.urlretrieve = _raise
+        assert scraper.scrape_senate_vote(_FakeVote(), "http://example/rc.pdf") is False
