@@ -31,10 +31,18 @@ requests.packages.urllib3.disable_warnings()
 # malformed PDF; it was never a PDF.
 #
 # Deriving the URL from the cited number instead is not a guess -- it is the rule
-# the working data already follows. Of the 110 Senate vote events that DID import
-# voters, 109 have a `Roll Call #<n>` in their bill's action text whose number
-# equals the number in the URL that worked. All 115 broken events have such a
-# number available on a same-date action, so this recovers them.
+# the working data already follows, checked in both directions:
+#
+#   * All 110 Senate vote events that DID import voters cite a `Roll Call #<n>`
+#     whose number equals the number in the URL that worked. 110 of 110, so
+#     reconstruction reproduces every URL that currently succeeds.
+#   * Of the 236 roll-call actions in the 194th, 2 are quorum calls (excluded
+#     below) and all 234 that would produce a vote carry a `Roll Call #<n>` in
+#     their own text -- so the number is always available where it is read, and
+#     no same-date sibling lookup is needed.
+#
+# Note the number is not always written tight against the "#": S 2710 reads
+# `Roll Call # 97`, which is why `#\s*` is not `#`.
 _SENATE_ROLLCALL_URL = "http://malegislature.gov/RollCall/{}/SenateRollCall{}.pdf"
 _ROLLCALL_NUMBER_RE = re.compile(r"Roll\s+Call\s+#\s*(\d+)", re.I)
 
@@ -670,6 +678,19 @@ class MABillScraper(Scraper):
                     # roll-call number there is no roll-call URL to give it, so
                     # fall back to the bill's own page -- which is where the
                     # claim actually came from.
+                    #
+                    # No Massachusetts action currently takes this path: of the
+                    # 236 roll-call actions in the 194th, 2 are quorum calls
+                    # (excluded above) and all 234 that would produce a vote
+                    # carry a `Roll Call #<n>`. It exists so a future change in
+                    # how the site cites roll calls degrades to a labelled vote
+                    # rather than to a crash or a silent drop.
+                    #
+                    # The dedupe key folds in the action text because date and
+                    # tally alone do not identify a roll call -- two votes on one
+                    # bill on one day can share a tally, and collapsing them
+                    # would silently merge two real votes. That is a worse
+                    # failure than the one this branch exists to handle.
                     fallback_source = (
                         bill.sources[0]["url"]
                         if bill.sources
@@ -677,7 +698,9 @@ class MABillScraper(Scraper):
                     )
                     cached_vote.add_source(rollcall_pdf or fallback_source)
                     cached_vote.dedupe_key = rollcall_pdf or "{}#senate-{}-{}".format(
-                        fallback_source, action_date, y
+                        fallback_source,
+                        action_date,
+                        re.sub(r"\W+", "-", action_name.strip().lower())[:80],
                     )
                     yield cached_vote
 

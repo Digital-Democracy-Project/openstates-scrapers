@@ -99,8 +99,38 @@ class TestSenateRollCallUrl:
             == "http://malegislature.gov/RollCall/194/SenateRollCall65.pdf"
         )
 
+    def test_reproduces_urls_that_already_work(self):
+        """The regression guard. Reconstruction replaces the link for *every*
+        Senate roll call, including the 110 that already import voters, so it
+        has to reproduce those URLs exactly rather than merely fix the broken
+        ones. These pairs are real: the action text on the left, and the URL the
+        successful import actually used on the right."""
+        cases = [
+            (
+                "Passed to be engrossed -see   Roll Call #70 (Yeas 39 to Nays 0)",
+                "http://malegislature.gov/RollCall/194/SenateRollCall70.pdf",
+            ),
+            (
+                "Passed to be engrossed -- see   Roll Call #128 (Yeas 38 to Nays 0)",
+                "http://malegislature.gov/RollCall/194/SenateRollCall128.pdf",
+            ),
+            # S 2710 -- a space after the "#". This is the one that made a
+            # stricter check look like a 109/110 mismatch; the real figure is
+            # 110/110 and this is why.
+            (
+                "Passed to be engrossed -see   Roll Call # 97 (Yeas 37 to Nays 0)",
+                "http://malegislature.gov/RollCall/194/SenateRollCall97.pdf",
+            ),
+        ]
+        for action_name, expected in cases:
+            assert senate_rollcall_url(action_name, SESSION) == expected
+
     def test_no_number_yields_no_url(self):
-        """Better to record the vote with an explicit gap than to invent a URL."""
+        """Better to record the vote with an explicit gap than to invent a URL.
+
+        No Massachusetts action currently reaches this: all 234 vote-producing
+        roll-call actions in the 194th carry a number. It is a degradation path,
+        not a live one."""
         assert senate_rollcall_url("Passed to be engrossed", SESSION) is None
 
     def test_never_returns_an_amendment_content_link(self):
