@@ -43,8 +43,23 @@ requests.packages.urllib3.disable_warnings()
 #
 # Note the number is not always written tight against the "#": S 2710 reads
 # `Roll Call # 97`, which is why `#\s*` is not `#`.
+#
+# An action can in principle name a roll call in EACH chamber. The docstring of
+# the Senate branch below already cites the shape, from 2019 H86:
+#
+#     Ordered to a third reading -- see Senate   Roll Call #25 and House Roll Call 56
+#
+# Taking the first number there would build a *Senate* URL out of a *House*
+# roll-call number -- a URL that resolves, returns a real PDF, and attaches the
+# wrong chamber's voters to the vote. That is the same silent-wrong-source class
+# OPEN-176 exists to remove, so it is guarded rather than left to chance even
+# though no such action exists in the data today: across all 236 Massachusetts
+# roll-call actions we hold, none cites more than one number and none uses the
+# chamber-qualified wording at all.
 _SENATE_ROLLCALL_URL = "http://malegislature.gov/RollCall/{}/SenateRollCall{}.pdf"
 _ROLLCALL_NUMBER_RE = re.compile(r"Roll\s+Call\s+#\s*(\d+)", re.I)
+_SENATE_ROLLCALL_MENTION_RE = re.compile(r"Senate\s+Roll\s+Call\s+#?\s*(\d+)", re.I)
+_HOUSE_ROLLCALL_MENTION_RE = re.compile(r"House\s+Roll\s+Call\s+#?\s*(\d+)", re.I)
 
 # OPEN-177: Massachusetts writes the nay count three different ways, and the
 # scraper only accepted one of them.
@@ -109,11 +124,34 @@ def senate_rollcall_url(action_name, session):
 
     OPEN-176: built from the roll-call number in the action's own text rather
     than from whichever link happens to sit first in the action cell.
+
+    Only ever returns a number this action attributes to the Senate:
+
+    * an explicit ``Senate Roll Call #<n>`` wins outright;
+    * otherwise an unqualified ``Roll Call #<n>`` is used, but only when the
+      action names exactly one and it is not the number it gave the House;
+    * anything ambiguous returns None, and the caller records the vote with
+      ``voters_unavailable`` rather than guessing.
+
+    Returning None costs a vote its voter list. Returning the wrong number
+    costs it the *other chamber's* voter list, silently and plausibly, which is
+    worse -- so ambiguity resolves to None.
     """
-    match = _ROLLCALL_NUMBER_RE.search(action_name or "")
-    if not match:
-        return None
-    return _SENATE_ROLLCALL_URL.format(re.sub(r"\D+$", "", session), match.group(1))
+    text = action_name or ""
+
+    senate_mention = _SENATE_ROLLCALL_MENTION_RE.search(text)
+    if senate_mention:
+        number = senate_mention.group(1)
+    else:
+        house_numbers = set(_HOUSE_ROLLCALL_MENTION_RE.findall(text))
+        candidates = {
+            n for n in _ROLLCALL_NUMBER_RE.findall(text) if n not in house_numbers
+        }
+        if len(candidates) != 1:
+            return None
+        number = candidates.pop()
+
+    return _SENATE_ROLLCALL_URL.format(re.sub(r"\D+$", "", session), number)
 
 
 class MABillScraper(Scraper):
