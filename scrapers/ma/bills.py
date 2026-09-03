@@ -154,6 +154,39 @@ def senate_rollcall_url(action_name, session):
     return _SENATE_ROLLCALL_URL.format(re.sub(r"\D+$", "", session), number)
 
 
+def _house_vote_dedupe_key(housevote_pdf, n_supplement, bill_identifier):
+    """OPEN-252: a single House roll-call PDF supplement number can legitimately be cited by
+    more than one bill's action history -- MA sometimes engrosses companion/consolidated bills
+    together in one roll call. Confirmed live in the 194th session: Supplement #29 on
+    2025-04-09 is cited by both H4005's and H4010's "Passed to be engrossed" actions.
+
+    `VoteEvent.bill` is a single FK, so this needs one row PER (roll call, bill) pair, not one
+    shared row. Without the bill identifier folded in here, the second bill's vote resolves via
+    `dedupe_key` to the first bill's already-imported row (`vote_events.py`'s `get_object()`
+    replaces the whole match spec with `dedupe_key` alone) and the importer raises
+    `DuplicateItemError` instead of creating its own row -- exactly what happened live during
+    OPEN-193's canary (run `ma-f08d7646b9fe`).
+    """
+    return "{}#{}#{}".format(housevote_pdf, n_supplement, bill_identifier)
+
+
+def _senate_vote_dedupe_key(
+    rollcall_pdf, fallback_source, action_date, action_name, bill_identifier
+):
+    """Same reasoning as `_house_vote_dedupe_key()` -- a Senate roll-call PDF can likewise be
+    cited by more than one bill's action history, so the bill identifier is folded in here too,
+    not only in the no-PDF fallback branch that already varied its key per action.
+    """
+    if rollcall_pdf:
+        return "{}#{}".format(rollcall_pdf, bill_identifier)
+    return "{}#senate-{}-{}#{}".format(
+        fallback_source,
+        action_date,
+        re.sub(r"\W+", "-", action_name.strip().lower())[:80],
+        bill_identifier,
+    )
+
+
 class MABillScraper(Scraper):
     verify = False
 
@@ -660,7 +693,9 @@ class MABillScraper(Scraper):
                     ] = "house-rollcall-unreadable"
 
                 cached_vote.add_source(housevote_pdf)
-                cached_vote.dedupe_key = "{}#{}".format(housevote_pdf, n_supplement)
+                cached_vote.dedupe_key = _house_vote_dedupe_key(
+                    housevote_pdf, n_supplement, bill.identifier
+                )
                 yield cached_vote
 
             # Senate votes
@@ -760,10 +795,12 @@ class MABillScraper(Scraper):
                         else "https://malegislature.gov"
                     )
                     cached_vote.add_source(rollcall_pdf or fallback_source)
-                    cached_vote.dedupe_key = rollcall_pdf or "{}#senate-{}-{}".format(
+                    cached_vote.dedupe_key = _senate_vote_dedupe_key(
+                        rollcall_pdf,
                         fallback_source,
                         action_date,
-                        re.sub(r"\W+", "-", action_name.strip().lower())[:80],
+                        action_name,
+                        bill.identifier,
                     )
                     yield cached_vote
 

@@ -20,7 +20,11 @@ from openstates.scrape import Bill
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
 
 from ma import Massachusetts  # noqa: E402
-from ma.bills import MABillScraper  # noqa: E402
+from ma.bills import (  # noqa: E402
+    MABillScraper,
+    _house_vote_dedupe_key,
+    _senate_vote_dedupe_key,
+)
 
 
 def make_scraper() -> MABillScraper:
@@ -364,3 +368,68 @@ def test_scrape_action_page_adds_related_bill_for_conference_report_backreferenc
             "relation_type": "related",
         }
     ]
+
+
+# ── _house_vote_dedupe_key / _senate_vote_dedupe_key (OPEN-252) ──────────────
+
+
+def test_house_vote_dedupe_key_differs_for_two_bills_sharing_one_supplement():
+    """The exact live collision: Supplement #29 on 2025-04-09 covers both H4005 and
+    H4010's "Passed to be engrossed" actions in the 194th session -- one shared roll
+    call PDF, two different bills. Before this fix both bills computed the identical
+    dedupe_key ("<pdf>#29"), so the importer's get_object() resolved H4010's vote to
+    H4005's already-imported row and raised DuplicateItemError (confirmed live during
+    OPEN-193's canary, run ma-f08d7646b9fe)."""
+    pdf = "https://malegislature.gov/Journal/House/194/2025/RollCalls"
+
+    key_h4005 = _house_vote_dedupe_key(pdf, 29, "H4005")
+    key_h4010 = _house_vote_dedupe_key(pdf, 29, "H4010")
+
+    assert key_h4005 != key_h4010
+
+
+def test_house_vote_dedupe_key_matches_for_the_same_bill_and_supplement():
+    # Re-scraping the same vote for the same bill must still be idempotent --
+    # this is what makes get_object() find and update the existing row rather
+    # than creating a duplicate across separate runs.
+    pdf = "https://malegislature.gov/Journal/House/194/2025/RollCalls"
+
+    assert _house_vote_dedupe_key(pdf, 29, "H4005") == _house_vote_dedupe_key(
+        pdf, 29, "H4005"
+    )
+
+
+def test_senate_vote_dedupe_key_differs_for_two_bills_sharing_one_rollcall_pdf():
+    # Same class of bug as the House branch, for the common case where a real
+    # rollcall_pdf was found.
+    pdf = "https://malegislature.gov/Bills/194/SenateRollCall70.pdf"
+
+    key_s1 = _senate_vote_dedupe_key(
+        pdf, "fallback", "2025-04-09", "Roll Call #70", "S1"
+    )
+    key_s2 = _senate_vote_dedupe_key(
+        pdf, "fallback", "2025-04-09", "Roll Call #70", "S2"
+    )
+
+    assert key_s1 != key_s2
+
+
+def test_senate_vote_dedupe_key_fallback_branch_differs_for_two_bills():
+    # No rollcall_pdf (the rare case): falls back to fallback_source + date +
+    # action text, which must also stay per-bill.
+    key_s1 = _senate_vote_dedupe_key(
+        None,
+        "https://malegislature.gov/Bills/194/S1",
+        "2025-04-09",
+        "Roll Call #70",
+        "S1",
+    )
+    key_s2 = _senate_vote_dedupe_key(
+        None,
+        "https://malegislature.gov/Bills/194/S2",
+        "2025-04-09",
+        "Roll Call #70",
+        "S2",
+    )
+
+    assert key_s1 != key_s2
