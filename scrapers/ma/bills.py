@@ -174,16 +174,23 @@ def _senate_vote_dedupe_key(
     rollcall_pdf, fallback_source, action_date, action_name, bill_identifier
 ):
     """Same reasoning as `_house_vote_dedupe_key()` -- a Senate roll-call PDF can likewise be
-    cited by more than one bill's action history, so the bill identifier is folded in here too,
-    not only in the no-PDF fallback branch that already varied its key per action.
+    cited by more than one bill's action history, so the bill identifier is folded in here too
+    when a real `rollcall_pdf` is available.
+
+    The no-PDF fallback branch is deliberately left in its original format (pm-review, round
+    1): `fallback_source` there is already `bill.sources[0]["url"]` -- the bill's OWN page --
+    so it was already unique per bill before this fix, and was never vulnerable to the
+    companion-bill collision the PDF branch above has. Changing its key format anyway would
+    only add migration/compatibility risk (any already-imported row would stop matching on the
+    next scrape) for a branch that per the comment above this call site currently never
+    executes at all (0 of 236 roll-call actions in the 194th).
     """
     if rollcall_pdf:
         return "{}#{}".format(rollcall_pdf, bill_identifier)
-    return "{}#senate-{}-{}#{}".format(
+    return "{}#senate-{}-{}".format(
         fallback_source,
         action_date,
         re.sub(r"\W+", "-", action_name.strip().lower())[:80],
-        bill_identifier,
     )
 
 

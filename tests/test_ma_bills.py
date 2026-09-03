@@ -414,22 +414,53 @@ def test_senate_vote_dedupe_key_differs_for_two_bills_sharing_one_rollcall_pdf()
     assert key_s1 != key_s2
 
 
-def test_senate_vote_dedupe_key_fallback_branch_differs_for_two_bills():
-    # No rollcall_pdf (the rare case): falls back to fallback_source + date +
-    # action text, which must also stay per-bill.
+def test_senate_vote_dedupe_key_fallback_branch_format_is_unchanged_by_this_fix():
+    """pm-review, round 1: the no-PDF fallback branch's `fallback_source` is already the
+    bill's own page URL (`bill.sources[0]["url"]`), so it was never vulnerable to the
+    companion-bill collision the PDF branch has -- deliberately NOT changing its key format,
+    to avoid orphaning any already-imported row under the old format for a branch that
+    (per bills.py's own comment) currently never executes at all. `bill_identifier` is
+    accepted but ignored in this branch; two different bills' *own* fallback_source values
+    already differ, which is what actually disambiguates them, not bill_identifier."""
     key_s1 = _senate_vote_dedupe_key(
-        None,
-        "https://malegislature.gov/Bills/194/S1",
+        None, "https://malegislature.gov/Bills/194/S1", "2025-04-09", "Roll Call #70", "S1"
+    )
+    key_s2 = _senate_vote_dedupe_key(
+        None, "https://malegislature.gov/Bills/194/S2", "2025-04-09", "Roll Call #70", "S2"
+    )
+
+    assert key_s1 != key_s2
+    # Exact pre-fix format, with no bill identifier folded in.
+    assert key_s1 == "https://malegislature.gov/Bills/194/S1#senate-2025-04-09-roll-call-70"
+
+
+# ── same bill, different roll call: must still stay distinct (pm-review, round 1) ──────────
+
+
+def test_house_vote_dedupe_key_differs_for_the_same_bill_on_different_supplements():
+    # The fix must not introduce a NEW same-bill collision -- two real, different House
+    # votes on the same bill (different supplement numbers) must keep distinct keys.
+    pdf = "https://malegislature.gov/Journal/House/194/2025/RollCalls"
+
+    assert _house_vote_dedupe_key(pdf, 29, "H4005") != _house_vote_dedupe_key(
+        pdf, 30, "H4005"
+    )
+
+
+def test_senate_vote_dedupe_key_differs_for_the_same_bill_on_different_rollcall_pdfs():
+    key_1 = _senate_vote_dedupe_key(
+        "https://malegislature.gov/Bills/194/SenateRollCall70.pdf",
+        "fallback",
         "2025-04-09",
         "Roll Call #70",
         "S1",
     )
-    key_s2 = _senate_vote_dedupe_key(
-        None,
-        "https://malegislature.gov/Bills/194/S2",
+    key_2 = _senate_vote_dedupe_key(
+        "https://malegislature.gov/Bills/194/SenateRollCall71.pdf",
+        "fallback",
         "2025-04-09",
-        "Roll Call #70",
-        "S2",
+        "Roll Call #71",
+        "S1",
     )
 
-    assert key_s1 != key_s2
+    assert key_1 != key_2
