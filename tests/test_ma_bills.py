@@ -423,15 +423,26 @@ def test_senate_vote_dedupe_key_fallback_branch_format_is_unchanged_by_this_fix(
     accepted but ignored in this branch; two different bills' *own* fallback_source values
     already differ, which is what actually disambiguates them, not bill_identifier."""
     key_s1 = _senate_vote_dedupe_key(
-        None, "https://malegislature.gov/Bills/194/S1", "2025-04-09", "Roll Call #70", "S1"
+        None,
+        "https://malegislature.gov/Bills/194/S1",
+        "2025-04-09",
+        "Roll Call #70",
+        "S1",
     )
     key_s2 = _senate_vote_dedupe_key(
-        None, "https://malegislature.gov/Bills/194/S2", "2025-04-09", "Roll Call #70", "S2"
+        None,
+        "https://malegislature.gov/Bills/194/S2",
+        "2025-04-09",
+        "Roll Call #70",
+        "S2",
     )
 
     assert key_s1 != key_s2
     # Exact pre-fix format, with no bill identifier folded in.
-    assert key_s1 == "https://malegislature.gov/Bills/194/S1#senate-2025-04-09-roll-call-70"
+    assert (
+        key_s1
+        == "https://malegislature.gov/Bills/194/S1#senate-2025-04-09-roll-call-70"
+    )
 
 
 # ── same bill, different roll call: must still stay distinct (pm-review, round 1) ──────────
