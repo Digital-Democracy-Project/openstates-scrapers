@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<rollcall-vote>
+  <vote-metadata>
+    <majority>R</majority>
+    <congress>119</congress>
+    <session>2nd</session>
+    <chamber>U.S. House of Representatives</chamber>
+    <rollcall-num>293</rollcall-num>
+    <legis-num>H J RES 1</legis-num>
+    <vote-question>On Motion to Suspend the Rules and Pass</vote-question>
+    <vote-type>2/3 YEA-AND-NAY</vote-type>
+    <vote-result>Failed</vote-result>
+    <action-date>2-Sep-2026</action-date>
+    <action-time time-etz="16:34">4:34 PM</action-time>
+    <vote-totals>
+      <totals-by-party-header>
+        <party-header>Party</party-header>
+        <yea-header>Yeas</yea-header>
+        <nay-header>Nays</nay-header>
+        <present-header>Answered "Present"</present-header>
+        <not-voting-header>Not Voting</not-voting-header>
+      </totals-by-party-header>
+      <totals-by-vote>
+        <yea-total>212</yea-total>
+        <nay-total>206</nay-total>
+        <present-total>0</present-total>
+        <not-voting-total>15</not-voting-total>
+      </totals-by-vote>
+    </vote-totals>
+  </vote-metadata>
+  <vote-data>
+    <recorded-vote>
+      <legislator name-id="A000370" sort-field="Adams" unaccented-name="Adams" party="D" state="NC" role="legislator">Adams</legislator>
+      <vote>Nay</vote>
+    </recorded-vote>
+    <recorded-vote>
+      <legislator name-id="G000598" sort-field="Garcia (CA)" unaccented-name="Garcia (CA)" party="D" state="CA" role="legislator">Garcia (CA)</legislator>
+      <vote>Yea</vote>
+    </recorded-vote>
+  </vote-data>
+</rollcall-vote>

@@ -7,6 +7,23 @@ from openstates.scrape import VoteEvent, Scraper
 from classify_motion import classify_motion
 
 
+def normalize_clerk_bill_id(bill_id):
+    """The Clerk's legis-num field spaces out every letter of a bill's type --
+    "H R 123", "H RES 123", "H J RES 1", "H CON RES 3" -- so this collapses it to
+    DDP's compact bill identifier format ("HR 123", "HJRES 1", "HCONRES 3").
+
+    OPEN-293: a capturing-group substitution (`re.sub(r"([A-Z])\\s([A-Z])", r"\\1\\2",
+    ...)`) only gets one left-to-right pass over the string, consuming the letters
+    each match replaces so they can't pair with what follows -- that silently
+    mis-normalized every "H J RES"/"S J RES" (HJRES/SJRES) bill id to
+    "HJ RES 1"/"SJ RES 5", a string that matches no real bill identifier, so the
+    vote never linked to its bill and was dropped entirely. A zero-width lookaround
+    doesn't consume the letters on either side of a removed space, so every gap in
+    a run collapses in one pass regardless of how many segments the bill type has.
+    """
+    return re.sub(r"(?<=[A-Z])\s(?=[A-Z])", "", bill_id)
+
+
 class USVoteScraper(Scraper):
     _TZ = pytz.timezone("US/Eastern")
 
@@ -167,8 +184,9 @@ class USVoteScraper(Scraper):
 
         bill_id = page.xpath("//rollcall-vote/vote-metadata/legis-num/text()")[0]
 
-        # for some reason these are "H R 123" which nobody uses, so fix to "HR 123"
-        bill_id = re.sub(r"([A-Z])\s([A-Z])", r"\1\2", bill_id)
+        # "H R 123" -> "HR 123", "H J RES 1" -> "HJRES 1", etc. -- see the function's
+        # own docstring for OPEN-293, the bug this replaced.
+        bill_id = normalize_clerk_bill_id(bill_id)
 
         roll_call = page.xpath("//rollcall-vote/vote-metadata/rollcall-num/text()")[0]
 
