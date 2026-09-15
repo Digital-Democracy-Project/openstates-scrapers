@@ -89,6 +89,9 @@ def test_scrape_house_vote_normalizes_hjres_bill_id():
     ("H CON RES 3", "HCONRES 3"),
     ("S CON RES 2", "SCONRES 2"),
     ("S 100", "S 100"),
+    # pm-review: already-compact input (e.g. a value some other caller already
+    # normalized) must pass through unchanged, not get mangled by a second pass.
+    ("HJRES 1", "HJRES 1"),
 ])
 def test_normalize_clerk_bill_id(clerk_id, expected):
     assert normalize_clerk_bill_id(clerk_id) == expected
