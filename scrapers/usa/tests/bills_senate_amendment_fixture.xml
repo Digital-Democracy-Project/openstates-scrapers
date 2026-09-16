@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!-- Same constructed amendment-branch case as senate_amendment_fixture.xml (votes.py's own
+     test fixture -- see that file's own comment for why it's constructed, not captured), with
+     <congress> added for bills.py's scrape_senate_votes(), which reads session from the page
+     itself rather than taking it as a parameter. -->
+<roll_call_vote>
+  <vote_date>May 21, 2025, 11:06 PM</vote_date>
+  <congress>119</congress>
+  <vote_number>280</vote_number>
+  <document>
+    <document_type>S.Con.Res.</document_type>
+    <document_name>S.Con.Res. 10</document_name>
+  </document>
+  <amendment>
+    <amendment_to_document_number>S.Con.Res. 10</amendment_to_document_number>
+  </amendment>
+  <vote_question_text>On the Amendment</vote_question_text>
+  <vote_result>Amendment Agreed to</vote_result>
+  <count>
+    <yeas>51</yeas>
+    <nays>46</nays>
+    <absent>3</absent>
+    <present>0</present>
+  </count>
+  <members>
+    <member>
+      <lis_member_id>S307</lis_member_id>
+      <member_full>Smith (D-MN)</member_full>
+      <vote_cast>Yea</vote_cast>
+    </member>
+  </members>
+</roll_call_vote>

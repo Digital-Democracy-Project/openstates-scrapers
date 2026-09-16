@@ -9,6 +9,7 @@ import xml.etree.ElementTree as ET
 
 from openstates.scrape import Bill, Scraper, VoteEvent, Event
 from classify_motion import classify_motion
+from usa.votes import normalize_clerk_bill_id, normalize_senate_bill_id
 
 
 # NOTE: This is a US federal bill scraper designed to output bills in the
@@ -775,11 +776,17 @@ class USBillScraper(Scraper):
         if page.xpath("//roll_call_vote/amendment/amendment_to_document_number/text()"):
             bill_id = page.xpath(
                 "//roll_call_vote/amendment/amendment_to_document_number/text()"
-            )[0].replace(".", "")
+            )[0]
         else:
-            bill_id = page.xpath("//roll_call_vote/document/document_name/text()")[
-                0
-            ].replace(".", "")
+            bill_id = page.xpath("//roll_call_vote/document/document_name/text()")[0]
+        # OPEN-293: this is the live production Senate-vote code path (usa/votes.py's
+        # own scrape_senate_vote is never invoked -- "votes" isn't registered in this
+        # jurisdiction's scrapers dict -- so its identical-looking fix never reached
+        # production). See normalize_senate_bill_id's docstring for the bug this
+        # replaces: `.replace(".", "")` alone fixed spacing but left the case wrong
+        # ("SJRes 55" instead of "SJRES 55"), so the vote matched no real bill and was
+        # silently dropped.
+        bill_id = normalize_senate_bill_id(bill_id)
 
         if re.match(r"PN\d*", bill_id):
             return
@@ -860,8 +867,13 @@ class USBillScraper(Scraper):
             return
 
         bill_id = page.xpath("//rollcall-vote/vote-metadata/legis-num/text()")[0]
-        # for some reason these are "H R 123" which nobody uses, so fix to "HR 123"
-        bill_id = re.sub(r"([A-Z])\s([A-Z])", r"\1\2", bill_id)
+        # OPEN-293: this is the live production House-vote code path (usa/votes.py's
+        # own scrape_house_vote is never invoked -- "votes" isn't registered in this
+        # jurisdiction's scrapers dict -- so its identical-looking fix never reached
+        # production). See normalize_clerk_bill_id's docstring for the bug this
+        # replaces: a single left-to-right regex pass silently dropped every
+        # HJRES/SJRES vote (e.g. "H J RES 1" -> "HJ RES 1", matching no real bill).
+        bill_id = normalize_clerk_bill_id(bill_id)
 
         roll_call = page.xpath("//rollcall-vote/vote-metadata/rollcall-num/text()")[0]
 
