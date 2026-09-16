@@ -7,6 +7,15 @@ from openstates.scrape import VoteEvent, Scraper
 from classify_motion import classify_motion
 
 
+# OPEN-293: USVoteScraper below is dead code -- "votes" is commented out of
+# UnitedStates.scrapers (usa/__init__.py), so nothing ever invokes it in production;
+# usa/bills.py's scrape_house_votes()/scrape_senate_votes() is the real, live
+# reimplementation of this same parsing. normalize_clerk_bill_id() and
+# normalize_senate_bill_id() are the one exception: bills.py imports them from here
+# directly, so this module can't be deleted or gutted as unused without either moving
+# these two functions somewhere else first or re-pointing that import.
+
+
 def normalize_clerk_bill_id(bill_id):
     """The Clerk's legis-num field spaces out every letter of a bill's type --
     "H R 123", "H RES 123", "H J RES 1", "H CON RES 3" -- so this collapses it to
