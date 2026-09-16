@@ -4,7 +4,7 @@ import pytest
 
 from openstates.utils import get_pseudo_id
 
-from usa.votes import USVoteScraper, normalize_clerk_bill_id
+from usa.votes import USVoteScraper, normalize_clerk_bill_id, normalize_senate_bill_id
 
 
 FIXTURE_DIR = os.path.join(os.path.dirname(__file__))
@@ -95,3 +95,34 @@ def test_scrape_house_vote_normalizes_hjres_bill_id():
 ])
 def test_normalize_clerk_bill_id(clerk_id, expected):
     assert normalize_clerk_bill_id(clerk_id) == expected
+
+
+# --- OPEN-293 (Senate side): case, not spacing, was the bug here ------------------
+
+def test_scrape_senate_vote_normalizes_sjres_bill_id():
+    """Real case: SJRES 55's roll-275 "On the Joint Resolution" vote had bill_identifier
+    "SJRes 55" before this fix -- correct spacing (the Senate's own XML already keeps
+    "S.J.Res." adjacent via periods, not spaces), but wrong case, so it still matched no
+    real bill and the vote was dropped. A different root cause than the House-side bug
+    above (case, not spacing) in a completely separate code path
+    (scrape_senate_vote, not scrape_house_vote)."""
+    scraper = make_scraper()
+    scraper.get = lambda url: FakeResponse(
+        os.path.join(FIXTURE_DIR, "senate_sjres_fixture.xml")
+    )
+
+    votes = list(scraper.scrape_senate_vote("119", 1, "275"))
+    assert len(votes) == 1
+    assert votes[0].bill_identifier == "SJRES 55"
+
+
+@pytest.mark.parametrize("senate_doc_name,expected", [
+    ("S.J.Res. 55", "SJRES 55"),
+    ("S.Con.Res. 10", "SCONRES 10"),
+    ("S.Res. 50", "SRES 50"),
+    ("S. 100", "S 100"),
+    # pm-review: already-compact input must pass through unchanged.
+    ("SJRES 55", "SJRES 55"),
+])
+def test_normalize_senate_bill_id(senate_doc_name, expected):
+    assert normalize_senate_bill_id(senate_doc_name) == expected

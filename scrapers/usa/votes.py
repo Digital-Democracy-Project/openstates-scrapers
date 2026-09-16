@@ -24,6 +24,25 @@ def normalize_clerk_bill_id(bill_id):
     return re.sub(r"(?<=[A-Z])\s(?=[A-Z])", "", bill_id)
 
 
+def normalize_senate_bill_id(bill_id):
+    """The Senate LIS XML's document_name/amendment_to_document_number fields give a
+    bill's type in mixed case with periods -- "S.J.Res. 55", "S.Con.Res. 10", "S.Res. 50"
+    -- so this collapses it to DDP's compact, all-uppercase bill identifier format
+    ("SJRES 55", "SCONRES 10", "SRES 50").
+
+    OPEN-293: the previous normalization was only `.replace(".", "")`, which fixes the
+    spacing (the periods already kept every segment adjacent, so removing them alone
+    produces the right number of spaces) but leaves the case exactly as the Senate wrote
+    it -- "SJRes 55", not "SJRES 55". That string matches no real bill identifier, so the
+    vote never linked to its bill and was dropped entirely, the same failure mode as the
+    House-side bug this ticket originally found, just from a different cause (case, not
+    spacing) in a completely separate code path (scrape_senate_vote, not
+    scrape_house_vote). A plain bill ("S. 100" -> "S 100") was never affected, since a
+    single letter has no case-sensitive word to get wrong.
+    """
+    return bill_id.replace(".", "").upper()
+
+
 class USVoteScraper(Scraper):
     _TZ = pytz.timezone("US/Eastern")
 
@@ -280,11 +299,10 @@ class USVoteScraper(Scraper):
         if page.xpath("//roll_call_vote/amendment/amendment_to_document_number/text()"):
             bill_id = page.xpath(
                 "//roll_call_vote/amendment/amendment_to_document_number/text()"
-            )[0].replace(".", "")
+            )[0]
         else:
-            bill_id = page.xpath("//roll_call_vote/document/document_name/text()")[
-                0
-            ].replace(".", "")
+            bill_id = page.xpath("//roll_call_vote/document/document_name/text()")[0]
+        bill_id = normalize_senate_bill_id(bill_id)
 
         if re.match(r"PN\d*", bill_id):
             return
