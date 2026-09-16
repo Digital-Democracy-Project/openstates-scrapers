@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!-- pm-review (OPEN-293 PR #48): a real vote-on-a-free-standing-amendment (populated
+     amendment_to_document_number, not empty like every real vote checked while building
+     this fix) wasn't found after checking several 119th-Congress rolls directly -- this
+     is a constructed case, not a captured one. document_name/amendment_to_document_number
+     share the same Senate LIS "document number" field convention, confirmed against
+     document_name's own real "S.J.Res. 55" shape, so this uses that identical shape for
+     the amendment's target document, the one thing this test needs to be realistic about. -->
+<roll_call_vote>
+  <vote_date>May 21, 2025, 11:06 PM</vote_date>
+  <vote_number>280</vote_number>
+  <document>
+    <document_type>S.Con.Res.</document_type>
+    <document_name>S.Con.Res. 10</document_name>
+  </document>
+  <amendment>
+    <amendment_to_document_number>S.Con.Res. 10</amendment_to_document_number>
+  </amendment>
+  <vote_question_text>On the Amendment</vote_question_text>
+  <vote_result>Amendment Agreed to</vote_result>
+  <count>
+    <yeas>51</yeas>
+    <nays>46</nays>
+    <absent>3</absent>
+    <present>0</present>
+  </count>
+  <members>
+    <member>
+      <lis_member_id>S307</lis_member_id>
+      <member_full>Smith (D-MN)</member_full>
+      <vote_cast>Yea</vote_cast>
+    </member>
+  </members>
+</roll_call_vote>

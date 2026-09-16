@@ -126,3 +126,31 @@ def test_scrape_senate_vote_normalizes_sjres_bill_id():
 ])
 def test_normalize_senate_bill_id(senate_doc_name, expected):
     assert normalize_senate_bill_id(senate_doc_name) == expected
+
+
+def test_scrape_senate_vote_normalizes_amendment_to_document_number():
+    """pm-review: the amendment_to_document_number branch (a vote on a free-standing
+    amendment, not the bill itself) goes through the same normalize_senate_bill_id() call
+    as document_name -- confirms that branch actually gets normalized too, not just
+    exercised structurally."""
+    scraper = make_scraper()
+    scraper.get = lambda url: FakeResponse(
+        os.path.join(FIXTURE_DIR, "senate_amendment_fixture.xml")
+    )
+
+    votes = list(scraper.scrape_senate_vote("119", 1, "280"))
+    assert len(votes) == 1
+    assert votes[0].bill_identifier == "SCONRES 10"
+
+
+def test_scrape_senate_vote_still_skips_nominations_after_normalization():
+    """pm-review: confirms the PN-nomination skip-check downstream of the normalization
+    change still works -- a nomination vote (document_name "PN123", already bare/upper by
+    convention) must still yield nothing, not get treated as a real bill vote."""
+    scraper = make_scraper()
+    scraper.get = lambda url: FakeResponse(
+        os.path.join(FIXTURE_DIR, "senate_nomination_fixture.xml")
+    )
+
+    votes = list(scraper.scrape_senate_vote("119", 1, "281"))
+    assert votes == []
