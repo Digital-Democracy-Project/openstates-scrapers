@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!-- Same real SJRES 55/roll-275 vote as senate_sjres_fixture.xml (votes.py's own test fixture),
+     with <congress> added -- bills.py's scrape_senate_votes() reads session from the page itself
+     (//roll_call_vote/congress/text()) rather than taking it as a parameter like votes.py's
+     scrape_senate_vote(session, period, roll_call) does, so this is the one real difference
+     between the two otherwise-identical XML shapes. -->
+<roll_call_vote>
+  <vote_date>May 21, 2025, 11:06 PM</vote_date>
+  <congress>119</congress>
+  <vote_number>275</vote_number>
+  <document>
+    <document_type>S.J.Res.</document_type>
+    <document_name>S.J.Res. 55</document_name>
+  </document>
+  <amendment>
+    <amendment_to_document_number/>
+  </amendment>
+  <vote_question_text>On the Joint Resolution S.J.Res. 55</vote_question_text>
+  <vote_result>Joint Resolution Passed</vote_result>
+  <count>
+    <yeas>51</yeas>
+    <nays>46</nays>
+    <absent>3</absent>
+    <present>0</present>
+  </count>
+  <members>
+    <member>
+      <lis_member_id>S307</lis_member_id>
+      <member_full>Smith (D-MN)</member_full>
+      <vote_cast>Yea</vote_cast>
+    </member>
+    <member>
+      <lis_member_id>S308</lis_member_id>
+      <member_full>Frankel, Lois (D-FL)</member_full>
+      <vote_cast>Nay</vote_cast>
+    </member>
+  </members>
+</roll_call_vote>

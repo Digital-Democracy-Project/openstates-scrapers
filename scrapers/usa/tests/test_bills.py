@@ -1,3 +1,7 @@
+import os
+
+import lxml.html
+
 from usa.bills import (
     USBillScraper,
     _US_BILL_URL_RE,
@@ -6,8 +10,16 @@ from usa.bills import (
 )
 
 
+FIXTURE_DIR = os.path.join(os.path.dirname(__file__))
+
+
 def make_scraper():
     return USBillScraper(jurisdiction="usa", datadir="/tmp")
+
+
+def _load_page(filename):
+    with open(os.path.join(FIXTURE_DIR, filename), "rb") as f:
+        return lxml.html.fromstring(f.read())
 
 
 class FakeResponse:
@@ -242,3 +254,65 @@ def test_scrape_without_bill_no_never_warns():
     list(scraper.scrape(session="119"))
 
     assert warnings == []
+
+
+# --- OPEN-293 (correction): the LIVE production vote-scraping code lives here, in
+# bills.py's scrape_house_votes()/scrape_senate_votes() -- not in usa/votes.py. "votes" is
+# commented out of UnitedStates.scrapers (scrapers/usa/__init__.py), so USVoteScraper is
+# never invoked by any real run; os-update's own scraper lookup (`juris.scrapers[name]`)
+# would KeyError on "votes" if anything ever tried. votes.py is a parallel, unused
+# reimplementation of the identical Clerk/Senate-LIS parsing logic -- confirmed by diffing
+# the two side by side, xpath for xpath. PRs #47/#48 fixed votes.py's copy of this bug; this
+# fixes the same bug in the copy that actually runs. Fixtures mirror votes.py's own
+# tests/roll293_hjres_fixture.xml (unmodified, identical XML shape) and
+# tests/senate_*_fixture.xml (with <congress> added -- bills.py's scrape_senate_votes()
+# reads session from the page itself, while votes.py's scrape_senate_vote() takes it as a
+# parameter instead; that's the one real structural difference between the two copies).
+
+
+def test_scrape_house_votes_normalizes_hjres_bill_id():
+    """Real case: HJRES 1's roll-293 vote had bill_identifier "HJ RES 1" before this fix --
+    matches no real bill, so the vote never linked to anything and was silently dropped."""
+    scraper = make_scraper()
+    page = _load_page("roll293_hjres_fixture.xml")
+
+    vote = scraper.scrape_house_votes(bill=None, page=page, url="https://clerk.house.gov/evs/2026/roll293.xml")
+
+    assert vote.bill_identifier == "HJRES 1"
+
+
+def test_scrape_senate_votes_normalizes_sjres_bill_id():
+    """Real case: SJRES 55's roll-275 vote had bill_identifier "SJRes 55" before this fix --
+    correct spacing, wrong case, so it still matched no real bill and was dropped."""
+    scraper = make_scraper()
+    page = _load_page("bills_senate_sjres_fixture.xml")
+
+    votes = list(scraper.scrape_senate_votes(page, "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_275.xml"))
+
+    assert len(votes) == 1
+    assert votes[0].bill_identifier == "SJRES 55"
+
+
+def test_scrape_senate_votes_normalizes_amendment_to_document_number():
+    """The amendment_to_document_number branch (a vote on a free-standing amendment, not the
+    bill itself) goes through the same normalize_senate_bill_id() call as document_name --
+    confirms that branch actually gets normalized too, not just exercised structurally."""
+    scraper = make_scraper()
+    page = _load_page("bills_senate_amendment_fixture.xml")
+
+    votes = list(scraper.scrape_senate_votes(page, "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_280.xml"))
+
+    assert len(votes) == 1
+    assert votes[0].bill_identifier == "SCONRES 10"
+
+
+def test_scrape_senate_votes_still_skips_nominations_after_normalization():
+    """Confirms the PN-nomination skip-check downstream of the normalization change still
+    works -- a nomination vote (document_name "PN123", already bare/upper by convention) must
+    still yield nothing, not get treated as a real bill vote."""
+    scraper = make_scraper()
+    page = _load_page("bills_senate_nomination_fixture.xml")
+
+    votes = list(scraper.scrape_senate_votes(page, "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_281.xml"))
+
+    assert votes == []

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!-- Same nomination-skip case as senate_nomination_fixture.xml (votes.py's own test fixture),
+     with <congress> added for bills.py's scrape_senate_votes(). -->
+<roll_call_vote>
+  <vote_date>May 21, 2025, 11:06 PM</vote_date>
+  <congress>119</congress>
+  <vote_number>281</vote_number>
+  <document>
+    <document_type>PN123</document_type>
+    <document_name>PN123</document_name>
+  </document>
+  <amendment>
+    <amendment_to_document_number/>
+  </amendment>
+  <vote_question_text>On the Nomination</vote_question_text>
+  <vote_result>Confirmed</vote_result>
+  <count>
+    <yeas>51</yeas>
+    <nays>46</nays>
+    <absent>3</absent>
+    <present>0</present>
+  </count>
+  <members>
+    <member>
+      <lis_member_id>S307</lis_member_id>
+      <member_full>Smith (D-MN)</member_full>
+      <vote_cast>Yea</vote_cast>
+    </member>
+  </members>
+</roll_call_vote>
