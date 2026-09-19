@@ -215,11 +215,17 @@ class USBillScraper(Scraper):
         #     zero-match handling (the warning above, from OPEN-123); this check would only
         #     ever be reached in a mode where bill_no= is unset, but the condition is spelled
         #     out explicitly rather than relied upon implicitly.
-        #   - only when candidates_seen > 0 -- i.e. the sitemap(s) themselves were fetched
-        #     and parsed successfully and had real entries to consider. If the sitemap fetch
-        #     itself fails or returns something unparseable, that raises out of the earlier
-        #     `self.get(sitemap_url)`/`ET.fromstring()` calls before this is ever reached, so
-        #     a genuinely broken/unreachable source is never mistaken for "nothing changed".
+        #   - only when candidates_seen > 0 -- i.e. at least one per-chamber sitemap listed
+        #     in the top-level index was fetched and parsed successfully and had real
+        #     entries to consider. If a sitemap's own fetch fails or returns something
+        #     unparseable, that raises out of the earlier `self.get()`/`ET.fromstring()`
+        #     calls before this is ever reached, so that failure mode is never mistaken for
+        #     "nothing changed". (This does NOT protect against the top-level sitemap index
+        #     itself omitting an entire per-chamber/session entry it should have listed --
+        #     this scraper has no independent source of truth for how many sitemaps ought to
+        #     exist for a given session, so that narrower failure mode is a known, accepted
+        #     limitation shared with ut/bills.py's identical EmptyScrape precedent, not
+        #     something this fix claims to catch.)
         #   - only when newer_than_cutoff is 0 -- i.e. literally none of the real candidates
         #     were newer than start=. pm-review (round 1) correctly caught that checking
         #     "yielded" instead would have masked a real problem: an entry that IS newer
@@ -233,6 +239,12 @@ class USBillScraper(Scraper):
             and scrape_stats["candidates_seen"]
             and not scrape_stats["newer_than_cutoff"]
         ):
+            self.info(
+                f"OPEN-216: incremental scrape (session={session!r}, chamber={chamber!r}, "
+                f"start={start!r}) saw {scrape_stats['candidates_seen']} candidate(s) across "
+                "the matching sitemap(s), none newer than the cutoff -- treating as a benign "
+                "no-op via EmptyScrape."
+            )
             raise EmptyScrape
 
     def parse_bill_list(
