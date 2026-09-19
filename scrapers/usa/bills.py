@@ -7,6 +7,7 @@ import re
 import requests
 import xml.etree.ElementTree as ET
 
+from openstates.exceptions import EmptyScrape
 from openstates.scrape import Bill, Scraper, VoteEvent, Event
 from classify_motion import classify_motion
 from usa.votes import normalize_clerk_bill_id, normalize_senate_bill_id
@@ -129,6 +130,11 @@ class USBillScraper(Scraper):
     # chain (not one process per bill) -- parse_bill_list() does the actual per-entry
     # skip against the sitemap listing it already walks.
     def scrape(self, chamber=None, session=None, start=None, hearings=True, bill_no=None):
+        # OPEN-216: recorded before start= is overwritten below (which always leaves it a
+        # real datetime, never falsy) -- this is the one signal for whether the caller
+        # actually asked for an incremental window, used by the EmptyScrape guard at the
+        # bottom of this method.
+        is_incremental = bool(start)
         if start:
             start = datetime.datetime.strptime(start, "%Y-%m-%dT%H:%M:%S")
         else:
@@ -161,6 +167,16 @@ class USBillScraper(Scraper):
         # if you want to test a bill:
         # yield from self.parse_bill('https://www.govinfo.gov/bulkdata/BILLSTATUS/119/hr/BILLSTATUS-119hr1968.xml')
 
+        # OPEN-216: threaded into parse_bill_list() below so this method can tell, once the
+        # sitemap walk is done, whether it saw real candidate entries at all (proof the
+        # sitemap fetch/parse itself worked) versus whether any of them were actually newer
+        # than the incremental cutoff. See the EmptyScrape check below for what this
+        # distinction is for -- deliberately NOT tracking "yielded" here: an entry that IS
+        # newer than start but whose parse_bill() call yields nothing for some other reason
+        # (a malformed detail page, a real parse problem) must not be swallowed as "nothing
+        # changed" -- only "candidates existed, none were newer than the cutoff" means that.
+        scrape_stats = {"candidates_seen": 0, "newer_than_cutoff": 0}
+
         for link in root.findall("us:sitemap/us:loc", self.ns):
             # split by /, then check that "116s" matches the chamber
             if chamber:
@@ -171,7 +187,7 @@ class USBillScraper(Scraper):
 
             if session in link.text:
                 yield from self.parse_bill_list(
-                    link.text, start, hearings, bill_nos, matched_bill_nos
+                    link.text, start, hearings, bill_nos, matched_bill_nos, scrape_stats
                 )
 
         # OPEN-123: a requested bill_no matching nothing used to yield zero bills and exit
@@ -187,8 +203,58 @@ class USBillScraper(Scraper):
                     f"Requested bill_no '{missing}' not found in session {session}"
                 )
 
+        # OPEN-216: openstates-core's do_scrape() hard-fails with ScrapeError whenever a
+        # scrape yields nothing, whether or not that's actually a problem -- an incremental
+        # window narrow enough to have zero real changes is a normal, expected outcome, not
+        # a failure, and aborting the whole os-update invocation over it (including any
+        # other work queued after it) is wrong. Mirrors ut/bills.py's own EmptyScrape
+        # escape hatch. Deliberately narrow, matching that precedent:
+        #   - only for a real incremental run (is_incremental) -- a full scrape (no start=)
+        #     finding nothing is still worth treating as a hard failure, unchanged.
+        #   - never when bill_no= targeting is active -- that already has its own, different
+        #     zero-match handling (the warning above, from OPEN-123); this check would only
+        #     ever be reached in a mode where bill_no= is unset, but the condition is spelled
+        #     out explicitly rather than relied upon implicitly.
+        #   - only when candidates_seen > 0 -- i.e. at least one per-chamber sitemap listed
+        #     in the top-level index was fetched and parsed successfully and had real
+        #     entries to consider. If a sitemap's own fetch fails or returns something
+        #     unparseable, that raises out of the earlier `self.get()`/`ET.fromstring()`
+        #     calls before this is ever reached, so that failure mode is never mistaken for
+        #     "nothing changed". (This does NOT protect against the top-level sitemap index
+        #     itself omitting an entire per-chamber/session entry it should have listed --
+        #     this scraper has no independent source of truth for how many sitemaps ought to
+        #     exist for a given session, so that narrower failure mode is a known, accepted
+        #     limitation shared with ut/bills.py's identical EmptyScrape precedent, not
+        #     something this fix claims to catch.)
+        #   - only when newer_than_cutoff is 0 -- i.e. literally none of the real candidates
+        #     were newer than start=. pm-review (round 1) correctly caught that checking
+        #     "yielded" instead would have masked a real problem: an entry that IS newer
+        #     than the cutoff but whose parse_bill() call yields nothing for some other
+        #     reason (a malformed detail page, a genuine parse failure that doesn't itself
+        #     raise) is not "nothing changed" and must not be swallowed as EmptyScrape --
+        #     the existing do_scrape() ScrapeError is the correct outcome for that case.
+        if (
+            is_incremental
+            and bill_nos is None
+            and scrape_stats["candidates_seen"]
+            and not scrape_stats["newer_than_cutoff"]
+        ):
+            self.info(
+                f"OPEN-216: incremental scrape (session={session!r}, chamber={chamber!r}, "
+                f"start={start!r}) saw {scrape_stats['candidates_seen']} candidate(s) across "
+                "the matching sitemap(s), none newer than the cutoff -- treating as a benign "
+                "no-op via EmptyScrape."
+            )
+            raise EmptyScrape
+
     def parse_bill_list(
-        self, url, start, scrape_hearings=True, bill_nos=None, matched_bill_nos=None
+        self,
+        url,
+        start,
+        scrape_hearings=True,
+        bill_nos=None,
+        matched_bill_nos=None,
+        scrape_stats=None,
     ):
         sitemap = self.get(url).content
         root = ET.fromstring(sitemap)
@@ -209,11 +275,20 @@ class USBillScraper(Scraper):
                 if matched_bill_nos is not None:
                     matched_bill_nos.add(bill_no_key)
 
+            if scrape_stats is not None:
+                scrape_stats["candidates_seen"] += 1
+
             date = datetime.datetime.fromisoformat(
                 self.get_xpath(row, "us:lastmod")[:-1]
             )
 
             if bill_nos is not None or date > start:
+                # OPEN-216: recorded here, at the date-cutoff decision itself, regardless
+                # of what parse_bill() below ends up yielding -- see this function's own
+                # scrape_stats comment for why "reached parse_bill" and "yielded something"
+                # are deliberately not conflated.
+                if scrape_stats is not None:
+                    scrape_stats["newer_than_cutoff"] += 1
                 self.debug(
                     f"{datetime.datetime.strftime(date, '%c')} > {datetime.datetime.strftime(start, '%c')}, scraping {bill_url}"
                 )

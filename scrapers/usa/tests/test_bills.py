@@ -1,6 +1,9 @@
 import os
 
 import lxml.html
+import pytest
+
+from openstates.exceptions import EmptyScrape
 
 from usa.bills import (
     USBillScraper,
@@ -158,7 +161,12 @@ def test_scrape_without_bill_no_processes_every_bill_unchanged():
 
 
 def test_scrape_with_bill_no_bypasses_start_cutoff():
-    # Without bill_no, this start value excludes HR76 (lastmod 2000, well before start).
+    # Without bill_no, this start value excludes HR76 (lastmod 2000, well before start) but
+    # HR160/HR9999/S325/S9999 are all newer than it -- OPEN-216's EmptyScrape guard keys off
+    # of whether any real candidate was newer than the cutoff, not whether parse_bill()
+    # actually yielded (see the dedicated tests below for why), so this pre-existing
+    # zero-yield mock doesn't trip it: 4 of 5 candidates are newer than start=, so this
+    # scrape completes normally, unaffected by that fix.
     scraper = make_scraper()
     _mock_sitemaps(scraper)
     processed = _record_parse_bill(scraper)
@@ -254,6 +262,82 @@ def test_scrape_without_bill_no_never_warns():
     list(scraper.scrape(session="119"))
 
     assert warnings == []
+
+
+# --- OPEN-216: a real incremental window with zero new bills must raise EmptyScrape,
+# not let openstates-core's do_scrape() hard-fail the whole run. cloud_collector.py and
+# run-scrape.sh both already catch that hard failure and treat it as a benign no-op via
+# string-matching the scrape output (OPEN-152/OPEN-244) -- this fix is complementary, not
+# a duplicate: it stops the crash at the source instead of relying on a wrapper to
+# recognize and reclassify it after the fact, matching the pattern ut/bills.py already
+# uses for the same situation.
+
+
+def test_incremental_scrape_with_zero_new_bills_raises_empty_scrape():
+    # All 5 sitemap entries have real lastmod dates well before this start=, so every one
+    # is a genuine candidate that gets correctly filtered out -- not a fetch/parse failure.
+    scraper = make_scraper()
+    _mock_sitemaps(scraper)
+    _record_parse_bill(scraper)
+
+    with pytest.raises(EmptyScrape):
+        list(scraper.scrape(session="119", start="2027-01-01T00:00:00"))
+
+
+def test_full_scrape_with_zero_bills_does_not_raise_empty_scrape():
+    # No start= -- this is a full scrape, not incremental. scrape() itself never raises
+    # ScrapeError directly (that's openstates-core's do_scrape(), one layer up, which this
+    # repo doesn't re-test here); what this guards is narrower and specific to this fix:
+    # the new EmptyScrape guard must not fire outside the incremental case, so a full
+    # scrape finding nothing still just completes quietly, exactly as before this change,
+    # leaving do_scrape()'s own existing hard-failure behavior for that case untouched.
+    scraper = make_scraper()
+    _mock_sitemaps(scraper)
+    scraper.parse_bill = lambda url, scrape_hearings=True: iter(())
+
+    assert list(scraper.scrape(session="119")) == []
+
+
+def test_incremental_scrape_with_no_real_candidates_does_not_raise_empty_scrape():
+    # The session filter matches nothing at all in the sitemap index -- candidates_seen
+    # stays 0, so this must NOT be mistaken for "asked and got nothing new". A real
+    # unreachable-source failure would instead raise directly out of the earlier sitemap
+    # fetch/parse calls; this covers the complementary "nothing to even consider" shape of
+    # "no real candidates", which is the one this function's own logic can tell apart from
+    # a genuine empty-window result.
+    scraper = make_scraper()
+    _mock_sitemaps(scraper)
+    _record_parse_bill(scraper)
+
+    assert list(scraper.scrape(session="999-no-such-session", start="2020-01-01T00:00:00")) == []
+
+
+def test_incremental_scrape_with_newer_entry_yielding_nothing_does_not_raise_empty_scrape():
+    # pm-review (round 1): the key boundary this fix has to get right. HR160/HR9999/S325/
+    # S9999 are all newer than this start=, so real work was found and attempted -- but
+    # parse_bill() is mocked to yield nothing for any of them, simulating a real per-bill
+    # parse failure that doesn't itself raise (a malformed detail page, say). This must NOT
+    # be swallowed as EmptyScrape -- a real problem should still surface as a real failure
+    # (openstates-core's own do_scrape(), not exercised directly here, is what raises
+    # ScrapeError for this exact "yielded nothing at all" shape one layer up).
+    scraper = make_scraper()
+    _mock_sitemaps(scraper)
+    scraper.parse_bill = lambda url, scrape_hearings=True: iter(())
+
+    assert list(scraper.scrape(session="119", start="2020-01-01T00:00:00")) == []
+
+
+def test_incremental_scrape_with_a_real_yield_does_not_raise_empty_scrape():
+    # The ordinary successful case: a real incremental run where at least one newer bill
+    # actually yields a real object. EmptyScrape must never fire here -- confirms the fix
+    # doesn't accidentally swallow real, successful incremental results too.
+    scraper = make_scraper()
+    _mock_sitemaps(scraper)
+    scraper.parse_bill = lambda url, scrape_hearings=True: iter([object()])
+
+    results = list(scraper.scrape(session="119", start="2020-01-01T00:00:00"))
+
+    assert len(results) == 4  # HR160, HR9999, S325, S9999 -- everything newer than start=
 
 
 # --- OPEN-293 (correction): the LIVE production vote-scraping code lives here, in
