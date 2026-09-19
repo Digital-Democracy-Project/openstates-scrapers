@@ -161,19 +161,17 @@ def test_scrape_without_bill_no_processes_every_bill_unchanged():
 
 
 def test_scrape_with_bill_no_bypasses_start_cutoff():
-    # Without bill_no, this start value excludes HR76 (lastmod 2000, well before start).
-    # OPEN-216: this test's own mock (_record_parse_bill) never actually yields a real Bill
-    # object for a reached URL, so from scrape()'s own point of view every one of these
-    # bills is a real candidate that yielded nothing -- exactly the shape the new
-    # EmptyScrape guard exists to catch on a real incremental run. `processed` is still
-    # populated as a side effect before the raise, so the URL-reached assertion below still
-    # holds.
+    # Without bill_no, this start value excludes HR76 (lastmod 2000, well before start) but
+    # HR160/HR9999/S325/S9999 are all newer than it -- OPEN-216's EmptyScrape guard keys off
+    # of whether any real candidate was newer than the cutoff, not whether parse_bill()
+    # actually yielded (see the dedicated tests below for why), so this pre-existing
+    # zero-yield mock doesn't trip it: 4 of 5 candidates are newer than start=, so this
+    # scrape completes normally, unaffected by that fix.
     scraper = make_scraper()
     _mock_sitemaps(scraper)
     processed = _record_parse_bill(scraper)
 
-    with pytest.raises(EmptyScrape):
-        list(scraper.scrape(session="119", start="2020-01-01T00:00:00"))
+    list(scraper.scrape(session="119", start="2020-01-01T00:00:00"))
 
     assert HR76_URL not in processed
 
@@ -312,6 +310,34 @@ def test_incremental_scrape_with_no_real_candidates_does_not_raise_empty_scrape(
     _record_parse_bill(scraper)
 
     assert list(scraper.scrape(session="999-no-such-session", start="2020-01-01T00:00:00")) == []
+
+
+def test_incremental_scrape_with_newer_entry_yielding_nothing_does_not_raise_empty_scrape():
+    # pm-review (round 1): the key boundary this fix has to get right. HR160/HR9999/S325/
+    # S9999 are all newer than this start=, so real work was found and attempted -- but
+    # parse_bill() is mocked to yield nothing for any of them, simulating a real per-bill
+    # parse failure that doesn't itself raise (a malformed detail page, say). This must NOT
+    # be swallowed as EmptyScrape -- a real problem should still surface as a real failure
+    # (openstates-core's own do_scrape(), not exercised directly here, is what raises
+    # ScrapeError for this exact "yielded nothing at all" shape one layer up).
+    scraper = make_scraper()
+    _mock_sitemaps(scraper)
+    scraper.parse_bill = lambda url, scrape_hearings=True: iter(())
+
+    assert list(scraper.scrape(session="119", start="2020-01-01T00:00:00")) == []
+
+
+def test_incremental_scrape_with_a_real_yield_does_not_raise_empty_scrape():
+    # The ordinary successful case: a real incremental run where at least one newer bill
+    # actually yields a real object. EmptyScrape must never fire here -- confirms the fix
+    # doesn't accidentally swallow real, successful incremental results too.
+    scraper = make_scraper()
+    _mock_sitemaps(scraper)
+    scraper.parse_bill = lambda url, scrape_hearings=True: iter([object()])
+
+    results = list(scraper.scrape(session="119", start="2020-01-01T00:00:00"))
+
+    assert len(results) == 4  # HR160, HR9999, S325, S9999 -- everything newer than start=
 
 
 # --- OPEN-293 (correction): the LIVE production vote-scraping code lives here, in

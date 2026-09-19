@@ -169,10 +169,13 @@ class USBillScraper(Scraper):
 
         # OPEN-216: threaded into parse_bill_list() below so this method can tell, once the
         # sitemap walk is done, whether it saw real candidate entries at all (proof the
-        # sitemap fetch/parse itself worked) versus yielded zero bills from them (a
-        # legitimate "nothing changed" incremental result). See the EmptyScrape check below
-        # for what this distinction is for.
-        scrape_stats = {"candidates_seen": 0, "yielded": 0}
+        # sitemap fetch/parse itself worked) versus whether any of them were actually newer
+        # than the incremental cutoff. See the EmptyScrape check below for what this
+        # distinction is for -- deliberately NOT tracking "yielded" here: an entry that IS
+        # newer than start but whose parse_bill() call yields nothing for some other reason
+        # (a malformed detail page, a real parse problem) must not be swallowed as "nothing
+        # changed" -- only "candidates existed, none were newer than the cutoff" means that.
+        scrape_stats = {"candidates_seen": 0, "newer_than_cutoff": 0}
 
         for link in root.findall("us:sitemap/us:loc", self.ns):
             # split by /, then check that "116s" matches the chamber
@@ -217,11 +220,18 @@ class USBillScraper(Scraper):
         #     itself fails or returns something unparseable, that raises out of the earlier
         #     `self.get(sitemap_url)`/`ET.fromstring()` calls before this is ever reached, so
         #     a genuinely broken/unreachable source is never mistaken for "nothing changed".
+        #   - only when newer_than_cutoff is 0 -- i.e. literally none of the real candidates
+        #     were newer than start=. pm-review (round 1) correctly caught that checking
+        #     "yielded" instead would have masked a real problem: an entry that IS newer
+        #     than the cutoff but whose parse_bill() call yields nothing for some other
+        #     reason (a malformed detail page, a genuine parse failure that doesn't itself
+        #     raise) is not "nothing changed" and must not be swallowed as EmptyScrape --
+        #     the existing do_scrape() ScrapeError is the correct outcome for that case.
         if (
             is_incremental
             and bill_nos is None
             and scrape_stats["candidates_seen"]
-            and not scrape_stats["yielded"]
+            and not scrape_stats["newer_than_cutoff"]
         ):
             raise EmptyScrape
 
@@ -261,13 +271,16 @@ class USBillScraper(Scraper):
             )
 
             if bill_nos is not None or date > start:
+                # OPEN-216: recorded here, at the date-cutoff decision itself, regardless
+                # of what parse_bill() below ends up yielding -- see this function's own
+                # scrape_stats comment for why "reached parse_bill" and "yielded something"
+                # are deliberately not conflated.
+                if scrape_stats is not None:
+                    scrape_stats["newer_than_cutoff"] += 1
                 self.debug(
                     f"{datetime.datetime.strftime(date, '%c')} > {datetime.datetime.strftime(start, '%c')}, scraping {bill_url}"
                 )
-                for obj in self.parse_bill(bill_url, scrape_hearings):
-                    if scrape_stats is not None:
-                        scrape_stats["yielded"] += 1
-                    yield obj
+                yield from self.parse_bill(bill_url, scrape_hearings)
 
     def parse_bill(self, url, scrape_hearings=True):
         xml = self.get(url).content
