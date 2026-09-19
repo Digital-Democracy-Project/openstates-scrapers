@@ -8,6 +8,7 @@ import pytz
 import requests
 import urllib3
 
+from openstates.exceptions import EmptyScrape
 from openstates.scrape import Scraper, Bill, VoteEvent
 from classify_motion import classify_motion
 from .actions import Categorizer
@@ -57,6 +58,12 @@ class VaBillScraper(Scraper):
                 start_dt = dateutil.parser.parse(start).replace(tzinfo=None)
             except Exception:
                 self.warning(f"Invalid start= '{start}', doing full scrape")
+
+        # OPEN-220: deliberately keyed on whether start_dt actually parsed, not on whether
+        # start= was passed at all -- an unparseable start= already falls back to a full
+        # scrape above (with its own warning), so it must not be treated as incremental here
+        # either; the EmptyScrape guard below only applies to a real cutoff-based scrape.
+        is_incremental = start_dt is not None
 
         bill_nos = None
         if bill_no:
@@ -108,6 +115,17 @@ class VaBillScraper(Scraper):
 
             bill_list = bill_chunks[chunk_number - 1]
 
+        # OPEN-220: candidates_seen counts real, non-duplicate bill_no= targeted rows from
+        # the API response; newer_than_cutoff counts how many of those actually passed the
+        # existing "nothing changed since start_dt" check below (i.e. were not skipped by
+        # the `continue` a few lines down). See the EmptyScrape guard at the end of this
+        # method for what the distinction is for -- mirrors usa/bills.py's OPEN-216 fix,
+        # applying the same round-1 pm-review lesson from that PR up front: this deliberately
+        # does NOT key off whether a bill was actually yielded, since a real per-bill failure
+        # further down (in add_versions/add_sponsors/add_votes) must still surface as a hard
+        # failure rather than being swallowed as a benign no-op.
+        scrape_stats = {"candidates_seen": 0, "newer_than_cutoff": 0}
+
         seen_bill_ids = set()
         matched_bill_nos = set()
         for row in bill_list:
@@ -123,6 +141,8 @@ class VaBillScraper(Scraper):
                 if normalized_bill_no not in bill_nos:
                     continue
                 matched_bill_nos.add(normalized_bill_no)
+
+            scrape_stats["candidates_seen"] += 1
 
             # the short title on the VA site is 'description',
             # LegislationTitle is on top of all the versions
@@ -167,6 +187,12 @@ class VaBillScraper(Scraper):
                         # yielding at all leaves the existing database row untouched.
                         continue
 
+                # OPEN-220: reached only when this candidate was NOT skipped by the cutoff
+                # check above -- either because it has real events newer than start_dt, or
+                # because it has no event history to compare at all (in which case the
+                # existing code above already lets it through unconditionally).
+                scrape_stats["newer_than_cutoff"] += 1
+
             self.add_versions(bill, row["LegislationID"])
             self.add_carryover_related_bill(bill)
             self.add_sponsors(bill, row["LegislationID"])
@@ -189,6 +215,42 @@ class VaBillScraper(Scraper):
                 self.warning(
                     f"Requested bill_no '{missing}' not found in session {session}"
                 )
+
+        # OPEN-220: openstates-core's do_scrape() hard-fails with ScrapeError whenever a
+        # scrape yields nothing -- but a real incremental window with zero changed bills is
+        # a normal, expected outcome, not a failure. Mirrors usa/bills.py's OPEN-216 fix and
+        # ut/bills.py's original EmptyScrape precedent. Deliberately narrow, matching both:
+        #   - only for a real incremental run (is_incremental) -- a full scrape (no start=,
+        #     or an unparseable start= that already fell back to a full scrape above)
+        #     finding nothing is still worth a hard failure, unchanged.
+        #   - never when bill_no= targeting is active -- that already has its own, different
+        #     zero-match handling (the warning immediately above, matching USA's OPEN-123
+        #     pattern); this check would only ever be reached with bill_nos unset regardless,
+        #     but the condition is spelled out explicitly rather than relied upon implicitly.
+        #   - only when candidates_seen > 0 -- i.e. the API actually returned real bill rows
+        #     to consider. A missing VA_API_KEY (the `return` above, before bill_list is even
+        #     fetched) or a getlegislationlistasync failure leaves candidates_seen at 0, so
+        #     that failure mode still falls through to do_scrape()'s normal ScrapeError
+        #     rather than being mistaken for "nothing changed".
+        #   - only when newer_than_cutoff is 0 -- i.e. every real candidate was genuinely
+        #     filtered out by the "nothing changed since start_dt" check. Deliberately NOT
+        #     keyed on whether a bill was actually yielded: a real failure further down (in
+        #     add_versions/add_sponsors/add_votes, all of which run after this counter is
+        #     incremented) must still surface as a hard failure, not be swallowed here --
+        #     the exact bug pm-review round 1 caught in usa/bills.py's first attempt at this
+        #     same fix, applied proactively here instead of repeating it.
+        if (
+            is_incremental
+            and not bill_nos
+            and scrape_stats["candidates_seen"]
+            and not scrape_stats["newer_than_cutoff"]
+        ):
+            self.info(
+                f"OPEN-220: incremental scrape (session={session!r}, start_dt={start_dt!r}) "
+                f"saw {scrape_stats['candidates_seen']} candidate(s), none newer than the "
+                "cutoff -- treating as a benign no-op via EmptyScrape."
+            )
+            raise EmptyScrape
 
     def _fetch_events(self, legislation_id: str):
         body = {
