@@ -221,3 +221,84 @@ def test_missing_api_key_does_not_raise_empty_scrape_on_incremental_run(monkeypa
 
     assert results == []
     assert len(errors) == 1
+
+
+def test_missing_legislations_key_does_not_raise_empty_scrape(monkeypatch):
+    # pm-review: a malformed bill-list response (unexpected shape) must still surface as a
+    # real exception, not be masked as EmptyScrape -- candidates_seen is only ever touched
+    # inside the per-row loop, which this never reaches.
+    monkeypatch.setenv("VA_API_KEY", "test-key")
+
+    class _BadResponse:
+        def json(self):
+            return {"UnexpectedShape": True}
+
+    monkeypatch.setattr("va.bills.requests.post", lambda *args, **kwargs: _BadResponse())
+    scraper = make_scraper()
+
+    with pytest.raises(KeyError):
+        list(scraper.scrape(session="2026", start="2026-01-01T00:00:00"))
+
+
+def test_bill_list_json_decode_failure_does_not_raise_empty_scrape(monkeypatch):
+    # Same shape as above, for the case where the response body itself isn't valid JSON at
+    # all rather than just being missing a key.
+    monkeypatch.setenv("VA_API_KEY", "test-key")
+
+    class _BrokenResponse:
+        def json(self):
+            raise ValueError("not valid JSON")
+
+    monkeypatch.setattr(
+        "va.bills.requests.post", lambda *args, **kwargs: _BrokenResponse()
+    )
+    scraper = make_scraper()
+
+    with pytest.raises(ValueError):
+        list(scraper.scrape(session="2026", start="2026-01-01T00:00:00"))
+
+
+@pytest.mark.parametrize("method_name", ["add_versions", "add_sponsors"])
+def test_downstream_failure_propagates_not_masked_as_empty_scrape(monkeypatch, method_name):
+    # pm-review: the property claimed in this fix's comments/PR body -- that a real failure
+    # in add_versions/add_sponsors/add_votes still surfaces as a hard failure, never gets
+    # silently converted into EmptyScrape -- proven directly rather than only asserted. This
+    # bill is genuinely newer than the cutoff (newer_than_cutoff gets incremented for it)
+    # before the failure hits, so a masking bug would show up as a swallowed exception here.
+    rows = [_bill_row("HB1", legislation_id="1")]
+    _mock_bill_list(monkeypatch, rows)
+    _mock_downstream(monkeypatch, events_by_id={"1": [_event("2026-06-01T00:00:00")]})
+
+    class _Boom(Exception):
+        pass
+
+    def raise_boom(self, bill, legislation_id):
+        raise _Boom("simulated downstream failure")
+
+    monkeypatch.setattr(VaBillScraper, method_name, raise_boom)
+    scraper = make_scraper()
+
+    with pytest.raises(_Boom):
+        list(scraper.scrape(session="2026", start="2026-01-01T00:00:00"))
+
+
+def test_downstream_add_votes_failure_propagates_not_masked_as_empty_scrape(monkeypatch):
+    # add_votes is consumed via `yield from` (it's a generator, unlike add_versions/
+    # add_sponsors), so it needs its own generator-shaped failure rather than the
+    # parametrized case above.
+    rows = [_bill_row("HB1", legislation_id="1")]
+    _mock_bill_list(monkeypatch, rows)
+    _mock_downstream(monkeypatch, events_by_id={"1": [_event("2026-06-01T00:00:00")]})
+
+    class _Boom(Exception):
+        pass
+
+    def raise_boom(self, bill, legislation_id):
+        raise _Boom("simulated downstream failure")
+        yield  # pragma: no cover -- unreachable, makes this a generator function
+
+    monkeypatch.setattr(VaBillScraper, "add_votes", raise_boom)
+    scraper = make_scraper()
+
+    with pytest.raises(_Boom):
+        list(scraper.scrape(session="2026", start="2026-01-01T00:00:00"))
