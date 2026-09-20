@@ -132,7 +132,20 @@ class WABillScraper(Scraper, LXMLMixin):
             try:
                 doc = self.lxmlize(base_url + chamber + " " + bill_type)
             except scrapelib.HTTPError:
-                return
+                # OPEN-299: a `return` here used to abandon every bill_type
+                # after this one too (dict order: Bills, Resolutions,
+                # Concurrent Resolutions, Joint Memorials, Joint
+                # Resolutions, Passed Legislature) -- "Bills" is always
+                # first and so always succeeded, silently leaving every
+                # resolution/memorial bill with zero version links for the
+                # rest of this chamber. A fetch failure for one bill_type's
+                # listing page doesn't mean the others are unreachable too.
+                self.warning(
+                    f"Could not load {bill_type} version listing for "
+                    f"{chamber} -- skipping just this bill_type, not the "
+                    f"rest of {chamber}'s version listings"
+                )
+                continue
             documents = doc.xpath("//a")[1:]
             for document in documents:
                 (link,) = document.xpath("@href")
@@ -187,7 +200,16 @@ class WABillScraper(Scraper, LXMLMixin):
             try:
                 doc = self.lxmlize(url)
             except scrapelib.HTTPError:
-                return
+                # OPEN-299: same cascade bug as _load_versions above -- a
+                # `return` here used to abandon every doctype after this one
+                # too (Amendments, Bill Reports, Digests), not just the one
+                # whose listing page failed to fetch.
+                self.warning(
+                    f"Could not load {doctype} document listing for "
+                    f"{chamber} -- skipping just this doctype, not the "
+                    f"rest of {chamber}'s document listings"
+                )
+                continue
 
             documents = doc.xpath("//a")[1:]
             for document in documents:
