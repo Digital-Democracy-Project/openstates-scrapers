@@ -4,6 +4,7 @@ import lxml.html
 import pytest
 
 from openstates.exceptions import EmptyScrape
+from openstates.utils import get_pseudo_id
 
 from usa.bills import (
     USBillScraper,
@@ -400,3 +401,34 @@ def test_scrape_senate_votes_still_skips_nominations_after_normalization():
     votes = list(scraper.scrape_senate_votes(page, "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_281.xml"))
 
     assert votes == []
+
+
+# OPEN-305: scrape_senate_votes()/scrape_house_votes() built each voter's pseudo-id from `name`
+# alone -- `note=lis_id`/`note=bioguide` was stored on PersonVote for a later backfill script to
+# read, but VoteEvent.vote() only adds "id" to the pseudo-id itself when passed explicitly, and
+# neither call passed it. That meant resolve_person()'s identifier-based lookup (added for
+# OPEN-2) never actually ran at import time, in either chamber -- only name-matching did, which
+# fails 100% of the time for Senate `member_full` values and ambiguates for a real fraction of
+# House ones. Confirmed against real production data via the RDS replica before this fix: every
+# `note` value already had a correct PersonIdentifier row, so this was never a data problem.
+
+
+def test_scrape_senate_votes_includes_lis_id_in_pseudo_id():
+    scraper = make_scraper()
+    page = _load_page("bills_senate_sjres_fixture.xml")
+
+    votes = list(scraper.scrape_senate_votes(page, "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_275.xml"))
+
+    assert len(votes) == 1
+    voter_ids = {v["note"]: get_pseudo_id(v["voter_id"]).get("id") for v in votes[0].votes}
+    assert voter_ids == {"S307": "S307", "S308": "S308"}
+
+
+def test_scrape_house_votes_includes_bioguide_in_pseudo_id():
+    scraper = make_scraper()
+    page = _load_page("roll293_hjres_fixture.xml")
+
+    vote = scraper.scrape_house_votes(bill=None, page=page, url="https://clerk.house.gov/evs/2026/roll293.xml")
+
+    voter_ids = {v["note"]: get_pseudo_id(v["voter_id"]).get("id") for v in vote.votes}
+    assert voter_ids == {"A000370": "A000370", "G000598": "G000598"}
