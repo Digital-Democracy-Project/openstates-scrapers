@@ -911,7 +911,14 @@ class USBillScraper(Scraper):
             name = row.xpath("member_full/text()")[0]
             choice = row.xpath("vote_cast/text()")[0]
 
-            vote.vote(self.vote_codes[choice], name, note=lis_id)
+            # OPEN-305: id= is what actually reaches resolve_person()'s identifier lookup
+            # (VoteEvent.vote() only adds "id" to the pseudo-id spec when this is truthy) --
+            # note= alone is stored on PersonVote for later backfill scripts to read, but never
+            # consulted at import time. This is the live production Senate-vote code path
+            # (usa/votes.py's near-identical scrape_senate_vote is dead code, never invoked --
+            # see scrapers/usa/__init__.py); its own vote.vote(..., note=lis_id, id=lis_id) call
+            # already had this right, it just wasn't the copy that runs.
+            vote.vote(self.vote_codes[choice], name, note=lis_id, id=lis_id)
 
         yield vote
 
@@ -993,6 +1000,9 @@ class USBillScraper(Scraper):
             name = row.xpath("legislator/@sort-field")[0]
             choice = row.xpath("vote/text()")[0]
 
-            vote.vote(self.vote_codes[choice], name, note=bioguide)
+            # OPEN-305: see scrape_senate_votes' identical comment above -- id= is what actually
+            # reaches resolve_person()'s identifier lookup; without it every House vote also fell
+            # back to name-only matching at import time.
+            vote.vote(self.vote_codes[choice], name, note=bioguide, id=bioguide)
 
         return vote
