@@ -68,6 +68,40 @@ def test_identifier_is_always_set_to_vote_id(monkeypatch):
     assert votes[0].identifier == "H1003V0001"
 
 
+def test_unmapped_response_code_skips_only_that_voter(monkeypatch):
+    """OPEN-306: self.vote_map[ResponseCode] used to raise a bare KeyError on any code not in
+    the hardcoded map -- VA's API has no published enum for this field, so a new code crashes
+    the whole scrape rather than just costing one voter's row."""
+    row = make_vote_row("H1003V0002", batch_number="H1003V0002")
+    row["VoteMember"].append({"ResponseCode": "Z", "MemberDisplayName": "Member Four"})
+    votes = run_add_votes(monkeypatch, row)
+
+    assert len(votes) == 1
+    voter_names = {v["voter_name"] for v in votes[0].votes}
+    assert voter_names == {"Member One", "Member Two", "Member Three"}
+    assert "Member Four" not in voter_names
+
+
+def test_unmapped_response_code_for_every_voter_warns_with_a_summary(monkeypatch, caplog):
+    """pm-review (OPEN-306): an unmapped code affecting MANY voters, not just one, would
+    otherwise look like a complete vote with a much smaller voter count than reality -- confirms
+    a single summary warning fires naming the affected VoteID, not just scattered per-voter
+    noise. Note: this row's Y/N/A tally would all be zero after every voter is skipped, which
+    add_votes already treats as a miscoded voice vote and drops -- so this asserts the warning
+    fired, not that a VoteEvent survives (a separate, pre-existing behavior, unrelated to this
+    fix)."""
+    row = make_vote_row("H1003V0003", batch_number="H1003V0003")
+    for member in row["VoteMember"]:
+        member["ResponseCode"] = "Z"
+
+    import logging
+    with caplog.at_level(logging.WARNING, logger="openstates"):
+        run_add_votes(monkeypatch, row)
+
+    assert "VoteID H1003V0003" in caplog.text
+    assert "3 voter(s) skipped due to an unmapped response code" in caplog.text
+
+
 @pytest.mark.parametrize(
     "batch_number,expected_url_part",
     [

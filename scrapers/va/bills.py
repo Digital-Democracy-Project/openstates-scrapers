@@ -11,6 +11,7 @@ import urllib3
 from openstates.exceptions import EmptyScrape
 from openstates.scrape import Scraper, Bill, VoteEvent
 from classify_motion import classify_motion
+from utils.votes import safe_lookup
 from .actions import Categorizer
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -478,6 +479,7 @@ class VaBillScraper(Scraper):
                     "V": 0,  # voting
                 }
 
+                skipped_voters = []
                 for subrow in row["VoteMember"]:
                     if "ResponseCode" not in subrow:
                         # Found one example where an entry in row["VoteMember"] has no response
@@ -485,12 +487,29 @@ class VaBillScraper(Scraper):
                         # (Karrie K. Delaney, https://lis.virginia.gov/vote-details/HB1549/20251/H19004V2511813)
                         # So I think we just skip that "voter"
                         continue
-                    v.vote(
-                        self.vote_map[subrow["ResponseCode"]],
-                        subrow["MemberDisplayName"],
+                    # OPEN-306: same "no published schema, don't crash on an unmapped value"
+                    # guard as usa/dc's vote-result lookups -- here it's VA's own ResponseCode
+                    # enum, per-voter, so an unmapped code skips just this one member's row.
+                    option = safe_lookup(
+                        self.vote_map, subrow["ResponseCode"], what="VA vote response code",
+                        context=f"{subrow['MemberDisplayName']}, VoteID {row['VoteID']}",
                     )
+                    if option is None:
+                        skipped_voters.append(subrow["MemberDisplayName"])
+                        continue
+                    v.vote(option, subrow["MemberDisplayName"])
 
                     tally[subrow["ResponseCode"]] += 1
+
+                # OPEN-306 (pm-review): a single unmapped response code used by many voters (not
+                # just one) would otherwise look like a complete, trustworthy vote with a much
+                # smaller voter count than reality -- one summary line per affected vote, not just
+                # scattered per-voter warnings.
+                if skipped_voters:
+                    self.logger.warning(
+                        f"VoteID {row['VoteID']}: {len(skipped_voters)} voter(s) skipped due to "
+                        f"an unmapped response code: {skipped_voters}"
+                    )
 
                 v.set_count("yes", tally["Y"])
                 v.set_count("no", tally["N"])

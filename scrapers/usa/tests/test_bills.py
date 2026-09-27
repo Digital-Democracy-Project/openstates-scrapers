@@ -1,3 +1,4 @@
+import logging
 import os
 
 import lxml.html
@@ -432,3 +433,81 @@ def test_scrape_house_votes_includes_bioguide_in_pseudo_id():
 
     voter_ids = {v["note"]: get_pseudo_id(v["voter_id"]).get("id") for v in vote.votes}
     assert voter_ids == {"A000370": "A000370", "G000598": "G000598"}
+
+
+# OPEN-306: senate_statuses/vote_codes are hardcoded enums for fields Senate/House publish no
+# schema for -- a bare dict[key] used to crash the whole remaining chamber scrape the first
+# time a legislature used a phrasing not yet seen (real case: "Concurrent Resolution Rejected",
+# HCONRES 89, 2026-09-26). These confirm the fix: an unmapped vote *result* skips just that one
+# vote (real fixture's own result_text is "Joint Resolution Passed"); an unmapped vote *choice*
+# skips just that one voter's row, not the whole vote.
+
+
+def test_concurrent_resolution_rejected_maps_to_fail():
+    scraper = make_scraper()
+    assert scraper.senate_statuses["Concurrent Resolution Rejected"] == "fail"
+
+
+def test_scrape_senate_votes_skips_the_whole_vote_on_an_unmapped_result():
+    scraper = make_scraper()
+    scraper.senate_statuses = {k: v for k, v in scraper.senate_statuses.items() if k != "Joint Resolution Passed"}
+    page = _load_page("bills_senate_sjres_fixture.xml")
+
+    votes = list(scraper.scrape_senate_votes(page, "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_275.xml"))
+
+    assert votes == []
+
+
+def test_scrape_senate_votes_skips_only_the_one_voter_with_an_unmapped_choice():
+    scraper = make_scraper()
+    scraper.vote_codes = {k: v for k, v in scraper.vote_codes.items() if k != "Nay"}
+    page = _load_page("bills_senate_sjres_fixture.xml")
+
+    votes = list(scraper.scrape_senate_votes(page, "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_275.xml"))
+
+    assert len(votes) == 1
+    voter_notes = {v["note"] for v in votes[0].votes}
+    assert voter_notes == {"S307"}  # S308 (the "Nay" voter) was skipped, not crashed on
+
+
+def test_scrape_house_votes_skips_only_the_one_voter_with_an_unmapped_choice():
+    scraper = make_scraper()
+    scraper.vote_codes = {k: v for k, v in scraper.vote_codes.items() if k != "Nay"}
+    page = _load_page("roll293_hjres_fixture.xml")
+
+    vote = scraper.scrape_house_votes(bill=None, page=page, url="https://clerk.house.gov/evs/2026/roll293.xml")
+
+    voter_notes = {v["note"] for v in vote.votes}
+    assert voter_notes == {"G000598"}  # A000370 (the "Nay" voter) was skipped, not crashed on
+
+
+# pm-review (OPEN-306): a single unmapped choice used by MANY voters -- not just one -- would
+# otherwise look like a complete, trustworthy vote with a much smaller voter count than reality.
+# These confirm the per-vote summary warning fires in that systemic case (both voters unmapped,
+# not just the "Nay" one), giving an operator a single, clear signal instead of scattered
+# per-voter noise.
+
+
+def test_scrape_senate_votes_warns_with_a_summary_when_every_voter_is_unmapped(caplog):
+    scraper = make_scraper()
+    scraper.vote_codes = {}
+    page = _load_page("bills_senate_sjres_fixture.xml")
+
+    with caplog.at_level(logging.WARNING, logger="openstates"):
+        votes = list(scraper.scrape_senate_votes(page, "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_275.xml"))
+
+    assert len(votes) == 1
+    assert votes[0].votes == []
+    assert "2 voter(s) skipped due to an unmapped vote choice" in caplog.text
+
+
+def test_scrape_house_votes_warns_with_a_summary_when_every_voter_is_unmapped(caplog):
+    scraper = make_scraper()
+    scraper.vote_codes = {}
+    page = _load_page("roll293_hjres_fixture.xml")
+
+    with caplog.at_level(logging.WARNING, logger="openstates"):
+        vote = scraper.scrape_house_votes(bill=None, page=page, url="https://clerk.house.gov/evs/2026/roll293.xml")
+
+    assert vote.votes == []
+    assert "2 voter(s) skipped due to an unmapped vote choice" in caplog.text
