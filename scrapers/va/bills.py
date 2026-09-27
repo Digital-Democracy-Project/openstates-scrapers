@@ -11,6 +11,7 @@ import urllib3
 from openstates.exceptions import EmptyScrape
 from openstates.scrape import Scraper, Bill, VoteEvent
 from classify_motion import classify_motion
+from utils.votes import safe_lookup
 from .actions import Categorizer
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -485,10 +486,16 @@ class VaBillScraper(Scraper):
                         # (Karrie K. Delaney, https://lis.virginia.gov/vote-details/HB1549/20251/H19004V2511813)
                         # So I think we just skip that "voter"
                         continue
-                    v.vote(
-                        self.vote_map[subrow["ResponseCode"]],
-                        subrow["MemberDisplayName"],
+                    # OPEN-306: same "no published schema, don't crash on an unmapped value"
+                    # guard as usa/dc's vote-result lookups -- here it's VA's own ResponseCode
+                    # enum, per-voter, so an unmapped code skips just this one member's row.
+                    option = safe_lookup(
+                        self.vote_map, subrow["ResponseCode"], what="VA vote response code",
+                        context=subrow["MemberDisplayName"],
                     )
+                    if option is None:
+                        continue
+                    v.vote(option, subrow["MemberDisplayName"])
 
                     tally[subrow["ResponseCode"]] += 1
 

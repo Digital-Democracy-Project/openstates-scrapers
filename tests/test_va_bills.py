@@ -68,6 +68,20 @@ def test_identifier_is_always_set_to_vote_id(monkeypatch):
     assert votes[0].identifier == "H1003V0001"
 
 
+def test_unmapped_response_code_skips_only_that_voter(monkeypatch):
+    """OPEN-306: self.vote_map[ResponseCode] used to raise a bare KeyError on any code not in
+    the hardcoded map -- VA's API has no published enum for this field, so a new code crashes
+    the whole scrape rather than just costing one voter's row."""
+    row = make_vote_row("H1003V0002", batch_number="H1003V0002")
+    row["VoteMember"].append({"ResponseCode": "Z", "MemberDisplayName": "Member Four"})
+    votes = run_add_votes(monkeypatch, row)
+
+    assert len(votes) == 1
+    voter_names = {v["voter_name"] for v in votes[0].votes}
+    assert voter_names == {"Member One", "Member Two", "Member Three"}
+    assert "Member Four" not in voter_names
+
+
 @pytest.mark.parametrize(
     "batch_number,expected_url_part",
     [
