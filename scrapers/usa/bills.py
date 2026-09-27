@@ -915,6 +915,7 @@ class USBillScraper(Scraper):
         vote.set_count("absent", int(absents))
         vote.set_count("abstain", int(presents))
 
+        skipped_voters = []
         for row in page.xpath("//roll_call_vote/members/member"):
             lis_id = row.xpath("lis_member_id/text()")[0]
             name = row.xpath("member_full/text()")[0]
@@ -930,10 +931,20 @@ class USBillScraper(Scraper):
             # OPEN-306: same "no schema, don't crash on an unmapped value" guard as the
             # vote-result lookup above -- here it's per-voter, so an unmapped choice skips just
             # this one member's row rather than the whole vote.
-            option = safe_lookup(self.vote_codes, choice, what="vote choice", context=f"{name} ({lis_id})")
+            option = safe_lookup(self.vote_codes, choice, what="vote choice", context=f"{name} ({lis_id}), {url}")
             if option is None:
+                skipped_voters.append(name)
                 continue
             vote.vote(option, name, note=lis_id, id=lis_id)
+
+        # OPEN-306 (pm-review): a single unmapped choice used by many voters (not just one) would
+        # otherwise look like a complete, trustworthy vote with a much smaller voter count than
+        # reality -- one summary line per affected vote, not just scattered per-voter warnings,
+        # so an operator scanning logs can tell this vote's data is suspect at a glance.
+        if skipped_voters:
+            self.warning(
+                f"{url}: {len(skipped_voters)} voter(s) skipped due to an unmapped vote choice: {skipped_voters}"
+            )
 
         yield vote
 
@@ -1010,6 +1021,7 @@ class USBillScraper(Scraper):
         vote.set_count("abstain", int(presents))
 
         # vote.yes vote.no vote.vote
+        skipped_voters = []
         for row in page.xpath("//rollcall-vote/vote-data/recorded-vote"):
             bioguide = row.xpath("legislator/@name-id")[0]
             name = row.xpath("legislator/@sort-field")[0]
@@ -1020,9 +1032,16 @@ class USBillScraper(Scraper):
             # back to name-only matching at import time.
             # OPEN-306: same per-voter "unmapped choice skips this row, not the whole vote"
             # guard as scrape_senate_votes' vote_codes lookup above.
-            option = safe_lookup(self.vote_codes, choice, what="vote choice", context=f"{name} ({bioguide})")
+            option = safe_lookup(self.vote_codes, choice, what="vote choice", context=f"{name} ({bioguide}), {url}")
             if option is None:
+                skipped_voters.append(name)
                 continue
             vote.vote(option, name, note=bioguide, id=bioguide)
+
+        # OPEN-306 (pm-review): see scrape_senate_votes' identical summary-warning comment above.
+        if skipped_voters:
+            self.warning(
+                f"{url}: {len(skipped_voters)} voter(s) skipped due to an unmapped vote choice: {skipped_voters}"
+            )
 
         return vote

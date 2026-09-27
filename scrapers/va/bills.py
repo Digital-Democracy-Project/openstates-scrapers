@@ -479,6 +479,7 @@ class VaBillScraper(Scraper):
                     "V": 0,  # voting
                 }
 
+                skipped_voters = []
                 for subrow in row["VoteMember"]:
                     if "ResponseCode" not in subrow:
                         # Found one example where an entry in row["VoteMember"] has no response
@@ -491,13 +492,24 @@ class VaBillScraper(Scraper):
                     # enum, per-voter, so an unmapped code skips just this one member's row.
                     option = safe_lookup(
                         self.vote_map, subrow["ResponseCode"], what="VA vote response code",
-                        context=subrow["MemberDisplayName"],
+                        context=f"{subrow['MemberDisplayName']}, VoteID {row['VoteID']}",
                     )
                     if option is None:
+                        skipped_voters.append(subrow["MemberDisplayName"])
                         continue
                     v.vote(option, subrow["MemberDisplayName"])
 
                     tally[subrow["ResponseCode"]] += 1
+
+                # OPEN-306 (pm-review): a single unmapped response code used by many voters (not
+                # just one) would otherwise look like a complete, trustworthy vote with a much
+                # smaller voter count than reality -- one summary line per affected vote, not just
+                # scattered per-voter warnings.
+                if skipped_voters:
+                    self.logger.warning(
+                        f"VoteID {row['VoteID']}: {len(skipped_voters)} voter(s) skipped due to "
+                        f"an unmapped response code: {skipped_voters}"
+                    )
 
                 v.set_count("yes", tally["Y"])
                 v.set_count("no", tally["N"])
