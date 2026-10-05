@@ -444,7 +444,13 @@ class NCBillScraper(Scraper):
                         else:
                             break
 
-    def scrape(self, session=None, chamber=None):
+    def scrape(self, session=None, chamber=None, start=None):
+        # OPEN-321: `start` is accepted and ignored. run-scrape.sh and cloud_collector.py both
+        # append start=<watermark minus one hour> whenever a watermark exists (every run after a
+        # jurisdiction's first), and without this parameter NC's second run died with
+        # "unexpected keyword argument 'start'". The
+        # FiledBillsFeed has no changed-since filter to hand it to, so NC full-walks every run
+        # (same as MA, which also ignores start).
         chambers = [chamber] if chamber else ["upper", "lower"]
 
         if session in ["1997", "1999"]:
