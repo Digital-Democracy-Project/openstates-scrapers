@@ -22,6 +22,7 @@ plus a bare "Substitute" are listed, so "First Substitute" isn't fully
 stripped by it).
 """
 import os
+from unittest import mock
 import sys
 
 import lxml.html
@@ -324,3 +325,28 @@ def test_scraper_defaults_to_a_browser_shaped_user_agent():
 
     assert "python-requests" not in user_agent
     assert "Mozilla" in user_agent
+
+
+# ── OPEN-322: bill pages must be fetched without certificate verification ───
+
+
+def test_scrape_bill_fetches_the_bill_page_with_verify_false():
+    """os-update turns verification ON unless --no-verify is passed (its flag is store_false),
+    and le.utah.gov's certificate chain doesn't verify in the Fargate image: UT's 2026-10-04
+    scrape died on the first bill page with CERTIFICATE_VERIFY_FAILED. Every other le.utah.gov
+    fetch in this scraper already passes verify=False; scrape_bill's page fetch must too."""
+    scraper = make_scraper()
+    page = mock.Mock()
+    page.text = "<html><body></body></html>"  # no breadcrumb -> scrape_bill raises right after
+
+    with mock.patch.object(scraper, "get", return_value=page) as get:
+        with pytest.raises(Exception, match="Unexpected bill page content"):
+            list(
+                scraper.scrape_bill(
+                    "lower", "2025S2", "https://le.utah.gov/~2025S2/bills/static/HB2001.html", "2025S2"
+                )
+            )
+
+    get.assert_called_once_with(
+        "https://le.utah.gov/~2025S2/bills/static/HB2001.html", verify=False
+    )
