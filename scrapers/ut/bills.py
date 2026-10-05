@@ -178,7 +178,11 @@ class UTBillScraper(Scraper, LXMLMixin):
             raise EmptyScrape
 
     def scrape_bill(self, chamber, session, url, session_slug):
-        response = self.get(url)
+        # OPEN-322: verify=False, like every other le.utah.gov fetch in this file. `os-update`'s
+        # --no-verify is a store_false flag, so verification is ON unless it's passed -- and in
+        # the Fargate image le.utah.gov's chain doesn't verify (CERTIFICATE_VERIFY_FAILED), which
+        # killed UT's 2026-10-04 scrape on its first bill page.
+        response = self.get(url, verify=False)
         page = lxml.html.fromstring(response.text)
         page.make_links_absolute(url)
 
