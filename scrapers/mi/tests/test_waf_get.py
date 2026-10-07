@@ -7,8 +7,12 @@ from openstates.utils.mi_cookies import MI_COOKIE_PROVIDER
 
 
 class FakeResponse:
-    def __init__(self, content=b"<html>real content</html>"):
+    def __init__(self, content=b"<html>real content</html>", url=None, status_code=None):
         self.content = content
+        if url is not None:
+            self.url = url
+        if status_code is not None:
+            self.status_code = status_code
 
 
 DEFAULT_USER_AGENT = "Mozilla/5.0 (Real Warm-Up Chromium)"
@@ -127,3 +131,37 @@ def test_mi_waf_get_uses_fresh_user_agent_paired_with_fresh_cookies_on_retry(mon
         ({"x-bni-fpc": "old", "x-bni-rncf": "old"}, "agent-v1"),
         ({"x-bni-fpc": "new", "x-bni-rncf": "new"}, "agent-v2"),
     ]
+
+
+# --- OPEN-334: a block says which marker matched, the HTTP status and the URL path ---
+
+
+def _blocked_message(monkeypatch, response):
+    _stub_cookie_provider(monkeypatch)
+    with pytest.raises(WafBlockDetected) as excinfo:
+        mi_waf_get(lambda cookies, user_agent: response)
+    return str(excinfo.value)
+
+
+def test_block_message_names_the_marker_status_and_path_but_not_the_query_string(monkeypatch):
+    msg = _blocked_message(monkeypatch, FakeResponse(
+        content=b"<html>captcha_resp=abc</html>",
+        url="https://legislature.mi.gov/Search/ExecuteSearch?sessions=2025-2026&sponsor=",
+        status_code=200,
+    ))
+    assert msg == "response matched known WAF block-page marker 'captcha_resp' (HTTP 200) on /Search/ExecuteSearch"
+    assert "sessions" not in msg
+
+
+def test_block_message_survives_a_response_with_no_url_or_status(monkeypatch):
+    msg = _blocked_message(monkeypatch, FakeResponse(content=b"User validation required to continue"))
+    assert "marker 'user validation required' (HTTP ?) on ?" in msg
+
+
+def test_block_message_never_contains_the_phrases_that_fail_a_run_on_their_own(monkeypatch):
+    # import-summary.sh's _SCRAPE_UNREACHABLE_MARKERS treats these as "site unreachable" in any log line.
+    msg = _blocked_message(monkeypatch, FakeResponse(
+        content=b"Request Rejected", url="https://legislature.mi.gov/Bills/Bill", status_code=403,
+    )).lower()
+    assert "waf block detected" not in msg
+    assert "consecutive waf blocks" not in msg

@@ -7,6 +7,7 @@ import requests
 import scrapelib
 import collections
 import typing
+from urllib.parse import urlparse
 from datetime import date
 from utils.media import get_media_type
 
@@ -15,8 +16,8 @@ from openstates.exceptions import ScrapeError
 from openstates.scrape import Scraper, Bill, VoteEvent
 from openstates.utils.cookie_provider import (
     WafBlockDetected,
-    content_matches_block_markers,
     content_matches_fake_404_block,
+    matched_block_marker,
 )
 from openstates.utils.mi_cookies import MI_COOKIE_PROVIDER
 from classify_motion import classify_motion
@@ -305,8 +306,16 @@ def mi_waf_get(
         content = getattr(resp, "content", None)
         if content is None:
             content = getattr(resp, "text", "").encode()
-        if content_matches_block_markers(content):
-            raise WafBlockDetected("response matched known WAF block-page heuristic")
+        marker = matched_block_marker(content)
+        if marker is not None:
+            # OPEN-334: say which challenge page came back and where. Path only (the query
+            # string can be long), and no "waf block detected" wording, which import-summary.sh
+            # treats as a failed run on its own.
+            path = urlparse(getattr(resp, "url", "") or "").path or "?"
+            status = getattr(resp, "status_code", "?")
+            raise WafBlockDetected(
+                f"response matched known WAF block-page marker {marker!r} (HTTP {status}) on {path}"
+            )
         return resp
 
     return MI_COOKIE_PROVIDER.fetch_with_retry(do_request)
