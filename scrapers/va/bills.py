@@ -286,7 +286,8 @@ class VaBillScraper(Scraper):
                 else:
                     chamber = "legislature"
                     self.logger.warning(
-                        f"Encountered unexpected action actor for legislation_id {legislation_id}"
+                        f"Encountered unexpected action actor for {bill.identifier} "
+                        f"LegislationEventID {row['LegislationEventID']}"
                     )
                 bill.add_action(
                     chamber=chamber,
