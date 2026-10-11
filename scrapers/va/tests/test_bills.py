@@ -302,3 +302,22 @@ def test_downstream_add_votes_failure_propagates_not_masked_as_empty_scrape(monk
 
     with pytest.raises(_Boom):
         list(scraper.scrape(session="2026", start="2026-01-01T00:00:00"))
+
+
+def test_add_actions_event_with_no_chamber_or_known_actor_is_logged_not_a_nameerror(
+    caplog,
+):
+    # An event with no ChamberCode and an ActorType other than Governor/Conference used to
+    # hit `legislation_id`, a name add_actions never defined, and raise NameError.
+    from openstates.scrape import Bill
+
+    scraper = make_scraper()
+    bill = Bill("HB1", "2026", "A bill", chamber="lower")
+    event = _event("2026-01-14T00:00:00")
+    event["ChamberCode"] = None
+    event["ActorType"] = "Clerk"
+
+    scraper.add_actions(bill, [event])
+
+    assert "legislature" in bill.actions[0]["organization_id"]
+    assert "unexpected action actor for HB1 LegislationEventID e1" in caplog.text
