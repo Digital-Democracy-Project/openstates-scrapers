@@ -97,7 +97,7 @@ class UTBillScraper(Scraper, LXMLMixin):
         session_url = "https://le.utah.gov/billlist.jsp?session={}".format(session_slug)
 
         # For some sessions the link doesn't go straight to the bill list
-        doc = self.lxmlize(session_url)
+        doc = self.lxmlize(session_url, verify=False)
 
         # Get all of the show/hide bill list elements
         # in order to get the IDs of the actual bill lists
