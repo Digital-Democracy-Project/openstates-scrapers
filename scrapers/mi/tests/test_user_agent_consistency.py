@@ -10,7 +10,6 @@ from http.client import RemoteDisconnected
 
 import scrapelib
 
-from mi import bills as mi_bills
 from mi.bills import MIBillScraper
 from mi.events import MIEventScraper
 from mi import Michigan
