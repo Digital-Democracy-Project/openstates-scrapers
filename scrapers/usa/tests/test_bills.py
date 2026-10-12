@@ -79,7 +79,9 @@ S_SITEMAP_XML = b"""<?xml version="1.0" encoding="UTF-8"?>
 
 HR160_URL = "https://www.govinfo.gov/bulkdata/BILLSTATUS/119/hr/BILLSTATUS-119hr160.xml"
 HR76_URL = "https://www.govinfo.gov/bulkdata/BILLSTATUS/119/hr/BILLSTATUS-119hr76.xml"
-HR9999_URL = "https://www.govinfo.gov/bulkdata/BILLSTATUS/119/hr/BILLSTATUS-119hr9999.xml"
+HR9999_URL = (
+    "https://www.govinfo.gov/bulkdata/BILLSTATUS/119/hr/BILLSTATUS-119hr9999.xml"
+)
 S325_URL = "https://www.govinfo.gov/bulkdata/BILLSTATUS/119/s/BILLSTATUS-119s325.xml"
 S9999_URL = "https://www.govinfo.gov/bulkdata/BILLSTATUS/119/s/BILLSTATUS-119s9999.xml"
 
@@ -99,7 +101,9 @@ def _mock_sitemaps(scraper):
 
 def _record_parse_bill(scraper):
     processed = []
-    scraper.parse_bill = lambda url, scrape_hearings=True: processed.append(url) or iter(())
+    scraper.parse_bill = lambda url, scrape_hearings=True: processed.append(
+        url
+    ) or iter(())
     return processed
 
 
@@ -311,7 +315,10 @@ def test_incremental_scrape_with_no_real_candidates_does_not_raise_empty_scrape(
     _mock_sitemaps(scraper)
     _record_parse_bill(scraper)
 
-    assert list(scraper.scrape(session="999-no-such-session", start="2020-01-01T00:00:00")) == []
+    assert (
+        list(scraper.scrape(session="999-no-such-session", start="2020-01-01T00:00:00"))
+        == []
+    )
 
 
 def test_incremental_scrape_with_newer_entry_yielding_nothing_does_not_raise_empty_scrape():
@@ -339,7 +346,9 @@ def test_incremental_scrape_with_a_real_yield_does_not_raise_empty_scrape():
 
     results = list(scraper.scrape(session="119", start="2020-01-01T00:00:00"))
 
-    assert len(results) == 4  # HR160, HR9999, S325, S9999 -- everything newer than start=
+    assert (
+        len(results) == 4
+    )  # HR160, HR9999, S325, S9999 -- everything newer than start=
 
 
 # --- OPEN-293 (correction): the LIVE production vote-scraping code lives here, in
@@ -362,7 +371,9 @@ def test_scrape_house_votes_normalizes_hjres_bill_id():
     scraper = make_scraper()
     page = _load_page("roll293_hjres_fixture.xml")
 
-    vote = scraper.scrape_house_votes(bill=None, page=page, url="https://clerk.house.gov/evs/2026/roll293.xml")
+    vote = scraper.scrape_house_votes(
+        bill=None, page=page, url="https://clerk.house.gov/evs/2026/roll293.xml"
+    )
 
     assert vote.bill_identifier == "HJRES 1"
 
@@ -373,7 +384,12 @@ def test_scrape_senate_votes_normalizes_sjres_bill_id():
     scraper = make_scraper()
     page = _load_page("bills_senate_sjres_fixture.xml")
 
-    votes = list(scraper.scrape_senate_votes(page, "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_275.xml"))
+    votes = list(
+        scraper.scrape_senate_votes(
+            page,
+            "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_275.xml",
+        )
+    )
 
     assert len(votes) == 1
     assert votes[0].bill_identifier == "SJRES 55"
@@ -386,7 +402,12 @@ def test_scrape_senate_votes_normalizes_amendment_to_document_number():
     scraper = make_scraper()
     page = _load_page("bills_senate_amendment_fixture.xml")
 
-    votes = list(scraper.scrape_senate_votes(page, "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_280.xml"))
+    votes = list(
+        scraper.scrape_senate_votes(
+            page,
+            "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_280.xml",
+        )
+    )
 
     assert len(votes) == 1
     assert votes[0].bill_identifier == "SCONRES 10"
@@ -399,7 +420,12 @@ def test_scrape_senate_votes_still_skips_nominations_after_normalization():
     scraper = make_scraper()
     page = _load_page("bills_senate_nomination_fixture.xml")
 
-    votes = list(scraper.scrape_senate_votes(page, "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_281.xml"))
+    votes = list(
+        scraper.scrape_senate_votes(
+            page,
+            "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_281.xml",
+        )
+    )
 
     assert votes == []
 
@@ -418,10 +444,17 @@ def test_scrape_senate_votes_includes_lis_id_in_pseudo_id():
     scraper = make_scraper()
     page = _load_page("bills_senate_sjres_fixture.xml")
 
-    votes = list(scraper.scrape_senate_votes(page, "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_275.xml"))
+    votes = list(
+        scraper.scrape_senate_votes(
+            page,
+            "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_275.xml",
+        )
+    )
 
     assert len(votes) == 1
-    voter_ids = {v["note"]: get_pseudo_id(v["voter_id"]).get("id") for v in votes[0].votes}
+    voter_ids = {
+        v["note"]: get_pseudo_id(v["voter_id"]).get("id") for v in votes[0].votes
+    }
     assert voter_ids == {"S307": "S307", "S308": "S308"}
 
 
@@ -429,7 +462,9 @@ def test_scrape_house_votes_includes_bioguide_in_pseudo_id():
     scraper = make_scraper()
     page = _load_page("roll293_hjres_fixture.xml")
 
-    vote = scraper.scrape_house_votes(bill=None, page=page, url="https://clerk.house.gov/evs/2026/roll293.xml")
+    vote = scraper.scrape_house_votes(
+        bill=None, page=page, url="https://clerk.house.gov/evs/2026/roll293.xml"
+    )
 
     voter_ids = {v["note"]: get_pseudo_id(v["voter_id"]).get("id") for v in vote.votes}
     assert voter_ids == {"A000370": "A000370", "G000598": "G000598"}
@@ -450,10 +485,19 @@ def test_concurrent_resolution_rejected_maps_to_fail():
 
 def test_scrape_senate_votes_skips_the_whole_vote_on_an_unmapped_result():
     scraper = make_scraper()
-    scraper.senate_statuses = {k: v for k, v in scraper.senate_statuses.items() if k != "Joint Resolution Passed"}
+    scraper.senate_statuses = {
+        k: v
+        for k, v in scraper.senate_statuses.items()
+        if k != "Joint Resolution Passed"
+    }
     page = _load_page("bills_senate_sjres_fixture.xml")
 
-    votes = list(scraper.scrape_senate_votes(page, "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_275.xml"))
+    votes = list(
+        scraper.scrape_senate_votes(
+            page,
+            "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_275.xml",
+        )
+    )
 
     assert votes == []
 
@@ -463,7 +507,12 @@ def test_scrape_senate_votes_skips_only_the_one_voter_with_an_unmapped_choice():
     scraper.vote_codes = {k: v for k, v in scraper.vote_codes.items() if k != "Nay"}
     page = _load_page("bills_senate_sjres_fixture.xml")
 
-    votes = list(scraper.scrape_senate_votes(page, "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_275.xml"))
+    votes = list(
+        scraper.scrape_senate_votes(
+            page,
+            "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_275.xml",
+        )
+    )
 
     assert len(votes) == 1
     voter_notes = {v["note"] for v in votes[0].votes}
@@ -475,10 +524,14 @@ def test_scrape_house_votes_skips_only_the_one_voter_with_an_unmapped_choice():
     scraper.vote_codes = {k: v for k, v in scraper.vote_codes.items() if k != "Nay"}
     page = _load_page("roll293_hjres_fixture.xml")
 
-    vote = scraper.scrape_house_votes(bill=None, page=page, url="https://clerk.house.gov/evs/2026/roll293.xml")
+    vote = scraper.scrape_house_votes(
+        bill=None, page=page, url="https://clerk.house.gov/evs/2026/roll293.xml"
+    )
 
     voter_notes = {v["note"] for v in vote.votes}
-    assert voter_notes == {"G000598"}  # A000370 (the "Nay" voter) was skipped, not crashed on
+    assert voter_notes == {
+        "G000598"
+    }  # A000370 (the "Nay" voter) was skipped, not crashed on
 
 
 # pm-review (OPEN-306): a single unmapped choice used by MANY voters -- not just one -- would
@@ -494,7 +547,12 @@ def test_scrape_senate_votes_warns_with_a_summary_when_every_voter_is_unmapped(c
     page = _load_page("bills_senate_sjres_fixture.xml")
 
     with caplog.at_level(logging.WARNING, logger="openstates"):
-        votes = list(scraper.scrape_senate_votes(page, "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_275.xml"))
+        votes = list(
+            scraper.scrape_senate_votes(
+                page,
+                "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_275.xml",
+            )
+        )
 
     assert len(votes) == 1
     assert votes[0].votes == []
@@ -507,7 +565,9 @@ def test_scrape_house_votes_warns_with_a_summary_when_every_voter_is_unmapped(ca
     page = _load_page("roll293_hjres_fixture.xml")
 
     with caplog.at_level(logging.WARNING, logger="openstates"):
-        vote = scraper.scrape_house_votes(bill=None, page=page, url="https://clerk.house.gov/evs/2026/roll293.xml")
+        vote = scraper.scrape_house_votes(
+            bill=None, page=page, url="https://clerk.house.gov/evs/2026/roll293.xml"
+        )
 
     assert vote.votes == []
     assert "2 voter(s) skipped due to an unmapped vote choice" in caplog.text

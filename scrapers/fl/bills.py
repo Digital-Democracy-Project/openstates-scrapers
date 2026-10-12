@@ -14,7 +14,10 @@ from openstates.scrape import Bill, VoteEvent, Scraper
 from classify_motion import classify_motion
 from openstates.utils import format_datetime
 from openstates.utils.resilience_profiles import RESILIENCE_PROFILES
-from openstates.utils.cookie_provider import WafBlockDetected, content_matches_block_markers
+from openstates.utils.cookie_provider import (
+    WafBlockDetected,
+    content_matches_block_markers,
+)
 from requests.exceptions import ConnectionError, Timeout, RequestException
 from spatula import HtmlPage, HtmlListPage, XPath, SelectorError, PdfPage, URL, SkipItem
 
@@ -22,7 +25,6 @@ from .actions import Categorizer
 from .utils import (
     get_random_user_agent,
     add_random_delay,
-    retry_on_connection_error,
 )
 
 SPONSOR_RE = re.compile(
@@ -198,9 +200,13 @@ class BillList(HtmlListPage):
             date_matches = re.findall(r"\d{1,2}/\d{1,2}/\d{4}", last_action_str)
             if date_matches:
                 try:
-                    last_action = datetime.datetime.strptime(date_matches[0], "%m/%d/%Y")
+                    last_action = datetime.datetime.strptime(
+                        date_matches[0], "%m/%d/%Y"
+                    )
                     if last_action < start:
-                        raise SkipItem(f"{bill_id} last action {date_matches[0]} <= cutoff")
+                        raise SkipItem(
+                            f"{bill_id} last action {date_matches[0]} <= cutoff"
+                        )
                 except ValueError:
                     pass
 
@@ -878,7 +884,12 @@ class _FLHouseCookieProviderSource(URL):
                     timeout=self.timeout,
                     cookies=cookies,
                 )
-            except (ConnectionError, RemoteDisconnected, URLError, RequestException) as e:
+            except (
+                ConnectionError,
+                RemoteDisconnected,
+                URLError,
+                RequestException,
+            ) as e:
                 raise WafBlockDetected(str(e)) from e
             if content_matches_block_markers(resp.content):
                 raise WafBlockDetected(
@@ -1261,7 +1272,9 @@ class FlBillScraper(Scraper):
 
         bill_nos = None
         if bill_no:
-            bill_nos = {re.sub(r"\s", "", b).upper() for b in bill_no.split(",") if b.strip()}
+            bill_nos = {
+                re.sub(r"\s", "", b).upper() for b in bill_no.split(",") if b.strip()
+            }
 
         # OPEN-123: filled in by BillList.process_item() as it matches each requested
         # number, then diffed against bill_nos once the list walk finishes below.

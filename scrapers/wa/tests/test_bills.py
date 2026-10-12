@@ -27,7 +27,9 @@ def _listing_page(entries):
     # the first <a> (a "parent directory" link on the real listing pages) --
     # the leading dummy link here mirrors that.
     links = "".join(f'<a href="{href}">{text}</a>' for href, text in entries)
-    return lxml.html.fromstring(f"<html><body><a href=\"../\">..</a>{links}</body></html>")
+    return lxml.html.fromstring(
+        f'<html><body><a href="../">..</a>{links}</body></html>'
+    )
 
 
 def _mock_bill_list(scraper, monkeypatch, bill_ids):

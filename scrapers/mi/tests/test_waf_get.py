@@ -7,7 +7,9 @@ from openstates.utils.mi_cookies import MI_COOKIE_PROVIDER
 
 
 class FakeResponse:
-    def __init__(self, content=b"<html>real content</html>", url=None, status_code=None):
+    def __init__(
+        self, content=b"<html>real content</html>", url=None, status_code=None
+    ):
         self.content = content
         if url is not None:
             self.url = url
@@ -106,11 +108,18 @@ def test_mi_waf_get_propagates_after_second_block(monkeypatch):
     assert calls["count"] == 2  # no second re-warm
 
 
-def test_mi_waf_get_uses_fresh_user_agent_paired_with_fresh_cookies_on_retry(monkeypatch):
+def test_mi_waf_get_uses_fresh_user_agent_paired_with_fresh_cookies_on_retry(
+    monkeypatch,
+):
     """The retry after an invalidate-and-rewarm must see whatever get_user_agent() returns
     *at that point* (a fresh, possibly-different real UA), not the first attempt's value --
     mirrors the pairing guarantee CookieProvider.fetch_with_retry itself provides."""
-    cookies_seq = iter([{"x-bni-fpc": "old", "x-bni-rncf": "old"}, {"x-bni-fpc": "new", "x-bni-rncf": "new"}])
+    cookies_seq = iter(
+        [
+            {"x-bni-fpc": "old", "x-bni-rncf": "old"},
+            {"x-bni-fpc": "new", "x-bni-rncf": "new"},
+        ]
+    )
     agents_seq = iter(["agent-v1", "agent-v2"])
 
     monkeypatch.setattr(MI_COOKIE_PROVIDER, "get_cookies", lambda: next(cookies_seq))
@@ -143,25 +152,42 @@ def _blocked_message(monkeypatch, response):
     return str(excinfo.value)
 
 
-def test_block_message_names_the_marker_status_and_path_but_not_the_query_string(monkeypatch):
-    msg = _blocked_message(monkeypatch, FakeResponse(
-        content=b"<html>captcha_resp=abc</html>",
-        url="https://legislature.mi.gov/Search/ExecuteSearch?sessions=2025-2026&sponsor=",
-        status_code=200,
-    ))
-    assert msg == "response matched known WAF block-page marker 'captcha_resp' (HTTP 200) on /Search/ExecuteSearch"
+def test_block_message_names_the_marker_status_and_path_but_not_the_query_string(
+    monkeypatch,
+):
+    msg = _blocked_message(
+        monkeypatch,
+        FakeResponse(
+            content=b"<html>captcha_resp=abc</html>",
+            url="https://legislature.mi.gov/Search/ExecuteSearch?sessions=2025-2026&sponsor=",
+            status_code=200,
+        ),
+    )
+    assert (
+        msg
+        == "response matched known WAF block-page marker 'captcha_resp' (HTTP 200) on /Search/ExecuteSearch"
+    )
     assert "sessions" not in msg
 
 
 def test_block_message_survives_a_response_with_no_url_or_status(monkeypatch):
-    msg = _blocked_message(monkeypatch, FakeResponse(content=b"User validation required to continue"))
+    msg = _blocked_message(
+        monkeypatch, FakeResponse(content=b"User validation required to continue")
+    )
     assert "marker 'user validation required' (HTTP ?) on ?" in msg
 
 
-def test_block_message_never_contains_the_phrases_that_fail_a_run_on_their_own(monkeypatch):
+def test_block_message_never_contains_the_phrases_that_fail_a_run_on_their_own(
+    monkeypatch,
+):
     # import-summary.sh's _SCRAPE_UNREACHABLE_MARKERS treats these as "site unreachable" in any log line.
-    msg = _blocked_message(monkeypatch, FakeResponse(
-        content=b"Request Rejected", url="https://legislature.mi.gov/Bills/Bill", status_code=403,
-    )).lower()
+    msg = _blocked_message(
+        monkeypatch,
+        FakeResponse(
+            content=b"Request Rejected",
+            url="https://legislature.mi.gov/Bills/Bill",
+            status_code=403,
+        ),
+    ).lower()
     assert "waf block detected" not in msg
     assert "consecutive waf blocks" not in msg

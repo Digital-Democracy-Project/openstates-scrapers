@@ -85,7 +85,7 @@ def _mi_bill_id_to_no(raw_bill_id: str) -> str:
     compact = re.sub(r"\s", "", raw_bill_id).upper()
     for prefix in _MI_KNOWN_PREFIXES:
         if compact.startswith(prefix):
-            rest = compact[len(prefix):]
+            rest = compact[len(prefix) :]
             if rest.isdigit():
                 rest = str(int(rest))
             return f"{prefix}{rest}"
@@ -266,9 +266,7 @@ class MIResilientScraperMixin:
         )
 
 
-def mi_waf_get(
-    request_func: typing.Callable[[dict, str], typing.Any]
-) -> typing.Any:
+def mi_waf_get(request_func: typing.Callable[[dict, str], typing.Any]) -> typing.Any:
     """
     Attach legislature.mi.gov's cached WAF cookies (OPEN-19 -- see
     openstates.utils.mi_cookies for the "sufficient in our testing" framing) *and* the real
@@ -468,10 +466,9 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         row_links = page.xpath(
             "//div[contains(@class,'tableScrollWrapper')]/table[1]/tbody/tr/td[1]/a"
         )
-        extraction_ok = (
-            not row_links
-            or len(site_actions) >= _MI_MIN_ACTION_COVERAGE * len(row_links)
-        )
+        extraction_ok = not row_links or len(
+            site_actions
+        ) >= _MI_MIN_ACTION_COVERAGE * len(row_links)
         coverage_detail = (
             f"results page lists {len(row_links)} bills but only {len(site_actions)} last "
             f"actions could be parsed off it (< {_MI_MIN_ACTION_COVERAGE:.0%}). The row layout "
@@ -677,9 +674,9 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
             bill_id = link[0].xpath("text()")
             if not bill_id:
                 continue
-            actions[_mi_bill_id_to_no(bill_id[0].split(" of ")[0])] = (
-                _mi_normalize_last_action(text[marker + len("Last Action:"):])
-            )
+            actions[
+                _mi_bill_id_to_no(bill_id[0].split(" of ")[0])
+            ] = _mi_normalize_last_action(text[marker + len("Last Action:") :])
         return actions
 
     def _warn_unmatched_bill_nos(self, session, bill_nos, matched_bill_nos) -> None:
@@ -920,7 +917,9 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
                     # tell a real recorded vote from an empty/summary passage motion
                     # (mirrors usa/votes.py's house/senate-rollcall-num extras).
                     vote.extras[
-                        "senate-rollcall-num" if actor == "upper" else "house-rollcall-num"
+                        "senate-rollcall-num"
+                        if actor == "upper"
+                        else "house-rollcall-num"
                     ] = rc_num
                     vote.add_source(vote_url)
                     yield vote

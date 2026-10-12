@@ -172,7 +172,8 @@ class VaBillScraper(Scraper):
                 event_dates = [e["EventDate"] for e in events if e.get("EventDate")]
                 if event_dates:
                     latest = max(
-                        dateutil.parser.parse(d).replace(tzinfo=None) for d in event_dates
+                        dateutil.parser.parse(d).replace(tzinfo=None)
+                        for d in event_dates
                     )
                     if latest <= start_dt:
                         # Nothing's changed since our cutoff -- skip this bill entirely rather
@@ -285,7 +286,8 @@ class VaBillScraper(Scraper):
                 else:
                     chamber = "legislature"
                     self.logger.warning(
-                        f"Encountered unexpected action actor for legislation_id {legislation_id}"
+                        f"Encountered unexpected action actor for {bill.identifier} "
+                        f"LegislationEventID {row['LegislationEventID']}"
                     )
                 bill.add_action(
                     chamber=chamber,
@@ -475,7 +477,9 @@ class VaBillScraper(Scraper):
                     chamber=self.chamber_map[row["ChamberCode"]],
                     bill=bill,
                     classification=classify_motion(
-                        "va", motion_text, bill_action=row["LegislationActionDescription"]
+                        "va",
+                        motion_text,
+                        bill_action=row["LegislationActionDescription"],
                     ),
                 )
 
@@ -507,7 +511,9 @@ class VaBillScraper(Scraper):
                     # guard as usa/dc's vote-result lookups -- here it's VA's own ResponseCode
                     # enum, per-voter, so an unmapped code skips just this one member's row.
                     option = safe_lookup(
-                        self.vote_map, subrow["ResponseCode"], what="VA vote response code",
+                        self.vote_map,
+                        subrow["ResponseCode"],
+                        what="VA vote response code",
                         context=f"{subrow['MemberDisplayName']}, VoteID {row['VoteID']}",
                     )
                     if option is None:
