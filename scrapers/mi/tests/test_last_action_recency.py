@@ -46,6 +46,7 @@ def results_page(rows) -> lxml.html.HtmlElement:
 
 # --- normalization -------------------------------------------------------------------
 
+
 def test_normalize_collapses_whitespace_and_case():
     assert (
         _mi_normalize_last_action("  REFERRED  to\n Committee ON  Rules ")
@@ -68,11 +69,22 @@ def test_normalize_does_not_strip_dates():
 
 # --- extraction ----------------------------------------------------------------------
 
+
 def test_extract_reads_bill_no_and_last_action():
-    page = results_page([
-        ("2025-HB-4864", "HB 4864 of 2025", "Last Action: referred to second reading"),
-        ("2025-SB-0001", "SB 0001 of 2025", "Last Action: referred to Committee on Rules"),
-    ])
+    page = results_page(
+        [
+            (
+                "2025-HB-4864",
+                "HB 4864 of 2025",
+                "Last Action: referred to second reading",
+            ),
+            (
+                "2025-SB-0001",
+                "SB 0001 of 2025",
+                "Last Action: referred to Committee on Rules",
+            ),
+        ]
+    )
     got = MIBillScraper._extract_last_actions(None, page)
     assert got == {
         "HB4864": "referred to second reading",
@@ -96,11 +108,15 @@ def test_extract_omits_row_with_no_last_action_marker():
 
 
 def test_extract_takes_the_last_marker_when_description_mentions_it():
-    page = results_page([(
-        "2025-HB-4002",
-        "HB 4002 of 2025",
-        "text mentioning Last Action: bogus <br />Last Action: real one",
-    )])
+    page = results_page(
+        [
+            (
+                "2025-HB-4002",
+                "HB 4002 of 2025",
+                "text mentioning Last Action: bogus <br />Last Action: real one",
+            )
+        ]
+    )
     assert MIBillScraper._extract_last_actions(None, page) == {"HB4002": "real one"}
 
 
@@ -121,6 +137,7 @@ def test_extract_on_empty_results_page():
 
 
 # --- baseline persistence ------------------------------------------------------------
+
 
 @pytest.fixture
 def cache_dir(tmp_path, monkeypatch):
@@ -165,6 +182,7 @@ def test_baseline_is_keyed_per_session(cache_dir):
 
 # --- scrape() wiring -----------------------------------------------------------------
 
+
 @pytest.fixture
 def scraper(cache_dir):
     s = MIBillScraper.__new__(MIBillScraper)
@@ -190,10 +208,15 @@ def drive(scraper, rows, start="2026-08-01", bill_no=None, scrape_bill=None):
 
     resp = mock.Mock()
     resp.content = lxml.html.tostring(results_page(rows))
-    with mock.patch.object(mi_bills, "mi_waf_get", return_value=resp), \
-            mock.patch.object(MIBillScraper, "scrape_bill", fake_scrape_bill), \
-            mock.patch.object(MIBillScraper, "get", create=True), \
-            mock.patch.object(MIBillScraper, "_redirected_single_bill", return_value=None):
+    with mock.patch.object(
+        mi_bills, "mi_waf_get", return_value=resp
+    ), mock.patch.object(
+        MIBillScraper, "scrape_bill", fake_scrape_bill
+    ), mock.patch.object(
+        MIBillScraper, "get", create=True
+    ), mock.patch.object(
+        MIBillScraper, "_redirected_single_bill", return_value=None
+    ):
         list(scraper.scrape(SESSION, start=start, bill_no=bill_no))
     return fetched
 
@@ -241,7 +264,11 @@ def test_extraction_shortfall_fails_closed(scraper, cache_dir):
     """
     _mi_save_last_actions(SESSION, {"HB4001": "x", "HB4002": "y", "HB4003": "z"})
     broken = [
-        ("2025-HB-4001", "HB 4001 of 2025", "Last Action: referred to Committee on Rules"),
+        (
+            "2025-HB-4001",
+            "HB 4001 of 2025",
+            "Last Action: referred to Committee on Rules",
+        ),
         ("2025-HB-4002", "HB 4002 of 2025", "marker gone"),
         ("2025-HB-4003", "HB 4003 of 2025", "marker gone"),
     ]
@@ -252,7 +279,9 @@ def test_extraction_shortfall_fails_closed(scraper, cache_dir):
 def test_extraction_shortfall_does_not_touch_the_baseline(scraper, cache_dir):
     before = {"HB4001": "x", "HB4002": "y", "HB4003": "z"}
     _mi_save_last_actions(SESSION, before)
-    broken = [(f"2025-HB-400{i}", f"HB 400{i} of 2025", "marker gone") for i in (1, 2, 3)]
+    broken = [
+        (f"2025-HB-400{i}", f"HB 400{i} of 2025", "marker gone") for i in (1, 2, 3)
+    ]
     with pytest.raises(ScrapeError):
         drive(scraper, broken)
     assert _mi_load_last_actions(SESSION) == before
@@ -265,11 +294,14 @@ def test_full_extraction_does_not_trip_the_coverage_guard(scraper, cache_dir):
 
 
 def test_only_bills_whose_last_action_changed_are_scraped(scraper, cache_dir):
-    _mi_save_last_actions(SESSION, {
-        "HB4001": "referred to committee on rules",   # unchanged
-        "HB4002": "introduced by rep smith",          # CHANGED -> now "adopted"
-        "HB4003": "reported with recommendation",     # unchanged
-    })
+    _mi_save_last_actions(
+        SESSION,
+        {
+            "HB4001": "referred to committee on rules",  # unchanged
+            "HB4002": "introduced by rep smith",  # CHANGED -> now "adopted"
+            "HB4003": "reported with recommendation",  # unchanged
+        },
+    )
     assert drive(scraper, ROWS) == ["HB 4002"]
 
 
@@ -284,8 +316,13 @@ def test_committee_action_change_is_detected(scraper, cache_dir):
     # The whole point of OPEN-134: a committee report on a pre-existing bill. dateFrom= could
     # never return this, and journals (OPEN-150) do not carry committee reports either.
     _mi_save_last_actions(SESSION, {"HB4003": "referred to Committee on Rules".lower()})
-    rows = [("2025-HB-4003", "HB 4003 of 2025",
-             "Last Action: reported with recommendation with substitute (H-1)")]
+    rows = [
+        (
+            "2025-HB-4003",
+            "HB 4003 of 2025",
+            "Last Action: reported with recommendation with substitute (H-1)",
+        )
+    ]
     assert drive(scraper, rows) == ["HB 4003"]
 
 
@@ -306,11 +343,14 @@ def test_baseline_advances_only_for_bills_actually_scraped(scraper, cache_dir):
     This is the OPEN-152 lesson one level down: a failed run that still records progress makes
     the bill invisible to every later run.
     """
-    _mi_save_last_actions(SESSION, {
-        "HB4001": "referred to committee on rules",
-        "HB4002": "stale one",
-        "HB4003": "also stale",
-    })
+    _mi_save_last_actions(
+        SESSION,
+        {
+            "HB4001": "referred to committee on rules",
+            "HB4002": "stale one",
+            "HB4003": "also stale",
+        },
+    )
 
     def boom(session, bill_id, bill_url):
         if bill_id == "HB 4003":
@@ -358,11 +398,14 @@ def test_search_url_no_longer_sends_a_date_window(scraper, cache_dir):
     """
     # A real baseline, not {} -- an empty one now fails closed by design, so it would abort
     # before the URL was ever built and this guard would pass for the wrong reason.
-    _mi_save_last_actions(SESSION, {
-        "HB4001": "referred to committee on rules",
-        "HB4002": "adopted",
-        "HB4003": "reported with recommendation",
-    })
+    _mi_save_last_actions(
+        SESSION,
+        {
+            "HB4001": "referred to committee on rules",
+            "HB4002": "adopted",
+            "HB4003": "reported with recommendation",
+        },
+    )
     seen = {}
 
     def capture(fn):
@@ -373,13 +416,13 @@ def test_search_url_no_longer_sends_a_date_window(scraper, cache_dir):
             r = mock.Mock()
             r.content = lxml.html.tostring(results_page(ROWS))
             return r
+
         scraper.get = rec
         return fn(None, "ua")
 
-    with mock.patch.object(mi_bills, "mi_waf_get", capture), \
-            mock.patch.object(MIBillScraper, "scrape_bill",
-                              lambda *a, **k: iter(())), \
-            mock.patch.object(MIBillScraper, "_redirected_single_bill", return_value=None):
+    with mock.patch.object(mi_bills, "mi_waf_get", capture), mock.patch.object(
+        MIBillScraper, "scrape_bill", lambda *a, **k: iter(())
+    ), mock.patch.object(MIBillScraper, "_redirected_single_bill", return_value=None):
         list(scraper.scrape(SESSION, start="2026-08-01"))
 
     assert "dateFrom=&" in seen["url"], seen["url"]

@@ -17,7 +17,9 @@ _PREPROCESSORS = {
 KNOWN_JURISDICTIONS = frozenset(_config["jurisdictions"].keys())
 
 
-def classify_motion(jurisdiction: str, motion_text: str, bill_action: str = None) -> list:
+def classify_motion(
+    jurisdiction: str, motion_text: str, bill_action: str = None
+) -> list:
     """Return an OpenStates motion_classification list for a vote event.
 
     Args:
@@ -34,7 +36,9 @@ def classify_motion(jurisdiction: str, motion_text: str, bill_action: str = None
     """
     cfg = _config["jurisdictions"].get(jurisdiction)
     if cfg is None:
-        logger.warning("classify_motion: unknown jurisdiction %r — returning []", jurisdiction)
+        logger.warning(
+            "classify_motion: unknown jurisdiction %r — returning []", jurisdiction
+        )
         return []
 
     t = (motion_text or "").strip().lower()

@@ -494,7 +494,9 @@ class AZBillScraper(Scraper):
                     if bill_no_key not in bill_nos:
                         continue
                     matched_bill_nos.add(bill_no_key)
-                yield from self.scrape_bill(chamber, session, bill_id, session_id, start_dt=start_dt)
+                yield from self.scrape_bill(
+                    chamber, session, bill_id, session_id, start_dt=start_dt
+                )
 
         # OPEN-123: a requested bill_no matching nothing used to produce a clean exit with
         # zero bills scraped, which during a targeted backfill is indistinguishable from

@@ -90,9 +90,7 @@ class UTBillScraper(Scraper, LXMLMixin):
 
         bill_nos = None
         if bill_no:
-            bill_nos = {
-                _normalize_bill_no(b) for b in bill_no.split(",") if b.strip()
-            }
+            bill_nos = {_normalize_bill_no(b) for b in bill_no.split(",") if b.strip()}
 
         session_url = "https://le.utah.gov/billlist.jsp?session={}".format(session_slug)
 
@@ -328,7 +326,9 @@ class UTBillScraper(Scraper, LXMLMixin):
         if self._start and data.get("actionHistoryList"):
             try:
                 start_dt = datetime.datetime.strptime(self._start, "%Y-%m-%dT%H:%M:%S")
-                most_recent_date = parser.parse(data["actionHistoryList"][0]["actionDate"])
+                most_recent_date = parser.parse(
+                    data["actionHistoryList"][0]["actionDate"]
+                )
                 if most_recent_date.replace(tzinfo=None) <= start_dt:
                     return True
             except (ValueError, TypeError, KeyError):

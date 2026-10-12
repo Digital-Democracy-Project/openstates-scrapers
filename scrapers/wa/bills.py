@@ -398,7 +398,9 @@ class WABillScraper(Scraper, LXMLMixin):
             action_date_str = xpath(page, "string(wa:CurrentStatus/wa:ActionDate)")
             if action_date_str:
                 try:
-                    action_dt = datetime.datetime.fromisoformat(action_date_str.rstrip("Z"))
+                    action_dt = datetime.datetime.fromisoformat(
+                        action_date_str.rstrip("Z")
+                    )
                     if action_dt <= self._start_dt:
                         return
                 except ValueError:
@@ -723,7 +725,9 @@ class WABillScraper(Scraper, LXMLMixin):
             # falsey presence signal.
             if seq_no:
                 vote.extras[
-                    "senate-rollcall-num" if chamber == "upper" else "house-rollcall-num"
+                    "senate-rollcall-num"
+                    if chamber == "upper"
+                    else "house-rollcall-num"
                 ] = seq_no
             vote.add_source(url)
             for sv in xpath(rc, "wa:Votes/wa:Vote"):

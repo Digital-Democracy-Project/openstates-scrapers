@@ -67,7 +67,9 @@ def test_get_session_list_attaches_cached_waf_cookies(monkeypatch):
         seen_cookies.update(cookies or {})
         return FakeResponse(SUCCESS_HTML)
 
-    _stub_cookie_provider(monkeypatch, cookies={"x-bni-fpc": "abc", "x-bni-rncf": "def"})
+    _stub_cookie_provider(
+        monkeypatch, cookies={"x-bni-fpc": "abc", "x-bni-rncf": "def"}
+    )
     monkeypatch.setattr("mi.requests.get", fake_get)
 
     sessions = Michigan().get_session_list()

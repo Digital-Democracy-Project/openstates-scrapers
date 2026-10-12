@@ -8,9 +8,7 @@ from va.bills import VaBillScraper
 
 
 class _FakeJurisdiction:
-    legislative_sessions = [
-        {"identifier": "2026", "extras": {"session_code": "20261"}}
-    ]
+    legislative_sessions = [{"identifier": "2026", "extras": {"session_code": "20261"}}]
 
 
 def make_scraper():
@@ -121,7 +119,9 @@ def test_full_scrape_with_zero_bills_does_not_raise_empty_scrape(monkeypatch):
     assert list(scraper.scrape(session="2026")) == []
 
 
-def test_incremental_scrape_with_no_real_candidates_does_not_raise_empty_scrape(monkeypatch):
+def test_incremental_scrape_with_no_real_candidates_does_not_raise_empty_scrape(
+    monkeypatch,
+):
     # An empty bill list (e.g. a session with nothing filed yet) leaves candidates_seen at
     # 0 -- this must not be mistaken for "asked and got nothing new". A genuinely broken
     # source is covered separately below (missing VA_API_KEY).
@@ -132,12 +132,12 @@ def test_incremental_scrape_with_no_real_candidates_does_not_raise_empty_scrape(
     assert list(scraper.scrape(session="2026", start="2026-01-01T00:00:00")) == []
 
 
-def test_incremental_scrape_with_a_real_newer_bill_does_not_raise_empty_scrape(monkeypatch):
+def test_incremental_scrape_with_a_real_newer_bill_does_not_raise_empty_scrape(
+    monkeypatch,
+):
     rows = [_bill_row("HB1", legislation_id="1")]
     _mock_bill_list(monkeypatch, rows)
-    _mock_downstream(
-        monkeypatch, events_by_id={"1": [_event("2026-06-01T00:00:00")]}
-    )
+    _mock_downstream(monkeypatch, events_by_id={"1": [_event("2026-06-01T00:00:00")]})
     scraper = make_scraper()
 
     results = list(scraper.scrape(session="2026", start="2026-01-01T00:00:00"))
@@ -146,7 +146,9 @@ def test_incremental_scrape_with_a_real_newer_bill_does_not_raise_empty_scrape(m
     assert results[0].identifier == "HB1"
 
 
-def test_incremental_scrape_with_no_event_history_does_not_raise_empty_scrape(monkeypatch):
+def test_incremental_scrape_with_no_event_history_does_not_raise_empty_scrape(
+    monkeypatch,
+):
     # A candidate with zero fetched events has nothing to compare against the cutoff, so
     # the pre-existing cutoff check (bills.py, the `if event_dates:` guard) lets it through
     # unconditionally. That must count as "newer than cutoff", not as evidence supporting a
@@ -169,9 +171,7 @@ def test_invalid_start_falls_back_to_full_scrape_and_does_not_raise_empty_scrape
     # start=, so this must behave identically to the no-start= case above.
     rows = [_bill_row("HB1", legislation_id="1")]
     _mock_bill_list(monkeypatch, rows)
-    _mock_downstream(
-        monkeypatch, events_by_id={"1": [_event("2020-01-01T00:00:00")]}
-    )
+    _mock_downstream(monkeypatch, events_by_id={"1": [_event("2020-01-01T00:00:00")]})
     scraper = make_scraper()
 
     warnings = []
@@ -193,9 +193,7 @@ def test_bill_no_targeting_does_not_raise_empty_scrape_even_with_zero_newer_matc
     # cutoff check -- that's a pre-existing, separate behavior this ticket doesn't touch.)
     rows = [_bill_row("HB1", legislation_id="1"), _bill_row("HB2", legislation_id="2")]
     _mock_bill_list(monkeypatch, rows)
-    _mock_downstream(
-        monkeypatch, events_by_id={"1": [_event("2020-01-01T00:00:00")]}
-    )
+    _mock_downstream(monkeypatch, events_by_id={"1": [_event("2020-01-01T00:00:00")]})
     scraper = make_scraper()
 
     results = list(
@@ -233,7 +231,9 @@ def test_missing_legislations_key_does_not_raise_empty_scrape(monkeypatch):
         def json(self):
             return {"UnexpectedShape": True}
 
-    monkeypatch.setattr("va.bills.requests.post", lambda *args, **kwargs: _BadResponse())
+    monkeypatch.setattr(
+        "va.bills.requests.post", lambda *args, **kwargs: _BadResponse()
+    )
     scraper = make_scraper()
 
     with pytest.raises(KeyError):
@@ -259,7 +259,9 @@ def test_bill_list_json_decode_failure_does_not_raise_empty_scrape(monkeypatch):
 
 
 @pytest.mark.parametrize("method_name", ["add_versions", "add_sponsors"])
-def test_downstream_failure_propagates_not_masked_as_empty_scrape(monkeypatch, method_name):
+def test_downstream_failure_propagates_not_masked_as_empty_scrape(
+    monkeypatch, method_name
+):
     # pm-review: the property claimed in this fix's comments/PR body -- that a real failure
     # in add_versions/add_sponsors/add_votes still surfaces as a hard failure, never gets
     # silently converted into EmptyScrape -- proven directly rather than only asserted. This
@@ -282,7 +284,9 @@ def test_downstream_failure_propagates_not_masked_as_empty_scrape(monkeypatch, m
         list(scraper.scrape(session="2026", start="2026-01-01T00:00:00"))
 
 
-def test_downstream_add_votes_failure_propagates_not_masked_as_empty_scrape(monkeypatch):
+def test_downstream_add_votes_failure_propagates_not_masked_as_empty_scrape(
+    monkeypatch,
+):
     # add_votes is consumed via `yield from` (it's a generator, unlike add_versions/
     # add_sponsors), so it needs its own generator-shaped failure rather than the
     # parametrized case above.
