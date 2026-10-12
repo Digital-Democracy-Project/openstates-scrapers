@@ -131,7 +131,9 @@ class USBillScraper(Scraper):
     # All targeted bills still flow through this one scrape()/parse_bill_list() generator
     # chain (not one process per bill) -- parse_bill_list() does the actual per-entry
     # skip against the sitemap listing it already walks.
-    def scrape(self, chamber=None, session=None, start=None, hearings=True, bill_no=None):
+    def scrape(
+        self, chamber=None, session=None, start=None, hearings=True, bill_no=None
+    ):
         # OPEN-216: recorded before start= is overwritten below (which always leaves it a
         # real datetime, never falsy) -- this is the one signal for whether the caller
         # actually asked for an incremental window, used by the EmptyScrape guard at the
@@ -877,7 +879,9 @@ class USBillScraper(Scraper):
         # (real case: "Concurrent Resolution Rejected", HCONRES 89, 2026-09-26). Senate LIS
         # publishes no schema/enum for this field -- new phrasing is only discoverable by
         # encountering it -- so skip just this one vote (loudly) instead of crashing.
-        result = safe_lookup(self.senate_statuses, result_text, what="Senate vote result", context=url)
+        result = safe_lookup(
+            self.senate_statuses, result_text, what="Senate vote result", context=url
+        )
         if result is None:
             return
 
@@ -931,7 +935,12 @@ class USBillScraper(Scraper):
             # OPEN-306: same "no schema, don't crash on an unmapped value" guard as the
             # vote-result lookup above -- here it's per-voter, so an unmapped choice skips just
             # this one member's row rather than the whole vote.
-            option = safe_lookup(self.vote_codes, choice, what="vote choice", context=f"{name} ({lis_id}), {url}")
+            option = safe_lookup(
+                self.vote_codes,
+                choice,
+                what="vote choice",
+                context=f"{name} ({lis_id}), {url}",
+            )
             if option is None:
                 skipped_voters.append(name)
                 continue
@@ -1032,7 +1041,12 @@ class USBillScraper(Scraper):
             # back to name-only matching at import time.
             # OPEN-306: same per-voter "unmapped choice skips this row, not the whole vote"
             # guard as scrape_senate_votes' vote_codes lookup above.
-            option = safe_lookup(self.vote_codes, choice, what="vote choice", context=f"{name} ({bioguide}), {url}")
+            option = safe_lookup(
+                self.vote_codes,
+                choice,
+                what="vote choice",
+                context=f"{name} ({bioguide}), {url}",
+            )
             if option is None:
                 skipped_voters.append(name)
                 continue

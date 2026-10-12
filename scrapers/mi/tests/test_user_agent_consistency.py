@@ -10,7 +10,6 @@ from http.client import RemoteDisconnected
 
 import scrapelib
 
-from mi import bills as mi_bills
 from mi.bills import MIBillScraper
 from mi.events import MIEventScraper
 from mi import Michigan
@@ -68,7 +67,9 @@ VALID_EVENT_HTML = b"""
 
 
 def _stub_cookie_provider(monkeypatch, user_agent=CAPTURED_USER_AGENT):
-    monkeypatch.setattr(MI_COOKIE_PROVIDER, "get_cookies", lambda: dict(STUBBED_COOKIES))
+    monkeypatch.setattr(
+        MI_COOKIE_PROVIDER, "get_cookies", lambda: dict(STUBBED_COOKIES)
+    )
     monkeypatch.setattr(MI_COOKIE_PROVIDER, "get_user_agent", lambda: user_agent)
     monkeypatch.setattr(MI_COOKIE_PROVIDER, "invalidate", lambda: None)
 
@@ -110,7 +111,9 @@ def _content_for_event_scrape(url):
 def test_full_bill_scrape_uses_captured_user_agent_for_every_request(monkeypatch):
     monkeypatch.setattr(core_base.time, "sleep", lambda *_a, **_k: None)
     _stub_cookie_provider(monkeypatch)
-    seen_user_agents = _install_transport_recorder(monkeypatch, _content_for_bill_scrape)
+    seen_user_agents = _install_transport_recorder(
+        monkeypatch, _content_for_bill_scrape
+    )
 
     scraper = MIBillScraper(Michigan(), tempfile.mkdtemp())
     list(scraper.scrape("2025-2026"))
@@ -124,7 +127,9 @@ def test_full_bill_scrape_uses_captured_user_agent_for_every_request(monkeypatch
 def test_full_event_scrape_uses_captured_user_agent_for_every_request(monkeypatch):
     monkeypatch.setattr(core_base.time, "sleep", lambda *_a, **_k: None)
     _stub_cookie_provider(monkeypatch)
-    seen_user_agents = _install_transport_recorder(monkeypatch, _content_for_event_scrape)
+    seen_user_agents = _install_transport_recorder(
+        monkeypatch, _content_for_event_scrape
+    )
 
     scraper = MIEventScraper(Michigan(), tempfile.mkdtemp())
     list(scraper.scrape())
@@ -144,14 +149,22 @@ def test_circuit_breaker_trip_does_not_change_mi_request_user_agent(monkeypatch)
         core_base, "get_random_user_agent", lambda: ROTATED_SENTINEL_USER_AGENT
     )
     _stub_cookie_provider(monkeypatch)
-    seen_user_agents = _install_transport_recorder(monkeypatch, _content_for_bill_scrape)
+    seen_user_agents = _install_transport_recorder(
+        monkeypatch, _content_for_bill_scrape
+    )
     monkeypatch.setattr(core_base.time, "sleep", lambda *_a, **_k: None)
 
     scraper = MIBillScraper(Michigan(), tempfile.mkdtemp())
     # Force the circuit breaker to trip on the very next request_resiliently() call.
     scraper._consecutive_failures = scraper._max_consecutive_failures
 
-    list(scraper.scrape_bill("2025-2026", "HB 0001", "https://legislature.mi.gov/Bills/Bill?ObjectName=2025-HB-0001"))
+    list(
+        scraper.scrape_bill(
+            "2025-2026",
+            "HB 0001",
+            "https://legislature.mi.gov/Bills/Bill?ObjectName=2025-HB-0001",
+        )
+    )
 
     assert seen_user_agents == [CAPTURED_USER_AGENT]
     # Rotation opt-out (AC3): self.headers itself must also stay untouched by the circuit
@@ -159,7 +172,9 @@ def test_circuit_breaker_trip_does_not_change_mi_request_user_agent(monkeypatch)
     assert scraper.headers.get("User-Agent") != ROTATED_SENTINEL_USER_AGENT
 
 
-def test_periodic_fresh_session_reset_does_not_change_mi_request_user_agent(monkeypatch):
+def test_periodic_fresh_session_reset_does_not_change_mi_request_user_agent(
+    monkeypatch,
+):
     """_create_fresh_session() (base.py, fired every _reset_interval seconds) rotates the
     User-Agent for a normal http_resilience_mode consumer -- for MI it must not."""
     monkeypatch.setattr(
@@ -167,13 +182,21 @@ def test_periodic_fresh_session_reset_does_not_change_mi_request_user_agent(monk
     )
     monkeypatch.setattr(core_base.time, "sleep", lambda *_a, **_k: None)
     _stub_cookie_provider(monkeypatch)
-    seen_user_agents = _install_transport_recorder(monkeypatch, _content_for_bill_scrape)
+    seen_user_agents = _install_transport_recorder(
+        monkeypatch, _content_for_bill_scrape
+    )
 
     scraper = MIBillScraper(Michigan(), tempfile.mkdtemp())
     # Force the periodic connection-pool reset to fire on the next request.
     scraper._last_reset_time = 0
 
-    list(scraper.scrape_bill("2025-2026", "HB 0001", "https://legislature.mi.gov/Bills/Bill?ObjectName=2025-HB-0001"))
+    list(
+        scraper.scrape_bill(
+            "2025-2026",
+            "HB 0001",
+            "https://legislature.mi.gov/Bills/Bill?ObjectName=2025-HB-0001",
+        )
+    )
 
     assert seen_user_agents == [CAPTURED_USER_AGENT]
     assert scraper.headers.get("User-Agent") != ROTATED_SENTINEL_USER_AGENT

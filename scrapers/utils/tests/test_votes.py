@@ -17,6 +17,11 @@ def test_safe_lookup_returns_none_and_warns_on_a_miss(caplog):
 
 def test_safe_lookup_warning_includes_context_when_given(caplog):
     with caplog.at_level(logging.WARNING, logger="openstates"):
-        safe_lookup({}, "Concurrent Resolution Rejected", what="Senate vote result", context="https://example.com/vote123")
+        safe_lookup(
+            {},
+            "Concurrent Resolution Rejected",
+            what="Senate vote result",
+            context="https://example.com/vote123",
+        )
 
     assert "https://example.com/vote123" in caplog.text

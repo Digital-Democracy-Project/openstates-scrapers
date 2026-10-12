@@ -85,7 +85,7 @@ def _mi_bill_id_to_no(raw_bill_id: str) -> str:
     compact = re.sub(r"\s", "", raw_bill_id).upper()
     for prefix in _MI_KNOWN_PREFIXES:
         if compact.startswith(prefix):
-            rest = compact[len(prefix):]
+            rest = compact[len(prefix) :]
             if rest.isdigit():
                 rest = str(int(rest))
             return f"{prefix}{rest}"
@@ -266,9 +266,7 @@ class MIResilientScraperMixin:
         )
 
 
-def mi_waf_get(
-    request_func: typing.Callable[[dict, str], typing.Any]
-) -> typing.Any:
+def mi_waf_get(request_func: typing.Callable[[dict, str], typing.Any]) -> typing.Any:
     """
     Attach legislature.mi.gov's cached WAF cookies (OPEN-19 -- see
     openstates.utils.mi_cookies for the "sufficient in our testing" framing) *and* the real
@@ -321,9 +319,23 @@ def mi_waf_get(
     return MI_COOKIE_PROVIDER.fetch_with_retry(do_request)
 
 
+# DDP difference from upstream (OPEN-344): upstream stopped labelling any "passed by ..." action as
+# passage, because most of them are the "PASSED BY HOUSE WITH IMMEDIATE EFFECT" follow-up line. A
+# handful are the real roll-call passage itself ("PASSED BY 3/4 VOTE ROLL CALL # 49 ..."): for some
+# bills (SB 602, SB 704) that is the only Senate passage action, so it keeps its label.
+_PASSED_BY_FRACTION_VOTE = re.compile(r"passed by \d+/\d+ vote")
+
+
 def categorize_action(action: str) -> str:
+    action_lower = action.lower()
+
+    if action_lower.startswith("passed by") and not _PASSED_BY_FRACTION_VOTE.match(
+        action_lower
+    ):
+        return None
+
     for prefix, atype in _categorizers.items():
-        if action.lower().startswith(prefix):
+        if action_lower.startswith(prefix):
             return atype
 
 
@@ -463,10 +475,9 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         row_links = page.xpath(
             "//div[contains(@class,'tableScrollWrapper')]/table[1]/tbody/tr/td[1]/a"
         )
-        extraction_ok = (
-            not row_links
-            or len(site_actions) >= _MI_MIN_ACTION_COVERAGE * len(row_links)
-        )
+        extraction_ok = not row_links or len(
+            site_actions
+        ) >= _MI_MIN_ACTION_COVERAGE * len(row_links)
         coverage_detail = (
             f"results page lists {len(row_links)} bills but only {len(site_actions)} last "
             f"actions could be parsed off it (< {_MI_MIN_ACTION_COVERAGE:.0%}). The row layout "
@@ -672,9 +683,9 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
             bill_id = link[0].xpath("text()")
             if not bill_id:
                 continue
-            actions[_mi_bill_id_to_no(bill_id[0].split(" of ")[0])] = (
-                _mi_normalize_last_action(text[marker + len("Last Action:"):])
-            )
+            actions[
+                _mi_bill_id_to_no(bill_id[0].split(" of ")[0])
+            ] = _mi_normalize_last_action(text[marker + len("Last Action:") :])
         return actions
 
     def _warn_unmatched_bill_nos(self, session, bill_nos, matched_bill_nos) -> None:
@@ -915,7 +926,9 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
                     # tell a real recorded vote from an empty/summary passage motion
                     # (mirrors usa/votes.py's house/senate-rollcall-num extras).
                     vote.extras[
-                        "senate-rollcall-num" if actor == "upper" else "house-rollcall-num"
+                        "senate-rollcall-num"
+                        if actor == "upper"
+                        else "house-rollcall-num"
                     ] = rc_num
                     vote.add_source(vote_url)
                     yield vote

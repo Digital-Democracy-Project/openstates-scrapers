@@ -65,6 +65,7 @@ def test_scrape_senate_vote_passes_lis_id_as_identifier():
 
 # --- OPEN-293: HJRES/SJRES bill ids were silently mangled, dropping the vote ------
 
+
 def test_scrape_house_vote_normalizes_hjres_bill_id():
     """Real case: HJRES 1's roll-293 "On Motion to Suspend the Rules and Pass" vote
     (the Supreme Court composition amendment) had bill_identifier "HJ RES 1" before
@@ -81,23 +82,27 @@ def test_scrape_house_vote_normalizes_hjres_bill_id():
     assert vote.bill_identifier == "HJRES 1"
 
 
-@pytest.mark.parametrize("clerk_id,expected", [
-    ("H R 8646", "HR 8646"),
-    ("H RES 1", "HRES 1"),
-    ("H J RES 1", "HJRES 1"),
-    ("S J RES 5", "SJRES 5"),
-    ("H CON RES 3", "HCONRES 3"),
-    ("S CON RES 2", "SCONRES 2"),
-    ("S 100", "S 100"),
-    # pm-review: already-compact input (e.g. a value some other caller already
-    # normalized) must pass through unchanged, not get mangled by a second pass.
-    ("HJRES 1", "HJRES 1"),
-])
+@pytest.mark.parametrize(
+    "clerk_id,expected",
+    [
+        ("H R 8646", "HR 8646"),
+        ("H RES 1", "HRES 1"),
+        ("H J RES 1", "HJRES 1"),
+        ("S J RES 5", "SJRES 5"),
+        ("H CON RES 3", "HCONRES 3"),
+        ("S CON RES 2", "SCONRES 2"),
+        ("S 100", "S 100"),
+        # pm-review: already-compact input (e.g. a value some other caller already
+        # normalized) must pass through unchanged, not get mangled by a second pass.
+        ("HJRES 1", "HJRES 1"),
+    ],
+)
 def test_normalize_clerk_bill_id(clerk_id, expected):
     assert normalize_clerk_bill_id(clerk_id) == expected
 
 
 # --- OPEN-293 (Senate side): case, not spacing, was the bug here ------------------
+
 
 def test_scrape_senate_vote_normalizes_sjres_bill_id():
     """Real case: SJRES 55's roll-275 "On the Joint Resolution" vote had bill_identifier
@@ -116,14 +121,17 @@ def test_scrape_senate_vote_normalizes_sjres_bill_id():
     assert votes[0].bill_identifier == "SJRES 55"
 
 
-@pytest.mark.parametrize("senate_doc_name,expected", [
-    ("S.J.Res. 55", "SJRES 55"),
-    ("S.Con.Res. 10", "SCONRES 10"),
-    ("S.Res. 50", "SRES 50"),
-    ("S. 100", "S 100"),
-    # pm-review: already-compact input must pass through unchanged.
-    ("SJRES 55", "SJRES 55"),
-])
+@pytest.mark.parametrize(
+    "senate_doc_name,expected",
+    [
+        ("S.J.Res. 55", "SJRES 55"),
+        ("S.Con.Res. 10", "SCONRES 10"),
+        ("S.Res. 50", "SRES 50"),
+        ("S. 100", "S 100"),
+        # pm-review: already-compact input must pass through unchanged.
+        ("SJRES 55", "SJRES 55"),
+    ],
+)
 def test_normalize_senate_bill_id(senate_doc_name, expected):
     assert normalize_senate_bill_id(senate_doc_name) == expected
 
