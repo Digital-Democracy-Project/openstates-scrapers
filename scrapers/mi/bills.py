@@ -319,10 +319,19 @@ def mi_waf_get(request_func: typing.Callable[[dict, str], typing.Any]) -> typing
     return MI_COOKIE_PROVIDER.fetch_with_retry(do_request)
 
 
+# DDP difference from upstream (OPEN-344): upstream stopped labelling any "passed by ..." action as
+# passage, because most of them are the "PASSED BY HOUSE WITH IMMEDIATE EFFECT" follow-up line. A
+# handful are the real roll-call passage itself ("PASSED BY 3/4 VOTE ROLL CALL # 49 ..."): for some
+# bills (SB 602, SB 704) that is the only Senate passage action, so it keeps its label.
+_PASSED_BY_FRACTION_VOTE = re.compile(r"passed by \d+/\d+ vote")
+
+
 def categorize_action(action: str) -> str:
     action_lower = action.lower()
 
-    if action_lower.startswith("passed by"):
+    if action_lower.startswith("passed by") and not _PASSED_BY_FRACTION_VOTE.match(
+        action_lower
+    ):
         return None
 
     for prefix, atype in _categorizers.items():
