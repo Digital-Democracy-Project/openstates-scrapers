@@ -322,8 +322,13 @@ def mi_waf_get(
 
 
 def categorize_action(action: str) -> str:
+    action_lower = action.lower()
+
+    if action_lower.startswith("passed by"):
+        return None
+
     for prefix, atype in _categorizers.items():
-        if action.lower().startswith(prefix):
+        if action_lower.startswith(prefix):
             return atype
 
 
