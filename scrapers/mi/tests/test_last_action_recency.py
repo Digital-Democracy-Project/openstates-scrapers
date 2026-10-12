@@ -6,7 +6,6 @@ text against what the previous run recorded, re-scraping only the bills whose te
 These tests cover the parts where getting it wrong is silent: the skip decision, and when the
 baseline is allowed to advance.
 """
-import json
 import os
 from unittest import mock
 
