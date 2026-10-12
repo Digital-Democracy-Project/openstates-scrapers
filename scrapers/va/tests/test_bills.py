@@ -53,9 +53,12 @@ def _mock_bill_list(monkeypatch, bill_rows, api_key="test-key"):
     else:
         monkeypatch.delenv("VA_API_KEY", raising=False)
 
+    # upstream's VA scraper goes through the scraper's own self.post() (scrapelib retry/backoff),
+    # not the raw requests module
     monkeypatch.setattr(
-        "va.bills.requests.post",
-        lambda *args, **kwargs: _FakeListResponse(bill_rows),
+        VaBillScraper,
+        "post",
+        lambda self, *args, **kwargs: _FakeListResponse(bill_rows),
     )
 
 
@@ -232,7 +235,7 @@ def test_missing_legislations_key_does_not_raise_empty_scrape(monkeypatch):
             return {"UnexpectedShape": True}
 
     monkeypatch.setattr(
-        "va.bills.requests.post", lambda *args, **kwargs: _BadResponse()
+        VaBillScraper, "post", lambda self, *args, **kwargs: _BadResponse()
     )
     scraper = make_scraper()
 
@@ -250,7 +253,7 @@ def test_bill_list_json_decode_failure_does_not_raise_empty_scrape(monkeypatch):
             raise ValueError("not valid JSON")
 
     monkeypatch.setattr(
-        "va.bills.requests.post", lambda *args, **kwargs: _BrokenResponse()
+        VaBillScraper, "post", lambda self, *args, **kwargs: _BrokenResponse()
     )
     scraper = make_scraper()
 
