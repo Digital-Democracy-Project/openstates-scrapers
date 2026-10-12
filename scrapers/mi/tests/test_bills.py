@@ -105,9 +105,7 @@ def test_scrape_bill_resets_counter_after_successful_fetch(monkeypatch):
 # history. These tests mirror the scrape_bill()/scrape_event_page() shape
 # above, applied to the per-vote-document fetch.
 
-ROLL_CALL_URL = (
-    "https://legislature.mi.gov/documents/2025-2026/Journal/House/htm/2025-HJ-07-03-300.htm"
-)
+ROLL_CALL_URL = "https://legislature.mi.gov/documents/2025-2026/Journal/House/htm/2025-HJ-07-03-300.htm"
 
 # Minimal valid roll-call journal document -- just enough <p> structure for
 # parse_roll_call() to find "Roll Call No. 1", collect a Yeas and a Nays
@@ -227,7 +225,11 @@ def test_scrape_votes_skips_vote_on_persistent_fetch_failure_but_continues(monke
     _always_blocked(monkeypatch)
 
     bill = Bill(
-        "HB 0001", "2025-2026", "A bill about testing", chamber="lower", classification="bill"
+        "HB 0001",
+        "2025-2026",
+        "A bill about testing",
+        chamber="lower",
+        classification="bill",
     )
     page = lxml.html.fromstring(HISTORY_PAGE_WITH_ONE_VOTE_HTML)
 
@@ -566,9 +568,7 @@ def test_malformed_object_name_is_not_scraped(monkeypatch, caplog):
 def _capture_warnings(scraper, monkeypatch):
     warnings = []
     monkeypatch.setattr(scraper, "warning", lambda msg: warnings.append(msg))
-    monkeypatch.setattr(
-        scraper, "scrape_bill", lambda session, bill_id, url: iter(())
-    )
+    monkeypatch.setattr(scraper, "scrape_bill", lambda session, bill_id, url: iter(()))
     return warnings
 
 

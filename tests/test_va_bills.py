@@ -54,9 +54,9 @@ def make_vote_row(vote_id: str, batch_number) -> dict:
 def run_add_votes(monkeypatch, row) -> list:
     scraper = make_scraper()
     fake_response = mock.Mock(content=json.dumps({"Votes": [row]}).encode())
-    monkeypatch.setattr(
-        "va.bills.requests.get", mock.Mock(return_value=fake_response)
-    )
+    # upstream's VA scraper now goes through the scraper's own self.get()/self.post()
+    # (scrapelib retry/backoff) rather than the raw requests module
+    monkeypatch.setattr(VaBillScraper, "get", mock.Mock(return_value=fake_response))
     return list(scraper.add_votes(make_bill(), "some-legislation-id"))
 
 
@@ -152,9 +152,7 @@ BILL_LIST_ROWS = [
 def _mock_bill_list(monkeypatch, rows=BILL_LIST_ROWS):
     fake_response = mock.Mock()
     fake_response.json.return_value = {"Legislations": rows}
-    monkeypatch.setattr(
-        "va.bills.requests.post", mock.Mock(return_value=fake_response)
-    )
+    monkeypatch.setattr(VaBillScraper, "post", mock.Mock(return_value=fake_response))
 
 
 def _stub_detail_calls(monkeypatch, scraper) -> list:

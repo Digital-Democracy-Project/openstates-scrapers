@@ -5,7 +5,6 @@ import json
 import lxml
 import os
 import pytz
-import requests
 import urllib3
 
 from openstates.exceptions import EmptyScrape
@@ -92,7 +91,7 @@ class VaBillScraper(Scraper):
         # If we don't IncludeFailed, we will only get a subset of legislation
         body = {"SessionCode": self.session_code, "IncludeFailed": True}
 
-        page = requests.post(
+        page = self.post(
             f"{self.base_url}/Legislation/api/getlegislationlistasync",
             headers=self.headers,
             json=body,
@@ -173,7 +172,8 @@ class VaBillScraper(Scraper):
                 event_dates = [e["EventDate"] for e in events if e.get("EventDate")]
                 if event_dates:
                     latest = max(
-                        dateutil.parser.parse(d).replace(tzinfo=None) for d in event_dates
+                        dateutil.parser.parse(d).replace(tzinfo=None)
+                        for d in event_dates
                     )
                     if latest <= start_dt:
                         # Nothing's changed since our cutoff -- skip this bill entirely rather
@@ -258,7 +258,7 @@ class VaBillScraper(Scraper):
             "sessionCode": self.session_code,
             "legislationID": legislation_id,
         }
-        page = requests.get(
+        page = self.get(
             f"{self.base_url}/LegislationEvent/api/getlegislationeventbylegislationidasync",
             params=body,
             headers=self.headers,
@@ -286,7 +286,8 @@ class VaBillScraper(Scraper):
                 else:
                     chamber = "legislature"
                     self.logger.warning(
-                        f"Encountered unexpected action actor for legislation_id {legislation_id}"
+                        f"Encountered unexpected action actor for {bill.identifier} "
+                        f"LegislationEventID {row['LegislationEventID']}"
                     )
                 bill.add_action(
                     chamber=chamber,
@@ -325,7 +326,7 @@ class VaBillScraper(Scraper):
             bill.add_related_bill(bill.identifier, f"{prior_session}", "prior-session")
 
     def add_sponsors(self, bill: Bill, legislation_id: str):
-        page = requests.get(
+        page = self.get(
             f"{self.base_url}/LegislationPatron/api/GetLegislationPatronsByIdAsync/{legislation_id}",
             headers=self.headers,
             verify=False,
@@ -346,7 +347,7 @@ class VaBillScraper(Scraper):
             "sessionCode": self.session_code,
             "legislationID": legislation_id,
         }
-        response = requests.get(
+        response = self.get(
             f"{self.base_url}/LegislationText/api/getlegislationtextbyidasync",
             params=body,
             headers=self.headers,
@@ -370,25 +371,42 @@ class VaBillScraper(Scraper):
             return
 
         for row in page["TextsList"]:
-            if (row["PDFFile"] and len(row["PDFFile"]) > 1) or (
-                row["HTMLFile"] and len(row["HTMLFile"]) > 1
-            ):
-                self.error(json.dumps(row))
-                self.error("Add code to handle multiple files to VA Scraper")
-                raise Exception
-
-            if row["PDFFile"] and len(row["PDFFile"]) > 0:
+            # Since the 2025 LIS relaunch, a version can carry multiple
+            # PDF/HTML files (e.g. lis.blob.core.windows.net/files/*.PDF).
+            # Add a version link for each one instead of just the first.
+            for pdf in row["PDFFile"] or []:
                 bill.add_version_link(
                     row["Description"],
-                    row["PDFFile"][0]["FileURL"],
+                    pdf["FileURL"],
                     media_type="application/pdf",
+                    on_duplicate="ignore",
                 )
 
-            if row["HTMLFile"] and len(row["HTMLFile"]) > 0:
+            for html in row["HTMLFile"] or []:
                 bill.add_version_link(
                     row["Description"],
-                    row["HTMLFile"][0]["FileURL"],
+                    html["FileURL"],
                     media_type="text/html",
+                    on_duplicate="ignore",
+                )
+
+            # Some versions (commonly ones that never got a generated PDF,
+            # e.g. still-prefiled bills) have no PDFFile/HTMLFile at all --
+            # getlegislationtextbyidasync only returns their text inline as
+            # DraftText, which isn't a URL we can hand off. The old
+            # legacylis.virginia.gov site still serves a rendered HTML page
+            # of that same text, so fall back to it rather than dropping
+            # the version entirely.
+            if not row["PDFFile"] and not row["HTMLFile"] and row.get("DraftText"):
+                legacy_url = (
+                    "https://legacylis.virginia.gov/cgi-bin/legp604.exe?"
+                    f"{self.session_code[2:]}+ful+{bill.identifier}"
+                )
+                bill.add_version_link(
+                    row["Description"],
+                    legacy_url,
+                    media_type="text/html",
+                    on_duplicate="ignore",
                 )
 
             if row["ImpactFile"]:
@@ -412,7 +430,7 @@ class VaBillScraper(Scraper):
         }
 
         vote_page_url = f"{self.base_url}/Vote/api/getvotebyidasync"
-        page = requests.get(
+        page = self.get(
             vote_page_url,
             params=body,
             headers=self.headers,
@@ -459,7 +477,9 @@ class VaBillScraper(Scraper):
                     chamber=self.chamber_map[row["ChamberCode"]],
                     bill=bill,
                     classification=classify_motion(
-                        "va", motion_text, bill_action=row["LegislationActionDescription"]
+                        "va",
+                        motion_text,
+                        bill_action=row["LegislationActionDescription"],
                     ),
                 )
 
@@ -491,7 +511,9 @@ class VaBillScraper(Scraper):
                     # guard as usa/dc's vote-result lookups -- here it's VA's own ResponseCode
                     # enum, per-voter, so an unmapped code skips just this one member's row.
                     option = safe_lookup(
-                        self.vote_map, subrow["ResponseCode"], what="VA vote response code",
+                        self.vote_map,
+                        subrow["ResponseCode"],
+                        what="VA vote response code",
                         context=f"{subrow['MemberDisplayName']}, VoteID {row['VoteID']}",
                     )
                     if option is None:

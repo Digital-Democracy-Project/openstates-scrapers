@@ -27,7 +27,9 @@ unchanged so nothing calling into this mixin needed to change.
 from openstates.utils.resilience_profiles import RESILIENCE_PROFILES
 from openstates.utils.waf_circuit_breaker import raise_if_waf_block_threshold_reached
 
-MAX_CONSECUTIVE_WAF_BLOCKS = RESILIENCE_PROFILES["mi"].circuit_breaker_max_consecutive_blocks
+MAX_CONSECUTIVE_WAF_BLOCKS = RESILIENCE_PROFILES[
+    "mi"
+].circuit_breaker_max_consecutive_blocks
 
 
 class MIWafCircuitBreakerMixin:

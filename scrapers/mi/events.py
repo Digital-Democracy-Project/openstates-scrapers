@@ -27,7 +27,10 @@ class MIEventScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper)
         try:
             page = mi_waf_get(
                 lambda cookies, user_agent: self.get(
-                    url, headers={"User-Agent": user_agent}, cookies=cookies, verify=False
+                    url,
+                    headers={"User-Agent": user_agent},
+                    cookies=cookies,
+                    verify=False,
                 )
             ).content
         except WafBlockDetected as e:
@@ -55,7 +58,10 @@ class MIEventScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper)
         try:
             page = mi_waf_get(
                 lambda cookies, user_agent: self.get(
-                    url, headers={"User-Agent": user_agent}, cookies=cookies, verify=False
+                    url,
+                    headers={"User-Agent": user_agent},
+                    cookies=cookies,
+                    verify=False,
                 )
             ).content
         except WafBlockDetected as e:

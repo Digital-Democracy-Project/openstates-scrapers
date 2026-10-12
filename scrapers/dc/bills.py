@@ -251,7 +251,10 @@ class DCBillScraper(Scraper):
                                     # vote-result phrasing not yet seen. Skip just this one
                                     # vote instead of the whole scrape.
                                     status = safe_lookup(
-                                        self._vote_statuses, result.lower(), what="DC vote result", context=result
+                                        self._vote_statuses,
+                                        result.lower(),
+                                        what="DC vote result",
+                                        context=result,
                                     )
                                     if status is None:
                                         continue
