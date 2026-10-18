@@ -11,6 +11,19 @@ from collections import defaultdict
 eastern = pytz.timezone("US/Eastern")
 
 
+# The one session whose votes are already stored with a bare roll-call number as their key (774 votes, OPEN-397).
+_BARE_KEY_SESSION = "2025"
+
+
+def vote_dedupe_key(session, rcs):
+    """NC restarts its roll-call numbers in every session, and the importer matches a vote on its dedupe_key
+    alone (not session or bill), so the 2025E1 extra session reusing "[S]-1" collided with the regular
+    session's vote and failed the whole load (OPEN-397). Every session but 2025 gets the session in the key
+    (so the next regular session, 2027, is safe too); 2025 keeps the bare number so its stored votes keep
+    their keys and ids."""
+    return rcs if session == _BARE_KEY_SESSION else f"{session}-{rcs}"
+
+
 class NCBillScraper(Scraper):
 
     archived_votes = defaultdict(lambda: defaultdict(list))
@@ -245,7 +258,7 @@ class NCBillScraper(Scraper):
                 bill=bill,
                 classification="passage",  # TODO: classify votes
             )
-            ve.dedupe_key = rcs
+            ve.dedupe_key = vote_dedupe_key(bill.legislative_session, rcs)
             ve.set_count("yes", int(aye))
             ve.set_count("no", int(no))
             ve.set_count("not voting", int(nv))
