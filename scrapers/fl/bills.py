@@ -1214,14 +1214,22 @@ class HouseComVote(HtmlPage):
                 else:
                     raise ValueError("Unknown vote type found: {}".format(member_vote))
 
-            if (yes_count or no_count) and not vote.votes:
-                # The page says people voted but no member row matched the markup above, so
-                # flhouse.gov has probably changed it again. The old markup did exactly this
-                # silently: 2,458 stored committee votes have tallies and no members (OPEN-402).
+            parsed = (
+                sum(1 for v in vote.votes if v["option"] == "yes"),
+                sum(1 for v in vote.votes if v["option"] == "no"),
+                sum(1 for v in vote.votes if v["option"] == "not voting"),
+            )
+            if parsed != (yes_count, no_count, other_count):
+                # The member rows do not add up to the page's own totals. The old markup
+                # produced tallies with no members at all, silently, for 2,458 stored
+                # committee votes (OPEN-402); a partial match after a markup change would
+                # look the same, so say so whenever the two disagree.
                 self.logger.warning(
                     f"House committee vote page {self.source.url} for "
-                    f"{_flhouse_bill_label(self)} has vote totals but no member rows "
-                    "matched; flhouse.gov's markup may have changed"
+                    f"{_flhouse_bill_label(self)}: member rows do not match the page's "
+                    f"totals (yes/no/not voting: parsed {parsed}, declared "
+                    f"{(yes_count, no_count, other_count)}); flhouse.gov's markup may "
+                    "have changed"
                 )
 
             return vote
@@ -1300,7 +1308,12 @@ class FlBillScraper(Scraper):
 
         # The subjects PDF is fetched once here and handed to every page of the bill list,
         # instead of being declared as a per-BillList dependency that re-fetches it (upstream #5880).
-        subjects = next(iter(SubjectPDF({"session": session}).do_scrape()))
+        subjects = next(iter(SubjectPDF({"session": session}).do_scrape()), None)
+        if subjects is None:
+            raise ValueError(
+                f"Florida subjects PDF for {session} produced no subjects; not scraping "
+                "bills without them"
+            )
 
         bill_list = BillList(
             {

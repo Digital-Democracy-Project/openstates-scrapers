@@ -767,7 +767,7 @@ def test_house_committee_vote_rejects_an_unknown_vote_code():
         page.process_page()
 
 
-def test_house_committee_vote_warns_when_totals_exist_but_no_member_row_matches(caplog):
+def test_house_committee_vote_warns_when_no_member_row_matches(caplog):
     # The old markup (ul.vote-list/li) silently yielded a vote with tallies and no members for
     # 2,458 stored votes (OPEN-402). If the markup moves again this must not be silent.
     page = _house_com_vote(
@@ -786,4 +786,83 @@ def test_house_committee_vote_warns_when_totals_exist_but_no_member_row_matches(
         vote = page.process_page()
 
     assert vote is not None and vote.votes == []
-    assert any("no member rows" in r.message for r in caplog.records)
+    assert any("do not match the page's totals" in r.message for r in caplog.records)
+
+
+def test_house_committee_vote_warns_on_a_partial_match_but_not_on_a_full_one(caplog):
+    # declared 2 yes / 1 no / 2 not voting (see _house_vote_html)
+    full = [("Y", "A"), ("Y", "B"), ("N", "C"), ("-", "D"), ("(Y)", "E")]
+    with caplog.at_level("WARNING"):
+        _house_com_vote(_house_vote_html(full)).process_page()
+    assert not any("do not match" in r.message for r in caplog.records)
+
+    with caplog.at_level("WARNING"):
+        _house_com_vote(_house_vote_html(full[:3])).process_page()  # two rows never matched
+    assert any("parsed (2, 1, 0), declared (2, 1, 2)" in r.message for r in caplog.records)
+
+
+def test_scrape_fails_clearly_when_the_subjects_pdf_yields_nothing(monkeypatch):
+    class _EmptySubjectPDF:
+        def __init__(self, page_input):
+            pass
+
+        def do_scrape(self):
+            return iter(())
+
+    scraper, _ = _make_scraper_for_scrape(monkeypatch, lambda bill_list: iter(()))
+    monkeypatch.setattr("fl.bills.SubjectPDF", _EmptySubjectPDF)
+
+    with pytest.raises(ValueError, match="subjects PDF .* produced no subjects"):
+        list(scraper.scrape(session="2026"))
+
+
+# pm-review (OPEN-402): pin the retry arithmetic and that WAF-blocked flhouse.gov traffic never
+# enters it (no real requests, sleeps are recorded, not slept).
+
+
+def _recorded_sleeps(monkeypatch):
+    sleeps = []
+    monkeypatch.setattr("fl.utils.time.sleep", lambda seconds: sleeps.append(seconds))
+    monkeypatch.setattr("fl.utils.random.uniform", lambda a, b: 1.0)  # no jitter
+    return sleeps
+
+
+def test_patched_get_response_gives_up_after_seven_attempts_with_the_expected_waits(monkeypatch):
+    import fl.bills as fl_bills
+    from requests.exceptions import Timeout
+
+    sleeps = _recorded_sleeps(monkeypatch)
+    calls = []
+
+    def always_times_out(self, scraper):
+        calls.append(1)
+        raise Timeout("stalled")
+
+    monkeypatch.setattr(fl_bills, "original_get_response", always_times_out)
+    monkeypatch.setattr(fl_bills, "add_random_delay", lambda *a, **k: None)
+
+    with pytest.raises(Timeout):
+        fl_bills.patched_get_response(URL("https://example.invalid/x"), object())
+
+    assert len(calls) == 7  # the first try and 6 retries
+    assert sleeps == [30, 60, 120, 240, 480, 600]  # about 25.5 minutes of waiting in all
+
+
+def test_a_waf_block_on_flhouse_gov_is_not_retried_by_the_long_outage_wait(monkeypatch):
+    from unittest import mock
+    from openstates.utils.cookie_provider import WafBlockDetected
+
+    sleeps = _recorded_sleeps(monkeypatch)
+    source = _FLHouseCookieProviderSource("https://flhouse.gov/x", verify=False)
+    fake_scraper = mock.Mock()
+    fake_scraper.request.return_value = mock.Mock(content=b"Request Rejected")
+
+    with mock.patch("fl.bills.RESILIENCE_PROFILES") as profiles:
+        profiles.__getitem__.return_value.cookie_provider.fetch_with_retry.side_effect = (
+            lambda do_request: do_request({"c": "stale"}, "UA")
+        )
+        with pytest.raises(WafBlockDetected):
+            source.get_response(fake_scraper)
+
+    assert fake_scraper.request.call_count == 1  # one request, not seven
+    assert sleeps == []  # and no backoff sleep
