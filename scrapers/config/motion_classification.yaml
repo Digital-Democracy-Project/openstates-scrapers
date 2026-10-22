@@ -135,5 +135,6 @@ jurisdictions:
       - '^conference report (agreed to|rejected) by (house|senate)\b'
       - '^(house|senate) acceded to request'               # "Accede Conference Committee R", new wording
       - '^(house|senate) concurred in governor'            # governor's recommendations
-      - '^governor''s (amendment|recommendation)'
+      # needs a disposition: LIS also logs "Governor's recommendation received by House" (not a vote)
+      - '^governor''s (amendment|recommendation)s?\b.*\b(agreed to|adopted|rejected|passed by|defeated)'
     default: null

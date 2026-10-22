@@ -253,6 +253,8 @@ def test_wa_not_passage(text):
     ("House concurred in Governor's recommendation (60-Y 38-N 0-A)", ["passage"]),
     ("Senate concurred in Governor's recommendation nos 1 - 3 (21-Y 18-N 0-A)", ["passage"]),
     ("Governor's amendment nos. 1 - 3 agreed to (96-Y 0-N 0-A)", ["passage"]),
+    ("Governor's recommendation adopted (96-Y 0-N 0-A)", ["passage"]),
+    ("Governor's recommendation nos. 1 - 3 passed by House (60-Y 38-N 0-A)", ["passage"]),
 ])
 def test_va_passage(text, expected):
     assert classify_motion("va", text) == expected
@@ -284,12 +286,31 @@ def test_va_passage(text, expected):
     "Subcommittee recommends striking from the docket (5-Y 0-N)",
     "Subcommittee recommends continuing to 2027 (5-Y 0-N)",
     "Subcommittee recommends incorporating into HB 1 (5-Y 0-N)",
+    # look-alike actions LIS logs that are not votes on passage
+    "Governor's recommendation received by House",
+    "Governor's Action Deadline 11:59 p.m., April 13, 2026",
+    "Governor's Veto Received by Senate",
+    "Conference Report released",
+    "House requested conference committee",
+    "Failed to Pass from conference",
 ])
 def test_va_not_passage(text):
     assert classify_motion("va", text) == []
     # the bill_action override must not turn these into committee passage either (the scraper
     # now hands classify_motion the same text as bill_action)
     assert classify_motion("va", text, bill_action=text) == []
+
+
+def test_va_first_matching_section_wins():
+    # evaluation order is bill_action -> not_passage -> committee_passage -> passage
+    # bill_action decides before the motion text is looked at
+    assert classify_motion(
+        "va", "Passed Senate (21-Y 19-N 0-A)", bill_action="Reported from Finance"
+    ) == ["committee-passage"]
+    # not_passage beats passage: a vote about passage is not a vote on passage
+    assert classify_motion("va", "Reconsideration of Senate passage agreed to by Senate") == []
+    # committee_passage beats passage
+    assert classify_motion("va", "Reported from Courts of Justice and passed by") == ["committee-passage"]
 
 
 @pytest.mark.parametrize("text", [
