@@ -443,11 +443,11 @@ def _make_bill_list(bill_nos, matched_bill_nos):
             "start": None,
             "bill_nos": bill_nos,
             "matched_bill_nos": matched_bill_nos,
+            # FlBillScraper.scrape() fetches the subjects PDF once and hands it to every
+            # page of the list; process_item() reads it after the bill_no check.
+            "subjects": collections.defaultdict(set),
         }
     )
-    # Normally injected by spatula's `dependencies` machinery (SubjectPDF);
-    # process_item() reads it after the bill_no check to set bill.subject.
-    page.subjects = collections.defaultdict(set)
     return page
 
 
@@ -488,12 +488,23 @@ def test_matched_bill_nos_accumulates_across_paginated_list_pages():
     matched = set()
     page_one = _make_bill_list({"HB53", "SB99"}, matched)
     page_two = type(page_one)(page_one.input, source=URL("https://example.invalid/2"))
-    page_two.subjects = collections.defaultdict(set)
 
     page_one.process_item(_bill_list_anchor("HB 53"))
     page_two.process_item(_bill_list_anchor("SB 99"))
 
     assert matched == {"HB53", "SB99"}
+
+
+class _FakeSubjectPDF:
+    instances = []
+
+    def __init__(self, page_input):
+        self.page_input = page_input
+        self.subjects = collections.defaultdict(set)
+        type(self).instances.append(self)
+
+    def do_scrape(self):
+        return iter([self.subjects])
 
 
 def _make_scraper_for_scrape(monkeypatch, walk):
@@ -506,6 +517,8 @@ def _make_scraper_for_scrape(monkeypatch, walk):
     monkeypatch.setattr(scraper, "get_house_session_number", lambda session: "104")
     monkeypatch.setattr(scraper, "_create_fresh_session", lambda: None)
     monkeypatch.setattr(scraper, "_process_bill_list", walk)
+    # scrape() fetches the subjects PDF up front; never touch the network in a unit test
+    monkeypatch.setattr("fl.bills.SubjectPDF", _FakeSubjectPDF)
 
     warnings = []
     monkeypatch.setattr(scraper, "warning", lambda msg: warnings.append(msg))
@@ -549,3 +562,228 @@ def test_scrape_without_bill_no_never_warns(monkeypatch):
     list(scraper.scrape(session="2026"))
 
     assert warnings == []
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# OPEN-402: upstream openstates-scrapers #5880 / #5836 brought into the fork.
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+def test_scrape_fetches_the_subjects_pdf_once_and_hands_it_to_the_bill_list(monkeypatch):
+    # #5880: BillList used to declare SubjectPDF as a spatula dependency, which fetched the
+    # subjects PDF again for the list pages and again after every restarted walk.
+    _FakeSubjectPDF.instances.clear()
+    seen = []
+
+    def walk(bill_list):
+        seen.append(bill_list.input["subjects"])
+        return iter(())
+
+    scraper, _ = _make_scraper_for_scrape(monkeypatch, walk)
+    list(scraper.scrape(session="2026"))
+
+    assert len(_FakeSubjectPDF.instances) == 1
+    assert _FakeSubjectPDF.instances[0].page_input == {"session": "2026"}
+    assert seen == [_FakeSubjectPDF.instances[0].subjects]
+    assert BillList.dependencies == {}  # no SubjectPDF dependency any more
+
+
+def test_patched_get_response_gives_every_request_a_default_timeout(monkeypatch):
+    # #5880: spatula/scrapelib default to no timeout, so a stalled connection hung the scrape
+    import fl.bills as fl_bills
+
+    monkeypatch.setattr(fl_bills, "original_get_response", lambda self, scraper: "response")
+    monkeypatch.setattr(fl_bills, "add_random_delay", lambda *a, **k: None)
+
+    no_timeout = URL("https://example.invalid/a")
+    assert no_timeout.timeout is None
+    assert fl_bills.patched_get_response(no_timeout, object()) == "response"
+    assert no_timeout.timeout == 60
+
+    explicit = URL("https://example.invalid/b", timeout=15)
+    fl_bills.patched_get_response(explicit, object())
+    assert explicit.timeout == 15  # an explicit timeout is kept
+
+
+def test_cookie_provider_source_gets_the_same_default_timeout(monkeypatch):
+    # Our flhouse.gov path overrides get_response, so it never reaches patched_get_response
+    from unittest import mock
+
+    def fetch(source):
+        fake_scraper = mock.Mock()
+        fake_scraper.request.return_value = mock.Mock(content=b"real content")
+        with mock.patch("fl.bills.RESILIENCE_PROFILES") as profiles:
+            profiles.__getitem__.return_value.cookie_provider.fetch_with_retry.side_effect = (
+                lambda do_request: do_request({"c": "v"}, "UA")
+            )
+            source.get_response(fake_scraper)
+        return fake_scraper.request.call_args.kwargs["timeout"]
+
+    assert fetch(_FLHouseCookieProviderSource("https://flhouse.gov/x", verify=False)) == 60
+    assert (
+        fetch(_FLHouseCookieProviderSource("https://flhouse.gov/x", verify=False, timeout=20))
+        == 20
+    )
+
+
+def _fl_text(*lines):
+    return "\n".join(lines)
+
+
+def _floor_vote(lines):
+    from fl.bills import FloorVote
+    from openstates.scrape import Bill
+
+    page = FloorVote(
+        {
+            "date": "2026-02-10",
+            "chamber": "lower",
+            "bill": Bill("HB 1", "2026", "t", chamber="lower", classification="bill"),
+        },
+        source=URL("https://example.invalid/vote.pdf"),
+    )
+    page.text = _fl_text(*lines)
+    (vote,) = list(page.process_page())
+    return vote
+
+
+def test_floor_vote_not_voting_member_with_an_accent_is_recorded():
+    vote = _floor_vote(
+        [
+            "Calendar Page: 1",
+            "",
+            "",
+            "",
+            "Passage",
+            "",
+            "    Yeas - 1  Nays - 0  Not Voting - 1",
+            "",
+            "",
+            "    Y Smith-12",
+            "            López-45",
+            "",
+        ]
+    )
+    options = {(v["option"], v["voter_name"]) for v in vote.votes}
+    assert ("yes", "Smith") in options
+    assert ("not voting", "López") in options
+
+
+def _upper_com_vote(member_lines):
+    from fl.bills import UpperComVote
+    from openstates.scrape import Bill
+
+    page = UpperComVote(
+        {
+            "date": "2026-02-03",
+            "bill": Bill("SB 1", "2026", "t", chamber="upper", classification="bill"),
+        },
+        source=URL("https://example.invalid/senate.pdf"),
+    )
+    page.text = _fl_text(
+        "Senate Committee Vote Sheet",
+        "Bill: SB 1",
+        "Final Action: Favorable",
+        "",
+        "      Yea  Nay   Yea  Nay",
+        *member_lines,
+        "",
+        "   3   0   TOTALS",
+    )
+    (vote,) = list(page.process_page())
+    return vote
+
+
+def test_upper_committee_vote_strips_a_trailing_vote_code_from_every_kind_of_name():
+    # #5836: a name followed by lots of spaces and a code (VA vote after roll call, VC vote
+    # change). The old code dropped single-word names ("Cruz ... VA") entirely, cut a word off
+    # multi-word ones, and left "VC" on the name.
+    vote = _upper_com_vote(
+        [
+            "   X   Smith",
+            "   X   Cruz" + " " * 40 + "VA",
+            "   X   De La Torre" + " " * 30 + "VC",
+        ]
+    )
+    names = sorted(v["voter_name"] for v in vote.votes)
+    assert names == ["Cruz", "De La Torre", "Smith"]
+
+
+# House committee vote page, current flhouse.gov markup (upstream #5836). Synthetic: shaped
+# from the XPaths upstream reads, because no real page is cached. A live smoke test of a real
+# page is recorded on the PR.
+def _house_vote_html(rows, vote_list_class="vote-list"):
+    row_html = "".join(
+        f'<div role="row"><span><span aria-hidden="true">{code}</span>'
+        f'<span class="sr-only">word</span></span><span>{name}</span></div>'
+        for code, name in rows
+    )
+    return f"""<html><body>
+<span id="ctl00_MainContent_lblTotal">5</span>
+<span id="ctl00_MainContent_lblDate">02/10/2026 08:30:00 AM</span>
+<span id="ctl00_MainContent_lblYeas">2</span>
+<span id="ctl00_MainContent_lblNays">1</span>
+<span id="ctl00_MainContent_lblMissed">2</span>
+<span id="ctl00_MainContent_lblCommittee">Health Committee</span>
+<span id="ctl00_MainContent_lblAction">Favorable</span>
+<div class="{vote_list_class}">
+<div role="row" class="sr-only"><span>Vote</span><span>Member</span></div>
+{row_html}
+</div></body></html>""".encode()
+
+
+def _house_com_vote(html):
+    from openstates.scrape import Bill
+
+    page = HouseComVote(Bill("HB 53", "2026", "t", chamber="lower", classification="bill"))
+    page.source = SimpleNamespace(url="https://flhouse.gov/billvote.aspx?VoteId=1")
+    page.root = lxml.html.fromstring(html)
+    return page
+
+
+def test_house_committee_vote_reads_members_from_the_current_markup():
+    page = _house_com_vote(
+        _house_vote_html(
+            [("Y", "Smith"), ("Y", "Jones"), ("N", "Brown"), ("-", "Green"), ("(Y)", "White")]
+        )
+    )
+
+    vote = page.process_page()
+
+    got = {(v["option"], v["voter_name"]) for v in vote.votes}
+    assert got == {
+        ("yes", "Smith"),
+        ("yes", "Jones"),
+        ("no", "Brown"),
+        ("not voting", "Green"),
+        ("not voting", "White"),  # "(Y)" is shown as Did Not Vote and counted as missed
+    }
+
+
+def test_house_committee_vote_rejects_an_unknown_vote_code():
+    page = _house_com_vote(_house_vote_html([("Q", "Smith")]))
+
+    with pytest.raises(ValueError, match="Unknown vote type"):
+        page.process_page()
+
+
+def test_house_committee_vote_warns_when_totals_exist_but_no_member_row_matches(caplog):
+    # The old markup (ul.vote-list/li) silently yielded a vote with tallies and no members for
+    # 2,458 stored votes (OPEN-402). If the markup moves again this must not be silent.
+    page = _house_com_vote(
+        b"""<html><body>
+<span id="ctl00_MainContent_lblTotal">5</span>
+<span id="ctl00_MainContent_lblDate">02/10/2026 08:30:00 AM</span>
+<span id="ctl00_MainContent_lblYeas">2</span><span id="ctl00_MainContent_lblNays">1</span>
+<span id="ctl00_MainContent_lblMissed">2</span>
+<span id="ctl00_MainContent_lblCommittee">Health Committee</span>
+<span id="ctl00_MainContent_lblAction">Favorable</span>
+<ul class="vote-list"><li><span>Y</span><span>Smith</span></li></ul>
+</body></html>"""
+    )
+
+    with caplog.at_level("WARNING"):
+        vote = page.process_page()
+
+    assert vote is not None and vote.votes == []
+    assert any("no member rows" in r.message for r in caplog.records)
