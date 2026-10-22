@@ -382,3 +382,19 @@ def test_bill_repeated_once_per_summary_version_is_scraped_once_from_its_last_ro
     first = bills[0].abstracts
     assert [a["abstract"] for a in first] == ["passed text"]
     assert first[0]["note"] == "SUMMARY AS PASSED"
+
+
+def test_real_hb1398_votes_the_duplicate_committee_vote_is_dropped_and_the_rest_kept(monkeypatch):
+    """Real LIS rows (HB 1398, 2026), trimmed to the fields add_votes reads. VoteIDs 296656 and
+    296660 are one Appropriations committee vote listed twice (same time 12:45:00, committee,
+    description and 22 voters); 296661 is the "Reconsidered" row with no members (dropped as a
+    miscoded voice vote, as before); 297828 is the House floor vote."""
+    path = os.path.join(os.path.dirname(__file__), "fixtures", "va_hb1398_votes_real.json")
+    with open(path) as f:
+        rows = json.load(f)["Votes"]
+    votes = run_add_votes_many(monkeypatch, rows)
+
+    assert [v.dedupe_key for v in votes] == ["296656-HB30", "297828-HB30"]
+    assert votes[0].motion_text.startswith("Reported from Appropriations with substitute")
+    yes = {c["option"]: c["value"] for c in votes[0].counts}["yes"]
+    assert yes == 22
