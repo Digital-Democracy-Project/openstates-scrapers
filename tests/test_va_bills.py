@@ -25,7 +25,9 @@ def make_scraper() -> VaBillScraper:
 def make_bill():
     from openstates.scrape import Bill
 
-    return Bill("HB30", "2026S1", "A bill title", chamber="lower", classification="bill")
+    return Bill(
+        "HB30", "2026S1", "A bill title", chamber="lower", classification="bill"
+    )
 
 
 ABSENT = object()
@@ -82,7 +84,9 @@ def test_unmapped_response_code_skips_only_that_voter(monkeypatch):
     assert "Member Four" not in voter_names
 
 
-def test_unmapped_response_code_for_every_voter_warns_with_a_summary(monkeypatch, caplog):
+def test_unmapped_response_code_for_every_voter_warns_with_a_summary(
+    monkeypatch, caplog
+):
     """pm-review (OPEN-306): an unmapped code affecting MANY voters, not just one, would
     otherwise look like a complete vote with a much smaller voter count than reality -- confirms
     a single summary warning fires naming the affected VoteID, not just scattered per-voter
@@ -95,6 +99,7 @@ def test_unmapped_response_code_for_every_voter_warns_with_a_summary(monkeypatch
         member["ResponseCode"] = "Z"
 
     import logging
+
     with caplog.at_level(logging.WARNING, logger="openstates"):
         run_add_votes(monkeypatch, row)
 
@@ -234,3 +239,146 @@ def test_scrape_warns_on_unmatched_bill_no(monkeypatch):
 
     assert any("HB404" in msg for msg in warnings)
     assert not any("HB30" in msg for msg in warnings)
+
+
+# Upstream openstates-scrapers #5826 (OPEN-406): a vote's motion text falls back to the bill's own
+# action text, the same committee vote LIS lists under two VoteIDs is yielded once, and a bill the
+# list repeats once per summary version is scraped once, from its most recent row.
+
+
+def make_committee_vote_row(
+    vote_id, description="Reported from Appropriations with substitute"
+):
+    """The shape LIS returned for HB 1398 (2026): one committee vote under two VoteIDs."""
+    row = make_vote_row(vote_id, batch_number=None)
+    row.update(
+        {
+            "VoteDate": "2026-02-11T12:45:00",
+            "CommitteeName": "Appropriations",
+            "Description": description,
+            "LegislationActionDescription": None,
+            "VoteActionDescription": "Reported from Appropriations with substitute",
+            "VoteLegislation": [
+                {
+                    "LegislationNumber": "HB30",
+                    "LegislationActionDescription": "Reported from Appropriations with substitute",
+                }
+            ],
+        }
+    )
+    return row
+
+
+def run_add_votes_many(monkeypatch, rows) -> list:
+    scraper = make_scraper()
+    fake_response = mock.Mock(content=json.dumps({"Votes": rows}).encode())
+    monkeypatch.setattr(VaBillScraper, "get", mock.Mock(return_value=fake_response))
+    return list(scraper.add_votes(make_bill(), "some-legislation-id"))
+
+
+def test_same_committee_vote_under_two_vote_ids_is_yielded_once(monkeypatch):
+    votes = run_add_votes_many(
+        monkeypatch,
+        [make_committee_vote_row("296656"), make_committee_vote_row("296660")],
+    )
+
+    assert len(votes) == 1
+    # the first VoteID is kept, so a stored vote keeps its dedupe_key
+    assert votes[0].dedupe_key == "296656-HB30"
+
+
+def test_distinct_votes_with_the_same_voters_are_both_kept(monkeypatch):
+    """Two real votes can have an identical roll (a repeated set of amendment votes): a
+    different Description or a different time means they are not the LIS duplicate."""
+    votes = run_add_votes_many(
+        monkeypatch,
+        [
+            make_committee_vote_row("1", description="Amendment 1 agreed to"),
+            make_committee_vote_row("2", description="Amendment 2 agreed to"),
+        ],
+    )
+    assert [v.identifier for v in votes] == ["1", "2"]
+
+    later = make_committee_vote_row("4")
+    later["VoteDate"] = "2026-02-11T13:00:00"
+    votes = run_add_votes_many(monkeypatch, [make_committee_vote_row("3"), later])
+    assert [v.identifier for v in votes] == ["3", "4"]
+
+
+def test_vote_rows_without_committee_or_description_do_not_crash_the_scrape(
+    monkeypatch,
+):
+    first = make_vote_row("10", batch_number=None)
+    second = make_vote_row("11", batch_number=None)
+    # make_vote_row has neither CommitteeName nor Description: the de-duplication must
+    # tolerate that rather than raise a KeyError that stops the whole VA scrape
+    votes = run_add_votes_many(monkeypatch, [first, second])
+
+    assert len(votes) == 1  # identical in every field the key uses
+
+
+def test_null_top_level_action_falls_back_to_the_bills_own_vote_legislation_entry(
+    monkeypatch,
+):
+    votes = run_add_votes_many(monkeypatch, [make_committee_vote_row("20")])
+
+    assert votes[0].motion_text == "Reported from Appropriations with substitute"
+    assert votes[0].bill_action == "Reported from Appropriations with substitute"
+    # the classifier is given the same text, so VA's bill_action rules see it
+    assert votes[0].motion_classification == ["committee-passage"]
+
+
+def test_bill_repeated_once_per_summary_version_is_scraped_once_from_its_last_row(
+    monkeypatch,
+):
+    monkeypatch.setenv("VA_API_KEY", "test-key")
+    rows = [
+        {
+            "LegislationID": 100,
+            "LegislationNumber": "HB1",
+            "Description": "A bill",
+            "LegislationTitle": None,
+            "LegislationSummary": f"<p>{summary}</p>",
+            "SummaryVersion": version,
+            "ChamberCode": "H",
+            "LegislationTypeCode": "HB",
+        }
+        for summary, version in [
+            ("introduced text", "SUMMARY AS INTRODUCED"),
+            ("passed text", "SUMMARY AS PASSED"),
+        ]
+    ] + [
+        {
+            "LegislationID": 101,
+            "LegislationNumber": "HB2",
+            "Description": "Another bill",
+            "LegislationTitle": None,
+            "LegislationSummary": None,
+            "SummaryVersion": None,
+            "ChamberCode": "H",
+            "LegislationTypeCode": "HB",
+        }
+    ]
+    scraper = make_scraper()
+    monkeypatch.setattr(
+        VaBillScraper,
+        "post",
+        mock.Mock(return_value=mock.Mock(json=lambda: {"Legislations": rows})),
+    )
+    monkeypatch.setattr(VaBillScraper, "classify_bill", lambda self, row: ["bill"])
+    for name in (
+        "add_actions",
+        "add_versions",
+        "add_carryover_related_bill",
+        "add_sponsors",
+    ):
+        monkeypatch.setattr(VaBillScraper, name, lambda self, *a, **k: None)
+    monkeypatch.setattr(VaBillScraper, "_fetch_events", lambda self, legislation_id: [])
+    monkeypatch.setattr(VaBillScraper, "add_votes", lambda self, *a, **k: iter(()))
+
+    bills = [b for b in scraper.scrape(session="2026S1") if b.identifier]
+
+    assert [b.identifier for b in bills] == ["HB1", "HB2"]
+    first = bills[0].abstracts
+    assert [a["abstract"] for a in first] == ["passed text"]
+    assert first[0]["note"] == "SUMMARY AS PASSED"
