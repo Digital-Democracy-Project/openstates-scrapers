@@ -384,17 +384,97 @@ def test_bill_repeated_once_per_summary_version_is_scraped_once_from_its_last_ro
     assert first[0]["note"] == "SUMMARY AS PASSED"
 
 
-def test_real_hb1398_votes_the_duplicate_committee_vote_is_dropped_and_the_rest_kept(monkeypatch):
+def test_real_hb1398_votes_the_duplicate_committee_vote_is_dropped_and_the_rest_kept(
+    monkeypatch,
+):
     """Real LIS rows (HB 1398, 2026), trimmed to the fields add_votes reads. VoteIDs 296656 and
     296660 are one Appropriations committee vote listed twice (same time 12:45:00, committee,
     description and 22 voters); 296661 is the "Reconsidered" row with no members (dropped as a
     miscoded voice vote, as before); 297828 is the House floor vote."""
-    path = os.path.join(os.path.dirname(__file__), "fixtures", "va_hb1398_votes_real.json")
+    path = os.path.join(
+        os.path.dirname(__file__), "fixtures", "va_hb1398_votes_real.json"
+    )
     with open(path) as f:
         rows = json.load(f)["Votes"]
     votes = run_add_votes_many(monkeypatch, rows)
 
     assert [v.dedupe_key for v in votes] == ["296656-HB30", "297828-HB30"]
-    assert votes[0].motion_text.startswith("Reported from Appropriations with substitute")
+    assert votes[0].motion_text.startswith(
+        "Reported from Appropriations with substitute"
+    )
     yes = {c["option"]: c["value"] for c in votes[0].counts}["yes"]
     assert yes == 22
+
+
+# pm-review (OPEN-406): the edges of the duplicate skip and of the VoteLegislation fallback.
+
+
+def test_identical_votes_on_two_different_bills_are_both_kept(monkeypatch):
+    """The skip is scoped to one bill (add_votes runs once per bill): the same time,
+    committee, description and roll on two bills is two votes, not a duplicate."""
+    from openstates.scrape import Bill
+
+    scraper = make_scraper()
+    row = make_committee_vote_row("500")
+    monkeypatch.setattr(
+        VaBillScraper,
+        "get",
+        mock.Mock(
+            return_value=mock.Mock(content=json.dumps({"Votes": [row]}).encode())
+        ),
+    )
+    first = list(scraper.add_votes(Bill("HB1", "2026S1", "t", chamber="lower"), "id-1"))
+    row["VoteLegislation"][0]["LegislationNumber"] = "HB2"
+    second = list(
+        scraper.add_votes(Bill("HB2", "2026S1", "t", chamber="lower"), "id-2")
+    )
+
+    assert len(first) == 1 and len(second) == 1
+
+
+def test_votes_with_no_committee_or_description_are_kept_when_their_time_or_roll_differs(
+    monkeypatch,
+):
+    a = make_vote_row("600", batch_number=None)
+    b = make_vote_row("601", batch_number=None)
+    b["VoteDate"] = "2026-06-29T00:05:00"  # a different time
+    c = make_vote_row("602", batch_number=None)
+    c["VoteMember"][2]["ResponseCode"] = "Y"  # one member voted differently
+    votes = run_add_votes_many(monkeypatch, [a, b, c])
+
+    assert [v.identifier for v in votes] == ["600", "601", "602"]
+
+
+def test_vote_with_no_matching_vote_legislation_entry_falls_back_to_the_vote_description(
+    monkeypatch,
+):
+    """Real shape (SB 822, 2026): VoteLegislation is empty and the top-level action is null, so
+    the motion is VoteActionDescription, exactly as before the change, and bill_action stays None."""
+    row = make_vote_row("700", batch_number=None)
+    row["LegislationActionDescription"] = None
+    row["VoteActionDescription"] = "Constitutional reading dispensed  R"
+    row["VoteLegislation"] = []
+    (vote,) = run_add_votes_many(monkeypatch, [row])
+    assert vote.motion_text == "Constitutional reading dispensed  R"
+    assert vote.bill_action is None
+
+    # an entry for a different bill does not match either
+    row["VoteLegislation"] = [
+        {"LegislationNumber": "HB999", "LegislationActionDescription": "Passed House"}
+    ]
+    (vote,) = run_add_votes_many(monkeypatch, [row])
+    assert vote.motion_text == "Constitutional reading dispensed  R"
+
+
+def test_vote_legislation_entries_missing_a_field_do_not_stop_the_scrape(monkeypatch):
+    row = make_vote_row("800", batch_number=None)
+    row["LegislationActionDescription"] = None
+    row["VoteActionDescription"] = "Fallback text"
+    row["VoteLegislation"] = [
+        {"LegislationNumber": "HB30"},
+        {"LegislationActionDescription": "x"},
+        {},
+    ]
+    (vote,) = run_add_votes_many(monkeypatch, [row])
+
+    assert vote.motion_text == "Fallback text"

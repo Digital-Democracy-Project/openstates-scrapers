@@ -462,9 +462,9 @@ class VaBillScraper(Scraper):
                         (
                             vl["LegislationActionDescription"]
                             for vl in row.get("VoteLegislation") or []
-                            if vl["LegislationNumber"]
+                            if vl.get("LegislationNumber")
                             == bill.identifier.replace(" ", "")
-                            and vl["LegislationActionDescription"]
+                            and vl.get("LegislationActionDescription")
                         ),
                         None,
                     )
