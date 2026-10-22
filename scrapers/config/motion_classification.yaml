@@ -133,6 +133,7 @@ jurisdictions:
       - '^agreed to by (house|senate)\b'                   # resolutions adopted
       - '^(house|senate) (substitute|amendments?)\b.*\b(agreed to|rejected) by (house|senate)\b'   # concurrence
       - '^conference report (agreed to|rejected) by (house|senate)\b'
+      - '^(house|senate) acceded to request'               # "Accede Conference Committee R", new wording
       - '^(house|senate) concurred in governor'            # governor's recommendations
       - '^governor''s (amendment|recommendation)'
     default: null

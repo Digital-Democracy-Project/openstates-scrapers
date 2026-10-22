@@ -248,6 +248,8 @@ def test_wa_not_passage(text):
     ("Senate substitute with amendment rejected by House (40-Y 55-N 0-A)", ["passage"]),
     ("Conference report agreed to by Senate (21-Y 18-N 0-A)", ["passage"]),
     ("Conference report agreed to by House (60-Y 38-N 0-A)", ["passage"]),
+    ("Senate acceded to request (40-Y 0-N 0-A)", ["passage"]),
+    ("Senate acceded to request  Block Vote (40-Y 0-N 0-A)", ["passage"]),
     ("House concurred in Governor's recommendation (60-Y 38-N 0-A)", ["passage"]),
     ("Senate concurred in Governor's recommendation nos 1 - 3 (21-Y 18-N 0-A)", ["passage"]),
     ("Governor's amendment nos. 1 - 3 agreed to (96-Y 0-N 0-A)", ["passage"]),
