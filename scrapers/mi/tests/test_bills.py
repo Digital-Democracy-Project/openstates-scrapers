@@ -917,3 +917,57 @@ def test_parse_roll_call_2017_2018_still_splits_on_whitespace(monkeypatch):
 
     assert results["yes"] == ["Smith", "Jones"]
     assert results["no"] == ["Brown"]
+
+
+# Real Senate journal pages (public record), trimmed to the "Name—present" roll and one roll
+# call each, kept byte-for-byte in the encoding the site served them in. Michigan serves some
+# pages as UTF-8 and some as windows-1252, all labelled ISO-8859-1 by the response headers, so
+# decoding the response text (the pre-change code) garbles the UTF-8 ones. Each journal prints
+# its own counts ("Yeas—22 ... Nays—13 ... Excused—2"), which is what these tests check.
+
+
+class RealJournalResponse:
+    def __init__(self, name):
+        path = os.path.join(os.path.dirname(__file__), "fixtures", name)
+        with open(path, "rb") as f:
+            self.content = f.read()
+        # what requests handed the old code: headers say ISO-8859-1
+        self.text = self.content.decode("iso-8859-1")
+
+
+def _parse_real_journal(monkeypatch, name, rc_num):
+    scraper = _make_scraper()
+    monkeypatch.setattr(
+        "mi.bills.mi_waf_get", lambda request_func: RealJournalResponse(name)
+    )
+    return scraper.parse_roll_call(ROLL_CALL_URL, rc_num, "2025-2026")
+
+
+def test_real_utf8_senate_journal_matches_the_journals_own_counts(monkeypatch):
+    # SJ 2025-05-07, Roll Call 79 (SB 160): Yeas 22, Nays 13, Excused 2, Not Voting 0.
+    # The pre-change parser returned 4 yes / 6 no for this page.
+    results = _parse_real_journal(monkeypatch, "senate_journal_utf8_rc79.htm", "79")
+
+    assert (len(results["yes"]), len(results["no"]), len(results["other"])) == (
+        22,
+        13,
+        2,
+    )
+    assert results["other"] == ["Camilleri", "Johnson"]
+    assert not [
+        n for n in sum(results.values(), []) if " " in n.strip()
+    ]  # no fused names
+
+
+def test_real_windows_1252_senate_journal_still_matches_the_journals_own_counts(
+    monkeypatch,
+):
+    # SJ 2025-01-29, Roll Call 1: Yeas 33, Nays 2, Excused 2, Not Voting 0 (parsed correctly
+    # before the change too; this pins that the byte parsing does not regress it).
+    results = _parse_real_journal(monkeypatch, "senate_journal_cp1252_rc1.htm", "1")
+
+    assert (len(results["yes"]), len(results["no"]), len(results["other"])) == (
+        33,
+        2,
+        2,
+    )
