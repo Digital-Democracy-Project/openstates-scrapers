@@ -274,3 +274,33 @@ def test_same_named_documents_in_one_bill_get_no_id_suffix():
     # The pre-#5807 behaviour: one version, note unchanged, no "(<Id>)" suffix.
     assert [v["note"] for v in bill.versions] == [name]
     assert not any("(" in v["note"] for v in bill.versions)
+
+
+def test_collapsed_same_named_documents_keep_every_link_in_the_one_version():
+    """pm-review (OPEN-404): what the hold-back does and does not lose. Two documents with the
+    same name collapse into ONE version (the pre-#5807 behaviour), but both documents' links stay
+    on it, so neither is unreachable; only the version identity is shared."""
+    scraper = make_scraper()
+    bill = Bill("SB1290", legislative_session=SESSION, title="t", chamber="upper")
+    name = "HOUSE - Commerce - Strike Everything"
+    scraper.get = mock.Mock(
+        return_value=json_response(
+            [
+                {
+                    "DocumentGroupName": "Proposed Amendments",
+                    "Documents": [
+                        {"Id": 540990, "DocumentName": name, "HtmlPath": "", "PdfPath": "https://x/GetDocumentPdf/540990/a.pdf"},
+                        {"Id": 540993, "DocumentName": name, "HtmlPath": "", "PdfPath": "https://x/GetDocumentPdf/540993/b.pdf"},
+                    ],
+                }
+            ]
+        )
+    )
+
+    scraper.scrape_versions_and_documents(bill, 84816)
+
+    (version,) = bill.versions
+    assert [link["url"] for link in version["links"]] == [
+        "https://x/GetDocumentPdf/540990/a.pdf",
+        "https://x/GetDocumentPdf/540993/b.pdf",
+    ]
