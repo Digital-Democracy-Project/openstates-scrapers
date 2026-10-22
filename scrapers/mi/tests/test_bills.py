@@ -138,8 +138,11 @@ HISTORY_PAGE_WITH_ONE_VOTE_HTML = b"""
 
 
 class FakeVoteResponse:
-    def __init__(self, text):
+    def __init__(self, text, encoding="utf-8"):
         self.text = text
+        # parse_roll_call() parses the bytes (upstream #5889: journals are UTF-8 but the
+        # response headers do not say so), so the fake has to carry them too.
+        self.content = text.encode(encoding)
 
 
 def test_parse_roll_call_registers_waf_block_on_waf_block_detected(monkeypatch):
@@ -692,3 +695,194 @@ def test_single_match_redirect_matches_across_a_leading_zero_difference(monkeypa
     list(scraper.scrape("2025-2026", bill_no="sr 0135"))
 
     assert warnings == []
+
+
+# --- Upstream openstates-scrapers #5882 / #5830 / #5889 (OPEN-407) ---------------------------
+
+# #5882: a bill the search results repeat at a pagination boundary is scraped once.
+SEARCH_RESULTS_WITH_DUPLICATE_BILL = """
+<html><body>
+  <div class="tableScrollWrapper">
+    <table><tbody>
+      <tr><td><a href="/Home/GetObject?objectName=2025-HB-4841">HB 4841 of 2025</a></td></tr>
+      <tr><td><a href="/Home/GetObject?objectName=2025-HB-4842">HB 4842 of 2025</a></td></tr>
+      <tr><td><a href="/Home/GetObject?objectName=2025-HB-4841">HB 4841 of 2025</a></td></tr>
+    </tbody></table>
+  </div>
+</body></html>
+"""
+
+
+def test_scrape_skips_duplicate_bill_urls_from_search_results(monkeypatch):
+    scraper = _make_scraper()
+
+    class FakeResponse:
+        content = SEARCH_RESULTS_WITH_DUPLICATE_BILL
+
+    monkeypatch.setattr("mi.bills.mi_waf_get", lambda request_func: FakeResponse())
+    # A full run persists its last-action baseline under settings.CACHE_DIR (see
+    # _mock_search_page); keep it off the real cache directory.
+    monkeypatch.setattr("mi.bills.settings.CACHE_DIR", tempfile.mkdtemp())
+
+    scraped_urls = []
+    monkeypatch.setattr(
+        scraper,
+        "scrape_bill",
+        lambda session, bill_id, url: scraped_urls.append(url) or iter(()),
+    )
+
+    list(scraper.scrape("2025-2026"))
+
+    assert scraped_urls == [
+        "https://legislature.mi.gov/Bills/Bill?ObjectName=2025-HB-4841",
+        "https://legislature.mi.gov/Bills/Bill?ObjectName=2025-HB-4842",
+    ]
+
+
+# #5830: Senate journals print a row of members as one line with single spaces ("Hauck
+# Hoitenga Johnson"), and a few surnames contain a space ("McDonald Rivet"). The strings below
+# are real voter names that were stored as ONE voter before this change (2025-2026 Senate).
+SENATE_ROSTER = {
+    "Albert", "Bellino", "Bumstead", "Daley", "Hauck", "Hoitenga", "Johnson", "Lindsey",
+    "McBroom", "McDonald Rivet", "Nesbitt", "Runestad", "Theis", "Victory", "Webber", "Wojno",
+}  # fmt: skip
+
+
+@pytest.mark.parametrize(
+    "line,expected",
+    [
+        ("Hauck Hoitenga Johnson", ["Hauck", "Hoitenga", "Johnson"]),
+        ("Runestad Theis Victory", ["Runestad", "Theis", "Victory"]),
+        ("Albert Bellino Bumstead", ["Albert", "Bellino", "Bumstead"]),
+        ("Webber Wojno", ["Webber", "Wojno"]),
+        ("Bumstead Daley", ["Bumstead", "Daley"]),
+        # a single name, and a name that itself contains a space, stay whole
+        ("Lindsey", ["Lindsey"]),
+        ("McDonald Rivet", ["McDonald Rivet"]),
+        ("Theis McDonald Rivet Victory", ["Theis", "McDonald Rivet", "Victory"]),
+    ],
+)
+def test_split_names_splits_a_collapsed_row_on_the_journals_roster(line, expected):
+    assert MIBillScraper.split_names(line, SENATE_ROSTER) == expected
+
+
+def test_split_names_leaves_a_line_that_is_not_entirely_member_names_untouched():
+    # a sentence, or a name missing from the roster, must not be half-split
+    assert MIBillScraper.split_names("Hauck Nobody Johnson", SENATE_ROSTER) == [
+        "Hauck Nobody Johnson"
+    ]
+    assert MIBillScraper.split_names(
+        "House Bill No. 4451, entitled", SENATE_ROSTER
+    ) == ["House Bill No. 4451, entitled"]
+
+
+def _journal(*pieces, charset="utf-8"):
+    # The response headers do not name a charset, so the page has to: parse_roll_call() hands
+    # lxml the bytes and lxml reads the declaration (see the tests at the end).
+    head = f'<head><meta http-equiv="Content-Type" content="text/html; charset={charset}"></head>'
+    return "<html>" + head + "<body>" + "".join(pieces) + "</body></html>"
+
+
+# Synthetic journal built from the shapes upstream's change describes (no real Michigan page
+# was fetched: the site is bot-protected, see OPEN-232/OPEN-333). The opening roll names every
+# member; each header is a <p> or, for Excused/Not Voting, an <h4>.
+SENATE_OPENING_ROLL = (
+    "<p>Albert—present</p><p>Bellino—present</p><p>Hauck—present</p><p>Hoitenga—present</p>"
+    "<p>Johnson—present</p><p>McDonald Rivet—present</p><p>Victory—excused</p>"
+)
+
+
+def _parse(monkeypatch, html, rc_num="184", session="2025-2026", encoding="utf-8"):
+    scraper = _make_scraper()
+    monkeypatch.setattr(
+        "mi.bills.mi_waf_get", lambda request_func: FakeVoteResponse(html, encoding)
+    )
+    return scraper.parse_roll_call(ROLL_CALL_URL, rc_num, session)
+
+
+def test_parse_roll_call_splits_fused_senate_names(monkeypatch):
+    html = _journal(
+        SENATE_OPENING_ROLL,
+        "<p>Roll Call No. 184</p><p>Yeas—4</p>",
+        "<p>Albert Bellino</p><p>Hauck Hoitenga</p>",
+        "<p>Nays—1</p><p>McDonald Rivet</p>",
+        "<p>In The Chair: Brinks</p>",
+    )
+    results = _parse(monkeypatch, html)
+
+    assert results["yes"] == ["Albert", "Bellino", "Hauck", "Hoitenga"]
+    assert results["no"] == ["McDonald Rivet"]
+
+
+def test_parse_roll_call_reads_excused_header_printed_as_h4_without_adding_nays(
+    monkeypatch,
+):
+    html = _journal(
+        SENATE_OPENING_ROLL,
+        "<p>Roll Call No. 184</p><p>Yeas—2</p><p>Albert Bellino</p>",
+        "<p>Nays—1</p><p>Hauck</p>",
+        "<h4>Excused—1</h4><p>Victory</p>",
+        "<p>In The Chair: Brinks</p>",
+    )
+    results = _parse(monkeypatch, html)
+
+    assert results["no"] == ["Hauck"]
+    assert results["other"] == ["Victory"]
+
+
+def test_parse_roll_call_handles_two_headers_on_one_line(monkeypatch):
+    html = _journal(
+        SENATE_OPENING_ROLL,
+        "<p>Roll Call No. 184</p><p>Yeas—3</p><p>Albert Bellino Hauck</p>",
+        "<p>Nays—0 Excused—1</p><p>Victory</p>",
+        "<p>In The Chair: Brinks</p>",
+    )
+    results = _parse(monkeypatch, html)
+
+    assert results["yes"] == ["Albert", "Bellino", "Hauck"]
+    assert results["no"] == []
+    assert results["other"] == ["Victory"]
+
+
+def test_parse_roll_call_stops_at_the_next_roll_call_and_at_in_the_chair(monkeypatch):
+    html = _journal(
+        SENATE_OPENING_ROLL,
+        "<p>Roll Call No. 184</p><p>Yeas—2</p><p>Albert Bellino</p>",
+        # the last voters share a line with the chair marker
+        "<p>Nays—1</p><p>Hauck In The Chair: Brinks</p>",
+        "<p>Roll Call No. 185</p><p>Yeas—1</p><p>Johnson</p>",
+    )
+    results = _parse(monkeypatch, html)
+
+    assert results["yes"] == ["Albert", "Bellino"]
+    assert results["no"] == ["Hauck"]  # not Johnson from roll call 185
+    assert "Johnson" not in sum(results.values(), [])
+
+
+def test_parse_roll_call_decodes_a_declared_charset_in_the_bytes(monkeypatch):
+    """#5889 parses the response bytes so lxml honours the charset the page declares. Word-made
+    journals declare windows-1252, where the em dash is byte 0x97 and the apostrophe 0x92."""
+    html = _journal(
+        "<p>O’Neal—present</p><p>Roll Call No. 5</p><p>Yeas—1</p><p>O’Neal</p>",
+        "<p>In The Chair: Someone</p>",
+        charset="windows-1252",
+    )
+    results = _parse(monkeypatch, html, rc_num="5", encoding="cp1252")
+
+    assert results["yes"] == ["O’Neal"]
+
+
+def test_parse_roll_call_without_a_declared_charset_keeps_names_fused_but_does_not_crash(
+    monkeypatch,
+):
+    """Documents the dependency in #5889/#5830: with no charset declared the em dash in the
+    opening roll is not read, the roster comes out empty, and a collapsed row stays one
+    string -- the pre-change result -- rather than raising."""
+    html = (
+        "<html><body>" + SENATE_OPENING_ROLL
+        + "<p>Roll Call No. 184</p><p>Yeas—2</p><p>Albert Bellino</p>"
+        + "<p>In The Chair: Brinks</p></body></html>"
+    )  # fmt: skip
+    results = _parse(monkeypatch, html)
+
+    assert results["yes"] == ["Albert Bellino"]
