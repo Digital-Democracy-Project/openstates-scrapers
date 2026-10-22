@@ -12,6 +12,7 @@ These tests mock scrape_bill and the two network fetches scrape() makes before
 it ever reaches the per-bill loop (the initial cookie-priming GET and the
 session-select POST) -- no real HTTP request is made.
 """
+import json
 import os
 import sys
 from unittest import mock
@@ -20,6 +21,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
 
 from az import Arizona  # noqa: E402
 from az.bills import AZBillScraper  # noqa: E402
+from openstates.scrape import Bill  # noqa: E402
 
 
 SESSION = "57th-2nd-regular"
@@ -171,3 +173,104 @@ def test_scrape_without_bill_no_never_warns():
     list(scraper.scrape(session=SESSION))
 
     assert warnings == []
+
+
+# ── OPEN-404: per-voter "NV" mapping kept, version-note suffix held back ────
+#
+# openstates-scrapers #5807 did two things. The per-voter "NV" -> "not voting"
+# mapping is kept. The " (<document Id>)" suffix on repeated DocumentName values
+# is held back (it splits stored versions and defeats core's
+# is_procedural_document for failed amendments), so same-named documents in one
+# bill must still collapse into a single version, as they did before #5807.
+
+
+def json_response(payload):
+    resp = mock.Mock()
+    resp.content = json.dumps(payload).encode("utf-8")
+    resp.url = "https://apps.azleg.gov/api/BillStatusFloorAction?x=1"
+    return resp
+
+
+def floor_vote_page(votes):
+    return [
+        {
+            "Action": "Do Pass",
+            "ReportDate": "2026-02-10T10:00:00.000",
+            "Ayes": 1,
+            "Nays": 1,
+            "Present": 1,
+            "Absent": 0,
+            "Excused": 0,
+            "NotVoting": 2,
+            "ReferralNumber": 1,
+            "Votes": [
+                {"Vote": code, "Legislator": {"FullName": name}}
+                for code, name in votes
+            ],
+        }
+    ]
+
+
+def test_scrape_votes_maps_nv_to_not_voting_and_keeps_other_codes():
+    scraper = make_scraper()
+    bill = Bill("HB2001", legislative_session=SESSION, title="t", chamber="lower")
+    scraper.get = mock.Mock(
+        return_value=json_response(
+            floor_vote_page(
+                [
+                    ("Y", "Yea Person"),
+                    ("N", "Nay Person"),
+                    ("NV", "Nv One"),
+                    ("NV", "Nv Two"),
+                    ("P", "Present Person"),
+                    ("E", "Excused Person"),
+                    ("A", "Absent Person"),
+                ]
+            )
+        )
+    )
+    page = {"BillId": 1, "FloorHeaders": [{"BillStatusActionId": 9, "LegislativeBody": "H"}]}
+
+    (vote,) = list(scraper.scrape_votes(bill, page))
+
+    by_option = {}
+    for v in vote.votes:
+        by_option.setdefault(v["option"], []).append(v["voter_name"])
+    assert by_option["not voting"] == ["Nv One", "Nv Two"]
+    assert by_option["yes"] == ["Yea Person"]
+    assert by_option["no"] == ["Nay Person"]
+    assert sorted(by_option["other"]) == ["Absent Person", "Excused Person", "Present Person"]
+    counts = {c["option"]: c["value"] for c in vote.counts}
+    assert counts["not voting"] == 2
+    assert counts["yes"] == 1 and counts["no"] == 1 and counts["other"] == 1
+
+
+def test_same_named_documents_in_one_bill_get_no_id_suffix():
+    scraper = make_scraper()
+    bill = Bill("SB1290", legislative_session=SESSION, title="t", chamber="upper")
+    name = "HOUSE - Commerce - Strike Everything"
+    scraper.get = mock.Mock(
+        return_value=json_response(
+            [
+                {
+                    "DocumentGroupName": "Proposed Amendments",
+                    "Documents": [
+                        {"Id": 540990, "DocumentName": name, "HtmlPath": "", "PdfPath": "https://x/a.pdf"},
+                        {"Id": 540993, "DocumentName": name, "HtmlPath": "", "PdfPath": "https://x/b.pdf"},
+                    ],
+                },
+                {
+                    "DocumentGroupName": "Adopted Amendments",
+                    "Documents": [
+                        {"Id": 541432, "DocumentName": name, "HtmlPath": "", "PdfPath": "https://x/c.pdf"},
+                    ],
+                },
+            ]
+        )
+    )
+
+    scraper.scrape_versions_and_documents(bill, 84816)
+
+    # The pre-#5807 behaviour: one version, note unchanged, no "(<Id>)" suffix.
+    assert [v["note"] for v in bill.versions] == [name]
+    assert not any("(" in v["note"] for v in bill.versions)

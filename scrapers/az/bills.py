@@ -101,11 +101,6 @@ class AZBillScraper(Scraper):
         page = json.loads(
             self.get(versions_url, timeout=80, verify=False).content.decode("utf-8")
         )
-        # azleg reuses identical DocumentName values (e.g. multiple
-        # "HOUSE - Commerce - Strike Everything" drafts) for distinct documents
-        # (different Id / content), so track seen names to keep them as
-        # separate versions instead of collapsing into one.
-        seen_version_notes = set()
         for document_set in page:
             type_ = document_set["DocumentGroupName"]
             for doc in document_set["Documents"]:
@@ -120,10 +115,15 @@ class AZBillScraper(Scraper):
                     url = "https://apps.azleg.gov{}".format(url)
 
                 if type_ in version_types:
+                    # OPEN-404: upstream (openstates-scrapers #5807) appends
+                    # " (<document Id>)" to a DocumentName repeated within one bill so
+                    # same-named committee-substitute drafts stay separate versions.
+                    # Held back here: it splits stored versions into extra ones and a
+                    # failed amendment's note with the suffix is no longer recognised
+                    # by core's is_procedural_document. Re-enable once core tolerates
+                    # a trailing " (<id>)". Until then same-named documents collapse
+                    # into one version (the pre-#5807 behaviour).
                     note = doc["DocumentName"]
-                    if note in seen_version_notes:
-                        note = "{} ({})".format(note, doc["Id"])
-                    seen_version_notes.add(doc["DocumentName"])
 
                     if media_type == "text/html":
                         pdf_url = re.sub("(.docx)?.htm(l)?$", ".pdf", url.lower())
