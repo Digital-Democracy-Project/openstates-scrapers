@@ -1,3 +1,4 @@
+import datetime
 import tempfile
 
 import lxml.html
@@ -292,3 +293,106 @@ def test_load_documents_logs_a_warning_naming_the_failed_doctype(monkeypatch):
     scraper._load_documents("lower")
 
     assert any("Amendments" in msg for msg in warnings)
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# OPEN-409: upstream #5876's bulk GetLegislationIntroducedSince list, and the start= filter.
+#
+# The bulk list has ONE RECORD PER VERSION of a bill, oldest version first, and each record
+# carries that version's own CurrentStatus: the base "HB 1390" record says 2025-03-03 while
+# "SHB 1390" says 2026-03-31. A record's date can also be unset (0001-01-01). Reading the first
+# record's date silently skipped a bill whose latest version had moved since start=. The shapes
+# below are real records from the 2025-26 list.
+# ═══════════════════════════════════════════════════════════════════════════
+
+from wa.utils import NS  # noqa: E402
+
+
+class _Proceeded(Exception):
+    """scrape_bill() got past the start= filter and went on to fetch the bill's pages."""
+
+
+def _record(bill_id, date, bill_number):
+    return (
+        f"<Legislation><Biennium>2025-26</Biennium><BillNumber>{bill_number}</BillNumber>"
+        f"<BillId>{bill_id}</BillId><OriginalAgency>House</OriginalAgency>"
+        "<LongDescription>A bill.</LongDescription>"
+        "<ShortLegislationType><LongLegislationType>Bill</LongLegislationType>"
+        "</ShortLegislationType>"
+        f"<CurrentStatus><ActionDate>{date}</ActionDate></CurrentStatus></Legislation>"
+    )
+
+
+def _bulk_list(*records):
+    return (
+        f'<ArrayOfLegislation xmlns="{NS["wa"]}">'
+        + "".join(records)
+        + "</ArrayOfLegislation>"
+    ).encode()
+
+
+UNSET = "0001-01-01T00:00:00"
+
+
+def _passes_start_filter(
+    monkeypatch, records, bill_number, start="2026-03-29T00:00:00"
+):
+    scraper = _make_scraper()
+    scraper._start_dt = datetime.datetime.strptime(start, "%Y-%m-%dT%H:%M:%S")
+    scraper.documents = (
+        {}
+    )  # normally filled in during a real scrape, read once past the filter
+    bulk = _bulk_list(*records)
+
+    def fake_get(url, *args, **kwargs):
+        if "GetLegislationIntroducedSince" in url:
+            return type("R", (), {"content": bulk})()
+        raise _Proceeded(url)  # any other fetch means the bill got past the filter
+
+    monkeypatch.setattr(scraper, "get", fake_get)
+    try:
+        list(scraper.scrape_bill("lower", "2025-2026", f"HB {bill_number}", 2026))
+    except _Proceeded:
+        return True
+    return False
+
+
+def test_start_filter_uses_the_latest_version_record_not_the_first(monkeypatch):
+    # real HB 1390: base record 2025-03-03, substitute 2026-03-31 ("Effective date")
+    records = [
+        _record("HB 1390", "2025-03-03T00:00:00", "1390"),
+        _record("SHB 1390", "2026-03-31T00:00:00", "1390"),
+    ]
+    assert _passes_start_filter(monkeypatch, records, "1390") is True
+
+
+def test_start_filter_does_not_skip_a_bill_whose_first_record_has_no_date(monkeypatch):
+    # real HB 2487: the first records are unset, only the last has a date after start=
+    records = [
+        _record("HB 2487", UNSET, "2487"),
+        _record("EHB 2487", UNSET, "2487"),
+        _record("HB 2487", UNSET, "2487"),
+        _record("EHB 2487", "2026-04-01T00:00:00", "2487"),
+    ]
+    assert _passes_start_filter(monkeypatch, records, "2487") is True
+    # real SB 6246: unset base record, dated engrossed version
+    records = [
+        _record("SB 6246", UNSET, "6246"),
+        _record("ESB 6246", "2026-03-30T00:00:00", "6246"),
+    ]
+    assert _passes_start_filter(monkeypatch, records, "6246") is True
+
+
+def test_start_filter_still_skips_a_bill_with_nothing_after_start(monkeypatch):
+    records = [
+        _record("HB 1000", "2026-01-10T00:00:00", "1000"),
+        _record("SHB 1000", "2026-02-02T00:00:00", "1000"),
+        _record("2SHB 1000", UNSET, "1000"),
+    ]
+    assert _passes_start_filter(monkeypatch, records, "1000") is False
+
+
+def test_start_filter_scrapes_a_bill_when_no_record_has_a_usable_date(monkeypatch):
+    # when in doubt scrape it: an unset date does not mean the bill is ancient
+    records = [_record("HB 3000", UNSET, "3000"), _record("SHB 3000", UNSET, "3000")]
+    assert _passes_start_filter(monkeypatch, records, "3000") is True

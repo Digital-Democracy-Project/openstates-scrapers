@@ -55,6 +55,9 @@ class WABillScraper(Scraper, LXMLMixin):
     versions = {}
     _legislation_by_year = {}
     _legislation = None
+    # bill number -> the latest status date (ISO text) over ALL of the bill's records in the
+    # bulk list; see scrape_bill()'s start= filter
+    _latest_status_date = None
     _status_changes = None
 
     _TZ = pytz.timezone("US/Eastern")
@@ -399,6 +402,7 @@ class WABillScraper(Scraper, LXMLMixin):
             # the bulk and per-bill endpoints order a bill's versions differently,
             # so only use the bulk record when all versions agree
             self._legislation = {}
+            self._latest_status_date = {}
             mixed = set()
             url = "%s/GetLegislationIntroducedSince?sinceDate=%s-11-01" % (
                 self._base_url,
@@ -409,6 +413,12 @@ class WABillScraper(Scraper, LXMLMixin):
                 if xpath(leg, "string(wa:Biennium)") != self.biennium:
                     continue
                 num = xpath(leg, "string(wa:BillNumber)")
+                # The bulk list has one record per version of a bill, in no useful order, and
+                # a record's CurrentStatus date can be unset (0001-01-01) while another
+                # version's is real. ISO text sorts chronologically, so keep the latest.
+                status_date = xpath(leg, "string(wa:CurrentStatus/wa:ActionDate)")
+                if status_date > self._latest_status_date.get(num, ""):
+                    self._latest_status_date[num] = status_date
                 first = self._legislation.setdefault(num, leg)
                 if self._legislation_fields(first) != self._legislation_fields(leg):
                     mixed.add(num)
@@ -430,12 +440,19 @@ class WABillScraper(Scraper, LXMLMixin):
 
         if self._start_dt:
             action_date_str = xpath(page, "string(wa:CurrentStatus/wa:ActionDate)")
+            if page is self._legislation.get(bill_num):
+                # a bulk record: its own date may be the unset one, so use the bill's latest
+                action_date_str = self._latest_status_date.get(
+                    bill_num, action_date_str
+                )
             if action_date_str:
                 try:
                     action_dt = datetime.datetime.fromisoformat(
                         action_date_str.rstrip("Z")
                     )
-                    if action_dt <= self._start_dt:
+                    # 0001-01-01 means the date is unset, not that the bill is ancient:
+                    # when in doubt scrape the bill rather than silently skip it
+                    if action_dt.year > 1 and action_dt <= self._start_dt:
                         return
                 except ValueError:
                     pass
