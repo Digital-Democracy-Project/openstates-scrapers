@@ -229,15 +229,75 @@ def test_wa_not_passage(text):
     ("H VOTE:", ["passage"]),
     ("S VOTE:", ["passage"]),
     ("Passage-Enrolled Bill  R", ["passage"]),
+    # "Agree to R" was never matched: the pattern's \b was a backspace inside double quotes
+    ("Agree to  R", ["passage"]),
+    # OPEN-416: LIS now sends the bill's own action text (with the tally) as the motion
+    ("Read third time and passed House (96-Y 0-N 0-A)", ["passage"]),
+    ("Read third time and passed House Block Vote (96-Y 0-N 0-A)", ["passage"]),
+    ("Read third time and defeated by House (3-Y 95-N 0-A)", ["passage"]),
+    ("Passed Senate (21-Y 19-N 0-A)", ["passage"]),
+    ("Passed House (98-Y 0-N 0-A)", ["passage"]),
+    ("Passed Senate with substitute (22-Y 18-N 0-A)", ["passage"]),
+    ("Passed Senate with amendments Block Vote (40-Y 0-N 0-A)", ["passage"]),
+    ("Defeated by Senate (18-Y 21-N 0-A)", ["passage"]),
+    ("Agreed to by House (96-Y 0-N 0-A)", ["passage"]),
+    ("Agreed to by Senate (39-Y 0-N 0-A)", ["passage"]),
+    ("Senate substitute agreed to by House (98-Y 0-N 0-A)", ["passage"]),
+    ("Senate substitute rejected by House (3-Y 95-N 0-A)", ["passage"]),
+    ("Senate amendments agreed to by House (71-Y 28-N 0-A)", ["passage"]),
+    ("Senate substitute with amendment rejected by House (40-Y 55-N 0-A)", ["passage"]),
+    ("Conference report agreed to by Senate (21-Y 18-N 0-A)", ["passage"]),
+    ("Conference report agreed to by House (60-Y 38-N 0-A)", ["passage"]),
+    ("House concurred in Governor's recommendation (60-Y 38-N 0-A)", ["passage"]),
+    ("Senate concurred in Governor's recommendation nos 1 - 3 (21-Y 18-N 0-A)", ["passage"]),
+    ("Governor's amendment nos. 1 - 3 agreed to (96-Y 0-N 0-A)", ["passage"]),
 ])
 def test_va_passage(text, expected):
     assert classify_motion("va", text) == expected
 
 
 @pytest.mark.parametrize("text", [
-    "Reported from Finance and Appropriations",
-    "Subcommittee recommends reporting",
     "Constitutional reading dispensed (on 2nd reading)",
+    "Constitutional reading dispensed Block Vote (on 2nd reading) (96-Y 0-N 0-A)",
+    "Continued to next session in Finance and Appropriations (11-Y 3-N)",
+    # a vote ABOUT passage is not a vote on passage
+    "Reconsideration of Senate passage agreed to by Senate (21-Y 19-N 0-A)",
+    "Reconsideration of Defeated action agreed to by Senate",
+    "Passed by indefinitely in Finance and Appropriations (10-Y 4-N)",
+    "Senate insisted on substitute (21-Y 19-N 0-A)",
+    "Senate insisted on substitute Block Vote (21-Y 19-N 0-A)",
+    # amendments, elections, reading waivers and committee referrals are not passage
+    "Floor Amendment Item 4-14 #2h offered by Delegate McNamara passed by (64-Y 33-N 0-A)",
+    "Contested committee amendment Item 4-5.04 #1h agreed to (64-Y 32-N 0-A)",
+    "Committee amendment agreed to (21-Y 19-N 0-A)",
+    "Senator Jordan Amendment rejected (18-Y 21-N 0-A)",
+    "Elected by House (98-Y 0-N 0-A)",
+    "Reading waived (35-Y 0-N 0-A)",
+    "Stricken from docket by Appropriations (12-Y 8-N)",
+    "Rereferred from Education and Health and rereferred to Commerce and Labor (9-Y 4-N)",
+    "Failed to report from Transportation with substitute (6-Y 7-N)",
+    "Subcommittee failed to recommend reporting with amendment(s) (4-Y 6-N)",
+    # subcommittee votes that kill or park a bill
+    "Subcommittee recommends laying on the table (5-Y 0-N)",
+    "Subcommittee recommends striking from the docket (5-Y 0-N)",
+    "Subcommittee recommends continuing to 2027 (5-Y 0-N)",
+    "Subcommittee recommends incorporating into HB 1 (5-Y 0-N)",
 ])
 def test_va_not_passage(text):
     assert classify_motion("va", text) == []
+    # the bill_action override must not turn these into committee passage either (the scraper
+    # now hands classify_motion the same text as bill_action)
+    assert classify_motion("va", text, bill_action=text) == []
+
+
+@pytest.mark.parametrize("text", [
+    "Reported from Finance and Appropriations",
+    "Reported from Courts of Justice with substitute (22-Y 0-N)",
+    "Reported from Counties, Cities and Towns with amendment(s) (15-Y 2-N)",
+    "Subcommittee recommends reporting",
+    "Subcommittee recommends reporting with substitute and rereferred to Appropriations (9-Y 0-N)",
+    "Subcommittee recommends reporting with amendment(s) (8-Y 0-N)",
+])
+def test_va_committee_passage(text):
+    assert classify_motion("va", text) == ["committee-passage"]
+    assert classify_motion("va", text, bill_action=text) == ["committee-passage"]
