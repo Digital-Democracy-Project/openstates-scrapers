@@ -886,3 +886,34 @@ def test_parse_roll_call_without_a_declared_charset_keeps_names_fused_but_does_n
     results = _parse(monkeypatch, html)
 
     assert results["yes"] == ["Albert Bellino"]
+
+
+# pm-review (OPEN-407): behaviour that must NOT change. House journals carry no "Name—present"
+# opening roll, so the roster is empty and every line is passed through as it always was; the
+# 2017-2018 branch still splits on whitespace. Both tests pass on the pre-change file too.
+
+
+def test_parse_roll_call_house_journal_without_an_opening_roll_is_unchanged(
+    monkeypatch,
+):
+    html = _journal(
+        "<p>Roll Call No. 12</p><p>Yeas</p><p>Smith\tJones\tDoe</p>",
+        "<p>Nays</p><p>Brown</p><p>Excused</p><p>Green</p>",
+        "<p>In The Chair: Speaker Someone</p>",
+    )
+    results = _parse(monkeypatch, html, rc_num="12")
+
+    assert results["yes"] == ["Smith", "Jones", "Doe"]
+    assert results["no"] == ["Brown"]
+    assert results["other"] == ["Green"]
+
+
+def test_parse_roll_call_2017_2018_still_splits_on_whitespace(monkeypatch):
+    html = _journal(
+        "<p>Roll Call No. 7</p><p>Yeas</p><p>Smith  Jones</p><p>Nays</p><p>Brown</p>",
+        "<p>In The Chair: Someone</p>",
+    )
+    results = _parse(monkeypatch, html, rc_num="7", session="2017-2018")
+
+    assert results["yes"] == ["Smith", "Jones"]
+    assert results["no"] == ["Brown"]
