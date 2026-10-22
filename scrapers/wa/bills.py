@@ -415,7 +415,9 @@ class WABillScraper(Scraper, LXMLMixin):
                 num = xpath(leg, "string(wa:BillNumber)")
                 # The bulk list has one record per version of a bill, in no useful order, and
                 # a record's CurrentStatus date can be unset (0001-01-01) while another
-                # version's is real. ISO text sorts chronologically, so keep the latest.
+                # version's is real. Keep the latest date over all of them. The dates are
+                # always "YYYY-MM-DDTHH:MM:SS" with no zone (all 5,245 records of the 2025-26
+                # list), so comparing the text is chronological.
                 status_date = xpath(leg, "string(wa:CurrentStatus/wa:ActionDate)")
                 if status_date > self._latest_status_date.get(num, ""):
                     self._latest_status_date[num] = status_date

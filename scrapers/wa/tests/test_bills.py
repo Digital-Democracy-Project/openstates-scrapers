@@ -335,18 +335,19 @@ UNSET = "0001-01-01T00:00:00"
 
 
 def _passes_start_filter(
-    monkeypatch, records, bill_number, start="2026-03-29T00:00:00"
+    monkeypatch, records, bill_number, start="2026-03-29T00:00:00", per_bill=None
 ):
     scraper = _make_scraper()
     scraper._start_dt = datetime.datetime.strptime(start, "%Y-%m-%dT%H:%M:%S")
-    scraper.documents = (
-        {}
-    )  # normally filled in during a real scrape, read once past the filter
+    # normally filled in during a real scrape and read once past the filter
+    scraper.documents = {}
     bulk = _bulk_list(*records)
 
     def fake_get(url, *args, **kwargs):
         if "GetLegislationIntroducedSince" in url:
             return type("R", (), {"content": bulk})()
+        if per_bill is not None and "GetLegislation?biennium" in url:
+            return type("R", (), {"content": per_bill})()
         raise _Proceeded(url)  # any other fetch means the bill got past the filter
 
     monkeypatch.setattr(scraper, "get", fake_get)
@@ -396,3 +397,40 @@ def test_start_filter_scrapes_a_bill_when_no_record_has_a_usable_date(monkeypatc
     # when in doubt scrape it: an unset date does not mean the bill is ancient
     records = [_record("HB 3000", UNSET, "3000"), _record("SHB 3000", UNSET, "3000")]
     assert _passes_start_filter(monkeypatch, records, "3000") is True
+
+
+def test_start_filter_does_not_depend_on_the_order_of_a_bills_records(monkeypatch):
+    records = [
+        _record("HB 1390", "2025-03-03T00:00:00", "1390"),
+        _record("SHB 1390", "2026-03-31T00:00:00", "1390"),
+    ]
+    assert _passes_start_filter(monkeypatch, records, "1390") is True
+    assert _passes_start_filter(monkeypatch, list(reversed(records)), "1390") is True
+
+
+def test_start_filter_skips_a_bill_dated_exactly_at_start_and_scrapes_one_second_later(
+    monkeypatch,
+):
+    # unchanged behaviour: a bill whose latest status is not after start= is skipped
+    at = [_record("HB 4000", "2026-03-29T00:00:00", "4000")]
+    after = [_record("HB 4001", "2026-03-29T00:00:01", "4001")]
+    assert _passes_start_filter(monkeypatch, at, "4000") is False
+    assert _passes_start_filter(monkeypatch, after, "4001") is True
+
+
+def test_start_filter_on_the_per_bill_path_for_resolutions_uses_its_own_date(
+    monkeypatch,
+):
+    # resolutions are not in the bulk list; their GetLegislation record is used as before.
+    # (The unset-date rule applies here too: a record with no date is scraped, not skipped.)
+    def check(date):
+        return _passes_start_filter(
+            monkeypatch,
+            [_record("HB 1", "2026-01-01T00:00:00", "1")],
+            "8700",
+            per_bill=_bulk_list(_record("SR 8700", date, "8700")),
+        )
+
+    assert check("2026-01-05T00:00:00") is False
+    assert check("2026-04-05T00:00:00") is True
+    assert check(UNSET) is True
