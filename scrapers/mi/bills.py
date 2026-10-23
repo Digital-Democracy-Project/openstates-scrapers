@@ -552,6 +552,10 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         #     yield from self.scrape_bill(session, bill_id, bill_url)
 
         matched_bill_nos = set()
+        # The search results can repeat a bill at a pagination boundary. Keep
+        # the canonical detail URL so a repeated listing cannot produce a
+        # duplicate bill (and duplicate import record).
+        seen_bill_urls = set()
         links = page.xpath(
             "//div[contains(@class,'tableScrollWrapper')]/table[1]/tbody/tr/td[1]/a"
         )
@@ -614,6 +618,9 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         scraped_actions = {}
         for link in links:
             bill_url = self.make_bill_url(link.xpath("@href")[0])
+            if bill_url in seen_bill_urls:
+                continue
+            seen_bill_urls.add(bill_url)
             bill_id = link.xpath("text()")[0].split(" of ")[0]
             bill_no_key = _mi_bill_id_to_no(bill_id)
             if bill_nos:
@@ -987,18 +994,20 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
             )
             return
         self._register_waf_success()
-        html = resp.text
-        vote_doc = lxml.html.fromstring(html)
+        # journals are UTF-8 but don't say so in the response headers, so parse
+        # the bytes and let lxml use the charset the document itself declares
+        vote_doc = lxml.html.fromstring(resp.content)
         vote_doc_textonly = vote_doc.text_content()
 
         if re.search("In\\s+The\\s+Chair", vote_doc_textonly) is None:
             self.warning('"In The Chair" indicator not found, unable to extract vote')
             return
 
-        # Split the file into lines using the <p> tags
+        # Split the file into lines using the <p> tags; Senate journals often
+        # print the "Excused"/"Not Voting" (sometimes "Nays") headers as <h4>
         pieces = [
             p.text_content().replace("\xa0", " ").replace("\r\n", " ")
-            for p in vote_doc.xpath("//p")
+            for p in vote_doc.xpath("//p | //h4")
         ]
 
         # Go until we find the roll call
@@ -1008,19 +1017,32 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
 
         vtype = None
         results = collections.defaultdict(list)
+        # The journal's own opening roll ("Albert—present") names every member,
+        # including the multi-word ones, and is the only way to tell where one
+        # name ends and the next begins in a collapsed line of names
+        roster = set()
+        for p in pieces:
+            member = re.match(r"(.+?)—(?:present|excused|absent)", p.strip(), re.I)
+            if member:
+                roster.add(member.group(1))
 
         # Once we find the roll call, go through voters
-        for p in pieces[i:]:
-            if "Yeas" in p:
-                vtype = "yes"
+        for j, p in enumerate(pieces[i:]):
+            # Stop at the next roll call so its voters aren't merged into this one
+            if j and p.startswith("Roll Call No."):
+                break
+            # "In The Chair:" can share a <p> with the last voter names
+            p, chair, _ = p.partition("In The Chair:")
+            # A header can share a line with the next one ("Nays—0 Excused—5"),
+            # so check them last-to-first
+            if "Excused" in p or "Not Voting" in p:
+                vtype = "other"
             elif "Nays" in p:
                 vtype = "no"
-            elif "Excused" in p or "Not Voting" in p:
-                vtype = "other"
+            elif "Yeas" in p:
+                vtype = "yes"
             elif "Roll Call No" in p:
                 continue
-            elif p.startswith("In The Chair:"):
-                break
             elif vtype:
                 # Split on tabs (House journals) or multiple spaces (Senate journals)
                 for line in re.split(r"\t|(?<!,)\s{2,}", p):
@@ -1029,11 +1051,33 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
                             for leg in line.split():
                                 results[vtype].append(leg)
                         else:
-                            results[vtype].append(line)
+                            results[vtype].extend(self.split_names(line, roster))
             else:
                 self.warning("piece without vtype set: %s", p)
+            if chair:
+                break
 
         return results
+
+    @staticmethod
+    def split_names(line, roster):
+        """Senate journals collapse a row of names into one space-separated
+        line ("Albert Bellino Bumstead Daley"), and names themselves can
+        contain spaces ("McDonald Rivet"), so split on the journal's roster.
+        Anything that isn't entirely member names is left untouched."""
+        names = []
+        rest = line.strip()
+        while rest:
+            match = max(
+                (n for n in roster if rest == n or rest.startswith(f"{n} ")),
+                key=len,
+                default=None,
+            )
+            if not match:
+                return [line]
+            names.append(match)
+            rest = rest[len(match) :].strip()
+        return names
 
     def scrape_legal(self, bill: Bill, page: lxml.html.HtmlElement):
         for row in page.xpath(

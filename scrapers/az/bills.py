@@ -115,16 +115,24 @@ class AZBillScraper(Scraper):
                     url = "https://apps.azleg.gov{}".format(url)
 
                 if type_ in version_types:
+                    # OPEN-404: upstream (openstates-scrapers #5807) appends
+                    # " (<document Id>)" to a DocumentName repeated within one bill so
+                    # same-named committee-substitute drafts stay separate versions.
+                    # Held back here: it splits stored versions into extra ones and a
+                    # failed amendment's note with the suffix is no longer recognised
+                    # by core's is_procedural_document. Re-enable once core tolerates
+                    # a trailing " (<id>)". Until then same-named documents collapse
+                    # into one version (the pre-#5807 behaviour).
+                    note = doc["DocumentName"]
+
                     if media_type == "text/html":
                         pdf_url = re.sub("(.docx)?.htm(l)?$", ".pdf", url.lower())
                         bill.add_version_link(
-                            note=doc["DocumentName"],
+                            note=note,
                             url=pdf_url,
                             media_type="application/pdf",
                         )
-                    bill.add_version_link(
-                        note=doc["DocumentName"], url=url, media_type=media_type
-                    )
+                    bill.add_version_link(note=note, url=url, media_type=media_type)
                 else:
                     bill.add_document_link(
                         note=doc["DocumentName"], url=url, media_type=media_type
@@ -411,7 +419,9 @@ class AZBillScraper(Scraper):
                 )
 
                 for v in action["Votes"]:
-                    vote_type = {"Y": "yes", "N": "no"}.get(v["Vote"], "other")
+                    vote_type = {"Y": "yes", "N": "no", "NV": "not voting"}.get(
+                        v["Vote"], "other"
+                    )
                     vote.vote(vote_type, v["Legislator"]["FullName"])
                 vote.dedupe_key = f"{resp.url}{action['ReferralNumber']}"
                 yield vote
