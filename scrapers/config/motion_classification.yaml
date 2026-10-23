@@ -97,7 +97,7 @@ jurisdictions:
     bill_action:                                 # bill_action field is the reliable committee signal
       committee_passage:
         - "^reported from"
-        - "^subcommittee recommends"
+        - "^subcommittee recommends reporting"   # not plain "recommends": laying on the table / striking / continuing are not passage
     not_passage:
       - "^constitutional reading dispensed"      # procedural reading waiver, not a vote on passage
       - "^continued to next session"             # carried over to next session
@@ -121,5 +121,20 @@ jurisdictions:
       - "^concur house"                          # concurrence in House amendments
       - "^concur senate"                         # concurrence in Senate amendments
       - "^accede conference committee"           # accepting conference committee recommendation
-      - "^agree to\b"                            # "Agree to R" = adopted recommendation
+      - '^agree to\b'                            # "Agree to R" = adopted recommendation
+      # OPEN-416: LIS now sends the bill's own action text as the vote's motion (it used to send
+      # "H VOTE:" and the short "Passage R" family), usually with the tally in parentheses.
+      # A failed vote is still a vote on passage, so "defeated" / "rejected" are included.
+      # NOTE: patterns with \b are single-quoted on purpose. In a double-quoted YAML string
+      # "\b" is a backspace character, not a word boundary (the old "^agree to\b" never matched).
+      - '^read third time and (passed|defeated)'          # "Read third time and passed House (96-Y 0-N 0-A)"
+      - '^passed (house|senate)\b'                         # "Passed Senate", "Passed Senate with substitute", "... Block Vote"
+      - '^defeated by (house|senate)\b'
+      - '^agreed to by (house|senate)\b'                   # resolutions adopted
+      - '^(house|senate) (substitute|amendments?)\b.*\b(agreed to|rejected) by (house|senate)\b'   # concurrence
+      - '^conference report (agreed to|rejected) by (house|senate)\b'
+      - '^(house|senate) acceded to request'               # "Accede Conference Committee R", new wording
+      - '^(house|senate) concurred in governor'            # governor's recommendations
+      # needs a disposition: LIS also logs "Governor's recommendation received by House" (not a vote)
+      - '^governor''s (amendment|recommendation)s?\b.*\b(agreed to|adopted|rejected|passed by|defeated)'
     default: null
