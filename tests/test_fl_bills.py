@@ -866,3 +866,127 @@ def test_a_waf_block_on_flhouse_gov_is_not_retried_by_the_long_outage_wait(monke
 
     assert fake_scraper.request.call_count == 1  # one request, not seven
     assert sleeps == []  # and no backoff sleep
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# OPEN-402: what our flhouse.gov cookie handling guarantees, tested end to end.
+#
+# The tests above replace the whole cookie provider with a mock, so none of them can notice
+# the property OPEN-27 / OPEN-84 exist for: a scrape that runs longer than the WAF cookie's
+# ~1 hour life must never keep presenting an expired cookie. These use a REAL CookieProvider
+# (real disk cache, real expiry check) with a fake warm-up and a fake clock, driven through
+# the live source, _FLHouseCookieProviderSource.
+#
+# Guarantees (each pinned below):
+#   G1  a cached cookie past its own expiry is never sent; a freshly warmed one is
+#   G2  one scrape longer than the cookie's life re-warms and keeps getting real content
+#   G3  a valid cookie is reused: no re-warm per request (no hammering of the WAF)
+#   G4  a block page re-warms once and retries with the fresh cookie and its own User-Agent;
+#       a second block is raised, not retried a third time
+#   G5  every request gets a 60 s default timeout (see test above)
+# ═══════════════════════════════════════════════════════════════════════════
+
+import json  # noqa: E402
+
+import fl.bills as fl_bills  # noqa: E402
+from openstates.utils import cookie_provider as cookie_provider_module  # noqa: E402
+from openstates.utils.cookie_provider import CookieProvider, WafBlockDetected  # noqa: E402
+
+_FL_COOKIE = "session_cookie_mfhp"
+
+
+class _Clock:
+    def __init__(self, now=1_000_000.0):
+        self.now = now
+
+    def time(self):
+        return self.now
+
+
+def _fl_harness(tmp_path, monkeypatch, responses):
+    """A real CookieProvider whose warm-up mints cookie 'fresh-N' (valid 3600 s from the fake
+    clock) and a scraper that records what each request sent. Returns (source, clock, warms,
+    sent, cache_path)."""
+    from unittest import mock
+
+    clock = _Clock()
+    monkeypatch.setattr(cookie_provider_module, "time", clock)
+    warms = []
+
+    def warm_up(_url):
+        warms.append(clock.now)
+        n = len(warms)
+        return (
+            [{"name": _FL_COOKIE, "value": f"fresh-{n}", "expires": clock.now + 3600}],
+            f"UA-{n}",
+        )
+
+    cache_path = str(tmp_path / "fl_cookies.json")
+    provider = CookieProvider("fl-test", "https://flhouse.gov/", [_FL_COOKIE], cache_path, warm_up_func=warm_up)
+    monkeypatch.setattr(fl_bills, "RESILIENCE_PROFILES", {"fl": SimpleNamespace(cookie_provider=provider)})
+
+    sent = []
+    queue = list(responses)
+
+    def request(**kwargs):
+        sent.append((kwargs["cookies"][_FL_COOKIE], kwargs["headers"]["User-Agent"]))
+        return mock.Mock(content=queue.pop(0) if queue else b"real content")
+
+    scraper = mock.Mock()
+    scraper.request.side_effect = request
+    source = _FLHouseCookieProviderSource("https://flhouse.gov/x", verify=False)
+    return source, scraper, clock, warms, sent, cache_path
+
+
+def test_g1_a_cached_cookie_past_its_expiry_is_never_sent(tmp_path, monkeypatch):
+    source, scraper, clock, warms, sent, cache_path = _fl_harness(tmp_path, monkeypatch, [])
+    with open(cache_path, "w") as f:
+        json.dump(
+            {_FL_COOKIE: {"value": "stale", "expires": clock.now - 10}, "_meta": {"user_agent": "old-UA"}}, f
+        )
+
+    source.get_response(scraper)
+
+    assert sent == [("fresh-1", "UA-1")]
+    assert len(warms) == 1
+
+
+def test_g2_g3_a_scrape_longer_than_the_cookies_life_rewarms_and_reuses_in_between(tmp_path, monkeypatch):
+    source, scraper, clock, warms, sent, _ = _fl_harness(tmp_path, monkeypatch, [])
+
+    source.get_response(scraper)  # t = 0: cold, warms
+    clock.now += 100
+    source.get_response(scraper)  # still valid: reused, no second warm-up
+    clock.now += 3000
+    source.get_response(scraper)  # t = 3100 s: still valid
+    assert len(warms) == 1
+    assert {cookie for cookie, _ in sent} == {"fresh-1"}
+
+    clock.now += 600  # t = 3700 s: past the hour -- the old cookie must not go out again
+    source.get_response(scraper)
+    clock.now += 100
+    source.get_response(scraper)
+
+    assert [cookie for cookie, _ in sent] == ["fresh-1", "fresh-1", "fresh-1", "fresh-2", "fresh-2"]
+    assert len(warms) == 2
+
+
+def test_g4_a_block_page_rewarms_once_and_retries_with_the_fresh_cookie_and_agent(tmp_path, monkeypatch):
+    source, scraper, clock, warms, sent, _ = _fl_harness(tmp_path, monkeypatch, [WAF_REJECTED_HTML, b"real content"])
+
+    response = source.get_response(scraper)
+
+    assert response.content == b"real content"
+    assert sent == [("fresh-1", "UA-1"), ("fresh-2", "UA-2")]
+    assert len(warms) == 2
+
+
+def test_g4_a_second_block_is_raised_not_retried_again(tmp_path, monkeypatch):
+    source, scraper, clock, warms, sent, _ = _fl_harness(
+        tmp_path, monkeypatch, [WAF_REJECTED_HTML, WAF_REJECTED_HTML, b"never reached"]
+    )
+
+    with pytest.raises(WafBlockDetected):
+        source.get_response(scraper)
+
+    assert len(sent) == 2 and len(warms) == 2
