@@ -443,11 +443,11 @@ def _make_bill_list(bill_nos, matched_bill_nos):
             "start": None,
             "bill_nos": bill_nos,
             "matched_bill_nos": matched_bill_nos,
+            # FlBillScraper.scrape() fetches the subjects PDF once and hands it to every
+            # page of the list; process_item() reads it after the bill_no check.
+            "subjects": collections.defaultdict(set),
         }
     )
-    # Normally injected by spatula's `dependencies` machinery (SubjectPDF);
-    # process_item() reads it after the bill_no check to set bill.subject.
-    page.subjects = collections.defaultdict(set)
     return page
 
 
@@ -488,12 +488,23 @@ def test_matched_bill_nos_accumulates_across_paginated_list_pages():
     matched = set()
     page_one = _make_bill_list({"HB53", "SB99"}, matched)
     page_two = type(page_one)(page_one.input, source=URL("https://example.invalid/2"))
-    page_two.subjects = collections.defaultdict(set)
 
     page_one.process_item(_bill_list_anchor("HB 53"))
     page_two.process_item(_bill_list_anchor("SB 99"))
 
     assert matched == {"HB53", "SB99"}
+
+
+class _FakeSubjectPDF:
+    instances = []
+
+    def __init__(self, page_input):
+        self.page_input = page_input
+        self.subjects = collections.defaultdict(set)
+        type(self).instances.append(self)
+
+    def do_scrape(self):
+        return iter([self.subjects])
 
 
 def _make_scraper_for_scrape(monkeypatch, walk):
@@ -506,6 +517,8 @@ def _make_scraper_for_scrape(monkeypatch, walk):
     monkeypatch.setattr(scraper, "get_house_session_number", lambda session: "104")
     monkeypatch.setattr(scraper, "_create_fresh_session", lambda: None)
     monkeypatch.setattr(scraper, "_process_bill_list", walk)
+    # scrape() fetches the subjects PDF up front; never touch the network in a unit test
+    monkeypatch.setattr("fl.bills.SubjectPDF", _FakeSubjectPDF)
 
     warnings = []
     monkeypatch.setattr(scraper, "warning", lambda msg: warnings.append(msg))
@@ -549,3 +562,431 @@ def test_scrape_without_bill_no_never_warns(monkeypatch):
     list(scraper.scrape(session="2026"))
 
     assert warnings == []
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# OPEN-402: upstream openstates-scrapers #5880 / #5836 brought into the fork.
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+def test_scrape_fetches_the_subjects_pdf_once_and_hands_it_to_the_bill_list(monkeypatch):
+    # #5880: BillList used to declare SubjectPDF as a spatula dependency, which fetched the
+    # subjects PDF again for the list pages and again after every restarted walk.
+    _FakeSubjectPDF.instances.clear()
+    seen = []
+
+    def walk(bill_list):
+        seen.append(bill_list.input["subjects"])
+        return iter(())
+
+    scraper, _ = _make_scraper_for_scrape(monkeypatch, walk)
+    list(scraper.scrape(session="2026"))
+
+    assert len(_FakeSubjectPDF.instances) == 1
+    assert _FakeSubjectPDF.instances[0].page_input == {"session": "2026"}
+    assert seen == [_FakeSubjectPDF.instances[0].subjects]
+    assert BillList.dependencies == {}  # no SubjectPDF dependency any more
+
+
+def test_patched_get_response_gives_every_request_a_default_timeout(monkeypatch):
+    # #5880: spatula/scrapelib default to no timeout, so a stalled connection hung the scrape
+    import fl.bills as fl_bills
+
+    monkeypatch.setattr(fl_bills, "original_get_response", lambda self, scraper: "response")
+    monkeypatch.setattr(fl_bills, "add_random_delay", lambda *a, **k: None)
+
+    no_timeout = URL("https://example.invalid/a")
+    assert no_timeout.timeout is None
+    assert fl_bills.patched_get_response(no_timeout, object()) == "response"
+    assert no_timeout.timeout == 60
+
+    explicit = URL("https://example.invalid/b", timeout=15)
+    fl_bills.patched_get_response(explicit, object())
+    assert explicit.timeout == 15  # an explicit timeout is kept
+
+
+def test_cookie_provider_source_gets_the_same_default_timeout(monkeypatch):
+    # Our flhouse.gov path overrides get_response, so it never reaches patched_get_response
+    from unittest import mock
+
+    def fetch(source):
+        fake_scraper = mock.Mock()
+        fake_scraper.request.return_value = mock.Mock(content=b"real content")
+        with mock.patch("fl.bills.RESILIENCE_PROFILES") as profiles:
+            profiles.__getitem__.return_value.cookie_provider.fetch_with_retry.side_effect = (
+                lambda do_request: do_request({"c": "v"}, "UA")
+            )
+            source.get_response(fake_scraper)
+        return fake_scraper.request.call_args.kwargs["timeout"]
+
+    assert fetch(_FLHouseCookieProviderSource("https://flhouse.gov/x", verify=False)) == 60
+    assert (
+        fetch(_FLHouseCookieProviderSource("https://flhouse.gov/x", verify=False, timeout=20))
+        == 20
+    )
+
+
+def _fl_text(*lines):
+    return "\n".join(lines)
+
+
+def _floor_vote(lines):
+    from fl.bills import FloorVote
+    from openstates.scrape import Bill
+
+    page = FloorVote(
+        {
+            "date": "2026-02-10",
+            "chamber": "lower",
+            "bill": Bill("HB 1", "2026", "t", chamber="lower", classification="bill"),
+        },
+        source=URL("https://example.invalid/vote.pdf"),
+    )
+    page.text = _fl_text(*lines)
+    (vote,) = list(page.process_page())
+    return vote
+
+
+def test_floor_vote_not_voting_member_with_an_accent_is_recorded():
+    vote = _floor_vote(
+        [
+            "Calendar Page: 1",
+            "",
+            "",
+            "",
+            "Passage",
+            "",
+            "    Yeas - 1  Nays - 0  Not Voting - 1",
+            "",
+            "",
+            "    Y Smith-12",
+            "            López-45",
+            "",
+        ]
+    )
+    options = {(v["option"], v["voter_name"]) for v in vote.votes}
+    assert ("yes", "Smith") in options
+    assert ("not voting", "López") in options
+
+
+def _upper_com_vote(member_lines):
+    from fl.bills import UpperComVote
+    from openstates.scrape import Bill
+
+    page = UpperComVote(
+        {
+            "date": "2026-02-03",
+            "bill": Bill("SB 1", "2026", "t", chamber="upper", classification="bill"),
+        },
+        source=URL("https://example.invalid/senate.pdf"),
+    )
+    page.text = _fl_text(
+        "Senate Committee Vote Sheet",
+        "Bill: SB 1",
+        "Final Action: Favorable",
+        "",
+        "      Yea  Nay   Yea  Nay",
+        *member_lines,
+        "",
+        "   3   0   TOTALS",
+    )
+    (vote,) = list(page.process_page())
+    return vote
+
+
+def test_upper_committee_vote_strips_a_trailing_vote_code_from_every_kind_of_name():
+    # #5836: a name followed by lots of spaces and a code (VA vote after roll call, VC vote
+    # change). The old code dropped single-word names ("Cruz ... VA") entirely, cut a word off
+    # multi-word ones, and left "VC" on the name.
+    vote = _upper_com_vote(
+        [
+            "   X   Smith",
+            "   X   Cruz" + " " * 40 + "VA",
+            "   X   De La Torre" + " " * 30 + "VC",
+        ]
+    )
+    names = sorted(v["voter_name"] for v in vote.votes)
+    assert names == ["Cruz", "De La Torre", "Smith"]
+
+
+# House committee vote page, current flhouse.gov markup (upstream #5836). Synthetic: shaped
+# from the XPaths upstream reads, because no real page is cached. A live smoke test of a real
+# page is recorded on the PR.
+def _house_vote_html(rows, vote_list_class="vote-list"):
+    row_html = "".join(
+        f'<div role="row"><span><span aria-hidden="true">{code}</span>'
+        f'<span class="sr-only">word</span></span><span>{name}</span></div>'
+        for code, name in rows
+    )
+    return f"""<html><body>
+<span id="ctl00_MainContent_lblTotal">5</span>
+<span id="ctl00_MainContent_lblDate">02/10/2026 08:30:00 AM</span>
+<span id="ctl00_MainContent_lblYeas">2</span>
+<span id="ctl00_MainContent_lblNays">1</span>
+<span id="ctl00_MainContent_lblMissed">2</span>
+<span id="ctl00_MainContent_lblCommittee">Health Committee</span>
+<span id="ctl00_MainContent_lblAction">Favorable</span>
+<div class="{vote_list_class}">
+<div role="row" class="sr-only"><span>Vote</span><span>Member</span></div>
+{row_html}
+</div></body></html>""".encode()
+
+
+def _house_com_vote(html):
+    from openstates.scrape import Bill
+
+    page = HouseComVote(Bill("HB 53", "2026", "t", chamber="lower", classification="bill"))
+    page.source = SimpleNamespace(url="https://flhouse.gov/billvote.aspx?VoteId=1")
+    page.root = lxml.html.fromstring(html)
+    return page
+
+
+def test_house_committee_vote_reads_members_from_the_current_markup():
+    page = _house_com_vote(
+        _house_vote_html(
+            [("Y", "Smith"), ("Y", "Jones"), ("N", "Brown"), ("-", "Green"), ("(Y)", "White")]
+        )
+    )
+
+    vote = page.process_page()
+
+    got = {(v["option"], v["voter_name"]) for v in vote.votes}
+    assert got == {
+        ("yes", "Smith"),
+        ("yes", "Jones"),
+        ("no", "Brown"),
+        ("not voting", "Green"),
+        ("not voting", "White"),  # "(Y)" is shown as Did Not Vote and counted as missed
+    }
+
+
+def test_house_committee_vote_rejects_an_unknown_vote_code():
+    page = _house_com_vote(_house_vote_html([("Q", "Smith")]))
+
+    with pytest.raises(ValueError, match="Unknown vote type"):
+        page.process_page()
+
+
+def test_house_committee_vote_warns_when_no_member_row_matches(caplog):
+    # The old markup (ul.vote-list/li) silently yielded a vote with tallies and no members for
+    # 2,458 stored votes (OPEN-402). If the markup moves again this must not be silent.
+    page = _house_com_vote(
+        b"""<html><body>
+<span id="ctl00_MainContent_lblTotal">5</span>
+<span id="ctl00_MainContent_lblDate">02/10/2026 08:30:00 AM</span>
+<span id="ctl00_MainContent_lblYeas">2</span><span id="ctl00_MainContent_lblNays">1</span>
+<span id="ctl00_MainContent_lblMissed">2</span>
+<span id="ctl00_MainContent_lblCommittee">Health Committee</span>
+<span id="ctl00_MainContent_lblAction">Favorable</span>
+<ul class="vote-list"><li><span>Y</span><span>Smith</span></li></ul>
+</body></html>"""
+    )
+
+    with caplog.at_level("WARNING"):
+        vote = page.process_page()
+
+    assert vote is not None and vote.votes == []
+    assert any("do not match the page's totals" in r.message for r in caplog.records)
+
+
+def test_house_committee_vote_warns_on_a_partial_match_but_not_on_a_full_one(caplog):
+    # declared 2 yes / 1 no / 2 not voting (see _house_vote_html)
+    full = [("Y", "A"), ("Y", "B"), ("N", "C"), ("-", "D"), ("(Y)", "E")]
+    with caplog.at_level("WARNING"):
+        _house_com_vote(_house_vote_html(full)).process_page()
+    assert not any("do not match" in r.message for r in caplog.records)
+
+    with caplog.at_level("WARNING"):
+        _house_com_vote(_house_vote_html(full[:3])).process_page()  # two rows never matched
+    assert any("parsed (2, 1, 0), declared (2, 1, 2)" in r.message for r in caplog.records)
+
+
+def test_scrape_fails_clearly_when_the_subjects_pdf_yields_nothing(monkeypatch):
+    class _EmptySubjectPDF:
+        def __init__(self, page_input):
+            pass
+
+        def do_scrape(self):
+            return iter(())
+
+    scraper, _ = _make_scraper_for_scrape(monkeypatch, lambda bill_list: iter(()))
+    monkeypatch.setattr("fl.bills.SubjectPDF", _EmptySubjectPDF)
+
+    with pytest.raises(ValueError, match="subjects PDF .* produced no subjects"):
+        list(scraper.scrape(session="2026"))
+
+
+# pm-review (OPEN-402): pin the retry arithmetic and that WAF-blocked flhouse.gov traffic never
+# enters it (no real requests, sleeps are recorded, not slept).
+
+
+def _recorded_sleeps(monkeypatch):
+    sleeps = []
+    monkeypatch.setattr("fl.utils.time.sleep", lambda seconds: sleeps.append(seconds))
+    monkeypatch.setattr("fl.utils.random.uniform", lambda a, b: 1.0)  # no jitter
+    return sleeps
+
+
+def test_patched_get_response_gives_up_after_seven_attempts_with_the_expected_waits(monkeypatch):
+    import fl.bills as fl_bills
+    from requests.exceptions import Timeout
+
+    sleeps = _recorded_sleeps(monkeypatch)
+    calls = []
+
+    def always_times_out(self, scraper):
+        calls.append(1)
+        raise Timeout("stalled")
+
+    monkeypatch.setattr(fl_bills, "original_get_response", always_times_out)
+    monkeypatch.setattr(fl_bills, "add_random_delay", lambda *a, **k: None)
+
+    with pytest.raises(Timeout):
+        fl_bills.patched_get_response(URL("https://example.invalid/x"), object())
+
+    assert len(calls) == 7  # the first try and 6 retries
+    assert sleeps == [30, 60, 120, 240, 480, 600]  # about 25.5 minutes of waiting in all
+
+
+def test_a_waf_block_on_flhouse_gov_is_not_retried_by_the_long_outage_wait(monkeypatch):
+    from unittest import mock
+    from openstates.utils.cookie_provider import WafBlockDetected
+
+    sleeps = _recorded_sleeps(monkeypatch)
+    source = _FLHouseCookieProviderSource("https://flhouse.gov/x", verify=False)
+    fake_scraper = mock.Mock()
+    fake_scraper.request.return_value = mock.Mock(content=b"Request Rejected")
+
+    with mock.patch("fl.bills.RESILIENCE_PROFILES") as profiles:
+        profiles.__getitem__.return_value.cookie_provider.fetch_with_retry.side_effect = (
+            lambda do_request: do_request({"c": "stale"}, "UA")
+        )
+        with pytest.raises(WafBlockDetected):
+            source.get_response(fake_scraper)
+
+    assert fake_scraper.request.call_count == 1  # one request, not seven
+    assert sleeps == []  # and no backoff sleep
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# OPEN-402: what our flhouse.gov cookie handling guarantees, tested end to end.
+#
+# The tests above replace the whole cookie provider with a mock, so none of them can notice
+# the property OPEN-27 / OPEN-84 exist for: a scrape that runs longer than the WAF cookie's
+# ~1 hour life must never keep presenting an expired cookie. These use a REAL CookieProvider
+# (real disk cache, real expiry check) with a fake warm-up and a fake clock, driven through
+# the live source, _FLHouseCookieProviderSource.
+#
+# Guarantees (each pinned below):
+#   G1  a cached cookie past its own expiry is never sent; a freshly warmed one is
+#   G2  one scrape longer than the cookie's life re-warms and keeps getting real content
+#   G3  a valid cookie is reused: no re-warm per request (no hammering of the WAF)
+#   G4  a block page re-warms once and retries with the fresh cookie and its own User-Agent;
+#       a second block is raised, not retried a third time
+#   G5  every request gets a 60 s default timeout (see test above)
+# ═══════════════════════════════════════════════════════════════════════════
+
+import json  # noqa: E402
+
+import fl.bills as fl_bills  # noqa: E402
+from openstates.utils import cookie_provider as cookie_provider_module  # noqa: E402
+from openstates.utils.cookie_provider import CookieProvider, WafBlockDetected  # noqa: E402
+
+_FL_COOKIE = "session_cookie_mfhp"
+
+
+class _Clock:
+    def __init__(self, now=1_000_000.0):
+        self.now = now
+
+    def time(self):
+        return self.now
+
+
+def _fl_harness(tmp_path, monkeypatch, responses):
+    """A real CookieProvider whose warm-up mints cookie 'fresh-N' (valid 3600 s from the fake
+    clock) and a scraper that records what each request sent. Returns (source, clock, warms,
+    sent, cache_path)."""
+    from unittest import mock
+
+    clock = _Clock()
+    monkeypatch.setattr(cookie_provider_module, "time", clock)
+    warms = []
+
+    def warm_up(_url):
+        warms.append(clock.now)
+        n = len(warms)
+        return (
+            [{"name": _FL_COOKIE, "value": f"fresh-{n}", "expires": clock.now + 3600}],
+            f"UA-{n}",
+        )
+
+    cache_path = str(tmp_path / "fl_cookies.json")
+    provider = CookieProvider("fl-test", "https://flhouse.gov/", [_FL_COOKIE], cache_path, warm_up_func=warm_up)
+    monkeypatch.setattr(fl_bills, "RESILIENCE_PROFILES", {"fl": SimpleNamespace(cookie_provider=provider)})
+
+    sent = []
+    queue = list(responses)
+
+    def request(**kwargs):
+        sent.append((kwargs["cookies"][_FL_COOKIE], kwargs["headers"]["User-Agent"]))
+        return mock.Mock(content=queue.pop(0) if queue else b"real content")
+
+    scraper = mock.Mock()
+    scraper.request.side_effect = request
+    source = _FLHouseCookieProviderSource("https://flhouse.gov/x", verify=False)
+    return source, scraper, clock, warms, sent, cache_path
+
+
+def test_g1_a_cached_cookie_past_its_expiry_is_never_sent(tmp_path, monkeypatch):
+    source, scraper, clock, warms, sent, cache_path = _fl_harness(tmp_path, monkeypatch, [])
+    with open(cache_path, "w") as f:
+        json.dump(
+            {_FL_COOKIE: {"value": "stale", "expires": clock.now - 10}, "_meta": {"user_agent": "old-UA"}}, f
+        )
+
+    source.get_response(scraper)
+
+    assert sent == [("fresh-1", "UA-1")]
+    assert len(warms) == 1
+
+
+def test_g2_g3_a_scrape_longer_than_the_cookies_life_rewarms_and_reuses_in_between(tmp_path, monkeypatch):
+    source, scraper, clock, warms, sent, _ = _fl_harness(tmp_path, monkeypatch, [])
+
+    source.get_response(scraper)  # t = 0: cold, warms
+    clock.now += 100
+    source.get_response(scraper)  # still valid: reused, no second warm-up
+    clock.now += 3000
+    source.get_response(scraper)  # t = 3100 s: still valid
+    assert len(warms) == 1
+    assert {cookie for cookie, _ in sent} == {"fresh-1"}
+
+    clock.now += 600  # t = 3700 s: past the hour -- the old cookie must not go out again
+    source.get_response(scraper)
+    clock.now += 100
+    source.get_response(scraper)
+
+    assert [cookie for cookie, _ in sent] == ["fresh-1", "fresh-1", "fresh-1", "fresh-2", "fresh-2"]
+    assert len(warms) == 2
+
+
+def test_g4_a_block_page_rewarms_once_and_retries_with_the_fresh_cookie_and_agent(tmp_path, monkeypatch):
+    source, scraper, clock, warms, sent, _ = _fl_harness(tmp_path, monkeypatch, [WAF_REJECTED_HTML, b"real content"])
+
+    response = source.get_response(scraper)
+
+    assert response.content == b"real content"
+    assert sent == [("fresh-1", "UA-1"), ("fresh-2", "UA-2")]
+    assert len(warms) == 2
+
+
+def test_g4_a_second_block_is_raised_not_retried_again(tmp_path, monkeypatch):
+    source, scraper, clock, warms, sent, _ = _fl_harness(
+        tmp_path, monkeypatch, [WAF_REJECTED_HTML, WAF_REJECTED_HTML, b"never reached"]
+    )
+
+    with pytest.raises(WafBlockDetected):
+        source.get_response(scraper)
+
+    assert len(sent) == 2 and len(warms) == 2
