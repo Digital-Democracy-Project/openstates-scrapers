@@ -122,6 +122,7 @@ class AZBillScraper(Scraper):
             type_ = document_set["DocumentGroupName"]
             for doc in document_set["Documents"]:
                 if type_ in version_types:
+                    # renamed in place on purpose: nothing below needs the dated source name
                     doc["DocumentName"] = undated_version_name(doc["DocumentName"])
                 media_type = "text/html" if doc["HtmlPath"] else "application/pdf"
                 url = doc["HtmlPath"] or doc["PdfPath"]
