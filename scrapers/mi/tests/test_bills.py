@@ -1037,3 +1037,19 @@ def test_parse_roll_call_a_header_outside_a_table_still_takes_effect_at_once(
 
     assert results["yes"] == ["Smith", "Jones"]
     assert results["no"] == ["Brown"]
+
+
+def test_parse_roll_call_a_header_in_the_last_table_row_does_not_leak_past_the_table(
+    monkeypatch,
+):
+    # The "Nays" header is in the same row as the last Yea, so that row's name stays a Yea;
+    # the next paragraph is outside the table, so the header takes effect there.
+    html = _journal(
+        "<table><tr><td><p>Roll Call No. 8</p></td><td><p>Yeas—2</p></td></tr>"
+        "<tr><td><p>Smith</p></td><td><p>Nays—1</p></td><td><p>Jones</p></td></tr></table>",
+        "<p>Brown</p><p>In The Chair: Someone</p>",
+    )
+    results = _parse(monkeypatch, html, rc_num="8")
+
+    assert results["yes"] == ["Smith", "Jones"]
+    assert results["no"] == ["Brown"]
