@@ -397,7 +397,7 @@ class AZBillScraper(Scraper):
                     "excused",
                     (
                         action["Excused"]
-                        if "Present" in action and action["Present"]
+                        if "Excused" in action and action["Excused"]
                         else 0
                     ),
                 )
