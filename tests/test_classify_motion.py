@@ -132,7 +132,16 @@ def test_az_not_passage(text):
     ("Senate/ passed 3rd reading", ["passage"]),
     ("House/ passed on 3rd reading", ["passage"]),
     ("Senate/ passed on 3rd reading", ["passage"]),
-    ("Final Passage", ["passage"]),
+    # The shapes below were once blocked by not_passage and are passage since 807fa5785 (2026-07-03):
+    # a chamber's concurrence, a conference report's final passage, a combined 2nd-and-3rd-reading
+    # passage under suspension of the rules, and a failed passage vote. Each shape is in the replica.
+    ("Senate/ passed 2nd & 3rd readings/ suspension", ["passage"]),
+    ("House/ concurs with Senate amendment", ["passage"]),
+    ("Senate/ concurs with House amendment", ["passage"]),
+    ("House Conference Committee - Final Passage", ["passage"]),
+    ("Senate Conference Committee - Final Passage", ["passage"]),
+    ("House/ failed", ["passage"]),
+    ("Senate/ failed", ["passage"]),
 ])
 def test_ut_passage(text, expected):
     assert classify_motion("ut", text) == expected
@@ -141,8 +150,9 @@ def test_ut_passage(text, expected):
 @pytest.mark.parametrize("text", [
     "House/ passed 2nd reading",
     "Senate/ passed 2nd reading",
-    "Senate/ concurs with House amendment",
     "House/ second reading",
+    "House/ substitute adoption failed",  # ends in "failed" but is not the bare "House/ failed"
+    "House/ floor amendment",
 ])
 def test_ut_not_passage(text):
     assert classify_motion("ut", text) == []
@@ -172,18 +182,15 @@ def test_fl_not_passage(text):
     ("The bill passed", ["passage"]),
     ("PASSAGE ROLL CALL # 88 YEAS 62 NAYS 40", ["passage"]),
     ("Passed as Amended ROLL CALL # 5 YEAS 57 NAYS 50", ["passage"]),
+    # A chamber's concurrence and a conference report's adoption are passage since 807fa5785
+    # (2026-07-03): real, tallied votes the old "concur"/"conference report" blocks hid.
+    ("HOUSE AMENDMENT(S) CONCURRED IN ROLL CALL # 116 YEAS 100 NAYS 3", ["passage"]),
+    ("Senate amendment(s) concurred in Roll Call #248 Yeas 102 Nays 7 Excused 0 Not Voting 1", ["passage"]),
+    ("Conference Report adopted ROLL CALL # 5", ["passage"]),
+    ("SENATE ADOPTED CONFERENCE REPORT WITH IMMEDIATE EFFECT ROLL CALL # 3", ["passage"]),
 ])
 def test_mi_passage(text, expected):
     assert classify_motion("mi", text) == expected
-
-
-@pytest.mark.parametrize("text", [
-    "HOUSE AMENDMENT(S) CONCURRED IN ROLL CALL # 116",
-    "Conference Report adopted ROLL CALL # 5",
-    "SENATE CONCURRED WITH HOUSE AMENDMENTS ROLL CALL # 200",
-])
-def test_mi_not_passage(text):
-    assert classify_motion("mi", text) == []
 
 
 @pytest.mark.parametrize("text,expected", [

@@ -26,3 +26,10 @@ jobs:
       run: poetry run flake8 scrapers scrapers_next
     - name: black check
       run: poetry run black --check --diff scrapers scrapers_next
+    # The motion-classification tests need only pytest and pyyaml, not the scrapers' runtime
+    # dependencies, so they run here without a full install. (OPEN-426: four of them went stale
+    # for months because nothing ran them.)
+    - name: motion classification tests
+      run: |
+        pip install pytest pyyaml
+        pytest tests/test_classify_motion.py
