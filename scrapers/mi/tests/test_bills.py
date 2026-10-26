@@ -971,3 +971,69 @@ def test_real_windows_1252_senate_journal_still_matches_the_journals_own_counts(
         2,
         2,
     )
+
+
+# OPEN-424: the journals lay a roll call out as an HTML table, and the option headers
+# ("Nays—19") sit in a cell of the row that ENDS the option before them, so a row can carry
+# names that come after the next header, and "In The Chair:" can sit in a cell in the middle of
+# the last row. Reading the pieces in document order credited those names to the wrong option
+# (or dropped them). Real pages (public record), trimmed to the roll and one roll call, UTF-8.
+# Each journal prints its own counts, which is what these tests check.
+
+
+def test_real_senate_journal_names_in_the_row_of_the_nays_header_are_yeas(monkeypatch):
+    # SJ 2026-04-30, Roll Call 91: Yeas 18, Nays 19. Eight Yeas sit in the row that holds the
+    # "Nays—19" header; the catch-up parser returned 10 yes / 27 no.
+    results = _parse_real_journal(
+        monkeypatch, "senate_journal_nays_header_mid_row_rc91.htm", "91"
+    )
+
+    assert (len(results["yes"]), len(results["no"]), len(results["other"])) == (
+        18,
+        19,
+        0,
+    )
+    assert {"Lindsey", "McBroom", "Nesbitt", "Outman"} <= set(results["yes"])
+    assert not {"Lindsey", "McBroom", "Nesbitt", "Outman"} & set(results["no"])
+
+
+def test_real_senate_journal_names_after_a_nays_zero_header_are_yeas(monkeypatch):
+    # SJ 2026-07-03, Roll Call 217 (SB 415): Yeas 36, Nays 0, Excused 2. "Nesbitt" and "Wojno"
+    # follow the "Nays—0" header; a unanimous vote must not store two nays.
+    results = _parse_real_journal(
+        monkeypatch, "senate_journal_unanimous_spill_rc217.htm", "217"
+    )
+
+    assert (len(results["yes"]), len(results["no"]), len(results["other"])) == (
+        36,
+        0,
+        2,
+    )
+    assert {"Nesbitt", "Wojno"} <= set(results["yes"])
+    assert results["other"] == ["Lauwers", "Santana"]
+
+
+def test_real_house_journal_names_after_in_the_chair_cell_are_still_read(monkeypatch):
+    # HJ 2026-07-03, Roll Call 292: Yeas 84, Nays 24. The last row's first cell holds
+    # "In The Chair: DeBoyer"; Herzberg, Schriver and Wortz are in the cells after it.
+    results = _parse_real_journal(
+        monkeypatch, "house_journal_chair_cell_mid_table_rc292.htm", "292"
+    )
+
+    assert (len(results["yes"]), len(results["no"])) == (84, 24)
+    assert {"Herzberg", "Schriver", "Wortz"} <= set(results["no"])
+    assert not [n for n in results["yes"] + results["no"] if "Chair" in n]
+
+
+def test_parse_roll_call_a_header_outside_a_table_still_takes_effect_at_once(
+    monkeypatch,
+):
+    # Behaviour that must NOT change: with no table rows, a header labels the very next line.
+    html = _journal(
+        "<p>Roll Call No. 5</p><p>Yeas—2</p><p>Smith  Jones</p><p>Nays—1</p><p>Brown</p>",
+        "<p>Excused—0 Not Voting—0</p><p>In The Chair: Someone</p>",
+    )
+    results = _parse(monkeypatch, html, rc_num="5")
+
+    assert results["yes"] == ["Smith", "Jones"]
+    assert results["no"] == ["Brown"]

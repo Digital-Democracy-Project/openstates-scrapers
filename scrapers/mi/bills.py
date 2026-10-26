@@ -1005,13 +1005,22 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
 
         # Split the file into lines using the <p> tags; Senate journals often
         # print the "Excused"/"Not Voting" (sometimes "Nays") headers as <h4>
-        pieces = [
-            p.text_content().replace("\xa0", " ").replace("\r\n", " ")
-            for p in vote_doc.xpath("//p | //h4")
-        ]
+        # Each piece also carries the table row it sits in (None outside a table): the journals
+        # lay a roll call out as a table whose option headers sit in a cell of the row that
+        # ends the PREVIOUS option, so a row's names can come after the next header (OPEN-424)
+        doc_tree = vote_doc.getroottree()
+        pieces = []
+        for el in vote_doc.xpath("//p | //h4"):
+            rows = el.xpath("ancestor::tr[1]")
+            pieces.append(
+                (
+                    el.text_content().replace("\xa0", " ").replace("\r\n", " "),
+                    doc_tree.getpath(rows[0]) if rows else None,
+                )
+            )
 
         # Go until we find the roll call
-        for i, p in enumerate(pieces):
+        for i, (p, _row) in enumerate(pieces):
             if p.startswith(f"Roll Call No. {rc_num}"):
                 break
 
@@ -1021,26 +1030,40 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         # including the multi-word ones, and is the only way to tell where one
         # name ends and the next begins in a collapsed line of names
         roster = set()
-        for p in pieces:
+        for p, _row in pieces:
             member = re.match(r"(.+?)—(?:present|excused|absent)", p.strip(), re.I)
             if member:
                 roster.add(member.group(1))
 
         # Once we find the roll call, go through voters
-        for j, p in enumerate(pieces[i:]):
+        # A header printed in a table row labels the names from the NEXT row on; names that
+        # share its row (and the ones that follow "In The Chair:" in its cell's row) still
+        # belong to the option before it
+        pending, pending_row, chair_row = None, None, None
+        for j, (p, row) in enumerate(pieces[i:]):
             # Stop at the next roll call so its voters aren't merged into this one
             if j and p.startswith("Roll Call No."):
+                break
+            if pending is not None and row != pending_row:
+                vtype, pending = pending, None
+            if chair_row is not None and row != chair_row:
                 break
             # "In The Chair:" can share a <p> with the last voter names
             p, chair, _ = p.partition("In The Chair:")
             # A header can share a line with the next one ("Nays—0 Excused—5"),
             # so check them last-to-first
+            header = None
             if "Excused" in p or "Not Voting" in p:
-                vtype = "other"
+                header = "other"
             elif "Nays" in p:
-                vtype = "no"
+                header = "no"
             elif "Yeas" in p:
-                vtype = "yes"
+                header = "yes"
+            if header:
+                if vtype is not None and row is not None:
+                    pending, pending_row = header, row
+                else:
+                    vtype, pending = header, None
             elif "Roll Call No" in p:
                 continue
             elif vtype:
@@ -1052,10 +1075,12 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
                                 results[vtype].append(leg)
                         else:
                             results[vtype].extend(self.split_names(line, roster))
-            else:
+            elif p.strip():
                 self.warning("piece without vtype set: %s", p)
             if chair:
-                break
+                if row is None:
+                    break
+                chair_row = row
 
         return results
 
