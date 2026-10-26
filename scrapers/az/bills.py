@@ -17,6 +17,23 @@ BASE_URL = "https://www.azleg.gov/"
 USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36"
 
 
+# OPEN-430: azleg began putting the version's date in Engrossed names, e.g.
+# "Senate Engrossed Version (02/26/2026)". A stored version (and its archived document,
+# keyed by note) is identified by its note, so a rescrape would rename ~1,200 stored
+# "... Engrossed Version" notes into new versions with new diffs and summaries. The
+# date adds nothing we use (core ranks the dated and undated names identically), so
+# keep the undated name stored data already has. Only this exact shape is touched; any
+# other new naming stays visible as drift.
+ENGROSSED_DATE_SUFFIX = re.compile(
+    r"^((?:House|Senate|Conference) Engrossed Version)\s*\(\d{1,2}/\d{1,2}/\d{4}\)\s*$"
+)
+
+
+def undated_version_name(name):
+    match = ENGROSSED_DATE_SUFFIX.match(name)
+    return match.group(1) if match else name
+
+
 class AZBillScraper(Scraper):
     chamber_map = {"lower": "H", "upper": "S"}
     chamber_map_rev = {"H": "upper", "S": "lower", "G": "executive", "SS": "executive"}
@@ -104,6 +121,8 @@ class AZBillScraper(Scraper):
         for document_set in page:
             type_ = document_set["DocumentGroupName"]
             for doc in document_set["Documents"]:
+                if type_ in version_types:
+                    doc["DocumentName"] = undated_version_name(doc["DocumentName"])
                 media_type = "text/html" if doc["HtmlPath"] else "application/pdf"
                 url = doc["HtmlPath"] or doc["PdfPath"]
                 if not url:
