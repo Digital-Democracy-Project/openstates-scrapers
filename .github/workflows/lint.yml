@@ -31,5 +31,5 @@ jobs:
     # for months because nothing ran them.)
     - name: motion classification tests
       run: |
-        pip install pytest pyyaml
-        pytest tests/test_classify_motion.py
+        python -m pip install pytest pyyaml
+        python -m pytest tests/test_classify_motion.py

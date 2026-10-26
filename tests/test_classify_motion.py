@@ -140,6 +140,9 @@ def test_az_not_passage(text):
     ("Senate/ concurs with House amendment", ["passage"]),
     ("House Conference Committee - Final Passage", ["passage"]),
     ("Senate Conference Committee - Final Passage", ["passage"]),
+    # "passage" says what the vote was about (a vote on passage), not how it came out: a failed
+    # passage vote is still the bill's up-or-down vote and the broker scores it. Do not "fix"
+    # these to []; the result field carries pass/fail.
     ("House/ failed", ["passage"]),
     ("Senate/ failed", ["passage"]),
 ])
@@ -153,6 +156,9 @@ def test_ut_passage(text, expected):
     "House/ second reading",
     "House/ substitute adoption failed",  # ends in "failed" but is not the bare "House/ failed"
     "House/ floor amendment",
+    # Bare "Final Passage" is not a Utah text (0 of 1,917 stored votes; the real one is
+    # "... Conference Committee - Final Passage" above), and the rule that matched it was removed in 807fa5785.
+    "Final Passage",
 ])
 def test_ut_not_passage(text):
     assert classify_motion("ut", text) == []
