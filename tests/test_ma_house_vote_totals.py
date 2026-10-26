@@ -125,3 +125,15 @@ def test_one_bad_roll_call_does_not_stop_the_rest_of_the_pdf():
     assert len(events) == 3
     assert [bool(e.votes) for e in events] == [False, True, True]
     assert len(warnings) == 1
+
+
+def test_a_roll_call_without_declared_totals_yields_nothing_and_warns_once():
+    events, warnings = _scrape(_text("jones_x").replace("127 YEAS", ""))
+    assert events == []
+    assert len(warnings) == 1 and "declared totals" in warnings[0]
+
+
+def test_present_does_not_cause_a_false_mismatch_in_a_scraped_roll_call():
+    events, warnings = _scrape(_text("present"))
+    assert warnings == [] and len(events) == 1
+    assert [v["option"] for v in events[0].votes].count("other") == 1
