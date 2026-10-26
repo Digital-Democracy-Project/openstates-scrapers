@@ -426,6 +426,29 @@ class HouseVoteRecordParser:
         if not votes_match_names:
             raise VoteTotalMismatch()
 
+    def totals_mismatch(self):
+        """OPEN-427: compare the voters read from the grid with the tally the sheet
+        declares, which is the only check that sees a grid read wrongly.
+
+        `error_if_invalid()` cannot: each cell yields its letter and name together,
+        so the two lists always have the same length. Returns None when the Y, N and
+        X counts equal the declared YEAS, NAYS and N/V, otherwise a short description.
+        P (present) is in none of the declared totals and is not compared.
+        """
+        declared = (self.total_yea, self.total_nay, self.total_nv)
+        if None in declared:
+            return "declared totals not found in the header"
+        read = (
+            self.votes.count("Y"),
+            self.votes.count("N"),
+            self.votes.count("X"),
+        )
+        if read != declared:
+            return "voters read {}-{}-{} (yes-no-not voting), sheet declares {}-{}-{}".format(
+                *read, *declared
+            )
+        return None
+
     def get_warning(self):
         # Some votes may not have any motion listed or without bill_id
         warning = None
@@ -437,9 +460,11 @@ class HouseVoteRecordParser:
             warning = (
                 f"Vote without a bill identifier, skipping vote #{self.vote_number}"
             )
+        elif None in (self.total_yea, self.total_nay, self.total_nv):
+            warning = f"Vote without declared totals, skipping vote #{self.vote_number}"
         return warning
 
-    def createVoteEvent(self):
+    def createVoteEvent(self, include_voters=True):
         vote_passed = self.total_yea > self.total_nay
 
         # Check for bill id in motion text
@@ -477,8 +502,9 @@ class HouseVoteRecordParser:
         }
 
         # Add all individual votes
-        for name, vote_val in zip(self.names, self.votes):
-            vote.vote(vote_dictionary[vote_val], name)
+        if include_voters:
+            for name, vote_val in zip(self.names, self.votes):
+                vote.vote(vote_dictionary[vote_val], name)
         return vote
 
 
@@ -504,6 +530,21 @@ class HouseRollCall(PdfPage):
                 self.logger.warning(warning)
             else:
                 vote_parser.error_if_invalid()
-                vote_event = vote_parser.createVoteEvent()
+                mismatch = vote_parser.totals_mismatch()
+                if mismatch is not None:
+                    # Same rule as bills.py (OPEN-176): the declared tally is real, a
+                    # voter list that disagrees with it is not, so record the tally
+                    # and say the voters could not be read.
+                    self.logger.warning(
+                        "MA House roll call #{} ({}): {}; recording the tally "
+                        "with voters_unavailable".format(
+                            vote_parser.vote_number, vote_parser.motion, mismatch
+                        )
+                    )
+                vote_event = vote_parser.createVoteEvent(
+                    include_voters=mismatch is None
+                )
+                if mismatch is not None:
+                    vote_event.extras["voters_unavailable"] = "house-rollcall-totals"
                 vote_event.add_source(self.source.url, note="Vote record pdf")
                 yield vote_event
