@@ -360,6 +360,16 @@ class HouseVoteRecordParser:
     bill_re = re.compile(r"(h|s)\.? ?(\d+) ?(.*)", re.IGNORECASE)
     number_re = re.compile(r"no\.? ?(\d+)", re.IGNORECASE)
 
+    # One "<vote letter> <name>" cell of the roll grid in `pdftotext -layout`
+    # output, e.g. "Y   Mr. Speaker" or "N   Tyler *". Each letter is paired
+    # with the name printed beside it. Without -layout, pdftotext emits the
+    # letter columns in a different order than the names, so zipping two
+    # separately collected lists attached votes to the wrong legislators.
+    cell_re = re.compile(
+        r"(?:^|(?<=\s))([YNXP])\s+(\S(?:.*?\S)?)(?=\s{2,}[YNXP]\s|\s*$)"
+    )
+    time_re = re.compile(r"\d{2}/\d{2}/\d{4} \d{1,2}:\d{2} [AP]M")
+
     def __init__(self, vote_text, session=None):
         self.votes = []
         self.names = []
@@ -372,81 +382,72 @@ class HouseVoteRecordParser:
         self.motion = None
         self.motion_parts = []
         self.session = session
-        lines = vote_text.split("\n")
         self.raw = vote_text
-        for line in lines:
-            if re.search(r"^[XP]\s", line):
-                sub_lines = line.split(" ")
-                self.read_line(sub_lines[0])
-                self.read_line(sub_lines[1])
-            else:
-                self.read_line(line)
+        for line in vote_text.split("\n"):
+            self.read_line(line)
 
     def read_line(self, line):
-        line = line.strip()
+        stripped = line.strip()
 
         # These lines contain no useful info and are skipped
-        blank = line in ["\x0c", ""]
-        contains_equal = "=" in line
-        yea_and_nay = line == "Yea and Nay"
-        if blank or contains_equal or yea_and_nay:
-            pass
+        if stripped in ["\x0c", ""] or "=" in stripped:
+            return
 
-        # Check for vote number. When the vote number is found, we can be sure
-        # that all the motion text has been read.
-        elif (match := self.number_re.match(line)) is not None:
-            self.vote_number = int(match.group(1))
-            self.motion = " ".join(self.motion_parts)
+        # Header: motion lines, then "Yea and Nay <date time>", then
+        # "No. <n>  <yeas> YEAS  <nays> NAYS  <n/v> N/V" on one line.
+        if self.vote_number is None:
+            if (match := self.time_re.search(stripped)) is not None:
+                when = dt.datetime.strptime(match.group(0), "%m/%d/%Y %I:%M %p")
+                self.time = self.tz.localize(when)
+            elif (match := self.number_re.match(stripped)) is not None:
+                self.vote_number = int(match.group(1))
+                self.motion = " ".join(self.motion_parts)
+                if (bill_match := self.bill_re.match(self.motion)) is not None:
+                    self.bill_id = f"{bill_match.group(1)}{bill_match.group(2)}"
+                if (total := self.total_yea_re.search(stripped)) is not None:
+                    self.total_yea = int(total.group(1))
+                if (total := self.total_nay_re.search(stripped)) is not None:
+                    self.total_nay = int(total.group(1))
+                if (total := self.total_nv_re.search(stripped)) is not None:
+                    self.total_nv = int(total.group(1))
+            else:
+                self.motion_parts.append(stripped)
+            return
 
-            # derive bill_id immediately
-            if (bill_match := self.bill_re.match(self.motion)) is not None:
-                self.bill_id = f"{bill_match.group(1)}{bill_match.group(2)}"
-
-        # Check for time
-        elif ":" in line:
-            when = dt.datetime.strptime(line, "%m/%d/%Y %I:%M %p")
-            when = self.tz.localize(when)
-            self.time = when
-
-        # Check for vote totals
-        elif (match := self.total_yea_re.match(line)) is not None:
-            self.total_yea = int(match.group(1))
-
-        elif (match := self.total_nay_re.match(line)) is not None:
-            self.total_nay = int(match.group(1))
-
-        elif (match := self.total_nv_re.match(line)) is not None:
-            self.total_nv = int(match.group(1))
-        # line is vote type
-        # Y is sometimes read as P by the pdf reader.
-        elif line in ["Y", "N", "X", "P"]:
-            self.votes.append(line)
-
-        # Read the line as motion, motion text may come through as multiple
-        # lines so append the line to an array.
-        elif self.vote_number is None:
-            self.motion_parts.append(line)
-
-        # At this point, the line is assumed to contain a name.
-
-        # Special case where pdf reader mistakenly joins two names together into
-        # a single line. This can happen if the first name starts with a double
-        # '--'. This can cause the next name in the list to be joined with
-        # this line. e.g. "--Jones-Smith" instead of "--Jones--" and "Smith" on
-        # separate lines.
-        elif line.startswith("--"):
-            all_names = [x for x in line[2:].split("-") if x]
-            self.names.extend(all_names)
-
-        # The line is a single name, but may be surrounded by '--'
-        else:
-            self.names.append(line.replace("--", ""))
+        # Roll grid. "*" marks a vote cast after the roll closed, and some
+        # names are printed as "--Name--". Neither mark is part of the name.
+        for vote_val, name in self.cell_re.findall(line):
+            self.votes.append(vote_val)
+            self.names.append(name.rstrip(" *").replace("--", ""))
 
     # Raises an error or writes warning to logger. Returns true if data is valid
     def error_if_invalid(self):
         votes_match_names = len(self.names) == len(self.votes)
         if not votes_match_names:
             raise VoteTotalMismatch()
+
+    def totals_mismatch(self):
+        """OPEN-427: compare the voters read from the grid with the tally the sheet
+        declares, which is the only check that sees a grid read wrongly.
+
+        `error_if_invalid()` cannot: each cell yields its letter and name together,
+        so the two lists always have the same length. Returns None when the Y, N and
+        X counts equal the declared YEAS, NAYS and N/V, otherwise a short description.
+        P (present) is in none of the declared totals and is not compared.
+        """
+        declared = (self.total_yea, self.total_nay, self.total_nv)
+        if None in declared:
+            return "declared totals not found in the header"
+        read = (
+            self.votes.count("Y"),
+            self.votes.count("N"),
+            self.votes.count("X"),
+        )
+        if read != declared:
+            return "voters read {}-{}-{} (yes-no-not voting), sheet declares {}-{}-{}".format(
+                *read, *declared
+            )
+        return None
 
     def get_warning(self):
         # Some votes may not have any motion listed or without bill_id
@@ -459,9 +460,11 @@ class HouseVoteRecordParser:
             warning = (
                 f"Vote without a bill identifier, skipping vote #{self.vote_number}"
             )
+        elif None in (self.total_yea, self.total_nay, self.total_nv):
+            warning = f"Vote without declared totals, skipping vote #{self.vote_number}"
         return warning
 
-    def createVoteEvent(self):
+    def createVoteEvent(self, include_voters=True):
         vote_passed = self.total_yea > self.total_nay
 
         # Check for bill id in motion text
@@ -491,18 +494,25 @@ class HouseVoteRecordParser:
 
         vote_dictionary = {
             "Y": "yes",
-            "P": "yes",  # Y's can be misread as P's
             "N": "no",
             "X": "not voting",
+            # P=PRESENT per the sheet's legend; excluded from its YEAS/NAYS/N/V
+            # totals, so it is not a yes.
+            "P": "other",
         }
 
         # Add all individual votes
-        for name, vote_val in zip(self.names, self.votes):
-            vote.vote(vote_dictionary[vote_val], name)
+        if include_voters:
+            for name, vote_val in zip(self.names, self.votes):
+                vote.vote(vote_dictionary[vote_val], name)
         return vote
 
 
 class HouseRollCall(PdfPage):
+    # HouseVoteRecordParser pairs each vote letter with the name beside it,
+    # which needs the columns kept in place.
+    preserve_layout = True
+
     def __init__(self, source, session=None):
         super().__init__(source=source)
         self.session = session
@@ -520,6 +530,21 @@ class HouseRollCall(PdfPage):
                 self.logger.warning(warning)
             else:
                 vote_parser.error_if_invalid()
-                vote_event = vote_parser.createVoteEvent()
+                mismatch = vote_parser.totals_mismatch()
+                if mismatch is not None:
+                    # Same rule as bills.py (OPEN-176): the declared tally is real, a
+                    # voter list that disagrees with it is not, so record the tally
+                    # and say the voters could not be read.
+                    self.logger.warning(
+                        "MA House roll call #{} ({}): {}; recording the tally "
+                        "with voters_unavailable".format(
+                            vote_parser.vote_number, vote_parser.motion, mismatch
+                        )
+                    )
+                vote_event = vote_parser.createVoteEvent(
+                    include_voters=mismatch is None
+                )
+                if mismatch is not None:
+                    vote_event.extras["voters_unavailable"] = "house-rollcall-totals"
                 vote_event.add_source(self.source.url, note="Vote record pdf")
                 yield vote_event

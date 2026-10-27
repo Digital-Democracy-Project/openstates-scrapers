@@ -60,6 +60,10 @@ def patched_get_response(self, scraper):
     """
     Patch the URL.get_response method to add retry logic for connection errors.
     """
+    # spatula/scrapelib default to no timeout, so a stalled connection
+    # (seen on flhouse.gov) hangs the whole scrape instead of being retried
+    if self.timeout is None:
+        self.timeout = 60
 
     # Use our handle_remote_disconnected function to specifically handle RemoteDisconnected errors
     def get_response_with_retry():
@@ -89,9 +93,12 @@ def patched_get_response(self, scraper):
         lambda: handle_remote_disconnected(
             get_response_with_retry, max_retries=5, initial_backoff=10, max_backoff=120
         ),
-        max_retries=3,
-        initial_backoff=5,
-        max_backoff=60,
+        # a full session takes hours, so ride out a short outage on the state's
+        # sites (both have gone 500/503 for minutes at a time) instead of
+        # ending the run
+        max_retries=6,
+        initial_backoff=30,
+        max_backoff=600,
     )
 
 
@@ -141,7 +148,6 @@ class SubjectPDF(PdfPage):
 class BillList(HtmlListPage):
     selector = XPath("//th/a[contains(@href, '/Session/Bill/')]")
     next_page_selector = XPath("//a[@class='next']/@href")
-    dependencies = {"subjects": SubjectPDF}
 
     def get_source_from_input(self):
         # Deliberately does NOT use flsenate.gov's own billNumber= filter (a substring
@@ -235,7 +241,7 @@ class BillList(HtmlListPage):
 
         # normalize id from HB 0004 to H4
         subj_bill_id = re.sub(r"(H|S)\w+ 0*(\d+)", r"\1\2", bill_id)
-        bill.subject = list(self.subjects[subj_bill_id])
+        bill.subject = list(self.input["subjects"][subj_bill_id])
 
         return BillDetail(bill)
 
@@ -635,7 +641,7 @@ class FloorVote(PdfPage):
             for line in lines[VOTE_START_INDEX:]:
                 if not line.strip():
                     break
-                for member in re.findall(r"\s{8,}([A-Z][a-z\'].*?)-\d{1,3}", line):
+                for member in re.findall(r"\s{8,}([A-Z][a-zà-ÿ\'].*?)-\d{1,3}", line):
                     member = member.strip()
                     vote.vote("not voting", member)
         yield vote
@@ -737,11 +743,10 @@ class UpperComVote(PdfPage):
         # set voters
         for vtype, voters in votes.items():
             for voter in voters:
-                voter = voter.strip()
-                # Removes the few voter names with a ton of extra spaces with  VA at the end.
+                # Removes the few voter names with a ton of extra spaces and a code (VA, VC)
+                # at the end.
                 # Ex: Cruz                                                               VA
-                if "  VA" in voter:
-                    voter = " ".join(voter.split()[:-2])
+                voter = re.split(r"\s{2,}", voter.strip())[0]
                 if len(voter) > 0:
                     vote.vote(vtype, voter)
 
@@ -869,6 +874,10 @@ class _FLHouseCookieProviderSource(URL):
     """
 
     def get_response(self, scraper):
+        # This source bypasses patched_get_response, so give it the same default timeout:
+        # without one a stalled flhouse.gov connection hangs the scrape (spatula's default is none)
+        if self.timeout is None:
+            self.timeout = 60
         profile = RESILIENCE_PROFILES["fl"]
 
         def do_request(cookies: dict, user_agent: str) -> requests.Response:
@@ -1184,27 +1193,44 @@ class HouseComVote(HtmlPage):
             vote.set_count("not voting", other_count)
 
             for member_vote in self.root.xpath(
-                '//ul[contains(@class, "vote-list")]/li'
+                '//div[contains(@class, "vote-list")]/div[@role="row"]'
+                '[not(contains(@class, "sr-only"))]'
             ):
-                if not member_vote.text_content().strip():
-                    continue
-
                 (member,) = member_vote.xpath("span[2]//text()")
-                (member_vote,) = member_vote.xpath("span[1]//text()")
+                (member_vote,) = member_vote.xpath(
+                    'span[1]/span[@aria-hidden="true"]/text()'
+                )
 
                 member = member.strip()
+                member_vote = member_vote.strip()
                 if member_vote == "Y":
                     vote.yes(member)
                 elif member_vote == "N":
                     vote.no(member)
-                elif member_vote == "-":
+                # Parenthetical votes are shown as "Did Not Vote" and are
+                # counted in Total Missed, same as "-"
+                elif member_vote == "-" or re.search(r"\([YN]\)", member_vote):
                     vote.vote("not voting", member)
-                # Parenthetical votes appear to not be counted in the
-                # totals for Yea, Nay, _or_ Missed
-                elif re.search(r"\([YN]\)", member_vote):
-                    continue
                 else:
                     raise ValueError("Unknown vote type found: {}".format(member_vote))
+
+            parsed = (
+                sum(1 for v in vote.votes if v["option"] == "yes"),
+                sum(1 for v in vote.votes if v["option"] == "no"),
+                sum(1 for v in vote.votes if v["option"] == "not voting"),
+            )
+            if parsed != (yes_count, no_count, other_count):
+                # The member rows do not add up to the page's own totals. The old markup
+                # produced tallies with no members at all, silently, for 2,458 stored
+                # committee votes (OPEN-402); a partial match after a markup change would
+                # look the same, so say so whenever the two disagree.
+                self.logger.warning(
+                    f"House committee vote page {self.source.url} for "
+                    f"{_flhouse_bill_label(self)}: member rows do not match the page's "
+                    f"totals (yes/no/not voting: parsed {parsed}, declared "
+                    f"{(yes_count, no_count, other_count)}); flhouse.gov's markup may "
+                    "have changed"
+                )
 
             return vote
         else:
@@ -1280,6 +1306,15 @@ class FlBillScraper(Scraper):
         # number, then diffed against bill_nos once the list walk finishes below.
         matched_bill_nos = set()
 
+        # The subjects PDF is fetched once here and handed to every page of the bill list,
+        # instead of being declared as a per-BillList dependency that re-fetches it (upstream #5880).
+        subjects = next(iter(SubjectPDF({"session": session}).do_scrape()), None)
+        if subjects is None:
+            raise ValueError(
+                f"Florida subjects PDF for {session} produced no subjects; not scraping "
+                "bills without them"
+            )
+
         bill_list = BillList(
             {
                 "session": session,
@@ -1287,6 +1322,7 @@ class FlBillScraper(Scraper):
                 "start": start_dt,
                 "bill_nos": bill_nos,
                 "matched_bill_nos": matched_bill_nos,
+                "subjects": subjects,
             }
         )
 

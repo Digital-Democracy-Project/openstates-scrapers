@@ -1,0 +1,682 @@
+{
+ "Votes": [
+  {
+   "VoteID": 296656,
+   "PassFail": "P",
+   "IsVoice": false,
+   "VoteDate": "2026-02-11T12:45:00",
+   "ChamberCode": "H",
+   "CommitteeName": "Appropriations",
+   "Description": "Reported from Appropriations with substitute (22-Y 0-N)",
+   "LegislationActionDescription": null,
+   "VoteActionDescription": "Reported from Appropriations with substitute",
+   "VoteLegislation": [
+    {
+     "LegislationEventID": 1594987,
+     "LegislationActionDescription": "Reported from Appropriations with substitute (22-Y 0-N)",
+     "VoteLegislationID": 334520,
+     "LegislationID": 100863,
+     "LegislationNumber": "HB1398",
+     "Description": "Fetal and Infant Mortality Review Team; established, definitions, penalty, report.",
+     "VoteNumber": null,
+     "MinutesEntryID": 22219,
+     "VoteItems": []
+    }
+   ],
+   "BatchNumber": null,
+   "VoteMember": [
+    {
+     "MemberDisplayName": "Luke E. Torian",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Betsy B. Carr",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Delores L. McQuinn",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Paul E. Krizek",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "C.E. Cliff Hayes, Jr.",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "David A. Reid",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Rodney T. Willett",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Briana D. Sewell",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Alex Q. Askew",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Charniele L. Herring",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Marcia S. \"Cia\" Price",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Kathy K.L. Tran",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Shelly A. Simonds",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Joshua E. Thomas",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Amy J. Laufer",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Terry L. Austin",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "James W. Morefield",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Robert S. Bloxom, Jr.",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "M. Keith Hodges",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Scott A. Wyatt",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Bill Wiley",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Ellen H. McLaughlin",
+     "ResponseCode": "Y"
+    }
+   ]
+  },
+  {
+   "VoteID": 296660,
+   "PassFail": "P",
+   "IsVoice": false,
+   "VoteDate": "2026-02-11T12:45:00",
+   "ChamberCode": "H",
+   "CommitteeName": "Appropriations",
+   "Description": "Reported from Appropriations with substitute (22-Y 0-N)",
+   "LegislationActionDescription": null,
+   "VoteActionDescription": "Reported from Appropriations with substitute",
+   "VoteLegislation": [
+    {
+     "LegislationEventID": 1594991,
+     "LegislationActionDescription": "Reported from Appropriations with substitute (22-Y 0-N)",
+     "VoteLegislationID": 334524,
+     "LegislationID": 100863,
+     "LegislationNumber": "HB1398",
+     "Description": "Fetal and Infant Mortality Review Team; established, definitions, penalty, report.",
+     "VoteNumber": null,
+     "MinutesEntryID": 22219,
+     "VoteItems": []
+    }
+   ],
+   "BatchNumber": null,
+   "VoteMember": [
+    {
+     "MemberDisplayName": "Luke E. Torian",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Betsy B. Carr",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Delores L. McQuinn",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Paul E. Krizek",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "C.E. Cliff Hayes, Jr.",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "David A. Reid",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Rodney T. Willett",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Briana D. Sewell",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Alex Q. Askew",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Charniele L. Herring",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Marcia S. \"Cia\" Price",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Kathy K.L. Tran",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Shelly A. Simonds",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Joshua E. Thomas",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Amy J. Laufer",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Terry L. Austin",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "James W. Morefield",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Robert S. Bloxom, Jr.",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "M. Keith Hodges",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Scott A. Wyatt",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Bill Wiley",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Ellen H. McLaughlin",
+     "ResponseCode": "Y"
+    }
+   ]
+  },
+  {
+   "VoteID": 296661,
+   "PassFail": "P",
+   "IsVoice": true,
+   "VoteDate": "2026-02-11T12:45:00",
+   "ChamberCode": "H",
+   "CommitteeName": "Appropriations",
+   "Description": "Reconsidered by Appropriations (Voice Vote)",
+   "LegislationActionDescription": null,
+   "VoteActionDescription": "Reconsidered by Appropriations",
+   "VoteLegislation": [
+    {
+     "LegislationEventID": 1594881,
+     "LegislationActionDescription": "Reconsidered by Appropriations (Voice Vote)",
+     "VoteLegislationID": 334525,
+     "LegislationID": 100863,
+     "LegislationNumber": "HB1398",
+     "Description": "Fetal and Infant Mortality Review Team; established, definitions, penalty, report.",
+     "VoteNumber": null,
+     "MinutesEntryID": 22219,
+     "VoteItems": []
+    }
+   ],
+   "BatchNumber": null,
+   "VoteMember": []
+  },
+  {
+   "VoteID": 297828,
+   "PassFail": "P",
+   "IsVoice": false,
+   "VoteDate": "2026-02-17T11:36:04",
+   "ChamberCode": "H",
+   "CommitteeName": null,
+   "Description": "Read third time and passed House (92-Y 5-N 0-A)",
+   "LegislationActionDescription": null,
+   "VoteActionDescription": "H VOTE:",
+   "VoteLegislation": [
+    {
+     "LegislationEventID": 1601418,
+     "LegislationActionDescription": "Read third time and passed House (92-Y 5-N 0-A)",
+     "VoteLegislationID": 336384,
+     "LegislationID": 100863,
+     "LegislationNumber": "HB1398",
+     "Description": "Fetal and Infant Mortality Review Team; established, definitions, penalty, report.",
+     "VoteNumber": null,
+     "VoteItems": []
+    }
+   ],
+   "BatchNumber": null,
+   "VoteMember": [
+    {
+     "MemberDisplayName": " Jessica L. Anderson",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Bonita G. Anthony",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Alex Q. Askew",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Terry L. Austin",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Jason S. Ballard",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Elizabeth B. Bennett-Parker",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Robert S. Bloxom, Jr.",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Gretchen M. Bulova",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Katrina Callsen",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Karen R. \"Kacey\" Carnegie",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Betsy B. Carr",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Stacey Annie Carroll",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Mike A. Cherry",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Nadarius E. Clark",
+     "ResponseCode": "X"
+    },
+    {
+     "MemberDisplayName": "Laura Jane Cohen",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Joshua G. Cole",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Nicole Cole",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Kelly K. Convirs-Fowler",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Mitchell Cornett",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Rae Cousins",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Will Davis",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Karrie K. Delaney",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Lindsey Dougherty",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Mark C. Downey",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Michael B. Feggans",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Hyland F. \"Buddy\" Fowler, Jr.",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Lily V. Franklin",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Margaret A. Franklin",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Debra D. Gardner",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Thomas A. Garrett, Jr.",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Jackie H. Glass",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Timothy P. Griffin",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Elizabeth R. Guzman",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Karen Hamilton",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "C.E. Cliff Hayes, Jr.",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Dan I. Helmer",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Rozia A. Henson, Jr.",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Phil M. Hernandez",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Charniele L. Herring",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "M. Keith Hodges",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Patrick A. Hope",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Hillary Pugh Kent",
+     "ResponseCode": "N"
+    },
+    {
+     "MemberDisplayName": "Karen Keys-Gamarra",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Terry G. Kilgore",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Paul E. Krizek",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Amy J. Laufer",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "James A. \"Jay\" Leftwich",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Destiny LeVere Bolling",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Alfonso H. Lopez",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Michelle Lopes Maldonado",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Marty Martinez",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "John Chilton McAuliff",
+     "ResponseCode": "X"
+    },
+    {
+     "MemberDisplayName": "Adele Y. McClure",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Garrett McGuire",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Ellen H. McLaughlin",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Joseph P. McNamara",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Delores L. McQuinn",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Leslie Chambers Mehta",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "James W. Morefield",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "May Nivar",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Delores Oates",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Israel D. O'Quinn",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Justin Pence",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Eric Phillips",
+     "ResponseCode": "N"
+    },
+    {
+     "MemberDisplayName": "Kimberly Pope Adams",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Marcia S. \"Cia\" Price",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Sam Rasoul",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Atoosa R. Reaser",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "David A. Reid",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Chris S. Runion",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": " Charlie Schmidt",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Phillip A. Scott",
+     "ResponseCode": "N"
+    },
+    {
+     "MemberDisplayName": "Holly M. Seibold",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Briana D. Sewell",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Irene Shin",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Marcus B. Simon",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Shelly A. Simonds",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "JJ Singh",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Richard C. \"Rip\" Sullivan, Jr.",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Anne Ferrell Tata",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Joshua E. Thomas",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Virgil Thornton",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Luke E. Torian",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Kathy K.L. Tran",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "H. Otto Wachsmann, Jr.",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Wendell S. Walker",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Jeion A. Ward",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "R. Lee Ware",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Vivian E. Watts",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Michael J. Webert",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Madison Whittle",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Bill Wiley",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Rodney T. Willett",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Wren M. Williams",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Tony O. Wilt",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Thomas C. Wright, Jr.",
+     "ResponseCode": "N"
+    },
+    {
+     "MemberDisplayName": "Scott A. Wyatt",
+     "ResponseCode": "N"
+    },
+    {
+     "MemberDisplayName": "Eric R. Zehr",
+     "ResponseCode": "Y"
+    },
+    {
+     "MemberDisplayName": "Don Scott",
+     "ResponseCode": "Y"
+    }
+   ]
+  }
+ ]
+}
