@@ -199,6 +199,17 @@ def test_mi_passage(text, expected):
     assert classify_motion("mi", text) == expected
 
 
+# The other side of the boundary: Michigan roll calls that are not the bill's passage vote.
+@pytest.mark.parametrize("text", [
+    "Amendment adopted ROLL CALL # 12 YEAS 60 NAYS 40",
+    "Substitute (S-1) adopted ROLL CALL # 9",
+    "Motion to reconsider ROLL CALL # 4",
+    "Referred to Committee on Appropriations ROLL CALL # 2",
+])
+def test_mi_not_passage(text):
+    assert classify_motion("mi", text) == []
+
+
 @pytest.mark.parametrize("text,expected", [
     ("Passed to be engrossed", ["passage"]),
     ("Enacted", ["passage"]),
