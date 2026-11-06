@@ -7,6 +7,7 @@ from collections import defaultdict
 from openstates.scrape import Scraper, Bill, VoteEvent
 from openstates.utils import convert_pdf
 from openstates.exceptions import EmptyScrape
+from classify_motion import classify_motion
 from utils import LXMLMixin
 
 # from . import actions
@@ -199,14 +200,14 @@ class LABillScraper(Scraper, LXMLMixin):
         chamber = {"Senate": "upper", "House": "lower"}[match.group(1)]
         motion = match.group(2).strip()
 
-        if motion.startswith("FINAL PASSAGE"):
-            type = "passage"
-        elif motion.startswith("AMENDMENT"):
-            type = "amendment"
-        elif "ON 3RD READING" in motion:
-            type = "reading-3"
-        else:
-            type = []
+        # OPEN-480: rules live in config/motion_classification.yaml (la block);
+        # the two classifications this scraper always set stay as they were.
+        type = classify_motion("la", motion)
+        if not type:
+            if motion.startswith("AMENDMENT"):
+                type = "amendment"
+            elif "ON 3RD READING" in motion:
+                type = "reading-3"
 
         fd, temp_path = tempfile.mkstemp()
         self.urlretrieve(url, temp_path)

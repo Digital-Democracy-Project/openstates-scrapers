@@ -19,7 +19,7 @@ def test_yaml_loads_without_error():
 
 
 def test_all_expected_jurisdiction_keys_present():
-    expected = {"us", "az", "ut", "fl", "mi", "ma", "wa", "va"}
+    expected = {"us", "az", "ut", "fl", "mi", "ma", "wa", "va", "pa", "ne", "la"}
     assert expected == KNOWN_JURISDICTIONS
 
 
@@ -348,3 +348,104 @@ def test_va_first_matching_section_wins():
 def test_va_committee_passage(text):
     assert classify_motion("va", text) == ["committee-passage"]
     assert classify_motion("va", text, bill_action=text) == ["committee-passage"]
+
+
+# ---------------------------------------------------------------------------
+# OPEN-478/479/480: Pennsylvania, Nebraska, Louisiana (pilot #2)
+# Texts are the real motion texts from each state's first full production scrape (2026-11-06).
+# ---------------------------------------------------------------------------
+
+@pytest.mark.parametrize("text,expected", [
+    # floor: final passage, including the reconsidered re-votes
+    ("FINAL PASSAGE", ["passage"]),
+    ("FINAL PASSAGE - RECONSIDERATION", ["passage"]),
+    ("FINAL PASSAGE-RECONSIDERED", ["passage"]),
+    # committee reports (floor-vote texts are upper-cased by the scraper; committee texts are not)
+    ("Committee vote (Appropriations): Re-report Bill As Committed", ["committee-passage"]),
+    ("Committee vote (Judiciary): Report Bill As Committed", ["committee-passage"]),
+    ("Committee vote (Health & Human Services): Reported as Committed", ["committee-passage"]),
+    ("Committee vote (Appropriations): Re-Reported as Committed", ["committee-passage"]),
+    ("Committee vote (Judiciary): Report Bill As Amended", ["committee-passage"]),
+    ("Committee vote (Judiciary): Reported as Amended", ["committee-passage"]),
+    ("Committee vote (Appropriations): Re-Reported as Amended", ["committee-passage"]),
+    ("Committee vote (Tourism, Recreation & Economic Development): Report Bill As Committed", ["committee-passage"]),
+    # not passage of any kind
+    ("Committee vote (Rules): Re-refer Bill To Another Committee", []),
+    ("Committee vote (Judiciary): Adopt Resolution", []),
+    ("Committee vote (Judiciary): Adopt Amendment A1101", []),
+    ("Committee vote (Judiciary): Vote To Table", []),
+    ("CONCURRENCE", []),
+    ("MOTION TO TABLE", []),
+    ("MOTION TO SUSPEND RULES", []),
+    ("MOTION TO APPEAL RULING OF THE CHAIR", []),
+    ("MOTION TO CONSIDER BILL ON SECOND CONSIDERATION", []),
+    ("CONSTITUTIONALITY", []),
+    ("RE-REFERRED TO THE COMMITTEE ON APPROPRIATIONS", []),
+    ("RECOMMIT TO THE COMMITTEE ON RULES", []),
+    ("A1363", []),
+    ("House Bill 1663", []),
+])
+def test_pa(text, expected):
+    # the pa scraper upper-cases floor motions before classifying
+    motion = text if text.startswith("Committee vote") else text.upper()
+    assert classify_motion("pa", motion) == expected
+
+
+@pytest.mark.parametrize("text,expected", [
+    ("Passed on Final Reading 49-0-0", ["passage"]),
+    ("Passed on Final Reading 47-1*-1", ["passage"]),
+    ("Passed on Final Reading with Emergency Clause 49-0-0", ["passage"]),
+    ("Passed on Final Reading with Emergency Clause stricken 40-9-0", ["passage"]),
+    ("Failed on Final Reading 20-25-4", ["passage"]),                     # a lost vote on passage
+    ("Failed on Final Reading with Emergency Clause 30-15-4", ["passage"]),
+    # advancement and procedure are not passage (Utah precedent)
+    ("Advanced to Enrollment and Review Initial", []),
+    ("Advanced to Enrollment and Review for Engrossment", []),
+    ("Failed to advance to Enrollment and Review Initial", []),
+    ("Failed to advance to Enrollment and Review for Engrossment", []),
+    ("Returned to Select File for specific amendment", []),
+    ("Motion to return to Select File failed", []),
+    ("Adopted", []),
+    ("Hansen AM1097 lost", []),
+    ("Arch AM1312 adopted", []),
+    ("Raybould FA27 lost", []),
+    ("Cavanaugh, M. MO207 prevailed", []),
+    ("Failed to become law notwithstanding the objections of the Governor 25-24-0", []),
+])
+def test_ne(text, expected):
+    assert classify_motion("ne", text) == expected
+
+
+@pytest.mark.parametrize("text,expected", [
+    ("FINAL PASSAGE (#1023)", ["passage"]),
+    ("FINAL PASSAGE (#7)", ["passage"]),
+    ("FINAL PASSAGE, SB 444 BY EDMONDS (#12)", ["passage"]),
+    ("BY CLOUD, FINAL PASSAGE (#40)", ["passage"]),
+    ("MOTION BY EDMONDS, FINAL PASSAGE (#9)", ["passage"]),
+    ("SENATOR MILLER, FINAL PASSAGE (#3)", ["passage"]),
+    ("FINAL PASSGE (#5)", ["passage"]),                                   # typo present in the source
+    ("AMENDMENT # 3891 BY AMEDEE, MOTION TO ADOPT (#14)", []),
+    ("AMENDMENT # 4587 BY LUNEAU, HB 1098 BY MCFARLAND (#9)", []),
+    ("MOTION TO RECONSIDER (#4)", []),
+    ("CONCUR (#4)", []),
+    ("CONCUR IN SENATE AMENDMENTS (#4)", []),
+    ("FINAL CONSIDERATION (#4)", []),
+    ("ADOPT (#4)", []),
+    ("ADOPT CONFERENCE REPORT (#4)", []),
+    ("REJECT SENATE AMENDMENTS (#4)", []),
+    ("CO-AUTHORS (#4)", []),
+    ("MODIFY TIME LIMITS (#4)", []),
+])
+def test_la(text, expected):
+    assert classify_motion("la", text) == expected
+
+
+def test_pa_ne_la_scrapers_use_classify_motion():
+    """The three scrapers must classify through the shared rules, not on their own."""
+    root = os.path.join(os.path.dirname(__file__), "..", "scrapers")
+    for state, call in (("pa", 'classify_motion("pa"'), ("ne", 'classify_motion("ne"'), ("la", 'classify_motion("la"')):
+        src = open(os.path.join(root, state, "bills.py")).read()
+        assert "from classify_motion import classify_motion" in src, state
+        assert call in src, state
+    ne_src = open(os.path.join(root, "ne", "bills.py")).read()
+    assert 'classification="passage"' not in ne_src   # NE used to call every vote passage

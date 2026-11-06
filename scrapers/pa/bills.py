@@ -8,6 +8,7 @@ import collections
 import lxml.html
 from openstates.scrape import Scraper, Bill, VoteEvent
 
+from classify_motion import classify_motion
 from . import utils
 from . import actions
 
@@ -341,12 +342,11 @@ class PABillScraper(Scraper):
         if motion == "FP":
             motion = "FINAL PASSAGE"
 
-        if motion == "FINAL PASSAGE":
-            type = "passage"
-        elif re.match(r"CONCUR(RENCE)? IN \w+ AMENDMENTS", motion):
+        if re.match(r"CONCUR(RENCE)? IN \w+ AMENDMENTS", motion):
             type = "amendment"
         else:
-            type = []
+            # OPEN-478: rules live in config/motion_classification.yaml (pa block)
+            type = classify_motion("pa", motion)
             if not motion:
                 xpath = '//div[contains(@class,h6)][contains(text(), "Bill")]/../a'
                 motion = page.xpath(xpath)[1].text_content().strip()
@@ -458,7 +458,7 @@ class PABillScraper(Scraper):
             chamber=chamber,
             start_date=date,
             motion_text=motion,
-            classification=[],
+            classification=classify_motion("pa", motion),
             result="pass" if rollcall["passed"] else "fail",
             bill=bill,
         )
