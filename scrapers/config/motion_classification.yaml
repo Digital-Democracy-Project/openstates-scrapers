@@ -138,3 +138,46 @@ jurisdictions:
       # needs a disposition: LIS also logs "Governor's recommendation received by House" (not a vote)
       - '^governor''s (amendment|recommendation)s?\b.*\b(agreed to|adopted|rejected|passed by|defeated)'
     default: null
+
+  # OPEN-478/479/480 (push-button onboarding, pilot #2). Rules written from the real motion texts of
+  # the first full production scrape of each state (Mac replica, 2026-11-06). Anything not matched
+  # stays unclassified ([]): it is better to leave a vote unclassified than to call it passage.
+  # The pa, ne and la scrapers keep a few classifications of their own that this file does not
+  # produce ("amendment" for a concurrence in amendments / an amendment vote, "reading-3" for LA's
+  # third-reading votes); the scrapers apply those first and call classify_motion() for the rest.
+  pa:
+    not_passage:
+      - "^motion to "                            # table, suspend rules, reconsider, proceed, appeal ruling of the chair
+      - "^constitutionality"                     # constitutionality of a bill: a ruling, not passage
+      - "^re-referred"
+      - "^recommit"
+      - "^concur"                                # concurrence in the other chamber's amendments: left unclassified
+      - '^committee vote \(.*?\): (adopt|vote to table|re-refer)'
+      - '^a\d+$'                                # a bare amendment number ("A1363") is an amendment vote
+    committee_passage:
+      - '^committee vote \(.*?\): (re-)?report(ed)?( bill)? as (committed|amended)'
+    passage:
+      - "^final passage"                         # also "FINAL PASSAGE - RECONSIDERATION" / "FINAL PASSAGE-RECONSIDERED"
+    default: null
+
+  ne:
+    not_passage:
+      - "^advanced to enrollment"                # General File / Select File advancement, not final passage (Utah precedent)
+      - "^failed to advance"
+      - "^returned to select file"
+      - "^motion to return"
+      - "^adopted$"
+      - "notwithstanding the objections"         # governor's veto override attempt
+      - ' (adopted|lost|failed|prevailed|withdrawn)$'   # "Hansen AM1097 lost", "Arch AM1312 adopted", "Dorn MO30 prevailed"
+    passage:
+      - "^(passed|failed) on final reading"      # includes "with Emergency Clause" and "Emergency Clause stricken"
+    default: null
+
+  la:
+    preprocess: strip_sequence_number
+    not_passage:
+      - "^amendment"                             # "AMENDMENT # 3891 BY AMEDEE, MOTION TO ADOPT"
+      - "^motion to reconsider"
+    passage:
+      - "final pass(age|ge)"                     # "FINAL PASSAGE", "BY CLOUD, FINAL PASSAGE", "FINAL PASSAGE, SB 444 BY EDMONDS"
+    default: null

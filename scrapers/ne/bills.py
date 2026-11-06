@@ -5,6 +5,7 @@ import dateutil
 
 from openstates.scrape import Scraper, Bill, VoteEvent
 
+from classify_motion import classify_motion
 from utils import LXMLMixin
 
 
@@ -301,7 +302,7 @@ class NEBillScraper(Scraper, LXMLMixin):
                 chamber=chamber,
                 start_date=TIMEZONE.localize(date),
                 motion_text=motion_text,
-                classification="passage",
+                classification=classify_motion("ne", motion_text),
                 result="pass" if passed else "fail",
             )
 
