@@ -1,0 +1,53 @@
+import pytest
+
+from ne.bills import vote_passed
+
+# OPEN-504: every text below is a real Nebraska history-row text stored on the replica
+# (2026-11-07), except the three marked "not seen", which guard the near-misses the ticket names.
+
+PASSES = [
+    "Advanced to Enrollment and Review Initial",
+    "Advanced to Enrollment and Review for Engrossment",
+    "Readvanced to Enrollment and Review for Engrossment",
+    "Passed on Final Reading 49-0-0",
+    "Passed on Final Reading 47-1*-1",
+    "Passed on Final Reading with Emergency Clause 49-0-0",
+    "Passed on Final Reading with Emergency Clause stricken 27-21*-1",
+    # Amendments and motions: stored as fail before OPEN-504.
+    "Adopted",
+    "Cavanaugh, J. AM1007 adopted",
+    "Bosn FA1146 adopted",
+    "Government, Military and Veterans Affairs AM1008 adopted",
+    "Banking, Commerce and Insurance AM1187 adopted",
+    "Meyer, G. AM2562 adopted",
+    "von Gillern AM1020 adopted",
+    "Ballard MO137 prevailed",
+    "Cavanaugh, M. MO206 prevailed",
+]
+
+FAILS = [
+    "Failed to advance to Enrollment and Review Initial",
+    "Failed to advance to Enrollment and Review for Engrossment",
+    "Failed on Final Reading 31-17*-1",
+    "Failed on Final Reading with Emergency Clause 27-21*-1",
+    "Failed to become law notwithstanding the objections of the Governor 24-24-1",
+    "Motion to return to Select File failed",
+    "Hansen AM1097 lost",
+    "Raybould FA27 lost",
+    "Brandt MO275 failed",
+    "Hansen AM1097 not adopted",  # not seen
+    "Hansen AM1097 withdrawn",  # not seen
+    "Hansen MO101 withdrawn",  # not seen
+    # Unclear, left as before (fail) and named on OPEN-504 for Ramon to decide.
+    "Returned to Select File for specific amendment",
+]
+
+
+@pytest.mark.parametrize("text", PASSES)
+def test_pass_texts(text):
+    assert vote_passed(text) is True
+
+
+@pytest.mark.parametrize("text", FAILS)
+def test_fail_texts(text):
+    assert vote_passed(text) is False
