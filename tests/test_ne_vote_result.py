@@ -57,10 +57,11 @@ def test_fail_texts(text):
     assert vote_passed(text) is False
 
 
-def test_scrape_votes_stores_adopted_amendment_as_pass():
+@pytest.mark.parametrize("text", ["Bosn FA1146 adopted", "Ballard MO137 prevailed"])
+def test_scrape_votes_stores_adopted_and_prevailed_as_pass(text):
     """The scraper itself must use the rule, not only the helper."""
     page = lxml.html.fromstring(
-        '<table class="history"><tr><td>Mar 4, 2025</td><td>Bosn FA1146 adopted</td>'
+        f'<table class="history"><tr><td>Mar 4, 2025</td><td>{text}</td>'
         '<td><a href="https://nebraskalegislature.gov/view_votes.php?KeyID=1">v</a></td></tr></table>'
     )
     scraper = NEBillScraper(jurisdiction="x", datadir="/tmp")
