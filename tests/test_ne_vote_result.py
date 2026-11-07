@@ -27,6 +27,8 @@ PASSES = [
     "von Gillern AM1020 adopted",
     "Ballard MO137 prevailed",
     "Cavanaugh, M. MO206 prevailed",
+    # A motion to return that carried (Ramon, 2026-11-07).
+    "Returned to Select File for specific amendment",
 ]
 
 FAILS = [
@@ -42,8 +44,6 @@ FAILS = [
     "Hansen AM1097 not adopted",  # not seen
     "Hansen AM1097 withdrawn",  # not seen
     "Hansen MO101 withdrawn",  # not seen
-    # Unclear, left as before (fail) and named on OPEN-504 for Ramon to decide.
-    "Returned to Select File for specific amendment",
 ]
 
 
@@ -57,7 +57,14 @@ def test_fail_texts(text):
     assert vote_passed(text) is False
 
 
-@pytest.mark.parametrize("text", ["Bosn FA1146 adopted", "Ballard MO137 prevailed"])
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Bosn FA1146 adopted",
+        "Ballard MO137 prevailed",
+        "Returned to Select File for specific amendment",
+    ],
+)
 def test_scrape_votes_stores_adopted_and_prevailed_as_pass(text):
     """The scraper itself must use the rule, not only the helper."""
     page = lxml.html.fromstring(
