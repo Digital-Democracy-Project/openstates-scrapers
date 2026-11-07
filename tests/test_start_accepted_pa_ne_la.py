@@ -59,3 +59,33 @@ def test_start_defaults_to_none_and_old_call_shape_still_binds(cls):
     sig = inspect.signature(cls.scrape)
     assert sig.parameters["start"].default is None
     sig.bind(None, session="x")  # the pre-OPEN-500 call shape
+
+
+@pytest.mark.parametrize(
+    "cls, inner",
+    [
+        (PABillScraper, "scrape_session"),
+        (NEBillScraper, "scrape_year"),
+        (LABillScraper, "lxmlize"),
+    ],
+)
+def test_do_scrape_with_start_is_not_a_type_error(cls, inner):
+    """The real call path (openstates Scraper.do_scrape -> self.scrape(**kwargs)) that raised
+    the TypeError in production. With the page fetches stubbed out nothing is yielded, so
+    do_scrape ends with a ScrapeError or similar; only a TypeError means start= was refused."""
+    session = {
+        "identifier": "S",
+        "classification": "primary",
+        "start_date": "2025-01-01",
+        "end_date": "2025-12-31",
+    }
+    scraper = make(cls, [session])
+    stub = mock.Mock(xpath=lambda *a: []) if inner == "lxmlize" else iter(())
+    with mock.patch.object(scraper, inner, return_value=stub):
+        with mock.patch.object(scraper, "scrape_priorities", create=True):
+            try:
+                scraper.do_scrape(session="S", start="2026-11-03T00:00:00")
+            except TypeError:
+                raise
+            except Exception:
+                pass
