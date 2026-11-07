@@ -1,4 +1,5 @@
 import pytz
+import re
 import urllib
 from datetime import datetime
 import dateutil
@@ -10,6 +11,23 @@ from utils import LXMLMixin
 
 
 TIMEZONE = pytz.timezone("US/Central")
+
+# OPEN-504: the history row's text is the vote's outcome. Bills say "Passed on Final Reading"
+# or "Advanced to E&R"; amendments and motions say "<sponsor> AM123 adopted" or
+# "<sponsor> MO45 prevailed" (or "lost" / "failed"). "Returned to Select File for specific
+# amendment" is a motion to return that carried (Ramon, 2026-11-07). A failure word wins.
+VOTE_FAILED = re.compile(
+    r"\bfail(ed|s)?\b|\blost\b|\bnot adopted\b|\bwithdrawn\b", re.I
+)
+VOTE_PASSED = re.compile(
+    r"\b(passed|(re)?advanced|adopted|prevailed|returned to select file)\b", re.I
+)
+
+
+def vote_passed(motion_text):
+    if VOTE_FAILED.search(motion_text):
+        return False
+    return bool(VOTE_PASSED.search(motion_text))
 
 
 class NEBillScraper(Scraper, LXMLMixin):
@@ -301,7 +319,7 @@ class NEBillScraper(Scraper, LXMLMixin):
             date = datetime.strptime(date_td.text, "%b %d, %Y")
             motion_text = motion_td.text_content()
             vote_page = self.lxmlize(vote_url, verify=False)
-            passed = "Passed" in motion_text or "Advanced" in motion_text
+            passed = vote_passed(motion_text)
 
             vote = VoteEvent(
                 bill=bill,
