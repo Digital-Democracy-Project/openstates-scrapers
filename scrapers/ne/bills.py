@@ -17,7 +17,13 @@ class NEBillScraper(Scraper, LXMLMixin):
     # SSL bad as of 2024-11-18
     verify = False
 
-    def scrape(self, session=None):
+    def scrape(self, session=None, start=None):
+        # OPEN-500: the runners append start=<watermark> on every run after the first. NE has
+        # no cheaper change signal, so accept it and ignore it: every run is a full walk (as MA
+        # does, OPEN-128).
+        if start:
+            self.info("NE OPEN-500: ignoring start=%s and doing a full walk", start)
+
         if session is None:
             session = self.jurisdiction.legislative_sessions[-1]
             self.info("no session specified, using %s", session["identifier"])

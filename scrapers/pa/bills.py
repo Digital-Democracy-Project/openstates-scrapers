@@ -21,7 +21,13 @@ class PABillScraper(Scraper):
     session_year: str = ""
     verify = False
 
-    def scrape(self, chamber=None, session=None):
+    def scrape(self, chamber=None, session=None, start=None):
+        # OPEN-500: the runners append start=<watermark> on every run after the first. PA has
+        # no cheaper change signal, so accept it and ignore it: every run is a full walk (as MA
+        # does, OPEN-128).
+        if start:
+            self.info("PA OPEN-500: ignoring start=%s and doing a full walk", start)
+
         chambers = [chamber] if chamber is not None else ["upper", "lower"]
 
         # Session Year code needed to fix committee vote URLs
