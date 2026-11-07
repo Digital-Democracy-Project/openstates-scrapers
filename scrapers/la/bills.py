@@ -127,7 +127,13 @@ class LABillScraper(Scraper, LXMLMixin):
         except lxml.etree.ParserError:
             return []
 
-    def scrape(self, chamber=None, session=None):
+    def scrape(self, chamber=None, session=None, start=None):
+        # OPEN-500: the runners append start=<watermark> on every run after the first. LA has
+        # no cheaper change signal, so accept it and ignore it: every run is a full walk (as MA
+        # does, OPEN-128).
+        if start:
+            self.info("LA OPEN-500: ignoring start=%s and doing a full walk", start)
+
         session_id = None
         # LA doesn't provide the year in action dates,
         # so assume it's the year of the active session
