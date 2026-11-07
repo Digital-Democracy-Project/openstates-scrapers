@@ -1,6 +1,10 @@
-import pytest
+from unittest import mock
 
-from ne.bills import vote_passed
+import lxml.html
+import pytest
+from openstates.scrape import Bill
+
+from ne.bills import NEBillScraper, vote_passed
 
 # OPEN-504: every text below is a real Nebraska history-row text stored on the replica
 # (2026-11-07), except the three marked "not seen", which guard the near-misses the ticket names.
@@ -51,3 +55,18 @@ def test_pass_texts(text):
 @pytest.mark.parametrize("text", FAILS)
 def test_fail_texts(text):
     assert vote_passed(text) is False
+
+
+def test_scrape_votes_stores_adopted_amendment_as_pass():
+    """The scraper itself must use the rule, not only the helper."""
+    page = lxml.html.fromstring(
+        '<table class="history"><tr><td>Mar 4, 2025</td><td>Bosn FA1146 adopted</td>'
+        '<td><a href="https://nebraskalegislature.gov/view_votes.php?KeyID=1">v</a></td></tr></table>'
+    )
+    scraper = NEBillScraper(jurisdiction="x", datadir="/tmp")
+    bill = Bill("LB1", "2025-2026", "A bill", chamber="legislature")
+    with mock.patch.object(
+        scraper, "lxmlize", return_value=lxml.html.fromstring("<div/>")
+    ):
+        (vote,) = list(scraper.scrape_votes(bill, page, "legislature"))
+    assert vote.result == "pass"
