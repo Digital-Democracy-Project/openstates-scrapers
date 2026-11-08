@@ -25,7 +25,9 @@ except ModuleNotFoundError as exc:
 # OPEN-508: an amendment paper ("Amendment H.5665", "Amendment S.3290") is NOT skipped; OPEN-509 shows it
 # under its real bill. Matches the identifier shape only: 153 of the 154 "Amendment ..." titles in the 194th
 # session; the other, "Amendment Filing Deadline for House No. 5151", is a notice and is skipped.
-_AMENDMENT_PAPER_TITLE = re.compile(r"\A\s*Amendment\s+[HS]D?\.?\s*\d+\s*\Z", re.IGNORECASE)
+_AMENDMENT_PAPER_TITLE = re.compile(
+    r"\A\s*Amendment\s+[HS]D?\.?\s*\d+\s*\Z", re.IGNORECASE
+)
 
 
 requests.packages.urllib3.disable_warnings()
@@ -359,7 +361,9 @@ class MABillScraper(Scraper):
             # BillNumber can be set, but mapped to None, so use or here
             bill_id = row["BillNumber"] or row["DocketNumber"]
             if self.is_not_a_measure(row.get("Title")):
-                self.info(f"OPEN-508: {bill_id} is not a bill ({row['Title'].strip()[:60]!r}); skipping")
+                self.info(
+                    f"OPEN-508: {bill_id} is not a bill ({row['Title'].strip()[:60]!r}); skipping"
+                )
                 continue
             # make sure the bill has an H or an S in the code
             if not any([chamber in bill_id for chamber in chambers]):
@@ -438,7 +442,9 @@ class MABillScraper(Scraper):
         # OPEN-508: the list's own Title is checked before the fetch; this catches an item whose list
         # Title was blank. Only the real page title counts: the h1 fallback below is a bill number, not a title.
         if self.is_not_a_measure(bill_title):
-            self.info(f"OPEN-508: {bill_id} is not a bill ({bill_title.strip()[:60]!r}); skipping")
+            self.info(
+                f"OPEN-508: {bill_id} is not a bill ({bill_title.strip()[:60]!r}); skipping"
+            )
             return False
 
         if bill_title is None:
