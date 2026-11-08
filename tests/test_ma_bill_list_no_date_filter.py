@@ -52,7 +52,7 @@ LIST_PAYLOAD = [
         # Recent sponsor date -- passed the old filter too, so it must not regress.
         "BillNumber": "H99",
         "DocketNumber": "HD5",
-        "Title": "A third act",
+        "Title": "An Act for a third act",
         "PrimarySponsor": {"ResponseDate": "2026-08-20T00:00:00.000"},
         "Cosponsors": [],
         "JointSponsor": None,
@@ -127,7 +127,7 @@ def test_records_with_no_sponsor_data_do_not_crash():
     s = make_scraper([{
         "BillNumber": "S1",
         "DocketNumber": "SD1",
-        "Title": "t",
+        "Title": "An Act relative to testing",
         "PrimarySponsor": None,
         "Cosponsors": None,
         "JointSponsor": None,
@@ -145,7 +145,7 @@ def test_docket_number_is_used_when_bill_number_is_absent():
     s = make_scraper([{
         "BillNumber": None,
         "DocketNumber": "HD77",
-        "Title": "t",
+        "Title": "An Act relative to testing",
         "PrimarySponsor": None,
         "Cosponsors": [],
         "JointSponsor": None,
@@ -163,7 +163,7 @@ def test_a_bill_id_with_no_chamber_letter_is_reported():
     s = make_scraper([{
         "BillNumber": "12345",
         "DocketNumber": "12345",
-        "Title": "t",
+        "Title": "An Act relative to testing",
         "PrimarySponsor": None,
         "Cosponsors": [],
         "JointSponsor": None,

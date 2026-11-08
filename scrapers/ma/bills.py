@@ -12,6 +12,21 @@ from openstates.utils.transformers import fix_bill_id
 
 from .actions import Categorizer
 
+try:
+    # DDP's openstates-core fork (what the scraper image is built with). Upstream's openstates package
+    # has no version_ordering; without it the OPEN-508 skip below is off (and says so once). Only that
+    # module being absent is forgiven: any other import failure is a real defect and stays loud.
+    from openstates.utils.version_ordering import is_bill_version
+except ModuleNotFoundError as exc:
+    if exc.name not in ("openstates.utils.version_ordering", "openstates.utils"):
+        raise
+    is_bill_version = None
+
+# OPEN-508: an amendment paper ("Amendment H.5665", "Amendment S.3290") is NOT skipped; OPEN-509 shows it
+# under its real bill. Matches the identifier shape only: 153 of the 154 "Amendment ..." titles in the 194th
+# session; the other, "Amendment Filing Deadline for House No. 5151", is a notice and is skipped.
+_AMENDMENT_PAPER_TITLE = re.compile(r"\A\s*Amendment\s+[HS]D?\.?\s*\d+\s*\Z", re.IGNORECASE)
+
 
 requests.packages.urllib3.disable_warnings()
 
@@ -219,6 +234,26 @@ class MABillScraper(Scraper):
         self.verify = False
         self.retry_attempts = 0
 
+    def is_not_a_measure(self, title):
+        """OPEN-508: True when `title` is present and shows the item is not a bill.
+
+        malegislature.gov files agency reports, communications, orders, study orders, precepts and rules under
+        H/S/HD/SD numbers in the same list as real bills. The ONE definition of "opens like a measure" is
+        openstates-core's `is_bill_version` (OPEN-498); this only asks it. A blank title is never a reason to
+        skip (the state site sometimes lacks one for a few days), and amendment papers are left for OPEN-509.
+        """
+        if is_bill_version is None:
+            if not getattr(self, "_warned_no_title_rule", False):
+                self._warned_no_title_rule = True
+                self.warning(
+                    "OPEN-508: openstates-core's is_bill_version is not installed; "
+                    "not skipping non-bill titles"
+                )
+            return False
+        if not title or not title.strip() or _AMENDMENT_PAPER_TITLE.match(title):
+            return False
+        return not is_bill_version("Massachusetts", "Bill Text", title)
+
     def format_bill_number(self, raw):
         return raw.replace("Bill ", "").replace(".", " ").strip()
 
@@ -323,6 +358,9 @@ class MABillScraper(Scraper):
             # bill never flips from house to senate from docket -> intro so we're safe here
             # BillNumber can be set, but mapped to None, so use or here
             bill_id = row["BillNumber"] or row["DocketNumber"]
+            if self.is_not_a_measure(row.get("Title")):
+                self.info(f"OPEN-508: {bill_id} is not a bill ({row['Title'].strip()[:60]!r}); skipping")
+                continue
             # make sure the bill has an H or an S in the code
             if not any([chamber in bill_id for chamber in chambers]):
                 self.error(
@@ -396,6 +434,12 @@ class MABillScraper(Scraper):
         except IndexError:
             bill_title = None
             pass
+
+        # OPEN-508: the list's own Title is checked before the fetch; this catches an item whose list
+        # Title was blank. Only the real page title counts: the h1 fallback below is a bill number, not a title.
+        if self.is_not_a_measure(bill_title):
+            self.info(f"OPEN-508: {bill_id} is not a bill ({bill_title.strip()[:60]!r}); skipping")
+            return False
 
         if bill_title is None:
             try:
