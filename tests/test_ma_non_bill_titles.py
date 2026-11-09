@@ -2,12 +2,13 @@
 
 malegislature.gov files agency reports, communications, legislative orders, study orders, precepts and
 rules under H/S/HD/SD numbers in the same Documents list as real bills. The rule that says what opens
-like a measure is openstates-core's `is_bill_version` (OPEN-498); these tests prove the scraper asks it,
-before the page is fetched when the list row carries a Title and after it otherwise, never skips on a
-blank title, and leaves amendment papers (OPEN-509) alone. Titles are real ones from the 194th session.
+like a measure is openstates-core's `is_bill_version` (OPEN-498); these tests prove the scraper asks it
+with the PAGE's title, never skips on a blank title, and leaves amendment papers (OPEN-509) alone. Titles
+are real ones from the 194th session.
 
-The list row's `Title` shape comes from the LIST_PAYLOAD fixture in test_ma_bill_list_no_date_filter.py,
-not from a live payload (malegislature.gov was not reachable when this was written).
+The Documents list's own `Title` is deliberately NOT used: checked on the live list (2026-11-08) it differs
+from the page title (19 real bills lack "An Act" there, amendment papers show a subject), so a list-stage
+skip would drop real bills. `test_the_list_title_is_never_used` pins that.
 """
 import os
 import sys
@@ -66,42 +67,30 @@ def queued(s):
     return [m["BillNumber"] for m in s.bill_list]
 
 
-@pytest.mark.parametrize("title", NOT_BILLS)
-def test_the_list_skips_an_item_whose_title_is_not_a_measure(title):
-    s = scraper([row("H1", title)])
+# Real rows of the live Documents list (2026-11-08): the list's Title is not the page's title.
+LIST_TITLES_THAT_ARE_NOT_THE_PAGE_TITLE = [
+    ("H5174", "to increase student access to career technical education schools and programs"),  # a real bill
+    ("S2630", "promoting economic development with emerging artificial intelligence models"),  # a real bill
+    ("S3207", "Rural Jobs"),  # page says "Amendment S.3207"
+    ("S2618", "Establishing privacy standards for student and educator data"),  # page: "Amendment S.2618"
+    ("H1", "Study Order"),  # a genuine non-bill: still queued here, skipped later by its page title
+]
+
+
+@pytest.mark.parametrize("number, list_title", LIST_TITLES_THAT_ARE_NOT_THE_PAGE_TITLE)
+def test_the_list_title_is_never_used(number, list_title):
+    s = scraper([row(number, list_title)])
     s.scrape_bill_list(SESSION)
-    assert queued(s) == []
+    assert queued(s) == [number]
 
 
-@pytest.mark.parametrize("title", MEASURES + AMENDMENT_PAPERS)
-def test_the_list_keeps_measures_and_amendment_papers(title):
-    s = scraper([row("H1", title)])
+def test_a_mixed_list_is_queued_whole():
+    s = scraper([row("H1", "An Act relative to golf carts"), row("H2", "Study Order"), row("S3", "Amendment S.3290")])
     s.scrape_bill_list(SESSION)
-    assert queued(s) == ["H1"]
+    assert queued(s) == ["H1", "H2", "S3"]
 
 
-@pytest.mark.parametrize("title", [None, "", "   "])
-def test_a_missing_list_title_never_skips(title):
-    s = scraper([row("H1", title)])
-    s.scrape_bill_list(SESSION)
-    assert queued(s) == ["H1"]
-
-
-def test_a_row_with_no_title_key_at_all_is_kept():
-    s = scraper([{"BillNumber": "H1", "DocketNumber": None}])
-    s.scrape_bill_list(SESSION)
-    assert queued(s) == ["H1"]
-
-
-def test_only_the_non_bills_of_a_mixed_list_are_dropped():
-    s = scraper(
-        [row("H1", "An Act relative to golf carts"), row("H2", "Study Order"), row("S3", "Amendment S.3290")]
-    )
-    s.scrape_bill_list(SESSION)
-    assert queued(s) == ["H1", "S3"]
-
-
-# --- the page-title fallback in scrape_bill, for an item whose list Title was blank ---
+# --- the page title in scrape_bill: the only title the skip reads ---
 PAGE = """<html><body>
 <div class="followable"><h1>Bill H.{n}</h1></div>
 <div id="contentContainer"><div><div>{h2}</div></div></div>
@@ -123,18 +112,21 @@ def run_scrape_bill(h2):
     return s, out
 
 
-def test_scrape_bill_skips_a_page_whose_real_title_is_not_a_measure():
-    s, out = run_scrape_bill("Study Order")
+@pytest.mark.parametrize("title", NOT_BILLS)
+def test_scrape_bill_skips_a_page_whose_real_title_is_not_a_measure(title):
+    s, out = run_scrape_bill(title)
     assert out == []
 
 
-def test_scrape_bill_keeps_a_measure():
-    s, out = run_scrape_bill("An Act relative to golf carts")
+@pytest.mark.parametrize("title", MEASURES)
+def test_scrape_bill_keeps_a_measure(title):
+    s, out = run_scrape_bill(title)
     assert [b.identifier for b in out] == ["H1"]
 
 
-def test_scrape_bill_keeps_an_amendment_paper():
-    s, out = run_scrape_bill("Amendment H.5665")
+@pytest.mark.parametrize("title", AMENDMENT_PAPERS)
+def test_scrape_bill_keeps_an_amendment_paper(title):
+    s, out = run_scrape_bill(title)
     assert [b.identifier for b in out] == ["H1"]
 
 
@@ -149,7 +141,8 @@ def test_without_openstates_core_nothing_is_skipped_and_it_says_so_once(monkeypa
     import ma.bills as bills
 
     monkeypatch.setattr(bills, "is_bill_version", None)
-    s = scraper([row("H1", "Study Order"), row("H2", "Golf Carts")])
-    s.scrape_bill_list(SESSION)
-    assert queued(s) == ["H1", "H2"]
+    s = fetch_page(scraper([]), "Study Order")
+    out1 = list(s.scrape_bill(SESSION, {"BillNumber": "H1", "DocketNumber": "HD1"}, "lower"))
+    out2 = list(s.scrape_bill(SESSION, {"BillNumber": "H1", "DocketNumber": "HD1"}, "lower"))
+    assert [b.identifier for b in out1] == ["H1"] and [b.identifier for b in out2] == ["H1"]
     assert s.warning.call_count == 1

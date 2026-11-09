@@ -360,11 +360,6 @@ class MABillScraper(Scraper):
             # bill never flips from house to senate from docket -> intro so we're safe here
             # BillNumber can be set, but mapped to None, so use or here
             bill_id = row["BillNumber"] or row["DocketNumber"]
-            if self.is_not_a_measure(row.get("Title")):
-                self.info(
-                    f"OPEN-508: {bill_id} is not a bill ({row['Title'].strip()[:60]!r}); skipping"
-                )
-                continue
             # make sure the bill has an H or an S in the code
             if not any([chamber in bill_id for chamber in chambers]):
                 self.error(
@@ -439,8 +434,10 @@ class MABillScraper(Scraper):
             bill_title = None
             pass
 
-        # OPEN-508: the list's own Title is checked before the fetch; this catches an item whose list
-        # Title was blank. Only the real page title counts: the h1 fallback below is a bill number, not a title.
+        # OPEN-508: only the page's own title counts (the h1 fallback below is a bill number, not a title).
+        # The Documents list's `Title` is NOT the same text and must not be used for this: on the live list
+        # (2026-11-08) 19 real bills show a title without "An Act" (H5174, S2630, H70, ...) and amendment papers
+        # show a subject ("Rural Jobs") where their page says "Amendment S.3207".
         if self.is_not_a_measure(bill_title):
             self.info(
                 f"OPEN-508: {bill_id} is not a bill ({bill_title.strip()[:60]!r}); skipping"
