@@ -7,7 +7,19 @@ import requests
 from openstates.scrape import Scraper, Bill, VoteEvent
 from openstates.exceptions import EmptyScrape
 from utils.media import get_media_type
+from classify_motion import classify_motion
 from .actions import Categorizer
+
+# OPEN-527: a "Motion to Adopt" on a history row that names an amendment or substitute (amdSub)
+# adopts that amendment; without one it adopts a resolution, which classify_motion() calls passage.
+AMENDMENT_ADOPTION = re.compile(r"\bmotion to adopt\b", re.I)
+
+
+def vote_classification(action_row: dict) -> list:
+    if action_row.get("amdSub") and AMENDMENT_ADOPTION.search(action_row["matter"]):
+        return ["amendment"]
+    # the rest of the rules live in config/motion_classification.yaml (al block)
+    return classify_motion("al", action_row["matter"])
 
 
 class ALBillScraper(Scraper):
@@ -522,7 +534,7 @@ class ALBillScraper(Scraper):
             result="pass" if yeas > (nays + abstains) else "fail",
             chamber=self.chamber_map[body],
             bill=bill,
-            classification=[],
+            classification=vote_classification(action_row),
         )
         vote.dedupe_key = vote_key
 

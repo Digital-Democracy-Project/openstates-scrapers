@@ -221,3 +221,81 @@ def test_bill_scrape_yields_votes_before_their_bill():
     kinds = [type(o) for o in out]
     assert kinds == [VoteEvent] * 6 + [Bill]
     assert all(v.bill == out[-1]._id for v in out[:-1])
+
+
+# ---------------------------------------------------------------------------
+# OPEN-527: motion classification (gate E). The rules are the al block of
+# config/motion_classification.yaml; the scraper labels amendment adoptions itself.
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "bill_id,roll_call,expected",
+    [
+        ("HB2", "534", []),  # Third Reading in House of Origin: the BIR roll call
+        ("HB2", "535", ["amendment"]),  # Motion to Adopt the committee substitute
+        ("HB2", "536", ["passage"]),  # Read a Third Time and Pass as Amended
+        ("HB2", "956", []),  # Third Reading in Second House: the BIR roll call
+        ("HB2", "1008", []),  # Petition To Close Debate
+        ("HB2", "1009", ["passage"]),  # Read a Third Time and Pass
+        ("HB1", "223", []),
+        ("HB1", "224", ["amendment"]),  # Motion to Adopt Tillman's 1st amendment
+        ("HB1", "225", ["passage"]),
+        ("HB1", "226", []),  # Motion to Add Cosponsor
+    ],
+)
+def test_scraped_votes_are_classified(bill_id, roll_call, expected):
+    scraper = make_scraper()
+    votes = scraper.scrape_votes(make_bill(bill_id), histories(bill_id))
+    assert by_roll_call(votes)[roll_call].motion_classification == expected
+
+
+def saved_rows():
+    # the roll-call history rows of four more bills, saved from ALISON's billModal on 2026-11-10
+    return json.loads(load("rollcall_rows_SB57_HB95_SR96_HJR4.json"))
+
+
+@pytest.mark.parametrize(
+    "bill_id,roll_call,matter_start,expected",
+    [
+        # SB 57: amendments in both houses, a conference, both conference reports
+        ("SB57", 694, "Orr motion to Adopt", ["amendment"]),
+        ("SB57", 696, "Orr motion to Adopt", ["amendment"]),
+        ("SB57", 697, "Motion to Read a Third Time and Pass as Amended", ["passage"]),
+        ("SB57", 693, "Third Reading in House of Origin", []),
+        ("SB57", 1282, "Motion to Adopt", ["amendment"]),  # an engrossed substitute
+        ("SB57", 1285, "Motion to Read a Third Time and Pass as Amended", ["passage"]),
+        ("SB57", 1262, "Gudger motion to Non-Concur", []),
+        ("SB57", 1333, "In Conference Committee", []),
+        ("SB57", 1333, "Lovvorn motion to Accede", []),
+        ("SB57", 1310, "Gudger motion to Concur In and Adopt Conference", ["passage"]),
+        ("SB57", 1355, "Ingram motion to Concur In and Adopt Conference", ["passage"]),
+        # HB 95: a lost amendment is still an amendment vote; the governor's amendment
+        ("HB95", 3, "Motion to Adopt - Lost", ["amendment"]),
+        ("HB95", 999, "Petition To Close Debate", []),
+        ("HB95", 1229, "Gudger Motion to Concur In and Adopt Executive", ["passage"]),
+        # SR 96: a resolution's adoption has no amdSub, so it is passage
+        ("SR96", 950, "Waggoner motion to Adopt", ["passage"]),
+        ("HJR4", 147, "Gudger Concur In and Adopt", ["passage"]),
+        ("HJR4", 159, "Reynolds Concur-In and Adopt Executive", ["passage"]),
+    ],
+)
+def test_vote_classification_on_real_rows(bill_id, roll_call, matter_start, expected):
+    rows = [
+        r
+        for r in saved_rows()[bill_id]
+        if r["rollCallNbr"] == roll_call and r["matter"].startswith(matter_start)
+    ]
+    assert len(rows) == 1
+    assert al_bills.vote_classification(rows[0]) == expected
+
+
+def test_amendment_label_needs_the_amdsub():
+    # the same "Motion to Adopt" text is an amendment with an amdSub and passage without one
+    row = [r for r in saved_rows()["HB95"] if r["rollCallNbr"] == 2][0]
+    assert row["amdSub"] and row["matter"].startswith("Motion to Adopt")
+    assert al_bills.vote_classification(row) == ["amendment"]
+    assert al_bills.vote_classification(dict(row, amdSub=None)) == ["passage"]
+    # an amdSub on a row that is not an adoption motion does not make it an amendment vote
+    tabled = dict(row, matter="Kiel motion to Table - Adopted Roll Call 559")
+    assert al_bills.vote_classification(tabled) == []
