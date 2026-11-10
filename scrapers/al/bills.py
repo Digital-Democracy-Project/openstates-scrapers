@@ -326,8 +326,10 @@ class ALBillScraper(Scraper):
         data = page["data"]
         histories = []
         if "data" in data["histories"]:
-            self.scrape_actions(bill, data["histories"], bill_row)
-            histories = data["histories"]["data"]
+            # ALISON lists history rows newest first; they are read oldest first, so a day with
+            # several actions ends on its last one and that becomes the latest action (OPEN-528)
+            histories = data["histories"]["data"][::-1]
+            self.scrape_actions(bill, histories, bill_row)
 
         for row in page["data"]["fiscalNotes"]["data"]:
             bill.add_document_link(
@@ -413,7 +415,7 @@ class ALBillScraper(Scraper):
                 "Alabama Chapter Law", act_number, "chapter", url=act_text_url
             )
 
-    def scrape_actions(self, bill: Bill, histories: dict, bill_row: dict):
+    def scrape_actions(self, bill: Bill, histories: list, bill_row: dict):
 
         if bill_row["prefiledDate"]:
             action_date = dateutil.parser.parse(bill_row["prefiledDate"])
@@ -425,7 +427,7 @@ class ALBillScraper(Scraper):
                 classification="filing",
             )
 
-        for row in histories["data"]:
+        for row in histories:
             action_text = row["matter"]
 
             if not action_text or action_text == "":

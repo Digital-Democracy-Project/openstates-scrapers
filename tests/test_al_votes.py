@@ -3,7 +3,8 @@
 Every response under tests/fixtures/al_2026rs/ is a real ALISON reply saved on 2026-11-10
 (HB2 of the 2026 Regular Session, the "Gulf of America Act"): the bill list (trimmed to the
 HB2 row), its billModal (actions, budget isolation resolutions) and the six rollCallVotes
-replies for its six roll calls; and HB1's billModal and four roll calls (one with abstains).
+replies for its six roll calls; and HB1's billModal and four roll calls (one with abstains);
+and (OPEN-528) the billModals of SR 99 and SB 57 and House roll call 1333.
 No test makes a live call.
 """
 import json
@@ -299,3 +300,102 @@ def test_amendment_label_needs_the_amdsub():
     # an amdSub on a row that is not an adoption motion does not make it an amendment vote
     tabled = dict(row, matter="Kiel motion to Table - Adopted Roll Call 559")
     assert al_bills.vote_classification(tabled) == []
+
+
+# ---------------------------------------------------------------------------
+# OPEN-528: actions oldest first. ALISON lists a bill's history rows newest first; the
+# billModal replies of SR 99, SB 57 and House roll call 1333 were saved on 2026-11-10.
+# ---------------------------------------------------------------------------
+
+
+def scrape_modal(bill_id, chamber="lower", classification="bill"):
+    scraper = make_scraper()
+    bill = Bill(
+        bill_id, "2026rs", "A title", chamber=chamber, classification=classification
+    )
+    bill_row = {"instrumentNbr": bill_id, "sessionAbbreviation": "2026RS"}
+    bill_row.update(prefiledDate=None, body="House")
+    return scraper, bill, scraper.scrape_rest(bill, bill_row)
+
+
+def test_sr99_latest_action_is_the_adoption():
+    # ALISON: "Waggoner motion to Adopt" first, then "Introduced", both on 2026-03-31
+    raw = [r["matter"] for r in histories("SR99")]
+    assert raw == ["Waggoner motion to Adopt - Adopted Roll Call 976", "Introduced"]
+    _, bill, _ = scrape_modal("SR99", "upper", "resolution")
+    assert [a["description"] for a in bill.actions] == [
+        "Introduced",
+        "Waggoner motion to Adopt - Adopted Roll Call 976",
+    ]
+
+
+@pytest.mark.parametrize(
+    "bill_id,first,last",
+    [
+        (
+            "HB1",
+            "Read for the first time and referred to the House Committee",
+            "Pending Committee Action in Second House",
+        ),
+        (
+            "HB2",
+            "Read for the first time and referred to the House Committee",
+            "Enacted",
+        ),
+        (
+            "SB57",
+            "Read for the first time and referred to the Senate Committee",
+            "Enacted",
+        ),
+    ],
+)
+def test_actions_come_out_oldest_first(bill_id, first, last):
+    _, bill, _ = scrape_modal(bill_id)
+    actions = bill.actions
+    assert actions[0]["description"].startswith(first)
+    assert actions[-1]["description"].startswith(last)
+    dates = [a["date"] for a in actions]
+    assert dates == sorted(dates)
+
+
+def test_hb1_last_day_ends_on_its_last_action():
+    # HB1's last day (2026-03-11): ALISON lists "Pending Committee Action" above the referral
+    _, bill, _ = scrape_modal("HB1")
+    assert [a["description"][:30] for a in bill.actions[-2:]] == [
+        "Read for the first time and re",
+        "Pending Committee Action in Se",
+    ]
+
+
+@pytest.mark.parametrize("bill_id", ["HB1", "HB2"])
+def test_votes_unchanged_by_the_new_order(bill_id):
+    def summary(votes):
+        return {
+            v.dedupe_key: (v.motion_text, counts(v), v.motion_classification, v.result)
+            for v in votes
+        }
+
+    newest_first = summary(
+        make_scraper().scrape_votes(make_bill(bill_id), histories(bill_id))
+    )
+    scraper, bill, oldest_first = scrape_modal(bill_id)
+    assert summary(scraper.scrape_votes(bill, oldest_first)) == newest_first
+    assert len(newest_first) == {"HB1": 4, "HB2": 6}[bill_id]
+
+
+def test_shared_roll_call_takes_the_motion_row():
+    # SB 57: House roll call 1333 is on two history rows, "In Conference Committee" and
+    # "Lovvorn motion to Accede"; read oldest first, the motion row comes first and wins
+    scraper, bill, rows = scrape_modal("SB57", "upper")
+    shared = [r for r in rows if r["rollCallNbr"] == 1333]
+    assert [r["matter"][:24] for r in shared] == [
+        "Lovvorn motion to Accede",
+        "In Conference Committee",
+    ]
+    votes = list(scraper.scrape_votes(bill, shared))
+    assert len(votes) == 1 and scraper.posted == [("House", 1333)]
+    assert votes[0].motion_text.startswith(
+        "Lovvorn motion to Accede - Adopted Roll Call 1333"
+    )
+    assert votes[0].motion_classification == []
+    assert counts(votes[0]) == {"yes": 102, "no": 1, "abstain": 0, "not voting": 2}
