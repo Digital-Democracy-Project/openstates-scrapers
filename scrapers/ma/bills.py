@@ -13,21 +13,15 @@ from openstates.utils.transformers import fix_bill_id
 from .actions import Categorizer
 
 try:
-    # DDP's openstates-core fork (what the scraper image is built with). Upstream's openstates package
-    # has no version_ordering; without it the OPEN-508 skip below is off (and says so once). Only that
-    # module being absent is forgiven: any other import failure is a real defect and stays loud.
-    from openstates.utils.version_ordering import is_bill_version
-except ModuleNotFoundError as exc:
+    # DDP's openstates-core fork at or after OPEN-517 (what the scraper image is built with). Upstream's
+    # openstates package has no version_ordering, and an older fork has no non_bill_kind; without it every
+    # paper is yielded as an ordinary bill, as before OPEN-508 (and the scraper says so once). Only those
+    # names being absent is forgiven: any other import failure is a real defect and stays loud.
+    from openstates.utils.version_ordering import NON_BILL_AMENDMENT, non_bill_kind
+except ImportError as exc:
     if exc.name not in ("openstates.utils.version_ordering", "openstates.utils"):
         raise
-    is_bill_version = None
-
-# OPEN-508: an amendment paper ("Amendment H.5665", "Amendment S.3290") is NOT skipped; OPEN-509 shows it
-# under its real bill. Matches the identifier shape only: 153 of the 154 "Amendment ..." titles in the 194th
-# session; the other, "Amendment Filing Deadline for House No. 5151", is a notice and is skipped.
-_AMENDMENT_PAPER_TITLE = re.compile(
-    r"\A\s*Amendment\s+[HS]D?\.?\s*\d+\s*\Z", re.IGNORECASE
-)
+    NON_BILL_AMENDMENT = non_bill_kind = None
 
 
 requests.packages.urllib3.disable_warnings()
@@ -236,25 +230,34 @@ class MABillScraper(Scraper):
         self.verify = False
         self.retry_attempts = 0
 
-    def is_not_a_measure(self, title):
-        """OPEN-508: True when `title` is present and shows the item is not a bill.
+    def label_non_bill(self, bill, page_title):
+        """OPEN-518: give a paper that is not a bill the label for what it is, instead of skipping it.
 
         malegislature.gov files agency reports, communications, orders, study orders, precepts and rules under
-        H/S/HD/SD numbers in the same list as real bills. The ONE definition of "opens like a measure" is
-        openstates-core's `is_bill_version` (OPEN-498); this only asks it. A blank title is never a reason to
-        skip (the state site sometimes lacks one for a few days), and amendment papers are left for OPEN-509.
+        H/S/HD/SD numbers in the same list as real bills. Ramon (2026-11-09): nothing is removed from our data,
+        so each is stored, labelled. The ONE rule that names the kind is openstates-core's `non_bill_kind`
+        (OPEN-517), the same one `os-text-extract relabel-non-bills ma` uses, so the two always agree; this
+        only asks it, with the page's own title and the actions (a committee study order titled by its subject
+        is known by its action). A blank or missing title leaves an ordinary bill (the state site sometimes
+        lacks one for a few days), and amendment papers are left as they are for OPEN-509.
         """
-        if is_bill_version is None:
+        if non_bill_kind is None:
             if not getattr(self, "_warned_no_title_rule", False):
                 self._warned_no_title_rule = True
                 self.warning(
-                    "OPEN-508: openstates-core's is_bill_version is not installed; "
-                    "not skipping non-bill titles"
+                    "OPEN-518: openstates-core's non_bill_kind is not installed; "
+                    "every paper is saved as a bill"
                 )
-            return False
-        if not title or not title.strip() or _AMENDMENT_PAPER_TITLE.match(title):
-            return False
-        return not is_bill_version("Massachusetts", "Bill Text", title)
+            return
+        kind = non_bill_kind(
+            "Massachusetts", page_title, [a["description"] for a in bill.actions]
+        )
+        if kind is None or kind == NON_BILL_AMENDMENT:
+            return
+        self.info(
+            f"OPEN-518: {bill.identifier} is a {kind} ({page_title.strip()[:60]!r})"
+        )
+        bill.classification = [kind]
 
     def format_bill_number(self, raw):
         return raw.replace("Bill ", "").replace(".", " ").strip()
@@ -434,15 +437,11 @@ class MABillScraper(Scraper):
             bill_title = None
             pass
 
-        # OPEN-508: only the page's own title counts (the h1 fallback below is a bill number, not a title).
-        # The Documents list's `Title` is NOT the same text and must not be used for this: on the live list
-        # (2026-11-08) 19 real bills show a title without "An Act" (H5174, S2630, H70, ...) and amendment papers
-        # show a subject ("Rural Jobs") where their page says "Amendment S.3207".
-        if self.is_not_a_measure(bill_title):
-            self.info(
-                f"OPEN-508: {bill_id} is not a bill ({bill_title.strip()[:60]!r}); skipping"
-            )
-            return False
+        # OPEN-508/518: only the page's own title says what a paper is (the h1 fallback below is a bill number,
+        # not a title). The Documents list's `Title` is NOT the same text and must not be used for this: on the
+        # live list (2026-11-08) 19 real bills show a title without "An Act" (H5174, S2630, H70, ...) and
+        # amendment papers show a subject ("Rural Jobs") where their page says "Amendment S.3207".
+        page_title = bill_title
 
         if bill_title is None:
             try:
@@ -529,6 +528,7 @@ class MABillScraper(Scraper):
             )
 
         yield from self.scrape_actions(bill, bill_url, session)
+        self.label_non_bill(bill, page_title)
         yield bill
 
     def scrape_cosponsors(self, bill, bill_url):
