@@ -19,7 +19,7 @@ def test_yaml_loads_without_error():
 
 
 def test_all_expected_jurisdiction_keys_present():
-    expected = {"us", "az", "ut", "fl", "mi", "ma", "wa", "va", "pa", "ne", "la"}
+    expected = {"us", "az", "ut", "fl", "mi", "ma", "wa", "va", "pa", "ne", "la", "al"}
     assert expected == KNOWN_JURISDICTIONS
 
 
@@ -449,3 +449,71 @@ def test_pa_ne_la_scrapers_use_classify_motion():
         assert call in src, state
     ne_src = open(os.path.join(root, "ne", "bills.py")).read()
     assert 'classification="passage"' not in ne_src   # NE used to call every vote passage
+
+
+# ---------------------------------------------------------------------------
+# OPEN-527: Alabama. Real ALISON action texts of 2026rs roll calls (Mac replica and ALISON,
+# 2026-11-10), with their "- Adopted/Lost Roll Call N" endings as the scraper sends them.
+# Amendment adoptions are labelled "amendment" by the al scraper before this is called
+# (tests/test_al_votes.py); here a bare "Motion to Adopt" is a resolution's adoption.
+# ---------------------------------------------------------------------------
+
+AL_CASES = [
+    # final passage, including as amended and a lost passage vote
+    ("Motion to Read a Third Time and Pass - Adopted Roll Call 1009", ["passage"]),
+    ("Motion to Read a Third Time and Pass as Amended - Adopted Roll Call 536", ["passage"]),
+    ("Motion to Read a Third Time and Pass - Lost Roll Call 1225", ["passage"]),
+    ("Waggoner motion to Read a Third Time and Pass - Adopted Roll Call 1304", ["passage"]),
+    # a resolution's adoption (SR 96) and HB 201's final Senate vote
+    ("Waggoner motion to Adopt - Adopted Roll Call 950", ["passage"]),
+    ("Motion to Adopt - Adopted Roll Call 101", ["passage"]),
+    # concurrence in the other house's / the governor's amendments, conference reports
+    ("Gudger Motion to Concur In and Adopt Executive Amendment - Adopted Roll Call 1229", ["passage"]),
+    ("Moore (M) Motion to Concur In and Adopt Senate Amendment - Adopted Roll Call 1251", ["passage"]),
+    ("Warren motion to Concur In and Adopt Senate Amendment - Adopted Roll Call 1349", ["passage"]),
+    ("Ingram motion to Concur In and Adopt Conference Committee Report - Adopted Roll Call 1355", ["passage"]),
+    ("Kirkland motion to Concur In and Adopt in Conference Committee - Adopted Roll Call 1341", ["passage"]),
+    ("Gudger Concur In and Adopt - Adopted Roll Call 147", ["passage"]),
+    ("Roberts Concur in and Adopt- Adopted Roll Call 801", ["passage"]),
+    ("Reynolds Concur-In and Adopt Executive Amendment Roll Call 159", ["passage"]),
+    # not passage: budget isolation resolutions, conference procedure, procedure
+    ("Third Reading in House of Origin", []),
+    ("Third Reading in Second House", []),
+    ("In Conference Committee", []),
+    ("Gudger motion to Non-Concur and Appoint Conference Committee - Adopted Roll Call 1262", []),
+    ("Lovvorn motion to Accede - Adopted Roll Call 1333 House appoints Ingram, Reynolds and Lawrence", []),
+    ("Kiel motion to Table - Adopted Roll Call 559", []),
+    ("Kirkland motion to Table - Lost Roll Call 1221", []),
+    ("Lee motion to Previous Question adopted - Adopted Roll Call 528", []),
+    ("Brown motion to Previous Question - Adopted Roll Call 446", []),
+    ("Petition To Close Debate- Adopted Roll Call 1008", []),
+    ("Waggoner Petition to Cease Debate - Adopted Roll Call 1311", []),
+    ("Motion to Add Cosponsor - Adopted Roll Call 226", []),
+    ("Add Cosponsor - Adopted Roll Call 441", []),
+    ("Chambliss Local Certification Resolution - Adopted Roll Call 364", []),
+    ("Local Certification Resolution - Adopted Roll Call 671", []),
+    # an unknown text stays unclassified
+    ("Carried Over to the Call of the Chair", []),
+]
+
+
+@pytest.mark.parametrize("text,expected", AL_CASES)
+def test_al(text, expected):
+    assert classify_motion("al", text) == expected
+
+
+@pytest.mark.parametrize("text,expected", AL_CASES[:-1])
+def test_al_every_real_text_is_decided_by_a_rule(text, expected):
+    # the not-passage texts are named on purpose (the budget isolation resolution above all),
+    # so that a later, wider passage pattern cannot pick them up by accident
+    cfg = _config["jurisdictions"]["al"]
+    key = "passage" if expected else "not_passage"
+    assert any(re.search(p, text.lower()) for p in cfg[key])
+
+
+def test_al_scraper_uses_classify_motion():
+    root = os.path.join(os.path.dirname(__file__), "..", "scrapers")
+    src = open(os.path.join(root, "al", "bills.py")).read()
+    assert "from classify_motion import classify_motion" in src
+    assert 'classify_motion("al"' in src
+    assert "classification=[]" not in src

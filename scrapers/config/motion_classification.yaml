@@ -181,3 +181,27 @@ jurisdictions:
     passage:
       - "final pass(age|ge)"                     # "FINAL PASSAGE", "BY CLOUD, FINAL PASSAGE", "FINAL PASSAGE, SB 444 BY EDMONDS"
     default: null
+
+  # OPEN-527 (Alabama, gate E). The motion text is ALISON's action text for the roll call, with its
+  # result on the end ("Motion to Read a Third Time and Pass - Adopted Roll Call 1009"), sometimes
+  # behind the mover's name ("Orr motion to Adopt ..."), so the patterns are not anchored at either
+  # end. Rules written from the real 2026rs texts (Mac replica + ALISON, 2026-11-10). An amendment or
+  # substitute adoption ("Motion to Adopt" on a row with an amdSub) is labelled "amendment" by the al
+  # scraper before this is called; a "Motion to Adopt" with no amdSub is a resolution's adoption (or,
+  # once, a local bill's final Senate vote) and is passage here.
+  al:
+    not_passage:
+      - "^third reading in (house of origin|second house)$"   # carries the budget isolation resolution roll call, not passage
+      - "^in conference committee$"              # shares the roll call of the "motion to Accede" row
+      - "non-concur"                             # "Non-Concur and Appoint Conference Committee"
+      - "motion to accede"                       # accede to the other house's conference request, appoint conferees
+      - "motion to table"
+      - "previous question"
+      - "petition to c(lose|ease) debate"
+      - "add cosponsor"
+      - "local certification resolution"         # certifies a local bill's notice, not a vote on the bill
+    passage:
+      - "motion to read a third time and pass"   # also "... as Amended", and "- Lost" (a failed passage vote)
+      - "motion to adopt"                        # resolution adoption (amendments are labelled by the scraper first)
+      - "concur(-| )in and adopt"                # concurrence in amendments / conference report = passage (ut, mi, wa, va)
+    default: null
