@@ -11,6 +11,7 @@ from openstates.utils import convert_pdf
 from openstates.utils.transformers import fix_bill_id
 
 from .actions import Categorizer
+from .voter_names import HOUSE_CELL_RE, house_voter_name, senate_voter_name
 
 try:
     # DDP's openstates-core fork at or after OPEN-517 (what the scraper image is built with). Upstream's
@@ -909,49 +910,29 @@ class MABillScraper(Scraper):
             self.info("No vote found in supplement for vote #%s" % supplement)
             return False
 
-        # create list of independent items in vote_text
-        rows = vote_text.splitlines()
-        lines = []
-        for row in rows:
-            lines.extend(row.split("   "))
-
-        # retrieving votes in columns
-        vote_tally = []
-        voters = []
-        for line in lines:
-            # removes whitespace and after-vote '*' tag
-            line = line.strip().strip("*").strip()
-
-            if "NAYS" in line or "YEAS" in line or "=" in line or "/" in line:
+        # OPEN-474: read each "<letter> <name>" cell of the grid together, as
+        # votes.py does. This used to split rows on three spaces and zip the
+        # letters with the names; a cell printed with one space ("X Silvia")
+        # became a name "X Silvia" with no letter, and every later voter in that
+        # roll call got the letter of the voter after them.
+        attached = 0
+        for line in vote_text.splitlines():
+            if "NAYS" in line or "YEAS" in line or "=" in line:
                 continue
-            elif line == "":
-                continue
-            elif line == "N":
-                vote_tally.append("n")
-            elif line == "Y":
-                vote_tally.append("y")
-            # Not Voting
-            elif line == "X":
-                vote_tally.append("x")
-            # Present
-            elif line == "P":
-                vote_tally.append("p")
-            else:
-                voters.append(line)
-
-        house_votes = list(zip(voters, vote_tally))
-        # iterate list and add individual names to vote.yes, vote.no
-        for tup1 in house_votes:
-            if tup1[1] == "y":
-                vote.yes(tup1[0])
-            elif tup1[1] == "n":
-                vote.no(tup1[0])
-            else:
-                vote.vote("other", tup1[0])
+            for letter, raw_name in HOUSE_CELL_RE.findall(line):
+                name = house_voter_name(raw_name, vote.legislative_session)
+                if letter == "Y":
+                    vote.yes(name)
+                elif letter == "N":
+                    vote.no(name)
+                else:
+                    # X (not voting) and P (present), as before
+                    vote.vote("other", name)
+                attached += 1
 
         # OPEN-176: a PDF that read cleanly but named nobody is a failure, not a
         # unanimous silence.
-        return bool(house_votes)
+        return attached > 0
 
     def scrape_senate_vote(self, vote, vurl):
         """Attach individual Senate voters to `vote`.
@@ -1004,6 +985,9 @@ class MABillScraper(Scraper):
                         clean_name = "".join(cut_name)
                     else:
                         clean_name = raw_name.strip()
+                    # OPEN-474: "Keenan, John F." -> "John F. Keenan", the form
+                    # the people data holds
+                    clean_name = senate_voter_name(clean_name)
                     # update vote object with names
                     if mode == "y":
                         vote.yes(clean_name)

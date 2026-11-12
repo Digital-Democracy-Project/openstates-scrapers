@@ -222,6 +222,8 @@ class TestQuorumRollCallsAreNotBillVotes:
 class _FakeVote:
     """Minimal stand-in for VoteEvent -- records what got attached."""
 
+    legislative_session = "194th"
+
     def __init__(self):
         self.voters = []
 
@@ -275,8 +277,9 @@ class TestUnreadableRollCallReportsFailure:
         assert vote.voters == []
 
     def test_readable_roll_call_returns_true_and_attaches_voters(self):
+        # The sheet prints each vote letter before its name (OPEN-474).
         scraper = _scraper_with_pdf(
-            "No. 7\nSmith   Y   Jones   N   Brown   X\nMASSACHUSETTS"
+            "No. 7\nY   Smith   N   Jones   X   Brown\nMASSACHUSETTS"
         )
         vote = _FakeVote()
         assert scraper.scrape_house_vote(vote, "http://example/rc", 7) is True

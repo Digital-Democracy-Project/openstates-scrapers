@@ -10,6 +10,8 @@ import re
 import pytz
 import datetime as dt
 
+from .voter_names import HOUSE_CELL_RE, house_voter_name
+
 
 class VoteTotalMismatch(Exception):
     def __init__(self):
@@ -365,9 +367,8 @@ class HouseVoteRecordParser:
     # with the name printed beside it. Without -layout, pdftotext emits the
     # letter columns in a different order than the names, so zipping two
     # separately collected lists attached votes to the wrong legislators.
-    cell_re = re.compile(
-        r"(?:^|(?<=\s))([YNXP])\s+(\S(?:.*?\S)?)(?=\s{2,}[YNXP]\s|\s*$)"
-    )
+    # Shared with the bills scraper's House reader (OPEN-474).
+    cell_re = HOUSE_CELL_RE
     time_re = re.compile(r"\d{2}/\d{2}/\d{4} \d{1,2}:\d{2} [AP]M")
 
     def __init__(self, vote_text, session=None):
@@ -415,10 +416,12 @@ class HouseVoteRecordParser:
             return
 
         # Roll grid. "*" marks a vote cast after the roll closed, and some
-        # names are printed as "--Name--". Neither mark is part of the name.
+        # names are printed as "--Name--". Neither mark is part of the name;
+        # house_voter_name() also turns "Mr. Speaker" and "Moran M." into the
+        # people data's spelling (OPEN-474).
         for vote_val, name in self.cell_re.findall(line):
             self.votes.append(vote_val)
-            self.names.append(name.rstrip(" *").replace("--", ""))
+            self.names.append(house_voter_name(name, self.session))
 
     # Raises an error or writes warning to logger. Returns true if data is valid
     def error_if_invalid(self):
