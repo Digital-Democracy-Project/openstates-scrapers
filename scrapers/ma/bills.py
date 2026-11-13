@@ -935,11 +935,12 @@ class MABillScraper(Scraper):
         # 16 of 234 roll calls read in the 194th disagrees with the sheet (S 3106 No.
         # 221: the action says 139 yeas, the sheet and its voters 149). When the
         # voters read equal the sheet's declared totals, the sheet is the tally;
-        # otherwise the action text's stays.
+        # otherwise the action text's stays. Only the counts change: the result is
+        # left as the caller set it, because a simple majority of the sheet's
+        # numbers is not the outcome of a motion that needs two thirds.
         if sheet.totals_mismatch() is None:
             vote.set_count("yes", sheet.total_yea)
             vote.set_count("no", sheet.total_nay)
-            vote.result = "pass" if sheet.total_yea > sheet.total_nay else "fail"
 
         # OPEN-176: a PDF that read cleanly but named nobody is a failure, not a
         # unanimous silence.

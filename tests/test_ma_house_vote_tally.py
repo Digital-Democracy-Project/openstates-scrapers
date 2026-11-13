@@ -30,7 +30,7 @@ def _sheet():
         return f.read()
 
 
-def _scrape(yes, no, sheet=None):
+def _scrape(yes, no, sheet=None, result=None):
     """Run scrape_house_vote on No. 221 for a vote whose action text said
     `yes` YEAS to `no` NAYS, as the caller sets it."""
     scraper = MABillScraper(Massachusetts(), "/tmp/")
@@ -40,7 +40,7 @@ def _scrape(yes, no, sheet=None):
         chamber="lower",
         start_date="2026-07-01",
         motion_text="Ordered to be engrossed",
-        result="pass" if yes > no else "fail",
+        result=result or ("pass" if yes > no else "fail"),
         classification="passage",
         legislative_session="194th",
         bill="S 3106",
@@ -80,10 +80,20 @@ def test_not_voting_cells_stay_other_and_are_not_added_to_the_tally():
     assert "not voting" not in _counts(vote)
 
 
-def test_the_result_follows_the_sheet_tally():
-    read, vote = _scrape(0, 149)
-    assert vote.result == "pass"
+def test_the_result_is_not_recomputed_from_the_sheet_tally():
+    """A two-thirds motion (veto override, suspension of rules, emergency
+    preamble) can fail with more yeas than nays. The result the caller set stays;
+    only the counts come from the sheet."""
+    read, vote = _scrape(139, 0, result="fail")
+    assert read is True
     assert _counts(vote) == {"yes": 149, "no": 0}
+    assert vote.result == "fail"
+
+
+def test_an_agreeing_vote_keeps_its_counts_and_its_result():
+    _, vote = _scrape(149, 0, result="fail")
+    assert _counts(vote) == {"yes": 149, "no": 0}
+    assert vote.result == "fail"
 
 
 def test_voters_that_disagree_with_the_sheet_keep_the_action_tally():
