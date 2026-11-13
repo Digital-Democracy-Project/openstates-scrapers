@@ -11,7 +11,8 @@ from openstates.utils import convert_pdf
 from openstates.utils.transformers import fix_bill_id
 
 from .actions import Categorizer
-from .voter_names import HOUSE_CELL_RE, house_voter_name, senate_voter_name
+from .voter_names import senate_voter_name
+from .votes import HouseVoteRecordParser
 
 try:
     # DDP's openstates-core fork at or after OPEN-517 (what the scraper image is built with). Upstream's
@@ -910,29 +911,39 @@ class MABillScraper(Scraper):
             self.info("No vote found in supplement for vote #%s" % supplement)
             return False
 
-        # OPEN-474: read each "<letter> <name>" cell of the grid together, as
-        # votes.py does. This used to split rows on three spaces and zip the
-        # letters with the names; a cell printed with one space ("X Silvia")
-        # became a name "X Silvia" with no letter, and every later voter in that
-        # roll call got the letter of the voter after them.
-        attached = 0
-        for line in vote_text.splitlines():
-            if "NAYS" in line or "YEAS" in line or "=" in line:
-                continue
-            for letter, raw_name in HOUSE_CELL_RE.findall(line):
-                name = house_voter_name(raw_name, vote.legislative_session)
-                if letter == "Y":
-                    vote.yes(name)
-                elif letter == "N":
-                    vote.no(name)
-                else:
-                    # X (not voting) and P (present), as before
-                    vote.vote("other", name)
-                attached += 1
+        # OPEN-474: read each "<letter> <name>" cell of the grid together. This
+        # used to split rows on three spaces and zip the letters with the names; a
+        # cell printed with one space ("X Silvia") became a name "X Silvia" with no
+        # letter, and every later voter in that roll call got the letter of the
+        # voter after them. OPEN-442: the grid and the sheet's own "No. <n>  <y>
+        # YEAS  <n> NAYS  <x> N/V" header are read by votes.py's parser, the one
+        # reader of a House roll-call sheet. The split above removed "No. <n>", so
+        # it is put back for the parser to find the header line.
+        sheet = HouseVoteRecordParser(
+            "No. {}{}".format(supplement, vote_text), session=vote.legislative_session
+        )
+        for letter, name in zip(sheet.votes, sheet.names):
+            if letter == "Y":
+                vote.yes(name)
+            elif letter == "N":
+                vote.no(name)
+            else:
+                # X (not voting) and P (present), as before
+                vote.vote("other", name)
+
+        # OPEN-442: the caller set the tally from the House action text, which for
+        # 16 of 234 roll calls read in the 194th disagrees with the sheet (S 3106 No.
+        # 221: the action says 139 yeas, the sheet and its voters 149). When the
+        # voters read equal the sheet's declared totals, the sheet is the tally;
+        # otherwise the action text's stays.
+        if sheet.totals_mismatch() is None:
+            vote.set_count("yes", sheet.total_yea)
+            vote.set_count("no", sheet.total_nay)
+            vote.result = "pass" if sheet.total_yea > sheet.total_nay else "fail"
 
         # OPEN-176: a PDF that read cleanly but named nobody is a failure, not a
         # unanimous silence.
-        return attached > 0
+        return bool(sheet.votes)
 
     def scrape_senate_vote(self, vote, vurl):
         """Attach individual Senate voters to `vote`.

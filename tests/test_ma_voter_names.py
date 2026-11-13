@@ -79,6 +79,10 @@ class _FakeVote:
     def vote(self, how, name):
         self.voters.append((how, name))
 
+    def set_count(self, option, value):
+        # OPEN-442: the House reader also sets the tally from the sheet's header
+        pass
+
 
 def _house_vote(fixture, number):
     scraper = MABillScraper.__new__(MABillScraper)
