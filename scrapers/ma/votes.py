@@ -10,7 +10,49 @@ import re
 import pytz
 import datetime as dt
 
+from classify_motion import needs_two_thirds
+
 from .voter_names import HOUSE_CELL_RE, house_voter_name
+
+
+# OPEN-561: what a two-thirds motion's own text says happened. Massachusetts writes the
+# outcome into the motion ("Item 4000-0051 passed over veto", "Motion (Tarr) to suspend the
+# rules does not prevail"). The failing forms are checked first because "does not prevail"
+# and "not adopted" contain the passing words.
+_STATED_FAIL_RE = re.compile(
+    r"\b(?:does|did)\s+not\s+prevail\b"
+    r"|\bnot\s+(?:adopted|passed|suspended|overridden)\b"
+    r"|\brejected\b"
+    r"|\bfail(?:s|ed)?\b"
+    r"|\bveto\s+(?:is\s+|was\s+)?sustained\b",
+    re.I,
+)
+_STATED_PASS_RE = re.compile(
+    r"\bpassed\b|\bprevails?\b|\badopted\b|\bsuspended\b|\boverridden\b",
+    re.I,
+)
+# A question ("H. 4240 Shall item 4000-0051 ... stand", "Shall the emergency preamble be
+# adopted?") names the proposition, not the outcome, so its words are not read as one.
+_QUESTION_RE = re.compile(r"^\s*(?:[hs]\.\s*\d+\s+)?shall\b|\?", re.I)
+
+
+def vote_result(motion_text, yes, no):
+    """Return "pass" or "fail" for a Massachusetts roll call (bills.py and the journals below).
+
+    OPEN-561: an ordinary motion passes on yeas > nays, as before. A motion that needs two
+    thirds (`needs_two_thirds`: veto override, suspension of the rules, emergency preamble)
+    can win a majority and still fail, so its result is what its text says happened, and
+    when the text states no outcome (or is a question), whether the yeas reached two thirds
+    of those voting (yeas + nays).
+    """
+    if not needs_two_thirds("ma", motion_text):
+        return "pass" if yes > no else "fail"
+    if not _QUESTION_RE.search(motion_text):
+        if _STATED_FAIL_RE.search(motion_text):
+            return "fail"
+        if _STATED_PASS_RE.search(motion_text):
+            return "pass"
+    return "pass" if yes > 0 and yes * 3 >= (yes + no) * 2 else "fail"
 
 
 class VoteTotalMismatch(Exception):
@@ -317,13 +359,19 @@ class SenateJournal(PdfPage):
         else:
             raise Exception(f"Unexpected bill ID to parse chamber: {bill_id}")
 
+        # OPEN-561: a two-thirds motion is not decided by the margin above.
+        if needs_two_thirds("ma", normalized_motion):
+            result = vote_result(normalized_motion, total_yea, total_nay)
+        else:
+            result = "pass" if vote_passed else "fail"
+
         vote_event = VoteEvent(
             chamber="upper",
             legislative_session=self.session,
             start_date=self.vote_date,
             motion_text=normalized_motion,
             bill=bill_id,
-            result="pass" if vote_passed else "fail",
+            result=result,
             classification=vote_classification,
             bill_chamber=bill_chamber,
         )
@@ -468,8 +516,6 @@ class HouseVoteRecordParser:
         return warning
 
     def createVoteEvent(self, include_voters=True):
-        vote_passed = self.total_yea > self.total_nay
-
         # Check for bill id in motion text
         bill_id = self.bill_id
 
@@ -486,7 +532,7 @@ class HouseVoteRecordParser:
             start_date=self.time,
             motion_text=self.motion,
             bill=bill_id,
-            result="pass" if vote_passed else "fail",
+            result=vote_result(self.motion, self.total_yea, self.total_nay),
             classification="passage",
             bill_chamber=bill_chamber,
         )

@@ -12,7 +12,7 @@ from openstates.utils.transformers import fix_bill_id
 
 from .actions import Categorizer
 from .voter_names import senate_voter_name
-from .votes import HouseVoteRecordParser
+from .votes import HouseVoteRecordParser, vote_result
 
 try:
     # DDP's openstates-core fork at or after OPEN-517 (what the scraper image is built with). Upstream's
@@ -702,7 +702,7 @@ class MABillScraper(Scraper):
                     chamber=actor,
                     start_date=action_date,
                     motion_text=vote_action,
-                    result="pass" if y > n else "fail",
+                    result=vote_result(vote_action, y, n),
                     classification=classify_motion("ma", vote_action),
                     bill=bill,
                 )
@@ -776,7 +776,7 @@ class MABillScraper(Scraper):
                         chamber=actor,
                         start_date=action_date,
                         motion_text=vote_action,
-                        result="pass" if y > n else "fail",
+                        result=vote_result(vote_action, y, n),
                         classification=classify_motion("ma", vote_action),
                         bill=bill,
                     )

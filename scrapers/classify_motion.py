@@ -17,6 +17,33 @@ _PREPROCESSORS = {
 KNOWN_JURISDICTIONS = frozenset(_config["jurisdictions"].keys())
 
 
+def _normalise(jurisdiction: str, cfg: dict, motion_text: str) -> str:
+    t = (motion_text or "").strip().lower()
+    if preprocess := cfg.get("preprocess"):
+        preprocessor = _PREPROCESSORS.get(preprocess)
+        if preprocessor is None:
+            raise ValueError(
+                f"classify_motion: unknown preprocessor {preprocess!r} for jurisdiction {jurisdiction!r}"
+            )
+        t = preprocessor(t)
+    return t
+
+
+def needs_two_thirds(jurisdiction: str, motion_text: str) -> bool:
+    """True when the motion needs two thirds of those present and voting.
+
+    OPEN-561: a veto override, a suspension of the rules or an emergency preamble can win a
+    majority and still fail, so its pass/fail cannot be yeas > nays. Patterns are the
+    jurisdiction's `two_thirds` list in config/motion_classification.yaml; a jurisdiction
+    without one returns False.
+    """
+    cfg = _config["jurisdictions"].get(jurisdiction)
+    if not cfg or not cfg.get("two_thirds"):
+        return False
+    t = _normalise(jurisdiction, cfg, motion_text)
+    return any(re.search(p, t) for p in cfg["two_thirds"])
+
+
 def classify_motion(
     jurisdiction: str, motion_text: str, bill_action: str = None
 ) -> list:
@@ -41,15 +68,7 @@ def classify_motion(
         )
         return []
 
-    t = (motion_text or "").strip().lower()
-
-    if preprocess := cfg.get("preprocess"):
-        preprocessor = _PREPROCESSORS.get(preprocess)
-        if preprocessor is None:
-            raise ValueError(
-                f"classify_motion: unknown preprocessor {preprocess!r} for jurisdiction {jurisdiction!r}"
-            )
-        t = preprocessor(t)
+    t = _normalise(jurisdiction, cfg, motion_text)
 
     if bill_action and (ba_cfg := cfg.get("bill_action")):
         a = bill_action.strip().lower()
