@@ -375,8 +375,17 @@ class LABillScraper(Scraper, LXMLMixin):
             votes_link = page.xpath("//a[text() = 'Votes']")[0]
             yield from self.scrape_votes(bill, votes_link.attrib["href"])
 
-        for action in page.xpath("//table[.//th[contains(text(),'Journal')]]//tr")[1:]:
-            date, chamber, page, text, *_ = [x.text for x in action.xpath(".//td")]
+        self.scrape_actions(bill, page)
+
+        yield bill
+
+    def scrape_actions(self, bill, page):
+        rows = page.xpath("//table[.//th[contains(text(),'Journal')]]//tr")[1:]
+        # The site lists a bill's history newest first, a day's actions included; they are read
+        # oldest first (a plain reverse, not a date sort), so a day ends on its last action and
+        # that becomes the latest action (OPEN-534, as OPEN-528 for Alabama)
+        for action in reversed(rows):
+            date, chamber, _page, text, *_ = [x.text for x in action.xpath(".//td")]
             # Session is April -> June. Prefiles look like they're in
             # January at earliest.
             date += "/{}".format(self.start_year)
@@ -391,5 +400,3 @@ class LABillScraper(Scraper, LXMLMixin):
                 chamber=chamber,
                 classification=attrs["classification"],
             )
-
-        yield bill
