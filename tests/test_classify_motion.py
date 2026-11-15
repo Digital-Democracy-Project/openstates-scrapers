@@ -7,7 +7,7 @@ import os
 import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
-from classify_motion import classify_motion, KNOWN_JURISDICTIONS, _config, _PREPROCESSORS
+from classify_motion import needs_two_thirds, classify_motion, KNOWN_JURISDICTIONS, _config, _PREPROCESSORS
 
 
 # ---------------------------------------------------------------------------
@@ -34,7 +34,7 @@ def test_all_preprocess_values_are_known():
 
 def test_all_patterns_are_valid_regex():
     for jur, cfg in _config["jurisdictions"].items():
-        for key in ("not_passage", "passage", "committee_passage"):
+        for key in ("not_passage", "passage", "committee_passage", "two_thirds"):
             for pattern in cfg.get(key, []):
                 try:
                     re.compile(pattern)
@@ -517,3 +517,34 @@ def test_al_scraper_uses_classify_motion():
     assert "from classify_motion import classify_motion" in src
     assert 'classify_motion("al"' in src
     assert "classification=[]" not in src
+
+
+# OPEN-561: Massachusetts motions that need two thirds (real MA 194th motion texts).
+@pytest.mark.parametrize("text", [
+    "Item 4000-0051 passed over veto",
+    "Motion (Tarr) to suspend the rules does not prevail",
+    "Emergency preamble adopted",
+    "Rules suspended",
+    "H. 4240 Shall item 4000-0051 (Family Resource Centers",
+])
+def test_ma_needs_two_thirds(text):
+    assert needs_two_thirds("ma", text)
+
+
+@pytest.mark.parametrize("text", [
+    "Decision of the Chair sustained on appeal",
+    "Amendment 412 (Tarr) rejected",
+    "Passed to be engrossed",
+    "Enacted",
+    "Committee of conference report accepted",
+    "Amendment 3 (Tarr), inserting before the enacting clause an emergency preamble, adopted",
+    "Passing the bill to be engrossed, the amendment requiring a two-thirds vote of the board",
+    "",
+])
+def test_ma_does_not_need_two_thirds(text):
+    assert not needs_two_thirds("ma", text)
+
+
+def test_jurisdiction_without_a_two_thirds_list_is_never_two_thirds():
+    assert not needs_two_thirds("wa", "Item 4000-0051 passed over veto")
+    assert not needs_two_thirds("xx", "Item 4000-0051 passed over veto")

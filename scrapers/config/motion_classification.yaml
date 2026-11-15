@@ -81,6 +81,18 @@ jurisdictions:
       - "^adopted"
       - "^committee of conference report accepted"
     default: null
+    # OPEN-561: motions that need two thirds of the members present and voting. Read only by
+    # needs_two_thirds() (the vote's pass/fail rule), never by classify_motion().
+    two_thirds:
+      # Anchored where they can be: a long Senate motion can quote an amendment's text, and an
+      # amendment that inserts an emergency preamble needs only a majority.
+      - "over (the )?(governor'?s )?veto"        # "Item 4000-0051 passed over veto"
+      - "veto (is |was )?(overridden|sustained)"
+      - "notwithstanding the objections"         # older form of a veto override
+      - "^(h\\. [0-9]+ )?shall item [0-9]{4}-[0-9]{4}"  # House sheet: "H. 4240 Shall item 4000-0051 (...) stand, the objections of the Governor notwithstanding?", cut short
+      - "^(motion [^,;]*?)?to suspend the rules" # "Motion (Tarr) to suspend the rules does not prevail"
+      - "^(rules suspended|suspension of the rules|suspending the rules)"
+      - "^(h\\. [0-9]+ )?(shall the |adopting |adoption of )?(the )?emergency preamble"  # "Emergency preamble adopted"
 
   wa:
     preprocess: strip_sequence_number            # "Final Passage (#7)" → "final passage"
