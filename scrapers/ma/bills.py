@@ -70,6 +70,13 @@ requests.packages.urllib3.disable_warnings()
 # roll-call actions we hold, none cites more than one number and none uses the
 # chamber-qualified wording at all.
 _SENATE_ROLLCALL_URL = "http://malegislature.gov/RollCall/{}/SenateRollCall{}.pdf"
+
+# OPEN-443: each House roll call also has its own sheet, in the same layout as the
+# House journal's year PDF. The year PDF is rebuilt only now and then (the 2026 one
+# was last built on 2026-07-27 and stops at No. 236, without No. 233), so the roll
+# calls after it are read from here instead. House roll-call numbers run on across
+# the whole session, so one number names one sheet.
+_HOUSE_ROLLCALL_URL = "https://malegislature.gov/RollCall/{}/HouseRollCall{}.pdf"
 _ROLLCALL_NUMBER_RE = re.compile(r"Roll\s+Call\s+#\s*(\d+)", re.I)
 _SENATE_ROLLCALL_MENTION_RE = re.compile(r"Senate\s+Roll\s+Call\s+#?\s*(\d+)", re.I)
 _HOUSE_ROLLCALL_MENTION_RE = re.compile(r"House\s+Roll\s+Call\s+#?\s*(\d+)", re.I)
@@ -737,7 +744,16 @@ class MABillScraper(Scraper):
                 # lag rather than a parse failure: the same bills will fill in on a
                 # later run, and until they do the gap is now visible instead of
                 # looking like a complete vote.
-                if not self.scrape_house_vote(cached_vote, housevote_pdf, n_supplement):
+                #
+                # OPEN-443: that later run never came -- the year PDF was still
+                # unchanged three months on. A roll call missing from it is now read
+                # from its own sheet, by the same reader and totals check. The sheet's
+                # bill line is not compared with this bill: No. 275 is printed as
+                # "H. 5699, as amended" and is the vote stored on H 5700.
+                voters_pdf = self.scrape_house_voters(
+                    cached_vote, housevote_pdf, bill.legislative_session, n_supplement
+                )
+                if voters_pdf is None:
                     self.warning(
                         "MA House roll call unreadable for {} supplement #{}: {} -- "
                         "recording the tally with voters_unavailable".format(
@@ -748,7 +764,10 @@ class MABillScraper(Scraper):
                         "voters_unavailable"
                     ] = "house-rollcall-unreadable"
 
-                cached_vote.add_source(housevote_pdf)
+                # The source is the PDF the voters came from. The dedupe key keeps the
+                # year PDF's URL, so the 40 tally-only votes already stored are filled
+                # in place rather than added again beside them.
+                cached_vote.add_source(voters_pdf or housevote_pdf)
                 cached_vote.dedupe_key = _house_vote_dedupe_key(
                     housevote_pdf, n_supplement, bill.identifier
                 )
@@ -872,7 +891,7 @@ class MABillScraper(Scraper):
                 action.add_related_entity(com, entity_type="organization")
 
     def get_house_pdf(self, vurl):
-        """cache house PDFs since they are done by year"""
+        """cache house PDFs: the year PDF serves every roll call in it"""
         if vurl not in self.house_pdf_cache:
             try:
                 (path, resp) = self.urlretrieve(vurl)
@@ -883,6 +902,20 @@ class MABillScraper(Scraper):
             os.remove(path)
             self.house_pdf_cache[vurl] = pdflines.decode("utf-8").replace("\u2019", "'")
         return self.house_pdf_cache[vurl]
+
+    def scrape_house_voters(self, vote, housevote_pdf, session, supplement):
+        """Attach the House voters of roll call `supplement` to `vote`, from the year
+        PDF or, when it is not there, from the roll call's own sheet (OPEN-443).
+
+        Returns the URL of the PDF the voters were read from, or None when neither
+        could be read.
+        """
+        if self.scrape_house_vote(vote, housevote_pdf, supplement):
+            return housevote_pdf
+        sheet_pdf = _HOUSE_ROLLCALL_URL.format(re.sub(r"\D+$", "", session), supplement)
+        if self.scrape_house_vote(vote, sheet_pdf, supplement):
+            return sheet_pdf
+        return None
 
     def scrape_house_vote(self, vote, vurl, supplement):
         """Attach individual House voters to `vote`.
