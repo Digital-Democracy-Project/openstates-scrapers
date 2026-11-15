@@ -25,15 +25,16 @@ def vote_classification(action_row: dict) -> list:
 # OPEN-563: ALISON writes each roll call's outcome into the history row ("... - Adopted Roll
 # Call 369", "... - Lost Roll Call 520", "LocalCertificationResolutionAdopted", "BIR Lost in
 # House of Origin"). On local bills most House members abstain, so a count would call adopted
-# votes failed; the count is only the fallback for a row that names no outcome.
+# votes failed; the count is only the fallback for a row that names no outcome, and there
+# (Ramon, 2026-11-15) more yeas than nays passes: abstentions do not count against the motion.
 VOTE_OUTCOME = re.compile(r"adopted\b|\blost\b", re.I)
 
 
-def vote_result(matter: str, yeas: int, nays: int, abstains: int) -> str:
+def vote_result(matter: str, yeas: int, nays: int) -> str:
     outcomes = VOTE_OUTCOME.findall(matter or "")
     if outcomes:
         return "fail" if outcomes[-1].lower() == "lost" else "pass"
-    return "pass" if yeas > (nays + abstains) else "fail"
+    return "pass" if yeas > nays else "fail"
 
 
 class ALBillScraper(Scraper):
@@ -564,7 +565,7 @@ class ALBillScraper(Scraper):
             start_date=self.transform_date(action_row["calendarDate"]),
             motion_text=action_row["matter"],
             bill_action=action_row["matter"],
-            result=vote_result(action_row["matter"], yeas, nays, abstains),
+            result=vote_result(action_row["matter"], yeas, nays),
             chamber=self.chamber_map[body],
             bill=bill,
             classification=vote_classification(action_row),
