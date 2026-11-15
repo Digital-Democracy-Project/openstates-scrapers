@@ -402,10 +402,11 @@ def test_shared_roll_call_takes_the_motion_row():
 
 
 # ---------------------------------------------------------------------------
-# OPEN-563: the result is ALISON's own outcome text ("Adopted" / "Lost"); the count
-# (yeas > nays + abstains) is only the fallback for a row that names no outcome. Each line
-# and its yeas, nays, abstains is a real Alabama 2026RS roll call stored on the Mac replica
-# (2026-11-15).
+# OPEN-563: the result is ALISON's own outcome text ("Adopted" / "Lost"); the count is only
+# the fallback for a row that names no outcome, and there more yeas than nays passes
+# (abstentions do not count against the motion; Ramon, 2026-11-15). Each line and its
+# yeas, nays, abstains is a real Alabama 2026RS roll call stored on the Mac replica
+# (2026-11-15), except the two written fallback rows marked below.
 # ---------------------------------------------------------------------------
 
 
@@ -458,15 +459,22 @@ def test_shared_roll_call_takes_the_motion_row():
             0,
             "pass",
         ),
-        # no outcome word: the count decides
+        # no outcome word: yeas > nays decides, abstains do not count against the motion
         ("HB2", "Third Reading in House of Origin", 74, 30, 0, "pass"),
-        ("HB193", "Third Reading in House of Origin", 50, 0, 50, "fail"),
+        # budget isolation third readings: stored "fail" before the yeas > nays fallback
+        ("HB193", "Third Reading in House of Origin", 50, 0, 50, "pass"),
+        ("HB367", "Third Reading in House of Origin", 43, 0, 57, "pass"),
+        ("SB339", "Third Reading in Second House", 47, 0, 55, "pass"),
+        # written here, not stored rows (no stored no-outcome row has yeas <= nays): a tie
+        # and a defeat by nays still fail
+        ("written", "Third Reading in House of Origin", 40, 40, 20, "fail"),
+        ("written", "Third Reading in House of Origin", 30, 50, 20, "fail"),
     ],
 )
 def test_vote_result_from_alison_outcome_text(
     bill_id, matter, yeas, nays, abstains, expected
 ):
-    assert al_bills.vote_result(matter, yeas, nays, abstains) == expected
+    assert al_bills.vote_result(matter, yeas, nays) == expected
 
 
 def test_scraped_vote_takes_the_adopted_text_over_the_count():
