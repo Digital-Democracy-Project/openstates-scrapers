@@ -179,52 +179,7 @@ class NEBillScraper(Scraper, LXMLMixin):
             classification="primary",
         )
 
-        action_nodes = self.get_nodes(
-            bill_page, '//table[contains(@class,"history")]/tbody/tr'
-        )
-
-        actor = "legislature"
-        for action_node in action_nodes:
-            date = self.get_node(action_node, "./td[1]").text
-            date = datetime.strptime(date, "%b %d, %Y")
-
-            # The action node may have an anchor element within it, so
-            # we grab all the text within.
-            action = self.get_node(action_node, "./td[2]").text_content()
-
-            # NE legislature site does not list cosponsors, so we grab it from action statements
-            if "name added" in action:
-                cosponsor_name = action.split("name added")[0].strip()
-                entity_type = "person"
-                if "committee" in cosponsor_name.lower():
-                    entity_type = "organization"
-                bill.add_sponsorship(
-                    cosponsor_name,
-                    entity_type=entity_type,
-                    classification="cosponsor",
-                    primary=False,
-                )
-
-            if "Governor" in action:
-                actor = "executive"
-            else:
-                actor = "legislature"
-
-            action_type = self.action_types(action)
-            bill.add_action(
-                action,
-                date.strftime("%Y-%m-%d"),
-                chamber=actor,
-                classification=action_type,
-            )
-
-            if "Notice of hearing for" in action:
-                ref_date = action.replace("Notice of hearing for", "").strip()
-                bill.extras["NE_REF_DATE"] = ref_date
-
-            if "Referred to" in action:
-                ref_com = action.split("Referred to")[1].strip()
-                bill.extras["NE_REF_COM"] = ref_com
+        self.scrape_actions(bill, bill_page)
 
         # Grabs bill version documents.
         version_links = self.get_nodes(
@@ -293,7 +248,59 @@ class NEBillScraper(Scraper, LXMLMixin):
 
         yield bill
 
-        yield from self.scrape_votes(bill, bill_page, actor)
+        # Nebraska's one house casts every vote (this was the oldest action's actor, which on the
+        # replica is "legislature" for every bill and all 1,772 votes)
+        yield from self.scrape_votes(bill, bill_page, "legislature")
+
+    def scrape_actions(self, bill, bill_page):
+        action_nodes = self.get_nodes(
+            bill_page, '//table[contains(@class,"history")]/tbody/tr'
+        )
+
+        # The site lists a bill's history newest first, a day's actions included; they are read
+        # oldest first (a plain reverse, not a date sort), so a day ends on its last action and
+        # that becomes the latest action (OPEN-535, as OPEN-528 for Alabama)
+        for action_node in reversed(action_nodes):
+            date = self.get_node(action_node, "./td[1]").text
+            date = datetime.strptime(date, "%b %d, %Y")
+
+            # The action node may have an anchor element within it, so
+            # we grab all the text within.
+            action = self.get_node(action_node, "./td[2]").text_content()
+
+            # NE legislature site does not list cosponsors, so we grab it from action statements
+            if "name added" in action:
+                cosponsor_name = action.split("name added")[0].strip()
+                entity_type = "person"
+                if "committee" in cosponsor_name.lower():
+                    entity_type = "organization"
+                bill.add_sponsorship(
+                    cosponsor_name,
+                    entity_type=entity_type,
+                    classification="cosponsor",
+                    primary=False,
+                )
+
+            if "Governor" in action:
+                actor = "executive"
+            else:
+                actor = "legislature"
+
+            action_type = self.action_types(action)
+            bill.add_action(
+                action,
+                date.strftime("%Y-%m-%d"),
+                chamber=actor,
+                classification=action_type,
+            )
+
+            if "Notice of hearing for" in action:
+                ref_date = action.replace("Notice of hearing for", "").strip()
+                bill.extras["NE_REF_DATE"] = ref_date
+
+            if "Referred to" in action:
+                ref_com = action.split("Referred to")[1].strip()
+                bill.extras["NE_REF_COM"] = ref_com
 
     def scrape_amendments(self, bill, bill_page):
         amd_xpath = '//div[contains(@class,"amends") and not(contains(@class,"mb-3"))]'
