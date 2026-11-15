@@ -399,3 +399,94 @@ def test_shared_roll_call_takes_the_motion_row():
     )
     assert votes[0].motion_classification == []
     assert counts(votes[0]) == {"yes": 102, "no": 1, "abstain": 0, "not voting": 2}
+
+
+# ---------------------------------------------------------------------------
+# OPEN-563: the result is ALISON's own outcome text ("Adopted" / "Lost"); the count
+# (yeas > nays + abstains) is only the fallback for a row that names no outcome. Each line
+# and its yeas, nays, abstains is a real Alabama 2026RS roll call stored on the Mac replica
+# (2026-11-15).
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "bill_id,matter,yeas,nays,abstains,expected",
+    [
+        # most House members abstain on a local bill: stored "fail" before OPEN-563
+        (
+            "HB365",
+            "Motion to Read a Third Time and Pass - Adopted Roll Call 369",
+            13,
+            0,
+            89,
+            "pass",
+        ),
+        (
+            "HB408",
+            "Motion to Read a Third Time and Pass - Adopted Roll Call 421",
+            16,
+            0,
+            85,
+            "pass",
+        ),
+        ("HB485", "LocalCertificationResolutionAdopted", 45, 0, 55, "pass"),
+        ("HB496", "Motion to Adopt - Adopted Roll Call 902", 50, 0, 55, "pass"),
+        # "Lost" with more yeas than nays and abstains: stored "pass" before OPEN-563
+        (
+            "HB460",
+            "Motion to Read a Third Time and Pass - Lost Roll Call 520",
+            55,
+            0,
+            49,
+            "fail",
+        ),
+        (
+            "SB303",
+            "Motion to Read a Third Time and Pass - Lost Roll Call 1225",
+            43,
+            44,
+            11,
+            "fail",
+        ),
+        ("HB583", "BIR Lost in House of Origin", 47, 37, 18, "fail"),
+        ("SB361", "Ensler motion to Table - Lost Roll Call 1277", 46, 53, 0, "fail"),
+        (
+            "HB360",
+            "Lee motion to Previous Question adopted - Adopted Roll Call 524",
+            72,
+            29,
+            0,
+            "pass",
+        ),
+        # no outcome word: the count decides
+        ("HB2", "Third Reading in House of Origin", 74, 30, 0, "pass"),
+        ("HB193", "Third Reading in House of Origin", 50, 0, 50, "fail"),
+    ],
+)
+def test_vote_result_from_alison_outcome_text(
+    bill_id, matter, yeas, nays, abstains, expected
+):
+    assert al_bills.vote_result(matter, yeas, nays, abstains) == expected
+
+
+def test_scraped_vote_takes_the_adopted_text_over_the_count():
+    # HB 365, House roll call 369: 13 yeas, 0 nays, 89 abstains, 3 passes (replica counts);
+    # the member list below is written here to those totals
+    scraper = make_scraper()
+    row = dict(
+        [r for r in hb2_histories() if r["rollCallNbr"] == 536][0],
+        matter="Motion to Read a Third Time and Pass - Adopted Roll Call 369",
+        rollCallNbr=369,
+    )
+    members = (
+        [{"memberName": f"Y{i}", "vote": "Y"} for i in range(13)]
+        + [{"memberName": f"A{i}", "vote": "A"} for i in range(89)]
+        + [{"memberName": f"P{i}", "vote": "P"} for i in range(3)]
+    )
+    reply = {"yeas": 13, "nays": 0, "abstains": 89, "passes": 3, "votes": members}
+    scraper.post = lambda *a, **k: mock.Mock(
+        content=json.dumps({"data": {"rollCallVotes": reply}}).encode()
+    )
+    (vote,) = scraper.scrape_votes(make_bill("HB365"), [row])
+    assert vote.result == "pass"
+    assert counts(vote) == {"yes": 13, "no": 0, "abstain": 89, "not voting": 3}
