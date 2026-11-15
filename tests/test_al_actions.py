@@ -98,6 +98,18 @@ def test_lost_third_reading_is_failure(matter):
 @pytest.mark.parametrize(
     "matter",
     [
+        "Ensler motion to Table - Lost Roll Call 1277",  # SB 361
+        "Motion to Adopt - Lost Roll Call 3",  # HB 95, an amendment
+        "Motion to Pass Over - Lost",  # not seen in Alabama: a procedural motion
+    ],
+)
+def test_other_lost_motions_are_not_bill_failure(matter):
+    assert "failure" not in tags(matter, resolution=False)
+
+
+@pytest.mark.parametrize(
+    "matter",
+    [
         "Motion to Read a Third Time and Pass - Adopted Roll Call 1009",
         "Motion to Read a Third Time and Pass as Amended - Adopted Roll Call 536",
     ],
