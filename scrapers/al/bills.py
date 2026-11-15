@@ -26,7 +26,7 @@ def vote_classification(action_row: dict) -> list:
 # Call 369", "... - Lost Roll Call 520", "LocalCertificationResolutionAdopted", "BIR Lost in
 # House of Origin"). On local bills most House members abstain, so a count would call adopted
 # votes failed; the count is only the fallback for a row that names no outcome.
-VOTE_OUTCOME = re.compile(r"adopted|\blost\b", re.I)
+VOTE_OUTCOME = re.compile(r"adopted\b|\blost\b", re.I)
 
 
 def vote_result(matter: str, yeas: int, nays: int, abstains: int) -> str:
