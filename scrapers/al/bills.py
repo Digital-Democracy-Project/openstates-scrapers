@@ -429,6 +429,22 @@ class ALBillScraper(Scraper):
                 "Alabama Chapter Law", act_number, "chapter", url=act_text_url
             )
 
+    def classify_action(self, action_row: dict, resolution: bool) -> list:
+        classification = self.categorizer.categorize(action_row["matter"])[
+            "classification"
+        ]
+        # OPEN-566: a resolution's "Motion to Adopt" with no amendment or substitute (amdSub)
+        # adopts the resolution itself, so it is passage, as vote_classification() says of its vote
+        if (
+            resolution
+            and not action_row.get("amdSub")
+            and AMENDMENT_ADOPTION.search(action_row["matter"])
+        ):
+            classification = [
+                "passage" if c == "amendment-passage" else c for c in classification
+            ]
+        return classification
+
     def scrape_actions(self, bill: Bill, histories: list, bill_row: dict):
 
         if bill_row["prefiledDate"]:
@@ -454,8 +470,9 @@ class ALBillScraper(Scraper):
             action_date = dateutil.parser.parse(row["calendarDate"])
             action_date = self.tz.localize(action_date)
 
-            action_attr = self.categorizer.categorize(row["matter"])
-            action_class = action_attr["classification"]
+            action_class = self.classify_action(
+                row, "resolution" in bill.classification
+            )
             if not row["body"] or row["body"] == "":
                 self.warning(f"No chamber for {action_text}, skipping")
                 continue

@@ -1,6 +1,11 @@
 from utils.actions import Rule, BaseCategorizer
 
 _categorizer_rules = (
+    # OPEN-566: a lost third reading ("Motion to Read a Third Time and Pass - Lost Roll Call
+    # 1225") failed; it stops here so "Read a Third Time and Pass" below does not call it passage
+    Rule(
+        r"Read a Third Time and Pass(?: as Amended)?\s*-\s*Lost\b", "failure", stop=True
+    ),
     Rule(r"Introduced and Referred", ["introduction", "referral"]),
     Rule(r"Read First Time", "reading-1"),
     Rule("Introduced", "introduction"),
@@ -16,7 +21,7 @@ _categorizer_rules = (
     Rule("Read for the second time", "reading-2"),
     Rule("(S|s)ubstitute adopted", "substitution"),
     Rule("(m|M)otion to Adopt (?:.*)adopted", "amendment-passage"),
-    Rule("(m|M)otion to (t|T)able (?:.*)adopted", "amendment-passage"),
+    # a carried "motion to Table" (OPEN-566) tables a motion or amendment; it adopts nothing
     Rule("(m|M)otion to Adopt (?:.*)lost", "amendment-failure"),
     Rule("(m|M)otion to Read a Third Time and Pass adopted", "passage"),
     Rule("(m|M)otion to Concur In and Adopt adopted", "passage"),
