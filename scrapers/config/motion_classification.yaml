@@ -252,3 +252,15 @@ jurisdictions:
       - "^r2 for adoption$"                      # House adopts a simple resolution (one reading)
       - "veto override"                          # "Veto Override", "Motion 11 Veto Override": Ramon, 2026-11-16, "Veto overrides count as passage" (unlike ma, ne); "... M4 Previous Question" stays procedure
     default: null
+
+  # Nevada (OPEN-595). The scraper reads the first vote list on each bill's NELIS Votes tab, the one
+  # headed "Final Passage" (GetBillVotes?voteTypeId=3): each chamber's third-reading roll call. Its
+  # label is the chamber and the version voted on, "Assembly (1st Reprint)", "Senate (As Introduced)",
+  # with " (2)" added by the scraper when the same label repeats on one day. Every text seen has this
+  # shape (2025 session 83: 1,343 votes, 12 texts; 2025Special36: 33 votes); a failed one stays
+  # passage (AB 500, 20-22). Anything else (a veto override in 2027, a new label) is left
+  # unclassified so it shows up rather than counting as final passage.
+  nv:
+    passage:
+      - '^(assembly|senate) \((as introduced|\d+(st|nd|rd|th) reprint)\)( \(\d+\))?$'
+    default: null
