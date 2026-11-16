@@ -19,7 +19,7 @@ def test_yaml_loads_without_error():
 
 
 def test_all_expected_jurisdiction_keys_present():
-    expected = {"us", "az", "ut", "fl", "mi", "ma", "wa", "va", "pa", "ne", "la", "al", "nc", "or"}
+    expected = {"us", "az", "ut", "fl", "mi", "ma", "wa", "va", "pa", "ne", "la", "al", "nc", "nv", "ga", "or"}
     assert expected == KNOWN_JURISDICTIONS
 
 
@@ -551,6 +551,120 @@ def test_jurisdiction_without_a_two_thirds_list_is_never_two_thirds():
 
 
 # ---------------------------------------------------------------------------
+# OPEN-590: Georgia. Real captions from Georgia's vote service (GetVotes, sessions 2025_26 and
+# 2026_ss, House and Senate, 1,917 roll calls, read 2026-11-16), as written there (some with a
+# trailing space). The House reconsideration of a calendar ("Local Calendar" again) is decided
+# by the ga scraper from the bill's status history (tests/test_ga_votes.py); here it is passage.
+# ---------------------------------------------------------------------------
+
+GA_CASES = [
+    # passage
+    ("PASSAGE", ["passage"]),
+    ("PASSAGE BY SUBSTITUTE", ["passage"]),
+    ("PASSAGE AS AMENDED", ["passage"]),
+    ("SBs 234,  235,  & 336 Passage", ["passage"]),
+    # concurrence
+    ("AGREE TO HOUSE SUBSTITUTE", ["passage"]),
+    ("Agree to Senate Substitute", ["passage"]),
+    ("Agree to Senate Sub as Am", ["passage"]),
+    ("AGREE TO HOUSE SUBSTITUTE AS AMENDED BY AMENDMENT #2", ["passage"]),
+    ("Agree to SAm to HSub As HAm", ["passage"]),
+    # conference report
+    ("ADOPT CONFERENCE COMMITTEE REPORT", ["passage"]),
+    ("Adopt CCR", ["passage"]),
+    ("Adopt Conference Comm. Report", ["passage"]),
+    # resolutions, constitutional amendments
+    ("ADOPT", ["passage"]),
+    ("ADOPTION", ["passage"]),
+    ("ADOPTION BY SUBSTITUTE", ["passage"]),
+    ("ADOPTION OF CONSTITUTIONAL AMENDMENT", ["passage"]),
+    ("Uncontested House Resolutions", ["passage"]),
+    ("CONSENT CALENDAR FOR SENATE STUDY COMMITTEES", ["passage"]),
+    # veto override: Ramon, 2026-11-16 (for nc), "Veto overrides count as passage"
+    ("Veto Override", ["passage"]),
+    # local calendars
+    ("Local Calendar", ["passage"]),
+    ("Local Calendar ", ["passage"]),
+    ("Local Calendar as a Whole", ["passage"]),
+    ("Previous Local Calendar", ["passage"]),
+    ("Supplemental Local Calendar #2", ["passage"]),
+    ("Local Calendar Without HBs 851 & 852", ["passage"]),
+    ("LOCAL CONSENT CALENDAR", ["passage"]),
+    ("SUPPLEMENTAL LOCAL CONSENT CALENDAR", ["passage"]),
+    # amendments
+    ("ADOPTION OF AMENDMENT #1 BY THE SENATOR FROM THE 44TH", []),
+    ("ADOPTION OF AMEND #1A BY SEN FROM THE 14TH TO AMEND #1 BY SEN FROM THE 14TH", []),
+    ("ADOPTION OF THE AMENDMENT BY THE SEN FROM THE 19TH AS AMENDED", []),
+    ("AM 62 0077", []),
+    # reconsideration
+    ("Reconsider", []),
+    ("MOTION FOR RECONSIDERATION", []),
+    ("MOTION TO RECONSIDER AMENDMENT #1", []),
+    ("MOTION TO RECONSIDER LOCAL CONSENT CALENDAR", []),
+    ("Recon SB 234,  235,  & 336", []),
+    ("SB614 & SB627 RECON", []),
+    # procedure
+    ("MOTION TO ENGROSS", []),
+    ("MOTION TO ENGROSS: SB 31, SB 175", []),
+    ("MOTION FOR THE PREVIOUS QUESTION", []),
+    ("MOTION TO WITHDRAW AND COMMIT", []),
+    ("MOTION TO TABLE", []),
+    ("TABLE", []),
+    ("MOTION TO REMOVE FROM THE TABLE", []),
+    ("MOTION TO TABLE REMAINING LEGISLATION ON THE RULES CALENDAR", []),
+    ("SHALL THE RULING OF THE CHAIR BE SUSTAINED", []),
+    ("MOTION TO SUSPEND SENATE RULE 7-1-6(b)", []),
+    ("Immediately Transmit", []),
+    ("MOTION TO IMMEDIATELY TRANSMIT TO GOVERNOR", []),
+    ("MOTION TO RESOLVE DEBATE", []),
+    ("MOTION TO ADJOURN", []),
+    ("Adjournment", []),
+    ("RECEDE FROM SENATE AMENDMENT", []),
+    ("MOTION TO PRINT", []),
+    ("Move from P&CH to Hth", []),
+    ("Remove from Local Cal/Vote Separately", []),
+]
+
+# left to the default (unclassified) on purpose: none of them is on one bill
+GA_DEFAULT = [
+    "Attendance",
+    "MORNING ROLL CALL",
+    "CONFIRMATION OF GOVERNOR'S APPOINTMENTS",
+    "MOTION TO CONFIRM WITH ONE ROLL CALL",
+    "Speaker of the House",
+    "Dispense with Reading of Journal",
+]
+
+
+@pytest.mark.parametrize("text,expected", GA_CASES)
+def test_ga(text, expected):
+    assert classify_motion("ga", text) == expected
+
+
+@pytest.mark.parametrize("text,expected", GA_CASES)
+def test_ga_every_real_text_is_decided_by_a_rule(text, expected):
+    cfg = _config["jurisdictions"]["ga"]
+    key = "passage" if expected else "not_passage"
+    assert any(re.search(p, text.strip().lower()) for p in cfg[key])
+
+
+@pytest.mark.parametrize("text", GA_DEFAULT)
+def test_ga_default_texts_are_unclassified(text):
+    cfg = _config["jurisdictions"]["ga"]
+    t = text.lower()
+    assert not any(re.search(p, t) for p in cfg["not_passage"] + cfg["passage"])
+    assert classify_motion("ga", text) == []
+
+
+def test_ga_scraper_uses_classify_motion():
+    root = os.path.join(os.path.dirname(__file__), "..", "scrapers")
+    src = open(os.path.join(root, "ga", "bills.py")).read()
+    assert "from classify_motion import classify_motion" in src
+    assert 'classify_motion("ga"' in src
+    assert "veto-override" not in src
+
+
+# ---------------------------------------------------------------------------
 # OPEN-572: North Carolina. Every motion text stored for NC (Mac replica, sessions 2025 and 2025E1,
 # 781 roll calls, 2026-11-15), as the bill page's vote table writes it. A bare "Second Reading" is
 # decided by the nc scraper from the bill's later roll calls (tests/test_nc_votes.py); here it is [].
@@ -625,6 +739,29 @@ def test_nc_scraper_uses_classify_motion():
     assert "from classify_motion import classify_motion" in src
     assert 'classify_motion("nc"' in src
     assert 'classification="passage"' not in src
+
+
+# OPEN-595: real Nevada motion texts (2025 session 83 from the OpenStates API, 2025Special36 from
+# govbot-data and the 10-31 probe sample). Every Nevada roll call the scraper reads is a chamber's
+# final-passage vote, labelled with the version voted on; the last two are not seen and must not count.
+NV_CASES = [
+    ("Assembly (As Introduced)", ["passage"]),
+    ("Senate (As Introduced)", ["passage"]),
+    ("Assembly (1st Reprint)", ["passage"]),
+    ("Senate (1st Reprint)", ["passage"]),
+    ("Assembly (2nd Reprint)", ["passage"]),
+    ("Senate (3rd Reprint)", ["passage"]),
+    ("Assembly (4th Reprint)", ["passage"]),
+    ("Senate (As Introduced) (2)", ["passage"]),  # AB 591, the same label twice on 2025-05-23
+    ("Senate (2nd Reprint) (2)", ["passage"]),  # AB 44
+    ("Assembly (Veto)", []),  # not seen
+    ("Senate (As Enrolled)", []),  # not seen
+]
+
+
+@pytest.mark.parametrize("text,expected", NV_CASES)
+def test_nv(text, expected):
+    assert classify_motion("nv", text) == expected
 
 
 # ---------------------------------------------------------------------------

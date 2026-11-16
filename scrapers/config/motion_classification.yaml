@@ -61,6 +61,41 @@ jurisdictions:
       - "^amendment"                             # anchored so "Favorable with 1 amendment" still defaults to passage
     default: passage                             # catch-all for floor-vote site
 
+  # OPEN-590 (Georgia, gate E). The motion text is the roll call's Caption in Georgia's vote service
+  # (GetVote). Rules written from every caption of sessions 2025_26 and 2026_ss (GetVotes, House and
+  # Senate, 1,917 roll calls, read 2026-11-16). House and Senate local bills are voted as a calendar
+  # ("Local Calendar", "LOCAL CONSENT CALENDAR"): passage for each bill on it. The caption does not
+  # change when the House reconsiders a calendar, so the ga scraper (vote_classification() in
+  # ga/bills.py) unclassifies a calendar roll call that the bill's status history pairs with a
+  # "Reconsidered" status. Pass/fail comes from the status history too ("... Lost"), not from here.
+  ga:
+    not_passage:
+      - "recon"                                  # "Reconsider", "MOTION FOR RECONSIDERATION", "SB614 & SB627 RECON", "MOTION TO RECONSIDER LOCAL CONSENT CALENDAR"
+      - '^adoption of (the )?amend'              # Senate floor amendments: "ADOPTION OF AMENDMENT #1 BY THE SENATOR FROM THE 44TH", "ADOPTION OF AMEND #1A BY SEN ..."
+      - '^am \d'                                 # an amendment's number: "AM 62 0077"
+      - "table"                                  # "MOTION TO TABLE", "TABLE", "MOTION TO REMOVE FROM THE TABLE", "... REMAINING LEGISLATION ON THE RULES CALENDAR"
+      - "engross"                                # "MOTION TO ENGROSS" (closes a bill to amendment)
+      - "previous question"
+      - "withdraw and commit"
+      - "ruling of the chair"
+      - "suspend"                                # "MOTION TO SUSPEND SENATE RULE 7-1-6(b)"
+      - "immediately transmit"                   # "Immediately Transmit", "MOTION TO IMMEDIATELY TRANSMIT TO GOVERNOR"
+      - "resolve debate"
+      - "adjourn"
+      - "recede"                                 # "RECEDE FROM SENATE AMENDMENT"
+      - "^motion to print$"
+      - "^move from "                            # committee move: "Move from P&CH to Hth"
+      - "^remove from local cal"                 # "Remove from Local Cal/Vote Separately"
+    passage:
+      - "passage"                                # "PASSAGE", "PASSAGE BY SUBSTITUTE", "PASSAGE AS AMENDED", "SBs 234,  235,  & 336 Passage"
+      - "^agree to "                             # concurrence: "AGREE TO HOUSE SUBSTITUTE", "Agree to Senate Sub as Am" (ut, mi, wa, va, al, nc)
+      - "^adopt"                                 # "ADOPT", "ADOPTION" (resolutions), "ADOPTION OF CONSTITUTIONAL AMENDMENT", "ADOPT CONFERENCE COMMITTEE REPORT", "Adopt CCR"
+      - "veto override"                          # Ramon, 2026-11-16 (for nc): "Veto overrides count as passage"
+      - "local (consent )?calendar"              # "Local Calendar", "Local Calendar as a Whole", "Previous Local Calendar", "Supplemental Local Calendar #2", "LOCAL CONSENT CALENDAR"
+      - "^consent calendar "                     # Senate resolutions: "CONSENT CALENDAR FOR SENATE STUDY COMMITTEES", "... EXPRESSING THE WILL OF THE SENATE"
+      - "^uncontested house resolutions$"
+    default: null                                # attendance, roll calls, confirmations, "Speaker of the House", "Dispense with Reading of Journal"
+
   mi:
     passage:
       - "^passed"                                # roll call# embedded after the verb
@@ -251,6 +286,18 @@ jurisdictions:
       - "^motion 8 to adopt$"                    # Senate adopts a simple resolution
       - "^r2 for adoption$"                      # House adopts a simple resolution (one reading)
       - "veto override"                          # "Veto Override", "Motion 11 Veto Override": Ramon, 2026-11-16, "Veto overrides count as passage" (unlike ma, ne); "... M4 Previous Question" stays procedure
+    default: null
+
+  # Nevada (OPEN-595). The scraper reads the first vote list on each bill's NELIS Votes tab, the one
+  # headed "Final Passage" (GetBillVotes?voteTypeId=3): each chamber's third-reading roll call. Its
+  # label is the chamber and the version voted on, "Assembly (1st Reprint)", "Senate (As Introduced)",
+  # with " (2)" added by the scraper when the same label repeats on one day. Every text seen has this
+  # shape (2025 session 83: 1,343 votes, 12 texts; 2025Special36: 33 votes); a failed one stays
+  # passage (AB 500, 20-22). Anything else (a veto override in 2027, a new label) is left
+  # unclassified so it shows up rather than counting as final passage.
+  nv:
+    passage:
+      - '^(assembly|senate) \((as introduced|\d+(st|nd|rd|th) reprint)\)( \(\d+\))?$'
     default: null
 
   # OPEN-597 (Oregon, gate E). The motion text is the ActionText of a MeasureHistoryActions row that carries
