@@ -332,6 +332,8 @@ class MABillScraper(Scraper):
         self.paper_links = {}
         self.amendment_papers = set()
         self.prefetched_pages = {}
+        # OPEN-568: amendment paper (fix_bill_id) -> the real bill its roll calls are recorded on
+        self.paper_parents = {}
 
     def label_non_bill(self, bill, page_title):
         """OPEN-518: give a paper that is not a bill the label for what it is, instead of skipping it.
@@ -498,6 +500,11 @@ class MABillScraper(Scraper):
             papers[fix_bill_id(bill_id)] = paper
 
         self.amendment_papers = set(papers)
+        listed = {
+            fix_bill_id(meta["BillNumber"])
+            for meta in self.bill_list
+            if meta["BillNumber"]
+        }
         for paper_id, parent in resolve_paper_parents(papers).items():
             paper = papers[paper_id]
             if parent is None:
@@ -505,6 +512,10 @@ class MABillScraper(Scraper):
                     f"OPEN-509: amendment paper {paper_id} names no single bill; not linked"
                 )
                 continue
+            # OPEN-568: the paper's roll calls go on the real bill (see paper_vote_event). Only a bill in this
+            # session's own list: the vote names its bill by number, and a number the import cannot find stops it.
+            if parent in listed:
+                self.paper_parents[paper_id] = parent
             if paper["substituted_for"] and paper["media_type"] == "application/pdf":
                 # OPEN-512: the chamber adopted this draft as the bill's text. "Substituted text (S2512)" ranks
                 # as an amendment-stage version in openstates-core's version ordering (after "Bill Text", before
@@ -757,6 +768,30 @@ class MABillScraper(Scraper):
         self.label_non_bill(bill, page_title)
         yield bill
 
+    def paper_vote_event(self, bill, **kwargs):
+        """A VoteEvent for a roll call in `bill`'s history, recorded on the bill it really decides.
+
+        OPEN-568 (Ramon, 2026-11-16: "Ship now; move votes later"): a roll call in an amendment paper's history
+        (the Senate's budget debate on S 3, its redraft of H 4001: "Amendment #493 (R. Kennedy) adopted") is a vote
+        on the real bill, so it is recorded there, on the parent the OPEN-509 pre-pass resolved; the paper keeps
+        its own actions. The paper's number is kept in the vote's extras so it can be traced back. Its dedupe key
+        is not changed (the callers still build it from the paper's number), so the next import moves the stored
+        row to the real bill instead of adding a second one. Any other bill's votes stay on it.
+        """
+        parent = self.paper_parents.get(fix_bill_id(bill.identifier))
+        # the bill is looked up in its chamber; only an "H" or "S" number names one
+        chamber = {"H": "lower", "S": "upper"}.get((parent or "").split(" ")[0])
+        if chamber is None:
+            return VoteEvent(bill=bill, **kwargs)
+        vote = VoteEvent(
+            bill=parent,
+            bill_chamber=chamber,
+            legislative_session=bill.legislative_session,
+            **kwargs,
+        )
+        vote.extras["ddp_amendment_paper"] = bill.identifier
+        return vote
+
     def scrape_cosponsors(self, bill, bill_url):
         # https://malegislature.gov/Bills/189/S1194/CoSponsor
         cosponsor_url = "{}/CoSponsor".format(bill_url)
@@ -926,13 +961,13 @@ class MABillScraper(Scraper):
                 n_supplement = int(
                     re.findall(r"No\.\s*(\d+)", action_name, re.IGNORECASE)[0]
                 )
-                cached_vote = VoteEvent(
+                cached_vote = self.paper_vote_event(
+                    bill,
                     chamber=actor,
                     start_date=action_date,
                     motion_text=vote_action,
                     result=vote_result(vote_action, y, n),
                     classification=classify_motion("ma", vote_action),
-                    bill=bill,
                 )
                 cached_vote.set_count("yes", y)
                 cached_vote.set_count("no", n)
@@ -1012,13 +1047,13 @@ class MABillScraper(Scraper):
                     y, n, nay_label_ok = tally
 
                     # TODO: other count isn't included, set later
-                    cached_vote = VoteEvent(
+                    cached_vote = self.paper_vote_event(
+                        bill,
                         chamber=actor,
                         start_date=action_date,
                         motion_text=vote_action,
                         result=vote_result(vote_action, y, n),
                         classification=classify_motion("ma", vote_action),
-                        bill=bill,
                     )
                     cached_vote.set_count("yes", y)
                     cached_vote.set_count("no", n)
