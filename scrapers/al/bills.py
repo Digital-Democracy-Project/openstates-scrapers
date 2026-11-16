@@ -37,6 +37,59 @@ def vote_result(matter: str, yeas: int, nays: int) -> str:
     return "pass" if yeas > nays else "fail"
 
 
+# OPEN-569: an amendment or substitute paper is a version of the bill only if it became part of it.
+# ALISON lists the paper (amdSubFileUrl) on every history row that acts on it: the committee report
+# or floor offer that introduces it, then the floor motion on it ("Motion to Adopt - Adopted Roll Call
+# 895", "Moore (M) motion to Table - Adopted Voice Vote"); an adoption row right after the paper's
+# row that names no paper is the vote on it too. A paper the floor adopted is a version; one
+# offered on the floor and never adopted (tabled, lost, withdrawn) is a document. A paper only a
+# committee acted on (reported out, never offered on the floor) stays a version: it is the bill as
+# the committee reported it.
+FLOOR_ACTION = re.compile(r"\boffered\b|\bmotion to\b", re.I)
+
+
+def paper_is_version(rows: list) -> bool:
+    for row in rows:
+        outcomes = VOTE_OUTCOME.findall(row["matter"])
+        if (
+            AMENDMENT_ADOPTION.search(row["matter"])
+            and outcomes
+            and outcomes[-1].lower() == "adopted"
+        ):
+            return True
+    return not any(FLOOR_ACTION.search(row["matter"]) for row in rows)
+
+
+# OPEN-569: the date of each of the bill's own printings, from the history row that marks it, so
+# openstates-core can order Alabama's versions by date (its versions had none, and the papers'
+# names cannot be placed in time). Introduced: the prefiled date, else the first history row.
+# Engrossed: the "Engrossed" row, else the first passage in the house of origin. Enrolled: the
+# first "Enrolled" row, else the last "Ready to Enroll". Empty when no row says.
+PASSAGE = re.compile(r"\bthird time and pass\b.*\badopted\b", re.I)
+
+
+def version_dates(bill_row: dict, histories: list) -> dict:
+    def day(row):
+        return dateutil.parser.parse(row["calendarDate"]).strftime("%Y-%m-%d")
+
+    def first(rows):
+        return day(rows[0]) if rows else ""
+
+    matters = [(row.get("matter") or "").strip() for row in histories]
+    introduced = (
+        dateutil.parser.parse(bill_row["prefiledDate"]).strftime("%Y-%m-%d")
+        if bill_row.get("prefiledDate")
+        else first(histories)
+    )
+    engrossed = first(
+        [r for r, m in zip(histories, matters) if m == "Engrossed"]
+    ) or first([r for r, m in zip(histories, matters) if PASSAGE.search(m)])
+    enrolled = first(
+        [r for r, m in zip(histories, matters) if m == "Enrolled"]
+    ) or first([r for r, m in zip(histories, matters) if m == "Ready to Enroll"][-1:])
+    return {"Introduced": introduced, "Engrossed": engrossed, "Enrolled": enrolled}
+
+
 class ALBillScraper(Scraper):
     categorizer = Categorizer()
     chamber_map = {"Senate": "upper", "House": "lower"}
@@ -186,8 +239,8 @@ class ALBillScraper(Scraper):
                 self.warning(f"No sponsors for {bill_id}")
                 continue
 
-            self.scrape_versions(bill, row)
             histories = self.scrape_rest(bill, row)
+            self.scrape_versions(bill, row, histories)
 
             bill.add_source("https://alison.legislature.state.al.us/bill-search")
             # AL removed instrumentUrl from API as of 1/20/25
@@ -366,25 +419,20 @@ class ALBillScraper(Scraper):
 
         return histories
 
-    def scrape_versions(self, bill: Bill, row: dict):
-        if row["introducedFileUrl"]:
-            bill.add_version_link(
-                "Introduced",
-                url=row["introducedFileUrl"],
-                media_type="application/pdf",
-            )
-        if row["engrossedFileUrl"]:
-            bill.add_version_link(
-                "Engrossed",
-                url=row["engrossedFileUrl"],
-                media_type="application/pdf",
-            )
-        if row["enrolledFileUrl"]:
-            bill.add_version_link(
-                "Enrolled",
-                url=row["enrolledFileUrl"],
-                media_type="application/pdf",
-            )
+    def scrape_versions(self, bill: Bill, row: dict, histories: list):
+        dates = version_dates(row, histories)
+        for note, key in (
+            ("Introduced", "introducedFileUrl"),
+            ("Engrossed", "engrossedFileUrl"),
+            ("Enrolled", "enrolledFileUrl"),
+        ):
+            if row[key]:
+                bill.add_version_link(
+                    note,
+                    url=row[key],
+                    date=dates[note],
+                    media_type="application/pdf",
+                )
 
     # the search JSON contains the act reference, but not the final text
     # so scrape it from the SoS
@@ -458,6 +506,8 @@ class ALBillScraper(Scraper):
                 classification="filing",
             )
 
+        papers = {}
+        last_url = None
         for row in histories:
             action_text = row["matter"]
 
@@ -485,13 +535,30 @@ class ALBillScraper(Scraper):
                 classification=action_class,
             )
 
-            if row["amdSubFileUrl"]:
-                bill.add_version_link(
-                    row["matter"],
-                    url=row["amdSubFileUrl"],
-                    media_type=get_media_type(row["amdSubFileUrl"]),
-                    on_duplicate="ignore",
-                )
+            url = row["amdSubFileUrl"]
+            if url:
+                papers.setdefault(url, []).append(row)
+            elif last_url and AMENDMENT_ADOPTION.search(row["matter"]):
+                # the adoption right after the paper's row sometimes names no paper (SB 146 2026RS:
+                # "Albritton motion to adopt- Adopted Roll Call 813"); it is the vote on that paper
+                papers[last_url].append(row)
+            last_url = url
+
+        # OPEN-569: each amendment or substitute paper once, named after and dated by the first
+        # action that carries it; a version only if it became part of the bill (paper_is_version)
+        for url, rows in papers.items():
+            add_link = (
+                bill.add_version_link
+                if paper_is_version(rows)
+                else bill.add_document_link
+            )
+            add_link(
+                rows[0]["matter"],
+                url,
+                date=self.transform_date(rows[0]["calendarDate"]),
+                media_type=get_media_type(url),
+                on_duplicate="ignore",
+            )
 
         # if bill_row["ViewEnacted"]:
         #     self.scrape_act(
