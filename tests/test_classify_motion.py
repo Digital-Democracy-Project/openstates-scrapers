@@ -19,7 +19,7 @@ def test_yaml_loads_without_error():
 
 
 def test_all_expected_jurisdiction_keys_present():
-    expected = {"us", "az", "ut", "fl", "mi", "ma", "wa", "va", "pa", "ne", "la", "al", "nc", "ga"}
+    expected = {"us", "az", "ut", "fl", "mi", "ma", "wa", "va", "pa", "ne", "la", "al", "nc", "nv", "ga"}
     assert expected == KNOWN_JURISDICTIONS
 
 
@@ -739,3 +739,26 @@ def test_nc_scraper_uses_classify_motion():
     assert "from classify_motion import classify_motion" in src
     assert 'classify_motion("nc"' in src
     assert 'classification="passage"' not in src
+
+
+# OPEN-595: real Nevada motion texts (2025 session 83 from the OpenStates API, 2025Special36 from
+# govbot-data and the 10-31 probe sample). Every Nevada roll call the scraper reads is a chamber's
+# final-passage vote, labelled with the version voted on; the last two are not seen and must not count.
+NV_CASES = [
+    ("Assembly (As Introduced)", ["passage"]),
+    ("Senate (As Introduced)", ["passage"]),
+    ("Assembly (1st Reprint)", ["passage"]),
+    ("Senate (1st Reprint)", ["passage"]),
+    ("Assembly (2nd Reprint)", ["passage"]),
+    ("Senate (3rd Reprint)", ["passage"]),
+    ("Assembly (4th Reprint)", ["passage"]),
+    ("Senate (As Introduced) (2)", ["passage"]),  # AB 591, the same label twice on 2025-05-23
+    ("Senate (2nd Reprint) (2)", ["passage"]),  # AB 44
+    ("Assembly (Veto)", []),  # not seen
+    ("Senate (As Enrolled)", []),  # not seen
+]
+
+
+@pytest.mark.parametrize("text,expected", NV_CASES)
+def test_nv(text, expected):
+    assert classify_motion("nv", text) == expected

@@ -7,6 +7,7 @@ from dataclasses import dataclass
 import dateutil.parser
 import lxml.html
 from openstates.scrape import Scraper, Bill, VoteEvent
+from classify_motion import classify_motion
 from .common import get_session_slug
 from spatula import HtmlListPage, HtmlPage, CSS, XPath, SelectorError, SkipItem
 from scrapelib import HTTPError
@@ -560,7 +561,8 @@ class VoteList(Utf8HtmlMixin, HtmlPage):
                 chamber=chamber,
                 motion_text=summary,
                 result="pass" if vote_options["yea"] > vote_options["nay"] else "fail",
-                classification="passage",
+                # OPEN-595: the rules live in config/motion_classification.yaml (nv block)
+                classification=classify_motion("nv", summary),
                 start_date=start_date,
                 bill=bill,
             )
