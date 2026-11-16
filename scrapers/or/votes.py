@@ -1,4 +1,5 @@
 import datetime
+import re
 import logging
 from collections import Counter
 
@@ -8,6 +9,24 @@ from .apiclient import OregonLegislatorODataClient
 from .utils import index_legislators, get_timezone, SESSION_KEYS
 
 logger = logging.getLogger("openstates")
+
+# OPEN-598: Oregon needs a majority of all members (31 of 60, 16 of 30) to pass a bill and several
+# motions, so a roll call can have more yes than no and still fail. The legislature's own text names
+# the outcome; the tally decides only when the text does not. "Carried by <names>." names the members
+# who carry the bill on the floor, not an outcome, so it is removed first.
+CARRIER = re.compile(r"carried by [^.]*\.", re.I)
+FAILED = re.compile(r"\bfailed\b", re.I)
+PASSED = re.compile(r"\b(passed|repassed|adopted|readopted|carried)\b", re.I)
+
+
+def result_from_text(text):
+    """'pass' or 'fail' when the motion text states the outcome, else None."""
+    t = CARRIER.sub("", text or "")
+    if FAILED.search(t):
+        return "fail"
+    if PASSED.search(t):
+        return "pass"
+    return None
 
 
 class ORVoteScraper(Scraper):
@@ -40,7 +59,9 @@ class ORVoteScraper(Scraper):
             for event in measure_history:
                 if event["MeasureVotes"]:
                     tally = self.tally_votes(event, "measure")
-                    passed = self.passed_vote(tally)
+                    result = result_from_text(event["ActionText"])
+                    if result is None:
+                        result = "pass" if self.passed_vote(tally) else "fail"
 
                     # OPEN-597: floor votes take the or block of config/motion_classification.yaml
                     classification = classify_motion("or", event["ActionText"])
@@ -54,7 +75,7 @@ class ORVoteScraper(Scraper):
                         bill_chamber=self.chamber_code[bid[0]],
                         motion_text=event["ActionText"],
                         classification=classification,
-                        result="pass" if passed else "fail",
+                        result=result,
                         legislative_session=session,
                         bill=bid,
                         chamber=self.chamber_code[event["Chamber"]],
