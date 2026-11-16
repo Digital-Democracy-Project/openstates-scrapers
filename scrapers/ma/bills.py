@@ -319,8 +319,8 @@ def rollcall_of(vote):
     """OPEN-568: which roll call a vote is, whatever bill cited it: its dedupe key without the bill number.
 
     None for a Senate vote whose action cites no roll-call number (`_senate_vote_dedupe_key`'s fallback, keyed by
-    the bill's own page): date and tally alone do not identify a roll call, so it is never matched (0 of the 236
-    roll-call actions of the 194th take that path).
+    the bill's own page, 0 of the 236 roll-call actions of the 194th): stripped, every such vote of one paper would
+    read as the same roll call (its page), and date and tally alone do not identify one.
     """
     key = vote.dedupe_key or ""
     if "#senate-" in key:
@@ -359,12 +359,14 @@ class MABillScraper(Scraper):
         self.paper_links = {}
         self.amendment_papers = set()
         self.prefetched_pages = {}
-        # OPEN-568: amendment paper (fix_bill_id) -> the real bill its roll calls are recorded on; the bills this
-        # run has yielded whole, the roll calls each cited, paper votes waiting for their real bill, failed histories
+        # OPEN-568: amendment paper (fix_bill_id) -> its real bill; for this run's paper groups (see
+        # with_paper_pairs): bill -> its group's real bill, real bill -> members not scraped yet, the members read
+        # whole, and the group's votes held back; the bill pages whose history could not be read in full
         self.paper_parents = {}
-        self.yielded_bills = set()
-        self.rollcalls_by_bill = {}
-        self.pending_paper_votes = {}
+        self.group_of = {}
+        self.group_waiting = {}
+        self.group_read_whole = set()
+        self.group_votes = {}
         self.failed_histories = set()
 
     def label_non_bill(self, bill, page_title):
@@ -459,7 +461,7 @@ class MABillScraper(Scraper):
 
         for bill_meta in self.with_paper_pairs(metas):
             yield from self.scrape_bill(session, bill_meta, meta_chamber(bill_meta))
-        yield from self.unclaimed_paper_votes()
+            yield from self.group_member_done(meta_id(bill_meta))
         if bill_no and len(metas) == 1:
             self.info("Finished individual bill scrape, exiting.")
 
@@ -472,6 +474,9 @@ class MABillScraper(Scraper):
         votes, `bill_no=H4001` the votes moved from S 3. A full run holds every group already; a single-bill,
         single-chamber or chunk run adds the missing members (in the 194th, 152 linked papers on 102 bills; the
         largest group, H 5576, adds 27 papers).
+
+        It also records this run's groups: a paper whose real bill is not in the list is in none, and its votes stay
+        on it, as before OPEN-568.
         """
         ids = {meta_id(meta) for meta in metas}
         roots = {self.paper_parents.get(bill_id, bill_id) for bill_id in ids}
@@ -490,7 +495,55 @@ class MABillScraper(Scraper):
                     ", ".join(meta_id(m) for m in extra)
                 )
             )
+        scheduled = ids
+        self.group_of, self.group_waiting = {}, {}
+        for paper, parent in self.paper_parents.items():
+            if paper in scheduled and parent in scheduled:
+                self.group_of[paper] = self.group_of[parent] = parent
+        for bill_id, root in self.group_of.items():
+            self.group_waiting.setdefault(root, set()).add(bill_id)
         return list(metas) + extra
+
+    def group_member_done(self, bill_id):
+        """OPEN-568: once every bill of a paper group has been scraped, send the group's votes, or none of them.
+
+        The import deletes a bill's stored votes that the run did not bring again. If any bill of the group could
+        not be read whole (its page, or a page of its history, failed), sending the rest would delete the missing
+        votes: S 3's history failing would delete the 21 votes moved from it to H 4001. So the whole group's votes
+        are held back that run, and nothing is deleted. A roll call cited both by the real bill and by a paper (or
+        by two papers) is sent once, the real bill's own first.
+        """
+        root = self.group_of.get(bill_id)
+        if root is None:
+            return
+        waiting = self.group_waiting[root]
+        waiting.discard(bill_id)
+        if waiting:
+            return
+        members = {b for b, r in self.group_of.items() if r == root}
+        votes = self.group_votes.pop(root, [])
+        missing = sorted(members - self.group_read_whole)
+        if missing:
+            self.warning(
+                "OPEN-568: {} not read whole; the {} votes of {} and its amendment papers are not sent "
+                "this run, so none of them is deleted".format(
+                    ", ".join(missing), len(votes), root
+                )
+            )
+            return
+        votes.sort(key=lambda vote: "ddp_amendment_paper" in vote.extras)
+        sent = set()
+        for vote in votes:
+            rollcall = rollcall_of(vote)
+            if rollcall is not None and rollcall in sent:
+                self.info(
+                    "OPEN-568: roll call {} from {} is already on {}; not added again".format(
+                        rollcall, vote.extras.get("ddp_amendment_paper"), root
+                    )
+                )
+                continue
+            sent.add(rollcall)
+            yield vote
 
     def scrape_amendment_papers(self, session):
         """OPEN-509/512 pre-pass: read every amendment paper's real bill before any bill is scraped.
@@ -820,72 +873,21 @@ class MABillScraper(Scraper):
             )
             add_link(note, url, date=date, media_type=media_type)
 
-        bill_key = fix_bill_id(bill.identifier)
-        paper_votes = []
-        for vote in self.scrape_actions(bill, bill_url, session):
-            if "ddp_amendment_paper" in vote.extras:
-                paper_votes.append(vote)
-                continue
-            self.rollcalls_by_bill.setdefault(bill_key, set()).add(rollcall_of(vote))
-            yield vote
+        # OPEN-568: a bill of a paper group holds its votes back until the whole group is scraped (see
+        # group_member_done). A history the OPEN-509 pre-pass failed to read and this pass reads counts as read.
+        member = meta_id(bill_meta)
+        root = self.group_of.get(member)
+        self.failed_histories.discard(bill_url)
+        if root is None:
+            yield from self.scrape_actions(bill, bill_url, session)
+        else:
+            self.group_votes.setdefault(root, []).extend(
+                self.scrape_actions(bill, bill_url, session)
+            )
+            if bill_url not in self.failed_histories:
+                self.group_read_whole.add(member)
         self.label_non_bill(bill, page_title)
         yield bill
-
-        # OPEN-568: a paper's votes go out only once its real bill has been yielded in this run with its whole
-        # history read (see with_paper_pairs); until then they wait, and unclaimed_paper_votes() puts back on the
-        # paper any whose real bill never was (its page or a history page failed, or it is missing from the list).
-        # Otherwise the moved votes would make the import delete the real bill's own votes it did not read again,
-        # and a parent that is never imported would stop the import (the vote names its bill by number).
-        if bill_url not in self.failed_histories:
-            self.yielded_bills.add(bill_key)
-        for vote in paper_votes:
-            if vote.bill_identifier in self.yielded_bills:
-                yield from self.claimed_paper_vote(vote)
-            else:
-                self.pending_paper_votes.setdefault(vote.bill_identifier, []).append(
-                    (vote, bill)
-                )
-        for vote, _paper in self.pending_paper_votes.pop(bill_key, ()):
-            yield from self.claimed_paper_vote(vote)
-
-    def claimed_paper_vote(self, vote):
-        """Yield a paper's vote on its real bill, unless the real bill already yielded the same roll call.
-
-        Its key names the paper, so a roll call both histories cite would otherwise be stored twice (none in the
-        194th). Skipped, the paper's copy is not imported, and a copy stored on the real bill is deleted by the
-        import as one this run did not bring.
-        """
-        rollcall = rollcall_of(vote)
-        if rollcall and rollcall in self.rollcalls_by_bill.get(
-            vote.bill_identifier, ()
-        ):
-            self.info(
-                "OPEN-568: {} roll call {} is already on {}; not added again".format(
-                    vote.extras["ddp_amendment_paper"],
-                    rollcall,
-                    vote.bill_identifier,
-                )
-            )
-            return
-        yield vote
-
-    def unclaimed_paper_votes(self):
-        """Paper votes whose real bill was not yielded in this run, put back on their paper, as before OPEN-568.
-
-        Their key is the paper's, so a stored row already moved to the real bill comes back to the paper: nothing is
-        lost, and the real bill, which brought no votes, has none deleted.
-        """
-        for parent, waiting in sorted(self.pending_paper_votes.items()):
-            for vote, paper in waiting:
-                self.warning(
-                    "OPEN-568: {} was not scraped in this run; {} vote of {} stays on the paper".format(
-                        parent, vote.start_date, paper.identifier
-                    )
-                )
-                vote.set_bill(paper)
-                del vote.extras["ddp_amendment_paper"]
-                yield vote
-        self.pending_paper_votes = {}
 
     def paper_vote_event(self, bill, **kwargs):
         """A VoteEvent for a roll call in `bill`'s history, recorded on the bill it really decides.
@@ -897,7 +899,9 @@ class MABillScraper(Scraper):
         is not changed (the callers still build it from the paper's number), so the next import moves the stored
         row to the real bill instead of adding a second one. Any other bill's votes stay on it.
         """
-        parent = self.paper_parents.get(fix_bill_id(bill.identifier))
+        paper = fix_bill_id(bill.identifier)
+        # only within a group this run scrapes whole (see with_paper_pairs)
+        parent = self.group_of.get(paper) if self.group_of.get(paper) != paper else None
         # the bill is looked up in its chamber; only an "H" or "S" number names one
         chamber = {"H": "lower", "S": "upper"}.get((parent or "").split(" ")[0])
         if chamber is None:

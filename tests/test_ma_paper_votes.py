@@ -30,7 +30,6 @@ from test_ma_amendment_papers import (  # noqa: E402
 )
 from openstates.utils import _make_pseudo_id  # noqa: E402
 from openstates.scrape import Bill  # noqa: E402
-from ma.bills import MABillScraper  # noqa: E402
 
 SENATE_ROW = (
     "<tr><td>7/23/2026</td><td>Senate</td><td>Amendment #41 (Tarr) rejected -see "
@@ -53,8 +52,20 @@ def history(*rows):
     return "<table><tbody>{}</tbody></table>".format("".join(rows))
 
 
-def make(paper_rows, parent_rows=(PARENT_ROW,), bill_list=None, failing=()):
-    """A scraper whose pre-pass has run; S3178's history holds `paper_rows`, H5576's `parent_rows`."""
+PAGINATOR = '<ul class="pagination pagination-sm"><li><a onclick="return reloadAjaxContent(2);">2</a></li></ul>'
+
+
+def make(
+    paper_rows,
+    parent_rows=(PARENT_ROW,),
+    bill_list=None,
+    failing=(),
+    failing_history=(),
+    parent_pages=1,
+):
+    """A scraper whose pre-pass has run; S3178's history holds `paper_rows` (on its page 2 of 5), H5576's
+    `parent_rows` (on page 1 of `parent_pages`). `failing` bills' pages and `failing_history` (bill, page) history
+    pages fail this run, the way the site fails: scrape_bill and action_pages return quietly."""
     s = make_scraper()
     if bill_list is not None:
         s.bill_list = bill_list
@@ -63,24 +74,37 @@ def make(paper_rows, parent_rows=(PARENT_ROW,), bill_list=None, failing=()):
     s.scrape_bill_list = lambda session, start=None: None
     pages = dict(HISTORY)
     pages[(URL.format("S3178"), 2)] = history(*paper_rows)
-    pages[(URL.format("H5576"), 1)] = history(*parent_rows)
-    s.get_action_page = lambda url, n: lxml.html.fromstring(
-        pages.get((url, n), EMPTY_HISTORY)
+    pages[(URL.format("H5576"), 1)] = history(*parent_rows) + (
+        PAGINATOR if parent_pages > 1 else ""
     )
-    s.action_pages = lambda url: (
-        s.get_action_page(url, n) for n in (1, 2) if (url, n) in pages
+    failing_history = {(URL.format(n), page) for n, page in failing_history}
+    s.get_action_page = lambda url, n: (
+        None
+        if (url, n) in failing_history
+        else lxml.html.fromstring(pages.get((url, n), EMPTY_HISTORY))
     )
     s.scrape_senate_vote = lambda vote, url: False  # the voters are not under test
     s.scrape_house_voters = lambda vote, pdf, session, n: None
     fetch = s.fetch_bill_page
-    for (
-        number
-    ) in failing:  # a bill whose page fails this run (scrape_bill returns quietly)
+    for number in failing:
         s.prefetched_pages.pop(URL.format(number), None)
     s.fetch_bill_page = lambda url: (
         None if url.rsplit("/", 1)[1] in failing else fetch(url)
     )
     return s
+
+
+def deleted_by_import(stored, votes):
+    """openstates-core's delete rule (importers/vote_events.py): a stored vote is deleted when the run brings any
+    vote for the bill it is stored on, and does not bring that vote again (matched by dedupe key)."""
+    bills = {v.bill_identifier.replace(" ", "") for v in votes}
+    brought = {v.dedupe_key for v in votes}
+    return {key for key, bill in stored.items() if bill in bills and key not in brought}
+
+
+# what the database holds after a clean run with this change: the moved vote and the real bill's own
+PARENT_KEY = "https://malegislature.gov/Journal/House/194/2026/RollCalls#65#H5576"
+STORED = {SENATE_KEY.format("S3178"): "H5576", PARENT_KEY: "H5576"}
 
 
 def run(s, **kwargs):
@@ -92,11 +116,6 @@ def run(s, **kwargs):
 
 def on(votes, identifier):
     return [v for v in votes if v.bill_identifier == identifier]
-
-
-def paper_ref(s, votes):
-    """The votes that name the paper S3178 by its scraped Bill (as before OPEN-568)."""
-    return [v for v in votes if v.bill_identifier == "S3178"]
 
 
 def bill_ref(identifier, chamber):
@@ -125,7 +144,9 @@ def test_a_roll_call_in_a_papers_history_is_recorded_on_the_real_bill(row, key):
     assert moved.motion_classification == []
     moved.validate()
     assert len(on(votes, "H5576")) == 1  # the real bill's own vote, still on it
-    assert paper_ref(s, votes) == []
+    assert on(votes, "S3178") == []
+    stored = {key.format("S3178"): "H5576", PARENT_KEY: "H5576"}
+    assert deleted_by_import(stored, votes) == set()
 
 
 def test_the_paper_keeps_its_own_actions():
@@ -159,18 +180,46 @@ def test_a_one_chamber_run_adds_the_real_bill_from_the_other_chamber():
     assert len(on(votes, "H 5576")) == 1
 
 
-# --- findings 1c and 2: the real bill is not yielded in this run ---
+# --- a member of the group cannot be read whole: none of the group's votes is sent, so none is deleted ---
+
+GROUP_FAILURES = {
+    "the real bill's page": dict(failing=("H5576",)),
+    "the real bill's history, page 1": dict(failing_history=[("H5576", 1)]),
+    "the real bill's history, page 2": dict(
+        failing_history=[("H5576", 2)], parent_pages=2
+    ),
+    "the paper's page": dict(failing=("S3178",)),
+    "the paper's history, page 1": dict(failing_history=[("S3178", 1)]),
+    "the paper's history, page 2": dict(failing_history=[("S3178", 2)]),
+    "the other paper's page": dict(failing=("S3208",)),
+}
 
 
-def test_a_real_bill_whose_page_fails_leaves_the_vote_on_the_paper():
-    s = make([SENATE_ROW], failing=("H5576",))
-    bills, votes = run(s)
-    assert "H5576" not in bills
-    (vote,) = votes
-    assert vote.bill_identifier == "S3178"  # on the paper, as before OPEN-568
-    assert "ddp_amendment_paper" not in vote.extras
-    assert vote.dedupe_key == SENATE_KEY.format("S3178")  # the moved row comes back
-    vote.validate()
+@pytest.mark.parametrize("failure", sorted(GROUP_FAILURES))
+@pytest.mark.parametrize("bill_no", [None, "S3178"])
+def test_when_any_member_fails_no_vote_of_the_group_is_sent_and_none_is_deleted(
+    failure, bill_no
+):
+    s = make([SENATE_ROW], **GROUP_FAILURES[failure])
+    bills, votes = run(s, bill_no=bill_no)
+    assert votes == []
+    assert deleted_by_import(STORED, votes) == set()
+
+
+def test_the_clean_run_deletes_nothing_and_a_one_sided_run_would():
+    # the simulation itself: what the import would do with the real bill's votes alone (before this round)
+    s = make([SENATE_ROW])
+    _, votes = run(s)
+    assert deleted_by_import(STORED, votes) == set()
+    own_only = [v for v in votes if "ddp_amendment_paper" not in v.extras]
+    assert deleted_by_import(STORED, own_only) == {SENATE_KEY.format("S3178")}
+
+
+def test_a_real_bill_whose_second_history_page_fails_is_recorded_as_failed():
+    s = make([SENATE_ROW], failing_history=[("H5576", 2)], parent_pages=2)
+    run(s)
+    assert URL.format("H5576") in s.failed_histories
+    assert "H 5576" not in s.group_read_whole
 
 
 def test_a_real_bill_missing_from_the_list_leaves_the_vote_on_the_paper():
@@ -203,7 +252,7 @@ def test_a_parent_that_is_not_an_h_or_s_number_leaves_the_vote_on_the_paper(pare
 
 def test_a_senate_bill_parent_is_looked_up_in_the_senate():
     s = make([])
-    s.paper_parents["S 3178"] = "S 2543"  # as for H 4271, the House's paper on S 2543
+    s.group_of = {"S 3178": "S 2543", "S 2543": "S 2543"}  # as for H 4271 and S 2543
     paper = Bill("S3178", legislative_session=SESSION, chamber="upper", title="x")
     vote = s.paper_vote_event(
         paper,
@@ -228,19 +277,6 @@ def test_a_roll_call_both_histories_cite_is_kept_once_on_the_real_bill(bill_no):
     assert vote.dedupe_key == SENATE_KEY.format("H5576")
 
 
-def test_a_real_bill_whose_history_fails_leaves_the_vote_on_the_paper():
-    # its own votes were not read again, so a vote moved onto it would make the import delete them
-    s = make([SENATE_ROW])
-    get_page, pages = s.get_action_page, s.action_pages
-    s.get_action_page = lambda url, n: None if "H5576" in url else get_page(url, n)
-    s.action_pages = lambda url: (
-        MABillScraper.action_pages(s, url) if "H5576" in url else pages(url)
-    )
-    bills, votes = run(s)
-    assert "H5576" in bills
-    assert [v.bill_identifier for v in votes] == ["S3178"]
-
-
 # a Senate roll call whose action gives no number: keyed by the bill's own page (never seen in the 194th)
 UNNUMBERED_ROW = (
     "<tr><td>7/23/2026</td><td>Senate</td><td>Amendment #41 (Tarr) rejected -see "
@@ -255,3 +291,42 @@ def test_a_roll_call_without_a_number_is_never_taken_for_another(bill_no):
     _, votes = run(s, bill_no=bill_no)
     assert sorted(v.bill_identifier for v in votes) == ["H 5576", "H5576"]
     assert len({v.dedupe_key for v in votes}) == 2
+
+
+def test_two_unnumbered_roll_calls_of_one_paper_are_both_kept():
+    # stripped of the bill, both keys would read as the paper's page: the guard in rollcall_of keeps them apart
+    other = UNNUMBERED_ROW.replace(
+        "#41 (Tarr) rejected", "#14 (Lewis) adopted"
+    ).replace("Yeas 5 to Nays 34", "Yeas 31 to Nays 8")
+    _, votes = run(make([UNNUMBERED_ROW, other]))
+    assert len(on(votes, "H 5576")) == 2
+
+
+def test_a_history_the_pre_pass_failed_to_read_but_this_pass_reads_counts_as_read():
+    s = make([SENATE_ROW])
+    s.failed_histories.add(
+        URL.format("S3178")
+    )  # as left by a pre-pass page that failed (the paper still linked)
+    _, votes = run(s)
+    assert len(on(votes, "H 5576")) == 1
+
+
+def test_the_known_gap_a_paper_whose_page_fails_twice_is_not_recognised():
+    # documented in PRIMITIVES and RUNBOOK: failing in the pre-pass too, S3178 is not known to be a paper, so it is
+    # in no group; the real bill sends its own votes and the import deletes the vote moved from S3178 until the
+    # next run brings it back. The run log names S3178 in a "Server Error on" line.
+    s = make_scraper()
+    fetch = s.fetch_bill_page
+    s.fetch_bill_page = lambda url: None if url.endswith("/S3178") else fetch(url)
+    s.scrape_amendment_papers(SESSION)
+    assert "S 3178" not in s.paper_parents
+    s.scrape_amendment_papers = lambda session: None
+    s.scrape_bill_list = lambda session, start=None: None
+    pages = {(URL.format("H5576"), 1): history(PARENT_ROW)}
+    s.get_action_page = lambda url, n: lxml.html.fromstring(
+        pages.get((url, n), EMPTY_HISTORY)
+    )
+    s.scrape_house_voters = lambda vote, pdf, session, n: None
+    _, votes = run(s)
+    assert [v.bill_identifier for v in votes] == ["H5576"]
+    assert deleted_by_import(STORED, votes) == {SENATE_KEY.format("S3178")}
