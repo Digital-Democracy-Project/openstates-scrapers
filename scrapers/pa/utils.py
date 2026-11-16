@@ -1,6 +1,9 @@
 import datetime
 from typing import Literal
 
+import lxml.etree
+import pytz
+
 old_base_url = "https://www.legis.state.pa.us"
 base_url = "https://www.palegis.us"
 urls = {
@@ -40,6 +43,64 @@ def bill_list_url(chamber, session, special):
         "&sessyr=%s&sessind=%s&billbody=%s"
         % (start_year(session), special, bill_abbr(chamber))
     )
+
+
+def bill_history_url(session, special):
+    # OPEN-574: the legislature's "Bill History Data" download (https://www.palegis.us/data),
+    # one zipped XML file per session, rebuilt daily, with every bill's lastUpdate time and
+    # full action history
+    return (
+        "https://www.palegis.us/data/file?documentType=BillHistoryData&session=%s_%s"
+        % (start_year(session), special)
+    )
+
+
+def bill_key(bill_id):
+    # "HB 17" (bill-index link text) -> "HB17"
+    return bill_id.replace(" ", "").upper()
+
+
+def _export_time(text):
+    # "November 15, 2026 7:30:14 PM EST" -> aware datetime
+    text, zone = text.strip().rsplit(" ", 1)
+    offset = {"EST": -5, "EDT": -4}[zone]
+    naive = datetime.datetime.strptime(text, "%B %d, %Y %I:%M:%S %p")
+    return naive.replace(tzinfo=datetime.timezone(datetime.timedelta(hours=offset)))
+
+
+def bills_changed_since(xml_bytes, since):
+    """OPEN-574: read a Bill History Data export and return (export_date, changed, known).
+
+    `since` is an aware datetime. A bill is changed when its lastUpdate is at or after
+    `since`, or when any of its actions is dated on or after `since`'s Eastern date. The
+    action dates are needed as well: lastUpdate is not always moved when an action is
+    added (HR 590 of 2025: "Adopted, Sept. 9, 2026" is dated 09/10/26, its lastUpdate is
+    09/08/26). `known` is every bill in the export, so a caller can still scrape a bill the
+    export does not list yet. Keys are "HB17"-style, as bill_key() makes them.
+    """
+    root = lxml.etree.fromstring(xml_bytes)
+    export_date = _export_time(root.get("exportDate"))
+    since_day = since.astimezone(pytz.timezone("America/New_York")).date()
+    changed, known = set(), set()
+    for bill in root.iter("bill"):
+        key = "%s%s%d" % (
+            bill.findtext("body"),
+            bill.findtext("type"),
+            int(bill.findtext("number")),
+        )
+        known.add(key)
+        if _export_time(bill.get("lastUpdate")) >= since:
+            changed.add(key)
+            continue
+        for action_date in bill.iterfind("actionHistory/action/date"):
+            if (
+                action_date.text
+                and datetime.datetime.strptime(action_date.text, "%m/%d/%y").date()
+                >= since_day
+            ):
+                changed.add(key)
+                break
+    return export_date, changed, known
 
 
 def info_url(session, special, bill_number):

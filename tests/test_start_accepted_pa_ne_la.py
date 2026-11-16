@@ -18,13 +18,20 @@ def make(cls, sessions):
 
 def test_pa_scrape_accepts_start_and_still_walks_both_chambers():
     """OPEN-500: run-scrape.sh appends start=<watermark> on every run after the first; PA's
-    second run died with TypeError. start must be accepted and must not change what is scraped."""
+    second run died with TypeError. start must be accepted and both chambers still walked
+    (since OPEN-574 start= narrows which bills are fetched: tests/test_pa_incremental.py)."""
     scraper = make(PABillScraper, [{"identifier": "2025-2026"}])
-    with mock.patch.object(scraper, "scrape_session", return_value=iter(())) as walk:
-        list(scraper.scrape(session="2025-2026", start=START))
+    with mock.patch.object(
+        scraper, "changed_since", return_value=(None, None)
+    ) as since:
+        with mock.patch.object(
+            scraper, "scrape_session", return_value=iter(())
+        ) as walk:
+            list(scraper.scrape(session="2025-2026", start=START))
+    since.assert_called_once_with("2025-2026", 0, START)
     assert [c.args for c in walk.call_args_list] == [
-        ("upper", "2025-2026"),
-        ("lower", "2025-2026"),
+        ("upper", "2025-2026", 0),
+        ("lower", "2025-2026", 0),
     ]
 
 
@@ -82,7 +89,11 @@ def test_do_scrape_with_start_is_not_a_type_error(cls, inner):
     scraper = make(cls, [session])
     stub = mock.Mock(xpath=lambda *a: []) if inner == "lxmlize" else iter(())
     with mock.patch.object(scraper, inner, return_value=stub):
-        with mock.patch.object(scraper, "scrape_priorities", create=True):
+        with mock.patch.object(
+            scraper, "scrape_priorities", create=True
+        ), mock.patch.object(
+            scraper, "changed_since", create=True, return_value=(None, None)
+        ):
             try:
                 scraper.do_scrape(session="S", start="2026-11-03T00:00:00")
             except TypeError:
