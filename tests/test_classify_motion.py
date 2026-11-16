@@ -19,7 +19,7 @@ def test_yaml_loads_without_error():
 
 
 def test_all_expected_jurisdiction_keys_present():
-    expected = {"us", "az", "ut", "fl", "mi", "ma", "wa", "va", "pa", "ne", "la", "al", "nc", "nv", "ga"}
+    expected = {"us", "az", "ut", "fl", "mi", "ma", "wa", "va", "pa", "ne", "la", "al", "nc", "nv", "ga", "or"}
     assert expected == KNOWN_JURISDICTIONS
 
 
@@ -762,3 +762,123 @@ NV_CASES = [
 @pytest.mark.parametrize("text,expected", NV_CASES)
 def test_nv(text, expected):
     assert classify_motion("nv", text) == expected
+
+
+# ---------------------------------------------------------------------------
+# OPEN-597: Oregon. Every distinct floor motion text the OpenStates API publishes for 2025R1 and 2026R1
+# (one real example per text once sponsor names are set aside; 1,976 floor roll calls, read 2026-11-16).
+# Committee roll calls ("Heard and Reported Out", "... with Amendments", "Heard") are labelled
+# committee-passage by the or scraper from where they come from (tests/test_or_votes.py), not here.
+# ---------------------------------------------------------------------------
+
+OR_CASES = [
+    # bill passage: third reading, whatever its outcome (a lost third reading is a lost passage vote)
+    ("Third reading. Carried by Nelson. Passed.", ["passage"]),
+    ("Rules suspended. Third reading. Carried by Anderson. Passed.", ["passage"]),
+    ("Third reading as Special Order of Business. Carried by Boice. Passed.", ["passage"]),
+    ("Rules suspended. Third reading as Special Order of Business. Carried by Nosse. Passed.", ["passage"]),
+    ("Made Special Order of Business. Third reading. Carried by Sollman. Passed.", ["passage"]),
+    ("Made Special Order of Business by voice vote. Third reading. Carried by Lieber. Passed.", ["passage"]),
+    ("Third reading. Carried by Gomberg. Failed.", ["passage"]),
+    ("Third reading. Carried by Frederick. Bill failed.", ["passage"]),
+    # the House's roll call recorded after a separate "Third reading. Carried by X." line
+    ("Passed.", ["passage"]),
+    ("Carried by Nelson. Passed.", ["passage"]),
+    ("Repassed.", ["passage"]),
+    # resolution and memorial adoption
+    ("Final reading. Carried by Manning Jr. Adopted.", ["passage"]),
+    ("Rules suspended. Final reading. Carried by Bonham. Adopted.", ["passage"]),
+    ("Special Order of Business. Final reading. Carried by McLane. Adopted.", ["passage"]),
+    ("Special Order of Business, Final reading. Carried by Prozanski. Adopted.", ["passage"]),
+    ("Made Special Order of Business. Final reading. Carried by Weber. Adopted.", ["passage"]),
+    ("Read. Carried by Chotzen. Adopted.", ["passage"]),
+    ("Rules suspended. Read. Carried by Bowman. Adopted.", ["passage"]),
+    ("Read as Special Order of Business. Carried by Levy B. Adopted.", ["passage"]),
+    ("Rules suspended. Read as Special Order of Business. Carried by Bowman. Adopted.", ["passage"]),
+    (
+        "Under the provisions of the Report of the Committee on Permanent Organization and Order of Business, "
+        "read final time. Carried by Jama. Adopted.",
+        ["passage"],
+    ),
+    ("Rules suspended. Resolution adopted in conjunction with the 2025 Rules of the House.", ["passage"]),
+    # concurrence and repassage (ut, mi, wa, va, al, nc precedent)
+    ("House concurred in Senate amendments and repassed bill.", ["passage"]),
+    ("Senate concurred in House amendments and repassed bill.", ["passage"]),
+    ("Rules suspended. Senate concurred in House amendments and repassed bill.", ["passage"]),
+    ("Rules suspended. House concurred in Senate amendments and repassed bill.", ["passage"]),
+    ("House concurred in Senate amendments and readopted measure.", ["passage"]),
+    ("Senate concurred in House amendments and readopted Resolution.", ["passage"]),
+    # conference report adoption
+    ("House adopted Conference Committee Report.", ["passage"]),
+    ("Senate adopted Conference Committee Report and repassed bill.", ["passage"]),
+    # veto override: counted as passage as in nc (Ramon, 2026-11-16); a decision for Ramon for Oregon
+    (
+        "Motion to repass bill notwithstanding Governor's veto carried in accordance with Art. V, sec. 15b, "
+        "Oregon Constitution. Bill repassed.",
+        ["passage"],
+    ),
+    # refusal to concur
+    ("House refused to concur in Senate amendments.", []),
+    ("Senate refused to concur in House amendments.", []),
+    # procedure: refer, re-refer, withdraw from committee
+    ("Motion to refer to Rules failed.", []),
+    ("Motion to refer to Committee on Rules failed.", []),
+    ("Motion to refer to Committee on Legislative Counsel failed.", []),
+    ("Motion to refer to Ways and Means failed.", []),
+    ("Motion to re-refer to Judiciary failed.", []),
+    ("Motion to re-refer to Revenue failed.", []),
+    ("Motion to rerefer to Committee on Human Services carried.", []),
+    ("Motion to rerefer to Committee on Rules carried.", []),
+    ("Motion to rerefer to Labor and Workplace Standards failed.", []),
+    ("Motion to withdraw from Rules failed.", []),
+    ("Motion to withdraw from Rules carried.", []),
+    ("Motion to withdraw from Judiciary failed.", []),
+    ("Motion to withdraw from Revenue failed.", []),
+    ("Motion to withdraw from Education failed.", []),
+    ("Motion to withdraw from Health Care failed.", []),
+    ("Motion to withdraw from Housing and Homelessness failed.", []),
+    ("Motion to withdraw from committee on Rules failed.", []),
+    ("Motion to withdraw from committee on Judiciary failed.", []),
+    ("Motion to withdraw from committee on Health Care failed.", []),
+    ("Motion to withdraw from committee on Early Childhood and Behavioral Health failed.", []),
+    # procedure: minority report, table, reconsider, postpone, calendar, special order
+    ("Motion to substitute Minority Report for Committee Report failed.", []),
+    ("Rules suspended. Motion to substitute Minority Report for Committee Report failed.", []),
+    ("Motion to table carried.", []),
+    ("Motion to table carried. Tabled.", []),
+    ("Motion to lay bill, together with Governor's message, on the table carried.", []),
+    ("Vote reconsideration carried.", []),
+    ("Motion to reconsider carried.", []),
+    ("Jama moved for immediate reconsideration. Motion to reconsider carried.", []),
+    (
+        "Motion to postpone to June 9, 2025 Calendar carried. Ayes, 32; Nays, 20--Boice, Boshart Davis, "
+        "Breese-Iverson, Cate; Excused, 7--Andersen, Gamba.",
+        [],
+    ),
+    (
+        "Taken from 06-18 Calendar and placed on 06-19 Calendar. Ayes, 18; Nays, 11--Anderson, Bonham; "
+        "Excused, 1--Gorsek.",
+        [],
+    ),
+    (
+        "Rules suspended. Third reading. Taken from 06-24 Calendar and placed on 06-25 Calendar. Ayes, 29; "
+        "Excused, 1--Thatcher.",
+        [],
+    ),
+    ("Rules suspended. Made a Special Order of Business immediately.", []),
+    # an unknown text stays unclassified
+    ("Motion to adjourn carried.", []),
+]
+
+
+@pytest.mark.parametrize("text,expected", OR_CASES)
+def test_or(text, expected):
+    assert classify_motion("or", text) == expected
+
+
+@pytest.mark.parametrize("text,expected", OR_CASES[:-1])
+def test_or_every_real_text_is_decided_by_a_rule(text, expected):
+    # the not-passage texts are named on purpose, so a later, wider passage pattern cannot pick them up
+    cfg = _config["jurisdictions"]["or"]
+    key = "passage" if expected else "not_passage"
+    assert any(re.search(p, text.lower()) for p in cfg[key])
