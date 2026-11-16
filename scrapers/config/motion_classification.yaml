@@ -252,3 +252,36 @@ jurisdictions:
       - "^r2 for adoption$"                      # House adopts a simple resolution (one reading)
       - "veto override"                          # "Veto Override", "Motion 11 Veto Override": Ramon, 2026-11-16, "Veto overrides count as passage" (unlike ma, ne); "... M4 Previous Question" stays procedure
     default: null
+
+  # OPEN-597 (Oregon, gate E). The motion text is the ActionText of a MeasureHistoryActions row that carries
+  # a roll call (floor votes only). Committee votes come from CommitteeAgendaItems and are labelled
+  # committee-passage by the or scraper from where they come from, without this block. Rules written from
+  # every floor motion text the OpenStates API publishes for 2025R1 and 2026R1 (1,976 floor roll calls,
+  # 2026-11-16). Texts end with the outcome ("Passed.", "Failed.", "Adopted.", "... failed."); the label
+  # names the kind of vote whatever the outcome, so a lost third reading is a lost passage vote (pa, al, nc).
+  or:
+    not_passage:
+      - "motion to (re-?refer|rerefer|refer) "   # "Motion to re-refer to Revenue failed.", "... rerefer to Committee on Rules carried."
+      - "motion to withdraw from "               # "Motion to withdraw from committee on Rules failed."
+      - "motion to substitute minority report"   # "... for Committee Report failed."
+      - "on the table"                           # "Motion to lay bill, together with Governor's message, on the table carried."
+      - "motion to table"
+      - "reconsider"                             # "Vote reconsideration carried.", "Motion to reconsider carried."
+      - "motion to postpone"
+      - "refused to concur"                      # the chamber refuses the other's amendments; a conference follows
+      - "taken from .* calendar"                 # "Rules suspended. Third reading. Taken from 06-24 Calendar and placed on 06-25 Calendar."
+      - "made a special order of business immediately"
+    passage:
+      - "third reading\\b"                       # "... Carried by X. Passed.", "... Failed.", "... Bill failed."; also "as Special Order of Business"
+      - "^passed\\.?$"                           # House roll call recorded after a separate "Third reading. Carried by X." line
+      - "^carried by .*\\bpassed\\.?$"
+      - "^repassed\\.?$"
+      - "final reading\\b"                       # resolution adoption: "Final reading. Carried by X. Adopted."
+      - "read final time"                        # "Under the provisions of the Report of the Committee on Permanent Organization ..."
+      - "^(rules suspended\\. )?read\\. carried by "   # resolution adoption: "Read. Carried by X. Adopted."
+      - "read as special order of business\\. carried by "   # resolution adoption
+      - "resolution adopted in conjunction with" # "Rules suspended. Resolution adopted in conjunction with the 2025 Rules of the House."
+      - "concurred in (house|senate) amendments and re(passed|adopted)"   # concurrence = passage (ut, mi, wa, va, al, nc)
+      - "adopted conference committee report"    # conference report adoption = passage (ut, mi, va, al, nc)
+      - "notwithstanding governor['’]s veto"      # FOR RAMON: veto override counted as passage, as nc (Ramon, 2026-11-16); ma and ne do not
+    default: null
