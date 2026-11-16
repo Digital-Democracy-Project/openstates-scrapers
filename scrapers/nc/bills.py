@@ -273,11 +273,14 @@ class NCBillScraper(Scraper):
                 bill.add_action(action, act_date, chamber=actor, classification=atype)
 
     def scrape_votes(self, bill, doc):
+        # The page shows a bill's latest two roll calls as class "row" and puts the rest in a collapsed
+        # "Show All Votes" block as class "row mx-0"; matching only "row" dropped every older roll call
+        # (HB 116 has 7, only 2 were stored: OPEN-573). Any div whose classes include "row" is a vote row.
         vote_tr_path = (
             '//h6[@id="vote-header"]'
             '/ancestor::div[contains(@class, "gray-card")]'
             '//div[contains(@class, "card-body")]'
-            '//div[@class="row"]'
+            '//div[contains(concat(" ", normalize-space(@class), " "), " row ")]'
         )
 
         for vote_row in doc.xpath(vote_tr_path):
