@@ -238,7 +238,6 @@ jurisdictions:
       - "reconsider"                             # "M6 Reconsider"
       - "^second reading motion "                # "... Motion 9 To Concur" (third reading follows), "... Motion 12/Divide", "/Appeal Ruling of Chair"
       - "not concur"                             # "M11 Not Concur": the House refuses the Senate's changes, a conference follows
-      - "veto override"                          # "Veto Override", "Motion 11 Veto Override" (ma, ne precedent)
       - "^r2 ruled mat'l"                        # second-reading roll call on a conference report / concurrence ruled material
       - "^conference rpt second reading$"
     passage:
@@ -251,4 +250,5 @@ jurisdictions:
       - "^motion 9 to concur"                    # Senate concurs in House amendments ("... House Amend" too); a failed one is a lost passage vote
       - "^motion 8 to adopt$"                    # Senate adopts a simple resolution
       - "^r2 for adoption$"                      # House adopts a simple resolution (one reading)
+      - "veto override"                          # "Veto Override", "Motion 11 Veto Override": Ramon, 2026-11-16, "Veto overrides count as passage" (unlike ma, ne); "... M4 Previous Question" stays procedure
     default: null

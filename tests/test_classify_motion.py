@@ -572,6 +572,9 @@ NC_CASES = [
     ("Motion 9 To Concur House Amend", ["passage"]),
     ("Motion 8 To Adopt", ["passage"]),
     ("R2 For Adoption", ["passage"]),
+    # veto overrides: Ramon, 2026-11-16, "Veto overrides count as passage"
+    ("Veto Override", ["passage"]),
+    ("Motion 11 Veto Override", ["passage"]),
     # second readings that a third-reading roll call follows
     ("Second Reading", []),
     ("Second Reading Motion 9 To Concur", []),
@@ -587,9 +590,7 @@ NC_CASES = [
     ("A2 Par\u00e9 Second Reading", []),
     ("A3 Budd Second Reading", []),
     ("A4 Morey R2 For Adoption", []),
-    # veto overrides (ma, ne precedent) and non-concurrence
-    ("Veto Override", []),
-    ("Motion 11 Veto Override", []),
+    # non-concurrence
     ("M11 Not Concur", []),
     # procedure
     ("Amendment 2  Motion 1 To Table", []),
