@@ -68,10 +68,11 @@ def pair_outcomes(listed_votes, history):
     with a "Lost" status, and of the calendar votes paired with a "Reconsidered"
     one ("House Lost Reconsidered Bill/Resolution" is the failed vote after it).
 
-    A "Reconsidered" status pairs only with a calendar vote: any other
-    reconsideration has its own caption ("Reconsider", "Recon SB 234, 235, & 336"),
-    is not a passage vote, and the re-vote after it gets its own outcome
-    (SB 234, 2025: "House Reconsidered" 19:18, then "House Passed/Adopted" 19:22).
+    A "Reconsidered" status pairs only with a House calendar vote: any other
+    reconsideration has its own caption ("Reconsider", "Recon SB 234, 235, & 336",
+    the Senate's "MOTION TO RECONSIDER LOCAL CONSENT CALENDAR"), is not a passage
+    vote, and the re-vote after it gets its own outcome (SB 234, 2025: "House
+    Reconsidered" 19:18, then "House Passed/Adopted" 19:22).
     """
     lost, reconsidered = set(), set()
     unpaired = sorted(
@@ -93,7 +94,10 @@ def pair_outcomes(listed_votes, history):
                 v["Branch"] == branch
                 and v["Date"].date() == status["Date"].date()
                 and v["Date"] <= status["Date"]
-                and (not is_reconsidered or CALENDAR.search(v["Caption"] or ""))
+                and (
+                    not is_reconsidered
+                    or (branch == "House" and CALENDAR.search(v["Caption"] or ""))
+                )
             ):
                 unpaired.remove(v)
                 if is_lost:

@@ -2,8 +2,9 @@
 
 Fixtures are Georgia's own GetLegislationDetail answers (webservices.legis.ga.gov,
 read 2026-11-16), saved as JSON: HB 1, HB 68 and HB 80 of the 2026 special session
-(local bills voted as a calendar, lost, reconsidered, lost again) and SB 234 of 2025
-(a local bill reconsidered under its own caption, then passed).
+(local bills voted as a calendar, lost, reconsidered, lost again), SB 234 of 2025
+(a local bill reconsidered under its own caption, then passed) and SB 1 of 2026_ss
+(the Senate reconsiders a consent calendar under its own caption).
 
 HB 1 is the probe sample's bill (10-31): its three House roll calls are all captioned
 "Local Calendar" (#5 and #10 with a trailing space). #5 lost on 06-20 ("House Third
@@ -117,6 +118,38 @@ def test_sb234_reconsidered_status_does_not_take_the_revote():
     assert got[435] == ([], False)
     assert got[436] == (["passage"], False)
     assert got[114] == (["passage"], False)  # Senate "LOCAL CONSENT CALENDAR", 52-0
+
+
+def test_sb1_senate_reconsiders_under_its_own_caption():
+    # 2026_ss: #8 "LOCAL CONSENT CALENDAR" 10:24, "Senate Local Lost" 10:28; #15 "MOTION TO
+    # RECONSIDER LOCAL CONSENT CALENDAR" 12:20, "Senate Reconsidered" 12:21; #16 "PASSAGE" 12:27,
+    # "Senate Reconsidered Lost" 12:28
+    assert labels(load("detail_2026_ss_SB1.json")) == {
+        8: (["passage"], True),
+        15: ([], False),
+        16: (["passage"], True),
+    }
+
+
+def test_senate_reconsidered_status_does_not_take_a_calendar_vote():
+    # the House rule only: a Senate calendar vote is never the reconsideration
+    day = datetime.datetime(2026, 6, 20)
+    votes = [
+        {
+            "VoteId": 1,
+            "Branch": "Senate",
+            "Caption": "LOCAL CONSENT CALENDAR",
+            "Date": day.replace(hour=10),
+        },
+    ]
+    statuses = [
+        {
+            "Code": "SRECO",
+            "Description": "Senate Reconsidered",
+            "Date": day.replace(hour=12),
+        },
+    ]
+    assert ga_bills.pair_outcomes(votes, statuses) == (set(), set())
 
 
 def test_reconsidered_status_only_pairs_a_calendar_vote():
