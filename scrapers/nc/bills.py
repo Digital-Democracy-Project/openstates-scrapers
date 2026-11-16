@@ -295,8 +295,10 @@ class NCBillScraper(Scraper):
             elif "S" in rcs:
                 chamber = "upper"
 
+            # "8/4/2026 5:51 p.m.": %I, the 12-hour field, so the a.m./p.m. counts (%H ignored it and stored
+            # every afternoon vote 12 hours early: OPEN-575)
             date = eastern.localize(
-                dt.datetime.strptime(date.replace(".", ""), "%m/%d/%Y %H:%M %p")
+                dt.datetime.strptime(date.replace(".", ""), "%m/%d/%Y %I:%M %p")
             )
             date = date.isoformat()
 
