@@ -1,11 +1,14 @@
+import io
 import re
 import urllib.parse
 import pytz
 import urllib
 import datetime
 import collections
+import zipfile
 
 import lxml.html
+from openstates.exceptions import EmptyScrape
 from openstates.scrape import Scraper, Bill, VoteEvent
 
 from classify_motion import classify_motion
@@ -15,6 +18,20 @@ from . import actions
 
 tz = pytz.timezone("America/New_York")
 
+# OPEN-574: the Bill History export is rebuilt about once a day (the 2026-11-15 copy was
+# built at 7:30 PM Eastern) and run-scrape.sh writes its watermark when a run ends, so a
+# change made between the export and the run, or during the run, only shows in a later
+# export with a time earlier than the next start=. Looking back two days covers both.
+EXPORT_LOOKBACK = datetime.timedelta(days=2)
+# Changes made after the export are left to the next run, whose lookback reaches back past
+# this export only while the export is under a day old; an older one (the site stopped
+# rebuilding it) means a full walk instead.
+EXPORT_MAX_AGE = datetime.timedelta(days=1)
+
+
+def _utcnow():
+    return datetime.datetime.now(datetime.timezone.utc)
+
 
 # FYI: as of 2025 this should be run with --http-resilience
 class PABillScraper(Scraper):
@@ -22,12 +39,6 @@ class PABillScraper(Scraper):
     verify = False
 
     def scrape(self, chamber=None, session=None, start=None):
-        # OPEN-500: the runners append start=<watermark> on every run after the first. PA has
-        # no cheaper change signal, so accept it and ignore it: every run is a full walk (as MA
-        # does, OPEN-128).
-        if start:
-            self.info("PA OPEN-500: ignoring start=%s and doing a full walk", start)
-
         chambers = [chamber] if chamber is not None else ["upper", "lower"]
 
         # Session Year code needed to fix committee vote URLs
@@ -37,11 +48,75 @@ class PABillScraper(Scraper):
                 self.session_year = i.get("extras", {}).get("session_year", "2023")
 
         match = re.search(r"[S#](\d+)", session)
+        special = int(match.group(1)) if match else 0
+
+        # OPEN-574: the runners append start=<watermark> on every run after the first. With
+        # it, only the bills the legislature's Bill History export marks as changed are
+        # fetched; without it (or if the export cannot be used) every bill is, as before.
+        self.changed_bills = self.known_bills = None
+        if start:
+            self.changed_bills, self.known_bills = self.changed_since(
+                session, special, start
+            )
+        self.incremental_stats = {"listed": 0, "selected": 0}
+
         for chamber in chambers:
-            if match:
-                yield from self.scrape_session(chamber, session, int(match.group(1)))
-            else:
-                yield from self.scrape_session(chamber, session)
+            yield from self.scrape_session(chamber, session, special)
+
+        # Nothing changed since the watermark (a quiet week) is a real answer, not a broken
+        # scrape: tell do_scrape() so instead of letting it fail on zero objects (as VA and
+        # UT do, OPEN-220/OPEN-106). A full walk that finds nothing still fails as before.
+        if (
+            self.changed_bills is not None
+            and self.incremental_stats["listed"]
+            and not self.incremental_stats["selected"]
+        ):
+            self.info("PA OPEN-574: no bill changed since %s", start)
+            raise EmptyScrape
+
+    def changed_since(self, session, special, start):
+        """OPEN-574: (changed, known) bill keys from the Bill History export, or
+        (None, None) for a full walk when the export cannot be trusted."""
+        try:
+            start_dt = datetime.datetime.strptime(start, "%Y-%m-%dT%H:%M:%S")
+        except ValueError:
+            self.warning("PA OPEN-574: invalid start=%r, doing a full walk", start)
+            return None, None
+        # the runners' watermark is UTC (run-scrape.sh writes `date -u`)
+        start_dt = start_dt.replace(tzinfo=datetime.timezone.utc)
+        url = utils.bill_history_url(session, special)
+        try:
+            response = self.get(url, verify=False)
+            with zipfile.ZipFile(io.BytesIO(response.content)) as archive:
+                names = [n for n in archive.namelist() if n.lower().endswith(".xml")]
+                xml_bytes = archive.read(names[0])
+            export_date, changed, known = utils.bills_changed_since(
+                xml_bytes, start_dt - EXPORT_LOOKBACK
+            )
+        except Exception as e:
+            self.warning(
+                "PA OPEN-574: could not read %s (%s), doing a full walk", url, e
+            )
+            return None, None
+        if export_date < _utcnow() - EXPORT_MAX_AGE:
+            self.warning(
+                "PA OPEN-574: the Bill History export is from %s, more than %s old, "
+                "doing a full walk",
+                export_date,
+                EXPORT_MAX_AGE,
+            )
+            return None, None
+        self.info(
+            "PA OPEN-574: export of %s lists %d bills, %d changed since %s (start=%s "
+            "minus %s)",
+            export_date,
+            len(known),
+            len(changed),
+            start_dt - EXPORT_LOOKBACK,
+            start,
+            EXPORT_LOOKBACK,
+        )
+        return changed, known
 
     def scrape_session(self, chamber, session, special=0):
         url = utils.bill_list_url(chamber, session, special)
@@ -56,6 +131,13 @@ class PABillScraper(Scraper):
             if link.attrib["href"] in bill_urls_seen:
                 continue
             bill_urls_seen.add(link.attrib["href"])
+            if self.changed_bills is not None:
+                self.incremental_stats["listed"] += 1
+                key = utils.bill_key(link.text.strip())
+                # a bill the export does not list yet (filed after it was built) is fetched
+                if key in self.known_bills and key not in self.changed_bills:
+                    continue
+                self.incremental_stats["selected"] += 1
             is_parsed = False
             for retry_time in range(0, RETRY_TIMES):
                 try:

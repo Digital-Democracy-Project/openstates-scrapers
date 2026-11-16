@@ -1,0 +1,857 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<historyExport exportDate="November 15, 2026 7:30:14 PM EST" totalDocuments="7">
+	<session year="2025" session="0">
+		<bill id="20250HB0017" lastUpdate="May 13, 2026 12:05:00 PM EDT">
+			<sessionYear>2025</sessionYear>
+			<session>0</session>
+			<body>H</body>
+			<type description="House Bill">B</type>
+			<subType>B</subType>
+			<number>0017</number>
+			<shortTitle>An Act amending the act of March 10, 1949 (P.L.30, No.14), known as the Public School Code of 1949, in terms and courses of study, further providing for subjects of instruction and flag code.</shortTitle>
+			<cosponsorshipMemo memoUrl="https://www.palegis.us/house/co-sponsorship/memo?memoID=43567&amp;document=HB17">Mandating Cursive Handwriting (Formerly HB1934)</cosponsorshipMemo>
+			<sponsors>
+				<sponsor sequenceNumber="01" fillSequence="0" party="R" body="H" districtNumber="116">WATRO</sponsor>
+				<sponsor sequenceNumber="02" fillSequence="0" party="R" body="H" districtNumber="131">M. MACKENZIE</sponsor>
+				<sponsor sequenceNumber="03" fillSequence="0" party="R" body="H" districtNumber="55">COOPER</sponsor>
+				<sponsor sequenceNumber="04" fillSequence="0" party="R" body="H" districtNumber="100">CUTLER</sponsor>
+				<sponsor sequenceNumber="05" fillSequence="0" party="R" body="H" districtNumber="84">HAMM</sponsor>
+				<sponsor sequenceNumber="06" fillSequence="0" party="D" body="H" districtNumber="174">NEILSON</sponsor>
+				<sponsor sequenceNumber="07" fillSequence="0" party="R" body="H" districtNumber="65">RAPP</sponsor>
+				<sponsor sequenceNumber="08" fillSequence="0" party="R" body="H" districtNumber="89">KAUFFMAN</sponsor>
+				<sponsor sequenceNumber="09" fillSequence="0" party="D" body="H" districtNumber="136">FREEMAN</sponsor>
+				<sponsor sequenceNumber="10" fillSequence="0" party="R" body="H" districtNumber="123">TWARDZIK</sponsor>
+				<sponsor sequenceNumber="11" fillSequence="0" party="R" body="H" districtNumber="64">JAMES</sponsor>
+				<sponsor sequenceNumber="12" fillSequence="0" party="R" body="H" districtNumber="85">ROWE</sponsor>
+				<sponsor sequenceNumber="13" fillSequence="0" party="R" body="H" districtNumber="99">ZIMMERMAN</sponsor>
+				<sponsor sequenceNumber="14" fillSequence="0" party="R" body="H" districtNumber="128">GILLEN</sponsor>
+				<sponsor sequenceNumber="15" fillSequence="0" party="R" body="H" districtNumber="122">HEFFLEY</sponsor>
+				<sponsor sequenceNumber="16" fillSequence="0" party="R" body="H" districtNumber="137">EMRICK</sponsor>
+				<sponsor sequenceNumber="17" fillSequence="0" party="R" body="H" districtNumber="145">STAATS</sponsor>
+				<sponsor sequenceNumber="18" fillSequence="0" party="R" body="H" districtNumber="147">SCHEUREN</sponsor>
+				<sponsor sequenceNumber="19" fillSequence="0" party="D" body="H" districtNumber="34">SALISBURY</sponsor>
+			</sponsors>
+			<printersNumberHistory>
+				<number sequence="01" billTextPdfUrl="https://www.palegis.us/legislation/bills/text/PDF/2025/0/HB0017/PN0002">0002</number>
+			</printersNumberHistory>
+			<actionHistory>
+				<action sequence="01" actionChamber="H">
+					<verb>Referred to</verb>
+					<committee>EDUCATION</committee>
+					<date>01/08/25</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>Referred to EDUCATION,  Jan. 8, 2025</fullAction>
+				</action>
+				<action sequence="02" actionChamber="H">
+					<verb>Reported as committed,</verb>
+					<committee>EDUCATION</committee>
+					<date>05/07/25</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>Reported as committed, May 7, 2025</fullAction>
+				</action>
+				<action sequence="03" actionChamber="H">
+					<verb>First consideration,</verb>
+					<committee/>
+					<date>05/07/25</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>First consideration, May 7, 2025 </fullAction>
+				</action>
+				<action sequence="04" actionChamber="H">
+					<verb>Laid on the table,</verb>
+					<committee/>
+					<date>05/07/25</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>Laid on the table, May 7, 2025 </fullAction>
+				</action>
+				<action sequence="05" actionChamber="H">
+					<verb>Removed from table,</verb>
+					<committee/>
+					<date>06/18/25</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>Removed from table, June 18, 2025</fullAction>
+				</action>
+				<action sequence="06" actionChamber="H">
+					<verb>Second consideration,</verb>
+					<committee/>
+					<date>06/23/25</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>Second consideration, June 23, 2025 </fullAction>
+				</action>
+				<action sequence="07" actionChamber="H">
+					<verb>Re-committed to</verb>
+					<committee>APPROPRIATIONS</committee>
+					<date>06/23/25</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>Re-committed to APPROPRIATIONS,  June 23, 2025</fullAction>
+				</action>
+				<action sequence="08" actionChamber="H">
+					<verb>Re-reported as committed,</verb>
+					<committee>APPROPRIATIONS</committee>
+					<date>06/24/25</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>Re-reported as committed, June 24, 2025</fullAction>
+				</action>
+				<action sequence="09" actionChamber="H">
+					<verb>Third consideration and final passage,</verb>
+					<committee/>
+					<date>06/24/25</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote>(195-8)</rollCallVote>
+					<fullAction>Third consideration and final passage, June 24, 2025 (195-8)</fullAction>
+				</action>
+				<action sequence="10" actionChamber="H">
+					<verb>(Remarks see House Journal Page</verb>
+					<committee/>
+					<date>05/13/26</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>(Remarks see House Journal Page 1025-1026), June 24, 2025</fullAction>
+				</action>
+				<action sequence="11" actionChamber="S">
+					<verb>In the Senate</verb>
+					<committee/>
+					<date>06/25/25</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>In the Senate </fullAction>
+				</action>
+				<action sequence="12" actionChamber="S">
+					<verb>Referred to</verb>
+					<committee>EDUCATION</committee>
+					<date>06/25/25</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>Referred to EDUCATION,  June 25, 2025</fullAction>
+				</action>
+				<action sequence="13" actionChamber="S">
+					<verb>Reported as committed,</verb>
+					<committee>EDUCATION</committee>
+					<date>07/16/25</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>Reported as committed, July 16, 2025</fullAction>
+				</action>
+				<action sequence="14" actionChamber="S">
+					<verb>First consideration,</verb>
+					<committee/>
+					<date>07/16/25</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>First consideration, July 16, 2025 </fullAction>
+				</action>
+				<action sequence="15" actionChamber="S">
+					<verb>Second consideration,</verb>
+					<committee/>
+					<date>07/17/25</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>Second consideration, July 17, 2025 </fullAction>
+				</action>
+				<action sequence="16" actionChamber="S">
+					<verb>Re-referred to</verb>
+					<committee>APPROPRIATIONS</committee>
+					<date>07/17/25</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>Re-referred to APPROPRIATIONS,  July 17, 2025</fullAction>
+				</action>
+				<action sequence="17" actionChamber="S">
+					<verb>Re-reported as committed,</verb>
+					<committee>APPROPRIATIONS</committee>
+					<date>11/18/25</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>Re-reported as committed, Nov. 18, 2025</fullAction>
+				</action>
+				<action sequence="18" actionChamber="S">
+					<verb>Third consideration and final passage,</verb>
+					<committee/>
+					<date>02/03/26</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote>(42-5)</rollCallVote>
+					<fullAction>Third consideration and final passage, Feb. 3, 2026 (42-5)</fullAction>
+				</action>
+				<action sequence="19" actionChamber="H">
+					<verb>Signed in House,</verb>
+					<committee/>
+					<date>02/04/26</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>Signed in House, Feb. 4, 2026</fullAction>
+				</action>
+				<action sequence="20" actionChamber="S">
+					<verb>Signed in Senate,</verb>
+					<committee/>
+					<date>02/04/26</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>Signed in Senate, Feb. 4, 2026</fullAction>
+				</action>
+				<action sequence="21" actionChamber="E">
+					<verb>Presented to the Governor,</verb>
+					<committee/>
+					<date>02/04/26</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>Presented to the Governor, Feb. 4, 2026</fullAction>
+				</action>
+				<action sequence="22" actionChamber="E">
+					<verb>Approved by the Governor,</verb>
+					<committee/>
+					<date>02/11/26</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>Approved by the Governor, Feb. 11, 2026</fullAction>
+				</action>
+				<action sequence="23" actionChamber="E">
+					<verb>Act No.</verb>
+					<committee/>
+					<date>02/11/26</date>
+					<printersNumber>0002</printersNumber>
+					<rollCallVote/>
+					<fullAction>Act No. 2 of 2026, Feb. 11, 2026</fullAction>
+				</action>
+			</actionHistory>
+			<amendments/>
+			<supportingDocuments>
+				<pnSupportingDocuments relatedPN="0002">
+					<document documentUrl="https://www.palegis.us/WU01/LI/BI/FN/2025/0/HB0017P0002.pdf">House Fiscal Note</document>
+					<document documentUrl="https://www.palegis.us/WU01/LI/BI/SFN/2025/0/HB0017P0002.pdf">Senate Fiscal Note</document>
+				</pnSupportingDocuments>
+			</supportingDocuments>
+		</bill>
+		<bill id="20250HB1088" lastUpdate="May 7, 2026 3:05:00 PM EDT">
+			<sessionYear>2025</sessionYear>
+			<session>0</session>
+			<body>H</body>
+			<type description="House Bill">B</type>
+			<subType>B</subType>
+			<number>1088</number>
+			<shortTitle>An Act amending the act of May 17, 1921 (P.L.682, No.284), known as The Insurance Company Law of 1921, in casualty insurance, providing for coverage for blood pressure monitors.</shortTitle>
+			<cosponsorshipMemo memoUrl="https://www.palegis.us/house/co-sponsorship/memo?memoID=45607&amp;document=HB1088">Expanding Maternal Blood Pressure Monitoring Coverage</cosponsorshipMemo>
+			<sponsors>
+				<sponsor sequenceNumber="01" fillSequence="0" party="D" body="H" districtNumber="33">STEELE</sponsor>
+				<sponsor sequenceNumber="02" fillSequence="0" party="D" body="H" districtNumber="184">FIEDLER</sponsor>
+				<sponsor sequenceNumber="03" fillSequence="0" party="D" body="H" districtNumber="113">DONAHUE</sponsor>
+				<sponsor sequenceNumber="04" fillSequence="0" party="D" body="H" districtNumber="180">GIRAL</sponsor>
+				<sponsor sequenceNumber="05" fillSequence="0" party="D" body="H" districtNumber="95">HILL-EVANS</sponsor>
+				<sponsor sequenceNumber="06" fillSequence="0" party="D" body="H" districtNumber="153">SANCHEZ</sponsor>
+				<sponsor sequenceNumber="07" fillSequence="0" party="D" body="H" districtNumber="189">PROBST</sponsor>
+				<sponsor sequenceNumber="08" fillSequence="0" party="D" body="H" districtNumber="61">HANBIDGE</sponsor>
+				<sponsor sequenceNumber="09" fillSequence="0" party="D" body="H" districtNumber="115">MADDEN</sponsor>
+				<sponsor sequenceNumber="10" fillSequence="0" party="D" body="H" districtNumber="21">POWELL</sponsor>
+				<sponsor sequenceNumber="11" fillSequence="0" party="D" body="H" districtNumber="168">BOROWSKI</sponsor>
+				<sponsor sequenceNumber="12" fillSequence="0" party="D" body="H" districtNumber="167">HOWARD</sponsor>
+				<sponsor sequenceNumber="13" fillSequence="0" party="D" body="H" districtNumber="132">SCHLOSSBERG</sponsor>
+				<sponsor sequenceNumber="14" fillSequence="0" party="D" body="H" districtNumber="155">OTTEN</sponsor>
+				<sponsor sequenceNumber="15" fillSequence="0" party="D" body="H" districtNumber="177">HOHENSTEIN</sponsor>
+				<sponsor sequenceNumber="16" fillSequence="0" party="D" body="H" districtNumber="151">CERRATO</sponsor>
+				<sponsor sequenceNumber="17" fillSequence="0" party="D" body="H" districtNumber="53">MALAGARI</sponsor>
+				<sponsor sequenceNumber="18" fillSequence="0" party="D" body="H" districtNumber="164">CURRY</sponsor>
+				<sponsor sequenceNumber="19" fillSequence="0" party="D" body="H" districtNumber="165">O'MARA</sponsor>
+				<sponsor sequenceNumber="20" fillSequence="0" party="D" body="H" districtNumber="157">SHUSTERMAN</sponsor>
+				<sponsor sequenceNumber="21" fillSequence="0" party="D" body="H" districtNumber="203">BELLMON</sponsor>
+				<sponsor sequenceNumber="22" fillSequence="0" party="D" body="H" districtNumber="96">RIVERA</sponsor>
+				<sponsor sequenceNumber="23" fillSequence="0" party="D" body="H" districtNumber="190">GREEN</sponsor>
+				<sponsor sequenceNumber="24" fillSequence="0" party="D" body="H" districtNumber="29">BRENNAN</sponsor>
+				<sponsor sequenceNumber="25" fillSequence="0" party="D" body="H" districtNumber="194">KHAN</sponsor>
+				<sponsor sequenceNumber="26" fillSequence="0" party="D" body="H" districtNumber="162">DELLOSO</sponsor>
+				<sponsor sequenceNumber="27" fillSequence="0" party="D" body="H" districtNumber="126">RUSNOCK</sponsor>
+				<sponsor sequenceNumber="28" fillSequence="0" party="D" body="H" districtNumber="104">MADSEN</sponsor>
+				<sponsor sequenceNumber="29" fillSequence="0" party="D" body="H" districtNumber="141">T. DAVIS</sponsor>
+				<sponsor sequenceNumber="30" fillSequence="0" party="D" body="H" districtNumber="135">SAMUELSON</sponsor>
+				<sponsor sequenceNumber="31" fillSequence="0" party="D" body="H" districtNumber="192">CEPHAS</sponsor>
+				<sponsor sequenceNumber="32" fillSequence="0" party="D" body="H" districtNumber="42">D. MILLER</sponsor>
+			</sponsors>
+			<printersNumberHistory>
+				<number sequence="01" billTextPdfUrl="https://www.palegis.us/legislation/bills/text/PDF/2025/0/HB1088/PN1205">1205</number>
+			</printersNumberHistory>
+			<actionHistory>
+				<action sequence="01" actionChamber="H">
+					<verb>Referred to</verb>
+					<committee>INSURANCE</committee>
+					<date>04/01/25</date>
+					<printersNumber>1205</printersNumber>
+					<rollCallVote/>
+					<fullAction>Referred to INSURANCE,  April 1, 2025</fullAction>
+				</action>
+				<action sequence="02" actionChamber="H">
+					<verb>Reported as committed,</verb>
+					<committee>INSURANCE</committee>
+					<date>05/07/25</date>
+					<printersNumber>1205</printersNumber>
+					<rollCallVote/>
+					<fullAction>Reported as committed, May 7, 2025</fullAction>
+				</action>
+				<action sequence="03" actionChamber="H">
+					<verb>First consideration,</verb>
+					<committee/>
+					<date>05/07/25</date>
+					<printersNumber>1205</printersNumber>
+					<rollCallVote/>
+					<fullAction>First consideration, May 7, 2025 </fullAction>
+				</action>
+				<action sequence="04" actionChamber="H">
+					<verb>Laid on the table,</verb>
+					<committee/>
+					<date>05/07/25</date>
+					<printersNumber>1205</printersNumber>
+					<rollCallVote/>
+					<fullAction>Laid on the table, May 7, 2025 </fullAction>
+				</action>
+				<action sequence="05" actionChamber="H">
+					<verb>Removed from table,</verb>
+					<committee/>
+					<date>06/04/25</date>
+					<printersNumber>1205</printersNumber>
+					<rollCallVote/>
+					<fullAction>Removed from table, June 4, 2025</fullAction>
+				</action>
+				<action sequence="06" actionChamber="H">
+					<verb>Second consideration,</verb>
+					<committee/>
+					<date>06/09/25</date>
+					<printersNumber>1205</printersNumber>
+					<rollCallVote/>
+					<fullAction>Second consideration, June 9, 2025 </fullAction>
+				</action>
+				<action sequence="07" actionChamber="H">
+					<verb>Re-committed to</verb>
+					<committee>APPROPRIATIONS</committee>
+					<date>06/09/25</date>
+					<printersNumber>1205</printersNumber>
+					<rollCallVote/>
+					<fullAction>Re-committed to APPROPRIATIONS,  June 9, 2025</fullAction>
+				</action>
+				<action sequence="08" actionChamber="H">
+					<verb>Re-reported as committed,</verb>
+					<committee>APPROPRIATIONS</committee>
+					<date>06/10/25</date>
+					<printersNumber>1205</printersNumber>
+					<rollCallVote/>
+					<fullAction>Re-reported as committed, June 10, 2025</fullAction>
+				</action>
+				<action sequence="09" actionChamber="H">
+					<verb>Third consideration and final passage,</verb>
+					<committee/>
+					<date>06/10/25</date>
+					<printersNumber>1205</printersNumber>
+					<rollCallVote>(143-60)</rollCallVote>
+					<fullAction>Third consideration and final passage, June 10, 2025 (143-60)</fullAction>
+				</action>
+				<action sequence="10" actionChamber="H">
+					<verb>(Remarks see House Journal Page</verb>
+					<committee/>
+					<date>05/07/26</date>
+					<printersNumber>1205</printersNumber>
+					<rollCallVote/>
+					<fullAction>(Remarks see House Journal Page 876-877), June 10, 2025</fullAction>
+				</action>
+				<action sequence="11" actionChamber="S">
+					<verb>In the Senate</verb>
+					<committee/>
+					<date>06/18/25</date>
+					<printersNumber>1205</printersNumber>
+					<rollCallVote/>
+					<fullAction>In the Senate </fullAction>
+				</action>
+				<action sequence="12" actionChamber="S">
+					<verb>Referred to</verb>
+					<committee>BANKING AND INSURANCE</committee>
+					<date>06/18/25</date>
+					<printersNumber>1205</printersNumber>
+					<rollCallVote/>
+					<fullAction>Referred to BANKING AND INSURANCE,  June 18, 2025</fullAction>
+				</action>
+			</actionHistory>
+			<amendments/>
+			<supportingDocuments>
+				<pnSupportingDocuments relatedPN="1205">
+					<document documentUrl="https://www.palegis.us/WU01/LI/BI/FN/2025/0/HB1088P1205.pdf">House Fiscal Note</document>
+				</pnSupportingDocuments>
+			</supportingDocuments>
+		</bill>
+		<bill id="20250HB1505" lastUpdate="July 12, 2026 6:05:01 PM EDT">
+			<sessionYear>2025</sessionYear>
+			<session>0</session>
+			<body>H</body>
+			<type description="House Bill">B</type>
+			<subType>B</subType>
+			<number>1505</number>
+			<shortTitle>An Act amending the act of March 10, 1949 (P.L.30, No.14), known as the Public School Code of 1949, in preliminary provisions, providing for standardized testing study; in grounds and buildings, repealing provisions relating to lead testing and providing for lead testing; providing for school facilities; in certification of teachers, further providing for special education certificate grade spans and age levels and duties of department, for program of continuing professional and paraprofessional education, for continuing professional education for school or system leaders and for Pennsylvania school leadership standards, repealing provisions relating to permit for classroom monitors and providing for permit for classroom monitors; in pupils and attendance, further providing for attendance policy at charter, regional charter and cyber charter schools, providing for school district enrollee wellness checks and further providing for procedure when child is truant and for procedure upon filing of citation; in student supports, further providing for policy relating to bullying; in school safety and security, further providing for definitions, for School Safety and Security Grant Program, for school safety and security coordinator and for school safety and security training, providing for school safety and mental health grants for 2026-2027 school year, further providing for school safety and security coordinator training and for reporting and memorandum of understanding and providing for school mapping services; in school health services, further providing for health services and for reports and providing for eating disorder awareness and education; in terms and courses of study, providing for use of funds for implementing later school start times, further providing for flexible instructional days and for physical education, providing for recess periods, further providing for economic education and personal financial literacy programs and providing for social media literacy education; in early learning programs, further providing for definitions and for duties of approved providers; in high schools, further providing for attendance in other districts; in charter schools, further providing for enrollment, for cyber charter school requirements and prohibitions, for enrollment and notification and for enrollee wellness checks; in disability inclusive curriculum, further providing for pilot program; in career and technical education, providing for temporary waiver; in community colleges, further providing for financial program and reimbursement of payments; in Thaddeus Stevens College of Technology, further providing for individuals eligible for admission; in the State System of Higher Education, further providing for definitions and for Grow Pennsylvania Tuition Waiver Program; in institutions of higher education, further providing for definitions and for agency duties, providing for institution duties and further providing for report; in Ready-to-Succeed Scholarship, further providing for agency; in funding for public libraries, providing for State aid for fiscal year 2026-2027; in reimbursements by Commonwealth and between school districts, further providing for student-weighted basic education funding beginning with 2023-2024 school year and for extraordinary special education program expenses, providing for temporary assistance program and further providing for assistance to school districts declared to be in financial recovery status or identified for financial watch status and for Ready-to-Learn Block Grant; and, in construction and renovation of buildings by school entities, further providing for applicability.</shortTitle>
+			<cosponsorshipMemo memoUrl="https://www.palegis.us/house/co-sponsorship/memo?memoID=46732&amp;document=HB1505">Protecting Access to Pre-K Counts</cosponsorshipMemo>
+			<sponsors>
+				<sponsor sequenceNumber="01" fillSequence="0" party="D" body="H" districtNumber="61">HANBIDGE</sponsor>
+				<sponsor sequenceNumber="02" fillSequence="0" party="D" body="H" districtNumber="189">PROBST</sponsor>
+				<sponsor sequenceNumber="03" fillSequence="0" party="D" body="H" districtNumber="152">GUENST</sponsor>
+				<sponsor sequenceNumber="04" fillSequence="0" party="D" body="H" districtNumber="133">McNEILL</sponsor>
+				<sponsor sequenceNumber="05" fillSequence="0" party="D" body="H" districtNumber="2">MERSKI</sponsor>
+				<sponsor sequenceNumber="06" fillSequence="0" party="D" body="H" districtNumber="136">FREEMAN</sponsor>
+				<sponsor sequenceNumber="07" fillSequence="0" party="D" body="H" districtNumber="95">HILL-EVANS</sponsor>
+				<sponsor sequenceNumber="08" fillSequence="0" party="D" body="H" districtNumber="24">MAYES</sponsor>
+				<sponsor sequenceNumber="09" fillSequence="0" party="D" body="H" districtNumber="53">MALAGARI</sponsor>
+				<sponsor sequenceNumber="10" fillSequence="0" party="D" body="H" districtNumber="153">SANCHEZ</sponsor>
+				<sponsor sequenceNumber="11" fillSequence="0" party="D" body="H" districtNumber="195">K. HARRIS</sponsor>
+				<sponsor sequenceNumber="12" fillSequence="0" party="D" body="H" districtNumber="156">PIELLI</sponsor>
+				<sponsor sequenceNumber="13" fillSequence="0" party="D" body="H" districtNumber="54">SCOTT</sponsor>
+				<sponsor sequenceNumber="14" fillSequence="0" party="D" body="H" districtNumber="149">BRIGGS</sponsor>
+				<sponsor sequenceNumber="15" fillSequence="0" party="D" body="H" districtNumber="115">MADDEN</sponsor>
+				<sponsor sequenceNumber="16" fillSequence="0" party="D" body="H" districtNumber="129">CEPEDA-FREYTIZ</sponsor>
+				<sponsor sequenceNumber="17" fillSequence="0" party="D" body="H" districtNumber="167">HOWARD</sponsor>
+				<sponsor sequenceNumber="18" fillSequence="0" party="D" body="H" districtNumber="155">OTTEN</sponsor>
+				<sponsor sequenceNumber="19" fillSequence="0" party="D" body="H" districtNumber="151">CERRATO</sponsor>
+				<sponsor sequenceNumber="20" fillSequence="0" party="D" body="H" districtNumber="165">O'MARA</sponsor>
+				<sponsor sequenceNumber="21" fillSequence="0" party="D" body="H" districtNumber="194">KHAN</sponsor>
+				<sponsor sequenceNumber="22" fillSequence="0" party="D" body="H" districtNumber="104">MADSEN</sponsor>
+				<sponsor sequenceNumber="23" fillSequence="0" party="D" body="H" districtNumber="150">WEBSTER</sponsor>
+				<sponsor sequenceNumber="24" fillSequence="0" party="D" body="H" districtNumber="141">T. DAVIS</sponsor>
+				<sponsor sequenceNumber="25" fillSequence="0" party="D" body="H" districtNumber="96">RIVERA</sponsor>
+				<sponsor sequenceNumber="26" fillSequence="0" party="D" body="H" districtNumber="146">CIRESI</sponsor>
+				<sponsor sequenceNumber="27" fillSequence="0" party="D" body="H" districtNumber="126">RUSNOCK</sponsor>
+				<sponsor sequenceNumber="28" fillSequence="0" party="D" body="H" districtNumber="105">FLEMING</sponsor>
+				<sponsor sequenceNumber="29" fillSequence="0" party="D" body="H" districtNumber="164">CURRY</sponsor>
+			</sponsors>
+			<printersNumberHistory>
+				<number sequence="01" billTextPdfUrl="https://www.palegis.us/legislation/bills/text/PDF/2025/0/HB1505/PN3764">3764</number>
+				<number sequence="02" billTextPdfUrl="https://www.palegis.us/legislation/bills/text/PDF/2025/0/HB1505/PN1760">1760</number>
+			</printersNumberHistory>
+			<actionHistory>
+				<action sequence="01" actionChamber="H">
+					<verb>Referred to</verb>
+					<committee>CHILDREN AND YOUTH</committee>
+					<date>05/28/25</date>
+					<printersNumber>1760</printersNumber>
+					<rollCallVote/>
+					<fullAction>Referred to CHILDREN AND YOUTH,  May 28, 2025</fullAction>
+				</action>
+				<action sequence="02" actionChamber="H">
+					<verb>Reported as committed,</verb>
+					<committee>CHILDREN AND YOUTH</committee>
+					<date>06/17/25</date>
+					<printersNumber>1760</printersNumber>
+					<rollCallVote/>
+					<fullAction>Reported as committed, June 17, 2025</fullAction>
+				</action>
+				<action sequence="03" actionChamber="H">
+					<verb>First consideration,</verb>
+					<committee/>
+					<date>06/17/25</date>
+					<printersNumber>1760</printersNumber>
+					<rollCallVote/>
+					<fullAction>First consideration, June 17, 2025 </fullAction>
+				</action>
+				<action sequence="04" actionChamber="H">
+					<verb>Re-committed to</verb>
+					<committee>RULES</committee>
+					<date>06/17/25</date>
+					<printersNumber>1760</printersNumber>
+					<rollCallVote/>
+					<fullAction>Re-committed to RULES,  June 17, 2025</fullAction>
+				</action>
+				<action sequence="05" actionChamber="H">
+					<verb>Re-reported as committed,</verb>
+					<committee>RULES</committee>
+					<date>07/01/25</date>
+					<printersNumber>1760</printersNumber>
+					<rollCallVote/>
+					<fullAction>Re-reported as committed, July 1, 2025</fullAction>
+				</action>
+				<action sequence="06" actionChamber="H">
+					<verb>Second consideration,</verb>
+					<committee/>
+					<date>07/01/25</date>
+					<printersNumber>1760</printersNumber>
+					<rollCallVote/>
+					<fullAction>Second consideration, July 1, 2025 </fullAction>
+				</action>
+				<action sequence="07" actionChamber="H">
+					<verb>Re-committed to</verb>
+					<committee>APPROPRIATIONS</committee>
+					<date>07/01/25</date>
+					<printersNumber>1760</printersNumber>
+					<rollCallVote/>
+					<fullAction>Re-committed to APPROPRIATIONS,  July 1, 2025</fullAction>
+				</action>
+				<action sequence="08" actionChamber="H">
+					<verb>Re-reported as committed,</verb>
+					<committee>APPROPRIATIONS</committee>
+					<date>07/07/25</date>
+					<printersNumber>1760</printersNumber>
+					<rollCallVote/>
+					<fullAction>Re-reported as committed, July 7, 2025</fullAction>
+				</action>
+				<action sequence="09" actionChamber="H">
+					<verb>Third consideration and final passage,</verb>
+					<committee/>
+					<date>07/07/25</date>
+					<printersNumber>1760</printersNumber>
+					<rollCallVote>(202-1)</rollCallVote>
+					<fullAction>Third consideration and final passage, July 7, 2025 (202-1)</fullAction>
+				</action>
+				<action sequence="10" actionChamber="H">
+					<verb>(Remarks see House Journal Page</verb>
+					<committee/>
+					<date>05/13/26</date>
+					<printersNumber>1760</printersNumber>
+					<rollCallVote/>
+					<fullAction>(Remarks see House Journal Page 1219-1220), July 7, 2025</fullAction>
+				</action>
+				<action sequence="11" actionChamber="S">
+					<verb>In the Senate</verb>
+					<committee/>
+					<date>07/14/25</date>
+					<printersNumber>1760</printersNumber>
+					<rollCallVote/>
+					<fullAction>In the Senate </fullAction>
+				</action>
+				<action sequence="12" actionChamber="S">
+					<verb>Referred to</verb>
+					<committee>EDUCATION</committee>
+					<date>07/14/25</date>
+					<printersNumber>1760</printersNumber>
+					<rollCallVote/>
+					<fullAction>Referred to EDUCATION,  July 14, 2025</fullAction>
+				</action>
+				<action sequence="13" actionChamber="S">
+					<verb>Reported as committed,</verb>
+					<committee>EDUCATION</committee>
+					<date>06/23/26</date>
+					<printersNumber>1760</printersNumber>
+					<rollCallVote/>
+					<fullAction>Reported as committed, June 23, 2026</fullAction>
+				</action>
+				<action sequence="14" actionChamber="S">
+					<verb>First consideration,</verb>
+					<committee/>
+					<date>06/23/26</date>
+					<printersNumber>1760</printersNumber>
+					<rollCallVote/>
+					<fullAction>First consideration, June 23, 2026 </fullAction>
+				</action>
+				<action sequence="15" actionChamber="S">
+					<verb>Second consideration,</verb>
+					<committee/>
+					<date>06/24/26</date>
+					<printersNumber>1760</printersNumber>
+					<rollCallVote/>
+					<fullAction>Second consideration, June 24, 2026 </fullAction>
+				</action>
+				<action sequence="16" actionChamber="S">
+					<verb>Re-referred to</verb>
+					<committee>APPROPRIATIONS</committee>
+					<date>06/24/26</date>
+					<printersNumber>1760</printersNumber>
+					<rollCallVote/>
+					<fullAction>Re-referred to APPROPRIATIONS,  June 24, 2026</fullAction>
+				</action>
+				<action sequence="17" actionChamber="S">
+					<verb>Re-reported as amended,</verb>
+					<committee>APPROPRIATIONS</committee>
+					<date>07/11/26</date>
+					<printersNumber>3764</printersNumber>
+					<rollCallVote/>
+					<fullAction>Re-reported as amended, July 11, 2026</fullAction>
+				</action>
+				<action sequence="18" actionChamber="S">
+					<verb>Third consideration and final passage,</verb>
+					<committee/>
+					<date>07/12/26</date>
+					<printersNumber>3764</printersNumber>
+					<rollCallVote>(45-5)</rollCallVote>
+					<fullAction>Third consideration and final passage, July 12, 2026 (45-5)</fullAction>
+				</action>
+				<action sequence="19" actionChamber="S">
+					<verb>(Remarks see Senate Journal Page</verb>
+					<committee/>
+					<date>07/12/26</date>
+					<printersNumber>3764</printersNumber>
+					<rollCallVote/>
+					<fullAction>(Remarks see Senate Journal Page ), July 12, 2026</fullAction>
+				</action>
+				<action sequence="20" actionChamber="H">
+					<verb>In the House</verb>
+					<committee/>
+					<date>07/12/26</date>
+					<printersNumber>3764</printersNumber>
+					<rollCallVote/>
+					<fullAction>In the House </fullAction>
+				</action>
+				<action sequence="21" actionChamber="H">
+					<verb>Referred to</verb>
+					<committee>RULES</committee>
+					<date>07/12/26</date>
+					<printersNumber>3764</printersNumber>
+					<rollCallVote/>
+					<fullAction>Referred to RULES,  July 12, 2026</fullAction>
+				</action>
+				<action sequence="22" actionChamber="H">
+					<verb>Re-reported on concurrence, as committed,</verb>
+					<committee>RULES</committee>
+					<date>07/12/26</date>
+					<printersNumber>3764</printersNumber>
+					<rollCallVote/>
+					<fullAction>Re-reported on concurrence, as committed, July 12, 2026</fullAction>
+				</action>
+				<action sequence="23" actionChamber="H">
+					<verb>House concurred in Senate amendments,</verb>
+					<committee/>
+					<date>07/12/26</date>
+					<printersNumber>3764</printersNumber>
+					<rollCallVote>(172-30)</rollCallVote>
+					<fullAction>House concurred in Senate amendments, July 12, 2026 (172-30)</fullAction>
+				</action>
+				<action sequence="24" actionChamber="H">
+					<verb>(Remarks see House Journal Page</verb>
+					<committee/>
+					<date>07/12/26</date>
+					<printersNumber>3764</printersNumber>
+					<rollCallVote/>
+					<fullAction>(Remarks see House Journal Page ), July 12, 2026</fullAction>
+				</action>
+				<action sequence="25" actionChamber="H">
+					<verb>Signed in House,</verb>
+					<committee/>
+					<date>07/12/26</date>
+					<printersNumber>3764</printersNumber>
+					<rollCallVote/>
+					<fullAction>Signed in House, July 12, 2026</fullAction>
+				</action>
+				<action sequence="26" actionChamber="S">
+					<verb>Signed in Senate,</verb>
+					<committee/>
+					<date>07/12/26</date>
+					<printersNumber>3764</printersNumber>
+					<rollCallVote/>
+					<fullAction>Signed in Senate, July 12, 2026</fullAction>
+				</action>
+				<action sequence="27" actionChamber="E">
+					<verb>Presented to the Governor,</verb>
+					<committee/>
+					<date>07/13/26</date>
+					<printersNumber>3764</printersNumber>
+					<rollCallVote/>
+					<fullAction>Presented to the Governor, July 12, 2026</fullAction>
+				</action>
+				<action sequence="28" actionChamber="E">
+					<verb>Approved by the Governor,</verb>
+					<committee/>
+					<date>07/13/26</date>
+					<printersNumber>3764</printersNumber>
+					<rollCallVote/>
+					<fullAction>Approved by the Governor, July 12, 2026</fullAction>
+				</action>
+				<action sequence="29" actionChamber="E">
+					<verb>Act No.</verb>
+					<committee/>
+					<date>07/13/26</date>
+					<printersNumber>3764</printersNumber>
+					<rollCallVote/>
+					<fullAction>Act No. 20 of 2026, July 12, 2026</fullAction>
+				</action>
+			</actionHistory>
+			<amendments>
+				<amendment chamber="S" date="07/11/26" number="04188" amendsPN="1760" amendmentUrl="https://www.palegis.us/legislation/amendments/text/2025/0/A04188" aicUrl="https://www.palegis.us/legislation/amendments/text/2025/0/A04188?amendType=AIC&amp;txtType=HTM">A04188</amendment>
+			</amendments>
+			<supportingDocuments>
+				<pnSupportingDocuments relatedPN="3764">
+					<document documentUrl="https://www.palegis.us/WU01/LI/BI/FN/2025/0/HB1505P3764.pdf">House Fiscal Note</document>
+					<document documentUrl="https://www.palegis.us/WU01/LI/BI/SFN/2025/0/HB1505P3764.pdf">Senate Fiscal Note</document>
+				</pnSupportingDocuments>
+				<pnSupportingDocuments relatedPN="1760">
+					<document documentUrl="https://www.palegis.us/WU01/LI/BI/FN/2025/0/HB1505P1760.pdf">House Fiscal Note</document>
+				</pnSupportingDocuments>
+			</supportingDocuments>
+		</bill>
+		<bill id="20250HB2659" lastUpdate="November 10, 2026 12:05:00 PM EST">
+			<sessionYear>2025</sessionYear>
+			<session>0</session>
+			<body>H</body>
+			<type description="House Bill">B</type>
+			<subType>B</subType>
+			<number>2659</number>
+			<shortTitle>An Act amending the act of March 10, 1949 (P.L.30, No.14), known as the Public School Code of 1949, establishing the Advanced Teaching Roles and Evidence-based Strategic Staffing Program; and imposing powers and duties on the Department of Education.</shortTitle>
+			<cosponsorshipMemo memoUrl="https://www.palegis.us/house/co-sponsorship/memo?memoID=48884&amp;document=HB2659">Advanced Teaching Roles and Evidence-Based Strategic Staffing Program</cosponsorshipMemo>
+			<sponsors>
+				<sponsor sequenceNumber="01" fillSequence="0" party="D" body="H" districtNumber="164">CURRY</sponsor>
+				<sponsor sequenceNumber="02" fillSequence="0" party="D" body="H" districtNumber="182">WAXMAN</sponsor>
+				<sponsor sequenceNumber="03" fillSequence="0" party="D" body="H" districtNumber="159">KAZEEM</sponsor>
+				<sponsor sequenceNumber="04" fillSequence="0" party="D" body="H" districtNumber="96">RIVERA</sponsor>
+				<sponsor sequenceNumber="05" fillSequence="0" party="D" body="H" districtNumber="153">SANCHEZ</sponsor>
+				<sponsor sequenceNumber="06" fillSequence="0" party="D" body="H" districtNumber="24">MAYES</sponsor>
+				<sponsor sequenceNumber="07" fillSequence="0" party="D" body="H" districtNumber="74">D. WILLIAMS</sponsor>
+				<sponsor sequenceNumber="08" fillSequence="0" party="D" body="H" districtNumber="175">ISAACSON</sponsor>
+				<sponsor sequenceNumber="09" fillSequence="0" party="D" body="H" districtNumber="163">BOYD</sponsor>
+				<sponsor sequenceNumber="10" fillSequence="0" party="D" body="H" districtNumber="29">BRENNAN</sponsor>
+				<sponsor sequenceNumber="11" fillSequence="0" party="R" body="H" districtNumber="46">ORTITAY</sponsor>
+				<sponsor sequenceNumber="12" fillSequence="0" party="D" body="H" districtNumber="105">FLEMING</sponsor>
+				<sponsor sequenceNumber="13" fillSequence="0" party="D" body="H" districtNumber="194">KHAN</sponsor>
+			</sponsors>
+			<printersNumberHistory>
+				<number sequence="01" billTextPdfUrl="https://www.palegis.us/legislation/bills/text/PDF/2025/0/HB2659/PN3670">3670</number>
+			</printersNumberHistory>
+			<actionHistory>
+				<action sequence="01" actionChamber="H">
+					<verb>Referred to</verb>
+					<committee>EDUCATION</committee>
+					<date>06/22/26</date>
+					<printersNumber>3670</printersNumber>
+					<rollCallVote/>
+					<fullAction>Referred to EDUCATION,  June 22, 2026</fullAction>
+				</action>
+			</actionHistory>
+			<amendments/>
+			<supportingDocuments/>
+		</bill>
+		<bill id="20250HR0590" lastUpdate="September 8, 2026 1:05:01 PM EDT">
+			<sessionYear>2025</sessionYear>
+			<session>0</session>
+			<body>H</body>
+			<type description="House Resolution">R</type>
+			<subType>R</subType>
+			<number>0590</number>
+			<shortTitle>A Resolution celebrating the momentous occasion of the 250th anniversary of the Constitution of Pennsylvania.</shortTitle>
+			<cosponsorshipMemo/>
+			<sponsors>
+				<sponsor sequenceNumber="01" fillSequence="0" party="D" body="H" districtNumber="191">McCLINTON</sponsor>
+				<sponsor sequenceNumber="02" fillSequence="0" party="D" body="H" districtNumber="70">BRADFORD</sponsor>
+				<sponsor sequenceNumber="03" fillSequence="0" party="R" body="H" districtNumber="78">TOPPER</sponsor>
+				<sponsor sequenceNumber="04" fillSequence="0" party="R" body="H" districtNumber="28">SHAFFER</sponsor>
+				<sponsor sequenceNumber="05" fillSequence="0" party="D" body="H" districtNumber="149">BRIGGS</sponsor>
+			</sponsors>
+			<printersNumberHistory>
+				<number sequence="01" billTextPdfUrl="https://www.palegis.us/legislation/bills/text/PDF/2025/0/HR0590/PN3791">3791</number>
+			</printersNumberHistory>
+			<actionHistory>
+				<action sequence="01" actionChamber="H">
+					<verb>Referred to</verb>
+					<committee>TOURISM, RECREATION AND ECONOMIC DEVELOPMENT</committee>
+					<date>07/22/26</date>
+					<printersNumber>3791</printersNumber>
+					<rollCallVote/>
+					<fullAction>Referred to TOURISM, RECREATION AND ECONOMIC DEVELOPMENT,  July 22, 2026</fullAction>
+				</action>
+				<action sequence="02" actionChamber="H">
+					<verb>Reported as committed,</verb>
+					<committee>TOURISM, RECREATION AND ECONOMIC DEVELOPMENT</committee>
+					<date>09/08/26</date>
+					<printersNumber>3791</printersNumber>
+					<rollCallVote/>
+					<fullAction>Reported as committed, Sept. 8, 2026</fullAction>
+				</action>
+				<action sequence="03" actionChamber="H">
+					<verb>Adopted,</verb>
+					<committee/>
+					<date>09/10/26</date>
+					<printersNumber>3791</printersNumber>
+					<rollCallVote>(203-0)</rollCallVote>
+					<fullAction>Adopted, Sept. 9, 2026 (203-0)</fullAction>
+				</action>
+				<action sequence="04" actionChamber="H">
+					<verb>(Remarks see House Journal Page</verb>
+					<committee/>
+					<date>09/10/26</date>
+					<printersNumber>3791</printersNumber>
+					<rollCallVote/>
+					<fullAction>(Remarks see House Journal Page ), Sept. 9, 2026</fullAction>
+				</action>
+			</actionHistory>
+			<amendments/>
+			<supportingDocuments/>
+		</bill>
+		<bill id="20250HR0676" lastUpdate="November 13, 2026 10:05:00 AM EST">
+			<sessionYear>2025</sessionYear>
+			<session>0</session>
+			<body>H</body>
+			<type description="House Resolution">R</type>
+			<subType>R</subType>
+			<number>0676</number>
+			<shortTitle>A Resolution censuring Representative Aaron Bernstine.</shortTitle>
+			<cosponsorshipMemo/>
+			<sponsors>
+				<sponsor sequenceNumber="01" fillSequence="0" party="D" body="H" districtNumber="70">BRADFORD</sponsor>
+			</sponsors>
+			<printersNumberHistory>
+				<number sequence="01" billTextPdfUrl="https://www.palegis.us/legislation/bills/text/PDF/2025/0/HR0676/PN4123">4123</number>
+				<number sequence="02" billTextPdfUrl="https://www.palegis.us/legislation/bills/text/PDF/2025/0/HR0676/PN4122">4122</number>
+			</printersNumberHistory>
+			<actionHistory>
+				<action sequence="01" actionChamber="H">
+					<verb>Undefined Action</verb>
+					<committee/>
+					<date>11/10/26</date>
+					<printersNumber>4122</printersNumber>
+					<rollCallVote/>
+					<fullAction>Originated in House Committee on Rules, Nov. 10, 2026 </fullAction>
+				</action>
+				<action sequence="02" actionChamber="H">
+					<verb>Corrective Reprint, Printer's No.</verb>
+					<committee/>
+					<date>11/10/26</date>
+					<printersNumber>4123</printersNumber>
+					<rollCallVote/>
+					<fullAction>Corrective Reprint, Printer's No.  4123, Nov. 10, 2026</fullAction>
+				</action>
+				<action sequence="03" actionChamber="H">
+					<verb>Reported as committed,</verb>
+					<committee/>
+					<date>11/10/26</date>
+					<printersNumber>4123</printersNumber>
+					<rollCallVote/>
+					<fullAction>Reported as committed, Nov. 10, 2026</fullAction>
+				</action>
+				<action sequence="04" actionChamber="H">
+					<verb>Undefined Action</verb>
+					<committee/>
+					<date>11/13/26</date>
+					<printersNumber>4123</printersNumber>
+					<rollCallVote/>
+					<fullAction>Referred to Session Calendar, Nov. 10, 2026 </fullAction>
+				</action>
+			</actionHistory>
+			<amendments/>
+			<supportingDocuments/>
+		</bill>
+		<bill id="20250SR0414" lastUpdate="November 13, 2026 12:05:00 PM EST">
+			<sessionYear>2025</sessionYear>
+			<session>0</session>
+			<body>S</body>
+			<type description="Senate Resolution">R</type>
+			<subType>R</subType>
+			<number>0414</number>
+			<shortTitle>A Resolution honoring the life, legacy and extraordinary contributions of Dolores Huerta, distinguished labor leader, community organizer and civic engagement advocate, for her lifelong commitment to workers' rights, civil rights, economic justice and democratic participation.</shortTitle>
+			<cosponsorshipMemo memoUrl="https://www.palegis.us/senate/co-sponsorship/memo?memoID=49385&amp;document=SR414">Condolence Resolution Honoring Dolores Huerta</cosponsorshipMemo>
+			<sponsors>
+				<sponsor sequenceNumber="01" fillSequence="0" party="D" body="S" districtNumber="3">STREET</sponsor>
+				<sponsor sequenceNumber="02" fillSequence="0" party="D" body="S" districtNumber="38">L. WILLIAMS</sponsor>
+				<sponsor sequenceNumber="03" fillSequence="0" party="D" body="S" districtNumber="1">SAVAL</sponsor>
+				<sponsor sequenceNumber="04" fillSequence="0" party="D" body="S" districtNumber="26">KEARNEY</sponsor>
+				<sponsor sequenceNumber="05" fillSequence="0" party="D" body="S" districtNumber="2">TARTAGLIONE</sponsor>
+				<sponsor sequenceNumber="06" fillSequence="0" party="D" body="S" districtNumber="4">HAYWOOD</sponsor>
+				<sponsor sequenceNumber="07" fillSequence="0" party="D" body="S" districtNumber="43">COSTA</sponsor>
+			</sponsors>
+			<printersNumberHistory>
+				<number sequence="01" billTextPdfUrl="https://www.palegis.us/legislation/bills/text/PDF/2025/0/SR0414/PN2086">2086</number>
+			</printersNumberHistory>
+			<actionHistory>
+				<action sequence="01" actionChamber="S">
+					<verb>Referred to</verb>
+					<committee>RULES AND EXECUTIVE NOMINATIONS</committee>
+					<date>11/06/26</date>
+					<printersNumber>2086</printersNumber>
+					<rollCallVote/>
+					<fullAction>Referred to RULES AND EXECUTIVE NOMINATIONS,  Nov. 6, 2026</fullAction>
+				</action>
+			</actionHistory>
+			<amendments/>
+			<supportingDocuments/>
+		</bill>
+		</session>
+</historyExport>
