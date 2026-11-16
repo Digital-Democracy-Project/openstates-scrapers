@@ -1,7 +1,10 @@
+import datetime
 import re
 import requests
 from collections import defaultdict
 
+import pytz
+from openstates.exceptions import EmptyScrape
 from openstates.scrape import Scraper, Bill, VoteEvent
 from classify_motion import classify_motion
 
@@ -41,6 +44,40 @@ vote_name_pattern = re.compile(r"(.*), (\d+(?:ST|ND|RD|TH))", re.IGNORECASE)
 OUTCOME_STATUS = r"Reconsidered|Passed|Adopted|Agreed|Lost"
 # "Local Calendar", "Previous Local Calendar", "LOCAL CONSENT CALENDAR"
 CALENDAR = re.compile(r"calendar", re.IGNORECASE)
+
+# OPEN-604: catch-up runs. Georgia's service dates are Eastern local time, and its search
+# compares them by calendar day (both ends inclusive, the time of day ignored; measured
+# 2026-11-16). A day of lookback covers a roll call or status published the day after it
+# is dated.
+EASTERN = pytz.timezone("America/New_York")
+CHANGED_LOOKBACK = datetime.timedelta(days=1)
+# the service refuses a page size over 250; StartIndex is a row offset
+SEARCH_PAGE_SIZE = 250
+
+
+def changed_cutoff(start):
+    """The first Eastern day a catch-up run asks for, from the runners' start= (UTC)."""
+    start_dt = datetime.datetime.strptime(start, "%Y-%m-%dT%H:%M:%S")
+    eastern = pytz.utc.localize(start_dt).astimezone(EASTERN)
+    return eastern.date() - CHANGED_LOOKBACK
+
+
+def bills_voted_since(cutoff, votes, index):
+    """Ids of the bills with a roll call dated on or after the cutoff day.
+
+    A roll call does not always add a status: SB 8 (2025_26) has the Senate's 26-26 vote to
+    agree to the House substitute (2026-04-02, #964) and no status after 2026-03-27, so the
+    status filter alone misses it. votes are GetVotes' listings; their Legislation is the
+    bill ("SB 8", the index's Description), or empty for a vote on no bill.
+    """
+    ids = {leg["Description"]: leg["Id"] for leg in index}
+    return {
+        ids[v["Legislation"].strip()]
+        for v in votes
+        if v["Legislation"]
+        and v["Legislation"].strip() in ids
+        and v["Date"].date() >= cutoff
+    }
 
 
 def vote_classification(caption, reconsidered=False):
@@ -109,7 +146,8 @@ def pair_outcomes(listed_votes, history):
 
 
 class GABillScraper(Scraper):
-    lservice = get_client("Legislation").service
+    lclient = get_client("Legislation")
+    lservice = lclient.service
     vservice = get_client("Votes").service
     mservice = get_client("Members").service
     lsource = get_url("Legislation")
@@ -123,6 +161,82 @@ class GABillScraper(Scraper):
         mem = backoff(self.mservice.GetMember, member_id)
         member_cache[member_id] = mem
         return mem
+
+    def search_current_status(self, session_id, cutoff):
+        """Ids of the session's bills whose current status is dated on or after the cutoff
+        day (GetLegislationSearchResultsPaged with a CurrentStatusConstraint).
+
+        Only the current status can be searched: an ExistingStatusConstraint (any status in
+        the range) fails on the service with "Object reference not set to an instance of an
+        object" (2026-11-16). The current one is enough, because a bill that gained a status
+        since the cutoff has a current status at least that recent; the open-ended DateEnd
+        keeps a later status from hiding an earlier one.
+        """
+        constraints = self.lclient.factory.create("ns2:LegislationSearchConstraints")
+        constraints.Session.Id = session_id
+        status = self.lclient.factory.create("ns2:CurrentStatusConstraint")
+        status.Status = "Any"
+        status.DateStart = datetime.datetime.combine(cutoff, datetime.time())
+        status.DateEnd = datetime.datetime(cutoff.year + 10, 1, 1)
+        constraints.StatusConstraints.StatusConstraint.append(status)
+
+        ids, offset = set(), 0
+        while True:
+            result = backoff(
+                self.lservice.GetLegislationSearchResultsPaged,
+                constraints,
+                SEARCH_PAGE_SIZE,
+                offset,
+            )
+            page = result["Page"]["LegislationSearchResult"] if result["Page"] else []
+            ids.update(row["Id"] for row in page)
+            offset += len(page)
+            if not page or offset >= result["Total"]:
+                break
+        # a short or overlapping listing cannot say which bills changed (pm-review)
+        if len(ids) < result["Total"]:
+            raise ValueError(
+                "search listed %d of %d bills" % (len(ids), result["Total"])
+            )
+        return ids
+
+    def changed_since(self, session_id, start, legislation):
+        """OPEN-604: ids of the bills to read on a catch-up run (a status or a roll call
+        since start=), or None for a full walk when the service cannot say."""
+        try:
+            cutoff = changed_cutoff(start)
+        except ValueError:
+            self.warning("GA OPEN-604: invalid start=%r, doing a full walk", start)
+            return None
+        try:
+            by_status = self.search_current_status(session_id, cutoff)
+            votes = []
+            for branch in ("House", "Senate"):
+                # an empty answer is a failure, not "no roll calls" (pm-review): a
+                # chamber's list is never empty after its first day
+                votes += backoff(self.vservice.GetVotes, branch, session_id)[
+                    "VoteListing"
+                ]
+            by_vote = bills_voted_since(cutoff, votes, legislation)
+        except Exception as e:
+            self.warning(
+                "GA OPEN-604: could not list the changed bills (%s), doing a full walk",
+                e,
+            )
+            return None
+        changed = by_status | by_vote
+        self.info(
+            "GA OPEN-604: %d of %d bills changed since %s (start=%s, Eastern day minus "
+            "%s): %d by status, %d more by roll call only",
+            len(changed),
+            len(legislation),
+            cutoff,
+            start,
+            CHANGED_LOOKBACK,
+            len(by_status),
+            len(by_vote - by_status),
+        )
+        return changed
 
     def scrape_subjects(self, session_id):
         """Build a mapping of legislation_id -> [subject names] via the REST API."""
@@ -181,7 +295,7 @@ class GABillScraper(Scraper):
 
         self.info(f"Loaded subjects for {len(self._subjects)} bills")
 
-    def scrape(self, session=None, chamber=None):
+    def scrape(self, session=None, chamber=None, start=None):
         bill_type_map = {
             "B": "bill",
             "R": "resolution",
@@ -261,11 +375,24 @@ class GABillScraper(Scraper):
         }
         sid = SESSION_SITE_IDS[session]
 
-        self.scrape_subjects(sid)
-
         legislation = backoff(self.lservice.GetLegislationForSession, sid)[
             "LegislationIndex"
         ]
+
+        # OPEN-604: the runners append start=<watermark> on every run after the first. With
+        # it, only the bills with a status or a roll call since then are read; without it
+        # (or if the service cannot list them) every bill is, as before.
+        changed = self.changed_since(sid, start, legislation) if start else None
+        if changed is not None:
+            listed = len(legislation)
+            legislation = [leg for leg in legislation if leg["Id"] in changed]
+            # A quiet week is a real answer, not a broken scrape: tell do_scrape() so (as
+            # PA, OPEN-574). An empty session index still fails as before.
+            if listed and not legislation:
+                self.info("GA OPEN-604: no bill changed since %s", start)
+                raise EmptyScrape
+
+        self.scrape_subjects(sid)
 
         for leg in legislation:
             lid = leg["Id"]

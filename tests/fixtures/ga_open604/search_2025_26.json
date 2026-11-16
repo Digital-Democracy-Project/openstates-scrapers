@@ -1,0 +1,759 @@
+[
+ {
+  "ActVetoNumber": null,
+  "Authors": {
+   "Sponsorship": [
+    {
+     "Id": 274551,
+     "MemberDescription": "Au, Michelle 50th",
+     "MemberId": 4983,
+     "Sequence": 1,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 276438,
+     "MemberDescription": "Cooper, Sharon 45th",
+     "MemberId": 86,
+     "Sequence": 2,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 276439,
+     "MemberDescription": "Oliver, Mary Margaret 84th",
+     "MemberId": 181,
+     "Sequence": 3,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 276440,
+     "MemberDescription": "Crawford, Omari 89th",
+     "MemberId": 5036,
+     "Sequence": 4,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 276476,
+     "MemberDescription": "Neal, Yasmin 79th",
+     "MemberId": 765,
+     "Sequence": 5,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 276441,
+     "MemberDescription": "Westbrook, Anne Allen 163rd",
+     "MemberId": 5054,
+     "Sequence": 6,
+     "Type": "HouseAuthor"
+    }
+   ]
+  },
+  "Caption": "Pediatric Health Safe Storage Act; enact",
+  "DocumentType": "HB",
+  "HouseCommittee": {
+   "Code": "PS&HS",
+   "Id": 129,
+   "Name": "Public Safety and Homeland Security",
+   "Type": "House"
+  },
+  "Id": 69281,
+  "Number": 1,
+  "SenateCommittee": null,
+  "Session": {
+   "IsDefault": true,
+   "Id": 1033,
+   "Description": "2025-2026 Regular Session",
+   "Library": "20252026"
+  },
+  "Status": {
+   "Code": "HSR",
+   "Date": "2025-01-15T10:15:29",
+   "Description": "House Second Readers",
+   "Id": 34,
+   "AmSub": null,
+   "StatusListingId": 320167
+  },
+  "Suffix": null
+ },
+ {
+  "ActVetoNumber": null,
+  "Authors": {
+   "Sponsorship": [
+    {
+     "Id": 274552,
+     "MemberDescription": "Au, Michelle 50th",
+     "MemberId": 4983,
+     "Sequence": 1,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 275042,
+     "MemberDescription": "Oliver, Mary Margaret 84th",
+     "MemberId": 181,
+     "Sequence": 2,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 275043,
+     "MemberDescription": "Crawford, Omari 89th",
+     "MemberId": 5036,
+     "Sequence": 3,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 275044,
+     "MemberDescription": "Neal, Yasmin 79th",
+     "MemberId": 765,
+     "Sequence": 4,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 275045,
+     "MemberDescription": "Westbrook, Anne Allen 163rd",
+     "MemberId": 5054,
+     "Sequence": 5,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 275046,
+     "MemberDescription": "Sanchez, Gabriel 42nd",
+     "MemberId": 5068,
+     "Sequence": 6,
+     "Type": "HouseAuthor"
+    }
+   ]
+  },
+  "Caption": "Safe Storage Tax Credit Act; enact",
+  "DocumentType": "HB",
+  "HouseCommittee": {
+   "Code": "W&M",
+   "Id": 101,
+   "Name": "Ways & Means",
+   "Type": "House"
+  },
+  "Id": 69282,
+  "Number": 2,
+  "SenateCommittee": null,
+  "Session": {
+   "IsDefault": true,
+   "Id": 1033,
+   "Description": "2025-2026 Regular Session",
+   "Library": "20252026"
+  },
+  "Status": {
+   "Code": "HSR",
+   "Date": "2025-01-15T10:15:29",
+   "Description": "House Second Readers",
+   "Id": 34,
+   "AmSub": null,
+   "StatusListingId": 320168
+  },
+  "Suffix": null
+ },
+ {
+  "ActVetoNumber": "V1",
+  "Authors": {
+   "Sponsorship": [
+    {
+     "Id": 274579,
+     "MemberDescription": "Carpenter, Kasey 4th",
+     "MemberId": 4911,
+     "Sequence": 1,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 274580,
+     "MemberDescription": "Tarvin, Steve 2nd",
+     "MemberId": 849,
+     "Sequence": 2,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 274581,
+     "MemberDescription": "Crawford, Omari 89th",
+     "MemberId": 5036,
+     "Sequence": 3,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 274582,
+     "MemberDescription": "Fleming, Tim 114th",
+     "MemberId": 5046,
+     "Sequence": 4,
+     "Type": "HouseAuthor"
+    }
+   ]
+  },
+  "Caption": "State symbols; cornbread as official state bread; designate",
+  "DocumentType": "HB",
+  "HouseCommittee": {
+   "Code": "SRules",
+   "Id": 117,
+   "Name": "Special Rules",
+   "Type": "House"
+  },
+  "Id": 69294,
+  "Number": 14,
+  "SenateCommittee": {
+   "Code": "RULES",
+   "Id": 83,
+   "Name": "Rules",
+   "Type": "Senate"
+  },
+  "Session": {
+   "IsDefault": true,
+   "Id": 1033,
+   "Description": "2025-2026 Regular Session",
+   "Library": "20252026"
+  },
+  "Status": {
+   "Code": "HDSG",
+   "Date": "2026-05-12T09:56:41",
+   "Description": "House Date Signed by Governor ",
+   "Id": 110,
+   "AmSub": null,
+   "StatusListingId": 346107
+  },
+  "Suffix": null
+ },
+ {
+  "ActVetoNumber": null,
+  "Authors": {
+   "Sponsorship": [
+    {
+     "Id": 274863,
+     "MemberDescription": "Rice, Carmen 139th",
+     "MemberId": 5064,
+     "Sequence": 1,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 274864,
+     "MemberDescription": "O'Steen, Angie 169th",
+     "MemberId": 5084,
+     "Sequence": 2,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 274865,
+     "MemberDescription": "Reeves, Matt 99th",
+     "MemberId": 5040,
+     "Sequence": 3,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 274866,
+     "MemberDescription": "Cannon, Chas 172nd",
+     "MemberId": 5058,
+     "Sequence": 4,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 274867,
+     "MemberDescription": "Bonner, Josh 73rd",
+     "MemberId": 4893,
+     "Sequence": 5,
+     "Type": "HouseAuthor"
+    }
+   ]
+  },
+  "Caption": "Ad valorem tax; qualified disabled veterans; extend homestead exemption to unremarried surviving spouses or minor children ",
+  "DocumentType": "HB",
+  "HouseCommittee": {
+   "Code": "W&M",
+   "Id": 101,
+   "Name": "Ways & Means",
+   "Type": "House"
+  },
+  "Id": 69349,
+  "Number": 52,
+  "SenateCommittee": {
+   "Code": "FIN",
+   "Id": 138,
+   "Name": "Finance",
+   "Type": "Senate"
+  },
+  "Session": {
+   "IsDefault": true,
+   "Id": 1033,
+   "Description": "2025-2026 Regular Session",
+   "Library": "20252026"
+  },
+  "Status": {
+   "Code": "SPA",
+   "Date": "2026-04-02T17:09:28",
+   "Description": "Senate Passed/Adopted By Substitute",
+   "Id": 99,
+   "AmSub": "CS",
+   "StatusListingId": 345392
+  },
+  "Suffix": null
+ },
+ {
+  "ActVetoNumber": "434",
+  "Authors": {
+   "Sponsorship": [
+    {
+     "Id": 275638,
+     "MemberDescription": "Petrea, Jesse 166th",
+     "MemberId": 862,
+     "Sequence": 1,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 275639,
+     "MemberDescription": "Stephens, Ron 164th",
+     "MemberId": 219,
+     "Sequence": 2,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 275640,
+     "MemberDescription": "Franklin, Lehman 160th",
+     "MemberId": 5053,
+     "Sequence": 3,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 275641,
+     "MemberDescription": "Townsend, Rick 179th",
+     "MemberId": 5055,
+     "Sequence": 4,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 275642,
+     "MemberDescription": "DeLoach, Buddy 167th",
+     "MemberId": 303,
+     "Sequence": 5,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 275643,
+     "MemberDescription": "Hitchens, Bill 161st",
+     "MemberId": 823,
+     "Sequence": 6,
+     "Type": "HouseAuthor"
+    }
+   ]
+  },
+  "Caption": "Natural Resources, Department of; certain notice upon registration of a vessel; provide",
+  "DocumentType": "HB",
+  "HouseCommittee": {
+   "Code": "GF&P",
+   "Id": 91,
+   "Name": "Game, Fish & Parks",
+   "Type": "House"
+  },
+  "Id": 69468,
+  "Number": 115,
+  "SenateCommittee": {
+   "Code": "NR&E",
+   "Id": 139,
+   "Name": "Natural Resources and the Environment",
+   "Type": "Senate"
+  },
+  "Session": {
+   "IsDefault": true,
+   "Id": 1033,
+   "Description": "2025-2026 Regular Session",
+   "Library": "20252026"
+  },
+  "Status": {
+   "Code": "HDSG",
+   "Date": "2026-05-11T12:10:27",
+   "Description": "House Date Signed by Governor ",
+   "Id": 110,
+   "AmSub": null,
+   "StatusListingId": 345920
+  },
+  "Suffix": null
+ },
+ {
+  "ActVetoNumber": null,
+  "Authors": {
+   "Sponsorship": [
+    {
+     "Id": 275891,
+     "MemberDescription": "Cox, Brent 28th",
+     "MemberId": 5021,
+     "Sequence": 1,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 275892,
+     "MemberDescription": "Leverett, Rob 123rd",
+     "MemberId": 4993,
+     "Sequence": 2,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 275893,
+     "MemberDescription": "Rice, Carmen 139th",
+     "MemberId": 5064,
+     "Sequence": 3,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 275894,
+     "MemberDescription": "Barrett, Carter 24th",
+     "MemberId": 5020,
+     "Sequence": 4,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 275895,
+     "MemberDescription": "Erwin, Chris 32nd",
+     "MemberId": 4965,
+     "Sequence": 5,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 278718,
+     "MemberDescription": "Horner, Mitchell 3rd",
+     "MemberId": 5018,
+     "Sequence": 6,
+     "Type": "HouseAuthor"
+    }
+   ]
+  },
+  "Caption": "Education; number of accumulated sick leave days for teachers and other school personnel; increase from three to five",
+  "DocumentType": "HB",
+  "HouseCommittee": {
+   "Code": "Ed",
+   "Id": 102,
+   "Name": "Education",
+   "Type": "House"
+  },
+  "Id": 69501,
+  "Number": 127,
+  "SenateCommittee": {
+   "Code": "ED&Y",
+   "Id": 120,
+   "Name": "Education and Youth",
+   "Type": "Senate"
+  },
+  "Session": {
+   "IsDefault": true,
+   "Id": 1033,
+   "Description": "2025-2026 Regular Session",
+   "Library": "20252026"
+  },
+  "Status": {
+   "Code": "SPA",
+   "Date": "2025-04-02T23:59:45",
+   "Description": "Senate Passed/Adopted By Substitute",
+   "Id": 99,
+   "AmSub": "CS",
+   "StatusListingId": 332202
+  },
+  "Suffix": null
+ },
+ {
+  "ActVetoNumber": null,
+  "Authors": {
+   "Sponsorship": [
+    {
+     "Id": 278792,
+     "MemberDescription": "Corbett, John 174th",
+     "MemberId": 859,
+     "Sequence": 1,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 278853,
+     "MemberDescription": "Seabaugh, Devan 34th",
+     "MemberId": 5009,
+     "Sequence": 2,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 278854,
+     "MemberDescription": "Crowe, Clint 118th",
+     "MemberId": 5002,
+     "Sequence": 3,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 278857,
+     "MemberDescription": "Huddleston, David 72nd",
+     "MemberId": 5033,
+     "Sequence": 4,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 278858,
+     "MemberDescription": "McDonald III, Lauren 26th",
+     "MemberId": 4992,
+     "Sequence": 5,
+     "Type": "HouseAuthor"
+    }
+   ]
+  },
+  "Caption": "Motor vehicles; placement of a special identifying sticker on the windshields of alternative fueled vehicles; require",
+  "DocumentType": "HB",
+  "HouseCommittee": {
+   "Code": "MotV",
+   "Id": 97,
+   "Name": "Motor Vehicles",
+   "Type": "House"
+  },
+  "Id": 69844,
+  "Number": 239,
+  "SenateCommittee": null,
+  "Session": {
+   "IsDefault": true,
+   "Id": 1033,
+   "Description": "2025-2026 Regular Session",
+   "Library": "20252026"
+  },
+  "Status": {
+   "Code": "HCFR",
+   "Date": "2026-04-02T10:23:35",
+   "Description": "House Committee Favorably Reported By Substitute",
+   "Id": 39,
+   "AmSub": "SUB",
+   "StatusListingId": 345098
+  },
+  "Suffix": null
+ },
+ {
+  "ActVetoNumber": "713",
+  "Authors": {
+   "Sponsorship": [
+    {
+     "Id": 279683,
+     "MemberDescription": "Gaines, Houston 120th",
+     "MemberId": 4955,
+     "Sequence": 1,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 279684,
+     "MemberDescription": "Leverett, Rob 123rd",
+     "MemberId": 4993,
+     "Sequence": 2,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 279685,
+     "MemberDescription": "Crowe, Clint 118th",
+     "MemberId": 5002,
+     "Sequence": 3,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 279686,
+     "MemberDescription": "Jones, Jan 47th",
+     "MemberId": 142,
+     "Sequence": 4,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 279687,
+     "MemberDescription": "Anderson, Victor 10th",
+     "MemberId": 4989,
+     "Sequence": 5,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 279688,
+     "MemberDescription": "Petrea, Jesse 166th",
+     "MemberId": 862,
+     "Sequence": 6,
+     "Type": "HouseAuthor"
+    }
+   ]
+  },
+  "Caption": "Local government; procedures for real property owners to make claims for compensation for loss of property value or expenses incurred; provisions",
+  "DocumentType": "HB",
+  "HouseCommittee": {
+   "Code": "PS&HS",
+   "Id": 129,
+   "Name": "Public Safety and Homeland Security",
+   "Type": "House"
+  },
+  "Id": 69969,
+  "Number": 295,
+  "SenateCommittee": {
+   "Code": "SLGO",
+   "Id": 85,
+   "Name": "State and Local Governmental Operations",
+   "Type": "Senate"
+  },
+  "Session": {
+   "IsDefault": true,
+   "Id": 1033,
+   "Description": "2025-2026 Regular Session",
+   "Library": "20252026"
+  },
+  "Status": {
+   "Code": "HDSG",
+   "Date": "2026-05-12T12:09:18",
+   "Description": "House Date Signed by Governor ",
+   "Id": 110,
+   "AmSub": null,
+   "StatusListingId": 346185
+  },
+  "Suffix": null
+ },
+ {
+  "ActVetoNumber": "11",
+  "Authors": {
+   "Sponsorship": [
+    {
+     "Id": 274454,
+     "MemberDescription": "Dolezal, Greg 27th",
+     "MemberId": 4925,
+     "Sequence": 1,
+     "Type": "SenateAuthor"
+    },
+    {
+     "Id": 274455,
+     "MemberDescription": "Kennedy, John F. 18th",
+     "MemberId": 852,
+     "Sequence": 2,
+     "Type": "SenateAuthor"
+    },
+    {
+     "Id": 274456,
+     "MemberDescription": "Gooch, Steve 51st",
+     "MemberId": 752,
+     "Sequence": 3,
+     "Type": "SenateAuthor"
+    },
+    {
+     "Id": 274457,
+     "MemberDescription": "Beach, Brandon 21st",
+     "MemberId": 840,
+     "Sequence": 4,
+     "Type": "SenateAuthor"
+    },
+    {
+     "Id": 274458,
+     "MemberDescription": "Robertson, Randy 29th",
+     "MemberId": 4926,
+     "Sequence": 5,
+     "Type": "SenateAuthor"
+    },
+    {
+     "Id": 274459,
+     "MemberDescription": "Albers, John 56th",
+     "MemberId": 754,
+     "Sequence": 6,
+     "Type": "SenateAuthor"
+    }
+   ]
+  },
+  "Caption": "'Fair and Safe Athletic Opportunities Act'; enact",
+  "DocumentType": "SB",
+  "HouseCommittee": {
+   "Code": "Ed",
+   "Id": 102,
+   "Name": "Education",
+   "Type": "House"
+  },
+  "Id": 69274,
+  "Number": 1,
+  "SenateCommittee": {
+   "Code": "ED&Y",
+   "Id": 120,
+   "Name": "Education and Youth",
+   "Type": "Senate"
+  },
+  "Session": {
+   "IsDefault": true,
+   "Id": 1033,
+   "Description": "2025-2026 Regular Session",
+   "Library": "20252026"
+  },
+  "Status": {
+   "Code": "SDSG",
+   "Date": "2025-04-28T16:28:36",
+   "Description": "Senate Date Signed by Governor ",
+   "Id": 111,
+   "AmSub": null,
+   "StatusListingId": 333187
+  },
+  "Suffix": null
+ },
+ {
+  "ActVetoNumber": null,
+  "Authors": {
+   "Sponsorship": [
+    {
+     "Id": 274773,
+     "MemberDescription": "Kirkpatrick, Kay 32nd",
+     "MemberId": 4910,
+     "Sequence": 1,
+     "Type": "SenateAuthor"
+    },
+    {
+     "Id": 274774,
+     "MemberDescription": "Strickland, Brian 42nd",
+     "MemberId": 835,
+     "Sequence": 2,
+     "Type": "SenateAuthor"
+    },
+    {
+     "Id": 274775,
+     "MemberDescription": "Hatchett, Bo 50th",
+     "MemberId": 4984,
+     "Sequence": 3,
+     "Type": "SenateAuthor"
+    },
+    {
+     "Id": 274776,
+     "MemberDescription": "Jackson, Kim 41st",
+     "MemberId": 4981,
+     "Sequence": 4,
+     "Type": "SenateAuthor"
+    },
+    {
+     "Id": 274777,
+     "MemberDescription": "Brass, Matt 6th",
+     "MemberId": 4907,
+     "Sequence": 5,
+     "Type": "SenateAuthor"
+    },
+    {
+     "Id": 274778,
+     "MemberDescription": "Esteves, Jason 35th",
+     "MemberId": 5014,
+     "Sequence": 6,
+     "Type": "SenateAuthor"
+    }
+   ]
+  },
+  "Caption": "Courts; arrest warrant requirements when juvenile courts are acting as courts of inquiry; provide",
+  "DocumentType": "SB",
+  "HouseCommittee": {
+   "Code": "JudyJ",
+   "Id": 203,
+   "Name": "Judiciary Juvenile",
+   "Type": "House"
+  },
+  "Id": 69327,
+  "Number": 8,
+  "SenateCommittee": {
+   "Code": "C&F",
+   "Id": 195,
+   "Name": "Children and Families",
+   "Type": "Senate"
+  },
+  "Session": {
+   "IsDefault": true,
+   "Id": 1033,
+   "Description": "2025-2026 Regular Session",
+   "Library": "20252026"
+  },
+  "Status": {
+   "Code": "HPA",
+   "Date": "2026-03-27T14:27:46",
+   "Description": "House Passed/Adopted By Substitute",
+   "Id": 100,
+   "AmSub": "CS",
+   "StatusListingId": 344175
+  },
+  "Suffix": null
+ }
+]
