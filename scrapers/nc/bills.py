@@ -24,6 +24,47 @@ def vote_dedupe_key(session, rcs):
     return rcs if session == _BARE_KEY_SESSION else f"{session}-{rcs}"
 
 
+def roll_call_votes(vdoc):
+    """(vote type, voter name) for every name on an NC roll-call transcript page.
+
+    The page lists each vote type as a header line and then one line of names separated by "; ", for example
+    "Ayes (Republican)" then "Adams; D. Hall (Speaker); Carson Smith; von Haefen". Each name is stripped on
+    its own, so a two-word name keeps its space: removing every space in the row first turned "John Lowery"
+    into "JohnLowery", which matches no one (OPEN-234)."""
+    # only one table that looks like this
+    for row in vdoc.xpath("//div[@class='row ncga-row-no-gutters']"):
+        votes_names = []
+        row = row.text_content()
+        if "None" in row:
+            vote_type = "Nope"
+        elif "Ayes (" in row:
+            vote_type = "yes"
+        elif "Noes (" in row:
+            vote_type = "no"
+        elif "Excused Absence (" in row:
+            vote_type = "absent"
+        elif "Not Voting (" in row:
+            vote_type = "not voting"
+        elif "Excused Vote (" in row:
+            vote_type = "excused"
+        else:
+            vote_type = "Not a vote"
+        if vote_type not in ("Nope", "Not a vote"):
+            # [0] is the blank before the header line, [1] the header, [-1] the blank after the names
+            parts = row.replace("\n", ";").split(";")
+            votes_names = [part.strip() for part in parts][2:-1]
+        for name in votes_names:
+            name = name.replace("\r", "")
+            # Resolves names that have '(Chair)' in them
+            if "(" in name:
+                name = name[: name.find("(")].strip()
+            # Adds a space to names inbetween initial and last name
+            # eg: L.Johnson -> L. Johnson
+            if name[1] == "." and name[2] != " ":
+                name = name[:2] + " " + name[2:]
+            yield vote_type, name
+
+
 class NCBillScraper(Scraper):
 
     archived_votes = defaultdict(lambda: defaultdict(list))
@@ -269,48 +310,8 @@ class NCBillScraper(Scraper):
             data = self.get(result_link).text
             vdoc = lxml.html.fromstring(data)
 
-            # only one table that looks like this
-            vote_table = vdoc.xpath("//div[@class='row ncga-row-no-gutters']")
-
-            # Grabs names for how people voted
-            for row in vote_table:
-                votes_names = []
-                row = row.text_content()
-                if "None" in row:
-                    vote_type = "Nope"
-                elif "Ayes (" in row:
-                    row = row.replace("\n", ";")
-                    votes_names = row.replace(" ", "").strip().split(";")[2:-1]
-                    vote_type = "yes"
-                elif "Noes (" in row:
-                    row = row.replace("\n", ";")
-                    votes_names = row.replace(" ", "").strip().split(";")[2:-1]
-                    vote_type = "no"
-                elif "Excused Absence (" in row:
-                    row = row.replace("\n", ";")
-                    votes_names = row.replace(" ", "").strip().split(";")[2:-1]
-                    vote_type = "absent"
-                elif "Not Voting (" in row:
-                    row = row.replace("\n", ";")
-                    votes_names = row.replace(" ", "").strip().split(";")[2:-1]
-                    vote_type = "not voting"
-                elif "Excused Vote (" in row:
-                    row = row.replace("\n", ";")
-                    votes_names = row.replace(" ", "").strip().split(";")[2:-1]
-                    vote_type = "excused"
-                else:
-                    vote_type = "Not a vote"
-                if votes_names:
-                    for name in votes_names:
-                        name = name.replace("\r", "")
-                        # Resolves names that have '(Chair)' in them
-                        if "(" in name:
-                            name = name[: name.find("(")]
-                        # Adds a space to names inbetween initial and last name
-                        # eg: L.Johnson -> L. Johnson
-                        if name[1] == "." and name[2] != " ":
-                            name = name[:2] + " " + name[2:]
-                        ve.vote(vote_type, name)
+            for vote_type, name in roll_call_votes(vdoc):
+                ve.vote(vote_type, name)
 
             yield ve
 
