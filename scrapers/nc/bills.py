@@ -210,7 +210,19 @@ class NCBillScraper(Scraper):
             self.warning("No subjects")
             pass
 
-        # actions
+        self.scrape_actions(bill, doc)
+
+        # TODO: Fix vote scraper
+        for row in doc.xpath("//h6[@id='vote-header']"):
+            yield from self.scrape_votes(bill, doc)
+
+        # For archived votes
+        if session in ["1997", "1999"]:
+            yield from self.add_archived_votes(bill, bill_id)
+
+        yield bill
+
+    def scrape_actions(self, bill, doc):
         action_tr_xpath = (
             '//h6[contains(text(), "History")]'
             '/ancestor::div[contains(@class, "gray-card")]'
@@ -218,7 +230,11 @@ class NCBillScraper(Scraper):
             '/div[contains(@class, "row")]'
         )
 
-        for row in doc.xpath(action_tr_xpath):
+        # The bill page lists the history newest first, a day's actions included (its own oldest-first view,
+        # /BillLookUp/{session}/{bill}/True, is exactly this list reversed). The rows are read oldest first, a
+        # plain reverse and not a date sort, so a day ends on its last action and that becomes the latest
+        # action (OPEN-543, as OPEN-534/535 for Louisiana and Nebraska)
+        for row in reversed(doc.xpath(action_tr_xpath)):
             cols = row.xpath("div")
             act_date = cols[1].text
             actor = cols[3].text or ""
@@ -255,16 +271,6 @@ class NCBillScraper(Scraper):
                 atype = None
             if act_date is not None:
                 bill.add_action(action, act_date, chamber=actor, classification=atype)
-
-        # TODO: Fix vote scraper
-        for row in doc.xpath("//h6[@id='vote-header']"):
-            yield from self.scrape_votes(bill, doc)
-
-        # For archived votes
-        if session in ["1997", "1999"]:
-            yield from self.add_archived_votes(bill, bill_id)
-
-        yield bill
 
     def scrape_votes(self, bill, doc):
         vote_tr_path = (
