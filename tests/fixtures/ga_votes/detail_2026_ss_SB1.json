@@ -1,0 +1,191 @@
+{
+ "ActVetoNumber": null,
+ "Authors": {
+  "Sponsorship": [
+   {
+    "Id": 308145,
+    "MemberDescription": "Hodges, Mike 3rd",
+    "MemberId": 5013,
+    "Sequence": 1,
+    "Type": "SenateAuthor"
+   }
+  ]
+ },
+ "Caption": "Glynn County; ad valorem taxes; homestead property determined annually for the special district based upon the proceeds of a new Local Homestead Option Sales Tax (LHOST); provide homestead exemption",
+ "Committees": {
+  "CommitteeListing": [
+   {
+    "Code": "SLGO",
+    "Id": 85,
+    "Name": "State and Local Governmental Operations",
+    "Type": "Senate"
+   }
+  ]
+ },
+ "DocumentType": "SB",
+ "Id": 74754,
+ "LatestVersion": {
+  "Description": "As introduced LC 47 4393",
+  "Id": 249258,
+  "LegislationId": 74754,
+  "Url": "https://www.legis.ga.gov/api/legislation/document/2026EX/249258",
+  "Version": 3
+ },
+ "LegislationType": "LOC",
+ "Number": 1,
+ "Session": {
+  "IsDefault": false,
+  "Id": 1034,
+  "Description": "2026 Special Session",
+  "Library": "2026EX"
+ },
+ "Status": {
+  "Code": "SRECL",
+  "Date": "2026-06-20T12:28:25",
+  "Description": "Senate Reconsidered Lost",
+  "Id": 63,
+  "AmSub": null,
+  "StatusListingId": 347016
+ },
+ "Suffix": "EX",
+ "Footnotes": null,
+ "Sponsor": null,
+ "StatusHistory": {
+  "StatusListing": [
+   {
+    "Code": "SRECL",
+    "Date": "2026-06-20T12:28:25",
+    "Description": "Senate Reconsidered Lost",
+    "Id": 63,
+    "AmSub": null,
+    "StatusListingId": 347016
+   },
+   {
+    "Code": "SRECO",
+    "Date": "2026-06-20T12:21:30",
+    "Description": "Senate Reconsidered",
+    "Id": 69,
+    "AmSub": null,
+    "StatusListingId": 347013
+   },
+   {
+    "Code": "SLL",
+    "Date": "2026-06-20T10:28:29",
+    "Description": "Senate Local Lost",
+    "Id": 122,
+    "AmSub": null,
+    "StatusListingId": 346974
+   },
+   {
+    "Code": "SCFR",
+    "Date": "2026-06-20T08:36:36",
+    "Description": "Senate Committee Favorably Reported",
+    "Id": 8,
+    "AmSub": null,
+    "StatusListingId": 346546
+   },
+   {
+    "Code": "SRAR",
+    "Date": "2026-06-17T15:45:28",
+    "Description": "Senate Read and Referred",
+    "Id": 3,
+    "AmSub": null,
+    "StatusListingId": 346262
+   },
+   {
+    "Code": "SH",
+    "Date": "2026-06-17T15:36:15",
+    "Description": "Senate Hopper",
+    "Id": 67,
+    "AmSub": null,
+    "StatusListingId": 346242
+   }
+  ]
+ },
+ "Summary": "A BILL to be entitled an Act to provide a homestead exemption from Glynn County ad valorem taxes in the amount of the assessed value of the homestead property determined annually for the special district based upon the proceeds of a new Local Homestead Option Sales Tax (LHOST) to be imposed within the special district conterminous with Glynn County; to specify the terms and conditions of the exemption and the procedures relating thereto; to provide for compliance with constitutional requirements and the provisions of Article 2C of Chapter 8 of Title 48 of the O.C.G.A.; to provide for a referendum, effective dates, automatic repeal, mandatory execution of election, and judicial remedies regarding failure to comply; to provide for related matters; to repeal conflicting laws; and for other purposes.",
+ "Versions": {
+  "DocumentDescription": [
+   {
+    "Description": "As introduced LC 47 4393",
+    "Id": 249258,
+    "LegislationId": 74754,
+    "Url": "https://www.legis.ga.gov/api/legislation/document/2026EX/249258",
+    "Version": 3
+   },
+   {
+    "Description": "SB 1EX Local Ad",
+    "Id": 249287,
+    "LegislationId": 74754,
+    "Url": "https://www.legis.ga.gov/api/legislation/document/2026EX/249287",
+    "Version": 2
+   }
+  ]
+ },
+ "Votes": {
+  "VoteListing": [
+   {
+    "Branch": "Senate",
+    "Caption": "LOCAL CONSENT CALENDAR",
+    "Date": "2026-06-20T10:24:00",
+    "Day": "6/20/2026",
+    "Description": "Senate Vote #8",
+    "Excused": 0,
+    "Legislation": null,
+    "Nays": 18,
+    "NotVoting": 5,
+    "Number": 8,
+    "Session": {
+     "IsDefault": false,
+     "Id": 1034,
+     "Description": "2026 Special Session",
+     "Library": "2026EX"
+    },
+    "Time": "10:24 AM",
+    "VoteId": 26660,
+    "Yeas": 33
+   },
+   {
+    "Branch": "Senate",
+    "Caption": "MOTION TO RECONSIDER LOCAL CONSENT CALENDAR",
+    "Date": "2026-06-20T12:20:00",
+    "Day": "6/20/2026",
+    "Description": "Senate Vote #15",
+    "Excused": 3,
+    "Legislation": null,
+    "Nays": 19,
+    "NotVoting": 1,
+    "Number": 15,
+    "Session": {
+     "IsDefault": false,
+     "Id": 1034,
+     "Description": "2026 Special Session",
+     "Library": "2026EX"
+    },
+    "Time": "12:20 PM",
+    "VoteId": 26667,
+    "Yeas": 33
+   },
+   {
+    "Branch": "Senate",
+    "Caption": "PASSAGE",
+    "Date": "2026-06-20T12:27:00",
+    "Day": "6/20/2026",
+    "Description": "Senate Vote #16",
+    "Excused": 3,
+    "Legislation": "SB 1",
+    "Nays": 18,
+    "NotVoting": 2,
+    "Number": 16,
+    "Session": {
+     "IsDefault": false,
+     "Id": 1034,
+     "Description": "2026 Special Session",
+     "Library": "2026EX"
+    },
+    "Time": "12:27 PM",
+    "VoteId": 26668,
+    "Yeas": 33
+   }
+  ]
+ }
+}
