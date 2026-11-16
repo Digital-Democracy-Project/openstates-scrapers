@@ -159,10 +159,11 @@ def test_lookback_reaches_two_days_before_start():
     assert "HB 2659" not in scraper.parsed
 
 
-def test_without_start_every_bill_is_fetched_and_the_export_is_not():
+def test_without_start_every_bill_is_fetched():
     scraper, patcher = make_scraper()
     run(scraper, patcher)
-    scraper.get.assert_not_called()
+    # the export is still read once, for its fiscal notes (OPEN-576)
+    scraper.get.assert_called_once()
     assert scraper.parsed == [
         "HB 17",
         "HB 1088",
@@ -205,7 +206,6 @@ def test_stale_export_means_a_full_walk():
 def test_invalid_start_means_a_full_walk():
     scraper, patcher = make_scraper()
     run(scraper, patcher, start="last tuesday")
-    scraper.get.assert_not_called()
     assert len(scraper.parsed) == len(LINKS)
 
 
