@@ -1,0 +1,215 @@
+{
+ "ActVetoNumber": null,
+ "Authors": {
+  "Sponsorship": [
+   {
+    "Id": 308144,
+    "MemberDescription": "Hatchett, Matt 155th",
+    "MemberId": 781,
+    "Sequence": 1,
+    "Type": "HouseAuthor"
+   }
+  ]
+ },
+ "Caption": "Dublin, City of; ad valorem tax; provide homestead exemption",
+ "Committees": {
+  "CommitteeListing": [
+   {
+    "Code": "IGC",
+    "Id": 94,
+    "Name": "Intragovernmental Coordination",
+    "Type": "House"
+   }
+  ]
+ },
+ "DocumentType": "HB",
+ "Id": 74753,
+ "LatestVersion": {
+  "Description": "LC 46 1571/a",
+  "Id": 249298,
+  "LegislationId": 74753,
+  "Url": "https://www.legis.ga.gov/api/legislation/document/2026EX/249298",
+  "Version": 3
+ },
+ "LegislationType": "LOC",
+ "Number": 1,
+ "Session": {
+  "IsDefault": false,
+  "Id": 1034,
+  "Description": "2026 Special Session",
+  "Library": "2026EX"
+ },
+ "Status": {
+  "Code": "HRECL",
+  "Date": "2026-06-22T16:25:40",
+  "Description": "House Lost Reconsidered Bill/Resolution",
+  "Id": 56,
+  "AmSub": null,
+  "StatusListingId": 347186
+ },
+ "Suffix": "EX",
+ "Footnotes": null,
+ "Sponsor": null,
+ "StatusHistory": {
+  "StatusListing": [
+   {
+    "Code": "HRECL",
+    "Date": "2026-06-22T16:25:40",
+    "Description": "House Lost Reconsidered Bill/Resolution",
+    "Id": 56,
+    "AmSub": null,
+    "StatusListingId": 347186
+   },
+   {
+    "Code": "HRECO",
+    "Date": "2026-06-22T16:11:30",
+    "Description": "House Reconsidered",
+    "Id": 53,
+    "AmSub": null,
+    "StatusListingId": 347103
+   },
+   {
+    "Code": "HNOM",
+    "Date": "2026-06-20T10:14:56",
+    "Description": "House Notice to Reconsider",
+    "Id": 52,
+    "AmSub": null,
+    "StatusListingId": 346904
+   },
+   {
+    "Code": "HTRL",
+    "Date": "2026-06-20T10:13:56",
+    "Description": "House Third Reading Lost",
+    "Id": 37,
+    "AmSub": null,
+    "StatusListingId": 346838
+   },
+   {
+    "Code": "HTR",
+    "Date": "2026-06-20T09:49:37",
+    "Description": "House Third Readers",
+    "Id": 35,
+    "AmSub": null,
+    "StatusListingId": 346640
+   },
+   {
+    "Code": "HCFR",
+    "Date": "2026-06-20T09:43:02",
+    "Description": "House Committee Favorably Reported",
+    "Id": 39,
+    "AmSub": null,
+    "StatusListingId": 346574
+   },
+   {
+    "Code": "HSR",
+    "Date": "2026-06-18T10:12:14",
+    "Description": "House Second Readers",
+    "Id": 34,
+    "AmSub": null,
+    "StatusListingId": 346435
+   },
+   {
+    "Code": "HFR",
+    "Date": "2026-06-17T17:39:15",
+    "Description": "House First Readers",
+    "Id": 33,
+    "AmSub": null,
+    "StatusListingId": 346367
+   },
+   {
+    "Code": "HH",
+    "Date": "2026-06-17T15:35:53",
+    "Description": "House Hopper",
+    "Id": 40,
+    "AmSub": null,
+    "StatusListingId": 346241
+   }
+  ]
+ },
+ "Summary": "A BILL to be entitled an Act to provide a homestead exemption from City of Dublin ad valorem taxes in the amount of the assessed value of the homestead property determined annually for the special district based upon the proceeds of a new Local Homestead Option Sales Tax (LHOST) to be imposed within the special district conterminous with Laurens County; to provide for definitions; to specify the terms and conditions of the exemption and the procedures relating thereto; to provide for applicability; to provide for compliance with constitutional requirements and the provisions of Article 2C of Chapter 8 of Title 48 of the O.C.G.A.; to provide for a referendum, effective dates, automatic repeal, mandatory execution of election, and judicial remedies regarding failure to comply; to provide for related matters; to repeal conflicting laws; and for other purposes. ",
+ "Versions": {
+  "DocumentDescription": [
+   {
+    "Description": "LC 46 1571/a",
+    "Id": 249298,
+    "LegislationId": 74753,
+    "Url": "https://www.legis.ga.gov/api/legislation/document/2026EX/249298",
+    "Version": 3
+   },
+   {
+    "Description": "Local Ad",
+    "Id": 249505,
+    "LegislationId": 74753,
+    "Url": "https://www.legis.ga.gov/api/legislation/document/2026EX/249505",
+    "Version": 2
+   }
+  ]
+ },
+ "Votes": {
+  "VoteListing": [
+   {
+    "Branch": "House",
+    "Caption": "Local Calendar ",
+    "Date": "2026-06-20T10:06:00",
+    "Day": "6/20/2026",
+    "Description": "House Vote #5",
+    "Excused": 12,
+    "Legislation": null,
+    "Nays": 67,
+    "NotVoting": 6,
+    "Number": 5,
+    "Session": {
+     "IsDefault": false,
+     "Id": 1034,
+     "Description": "2026 Special Session",
+     "Library": "2026EX"
+    },
+    "Time": "10:06 AM",
+    "VoteId": 26658,
+    "Yeas": 95
+   },
+   {
+    "Branch": "House",
+    "Caption": "Local Calendar",
+    "Date": "2026-06-22T14:37:00",
+    "Day": "6/22/2026",
+    "Description": "House Vote #9",
+    "Excused": 6,
+    "Legislation": null,
+    "Nays": 75,
+    "NotVoting": 2,
+    "Number": 9,
+    "Session": {
+     "IsDefault": false,
+     "Id": 1034,
+     "Description": "2026 Special Session",
+     "Library": "2026EX"
+    },
+    "Time": "2:37 PM",
+    "VoteId": 26673,
+    "Yeas": 97
+   },
+   {
+    "Branch": "House",
+    "Caption": "Local Calendar ",
+    "Date": "2026-06-22T14:47:00",
+    "Day": "6/22/2026",
+    "Description": "House Vote #10",
+    "Excused": 5,
+    "Legislation": null,
+    "Nays": 74,
+    "NotVoting": 2,
+    "Number": 10,
+    "Session": {
+     "IsDefault": false,
+     "Id": 1034,
+     "Description": "2026 Special Session",
+     "Library": "2026EX"
+    },
+    "Time": "2:47 PM",
+    "VoteId": 26674,
+    "Yeas": 99
+   }
+  ]
+ }
+}

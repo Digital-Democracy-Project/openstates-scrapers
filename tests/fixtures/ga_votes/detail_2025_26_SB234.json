@@ -1,0 +1,310 @@
+{
+ "ActVetoNumber": "109",
+ "Authors": {
+  "Sponsorship": [
+   {
+    "Id": 283881,
+    "MemberDescription": "Payne, Chuck 54th",
+    "MemberId": 4909,
+    "Sequence": 1,
+    "Type": "SenateAuthor"
+   }
+  ]
+ },
+ "Caption": "City of Dalton; independent school district ad valorem taxes for educational purposes; provide a homestead exemption",
+ "Committees": {
+  "CommitteeListing": [
+   {
+    "Code": "IGC",
+    "Id": 94,
+    "Name": "Intragovernmental Coordination",
+    "Type": "House"
+   },
+   {
+    "Code": "SLGO",
+    "Id": 85,
+    "Name": "State and Local Governmental Operations",
+    "Type": "Senate"
+   }
+  ]
+ },
+ "DocumentType": "SB",
+ "Id": 70650,
+ "LatestVersion": {
+  "Description": "SB 234/AP*",
+  "Id": 239527,
+  "LegislationId": 70650,
+  "Url": "https://www.legis.ga.gov/api/legislation/document/20252026/239527",
+  "Version": 6
+ },
+ "LegislationType": "LOC",
+ "Number": 234,
+ "Session": {
+  "IsDefault": true,
+  "Id": 1033,
+  "Description": "2025-2026 Regular Session",
+  "Library": "20252026"
+ },
+ "Status": {
+  "Code": "SDSG",
+  "Date": "2025-05-09T11:31:43",
+  "Description": "Senate Date Signed by Governor ",
+  "Id": 111,
+  "AmSub": null,
+  "StatusListingId": 333285
+ },
+ "Suffix": null,
+ "Footnotes": null,
+ "Sponsor": {
+  "Id": 291992,
+  "MemberDescription": "Carpenter, Kasey 4th",
+  "MemberId": 4911,
+  "Sequence": 2,
+  "Type": "HouseSponsor"
+ },
+ "StatusHistory": {
+  "StatusListing": [
+   {
+    "Code": "EFF",
+    "Date": "2025-05-09T23:59:59",
+    "Description": "Effective Date",
+    "Id": -2,
+    "AmSub": null,
+    "StatusListingId": 0
+   },
+   {
+    "Code": "Signed Gov",
+    "Date": "2025-05-09T23:59:59",
+    "Description": "Act 109",
+    "Id": -1,
+    "AmSub": null,
+    "StatusListingId": 0
+   },
+   {
+    "Code": "SDSG",
+    "Date": "2025-05-09T11:31:43",
+    "Description": "Senate Date Signed by Governor ",
+    "Id": 111,
+    "AmSub": null,
+    "StatusListingId": 333285
+   },
+   {
+    "Code": "SSG",
+    "Date": "2025-04-10T11:13:54",
+    "Description": "Senate Sent to Governor ",
+    "Id": 108,
+    "AmSub": null,
+    "StatusListingId": 333158
+   },
+   {
+    "Code": "HPA",
+    "Date": "2025-04-04T19:22:44",
+    "Description": "House Passed/Adopted",
+    "Id": 100,
+    "AmSub": null,
+    "StatusListingId": 332433
+   },
+   {
+    "Code": "HRECO",
+    "Date": "2025-04-04T19:18:24",
+    "Description": "House Reconsidered",
+    "Id": 53,
+    "AmSub": null,
+    "StatusListingId": 332423
+   },
+   {
+    "Code": "HTRL",
+    "Date": "2025-04-04T18:13:52",
+    "Description": "House Third Reading Lost",
+    "Id": 37,
+    "AmSub": null,
+    "StatusListingId": 332412
+   },
+   {
+    "Code": "HTR",
+    "Date": "2025-04-04T18:09:05",
+    "Description": "House Third Readers",
+    "Id": 35,
+    "AmSub": null,
+    "StatusListingId": 332404
+   },
+   {
+    "Code": "HCFR",
+    "Date": "2025-04-04T14:58:12",
+    "Description": "House Committee Favorably Reported",
+    "Id": 39,
+    "AmSub": null,
+    "StatusListingId": 332340
+   },
+   {
+    "Code": "HSR",
+    "Date": "2025-03-06T09:53:10",
+    "Description": "House Second Readers",
+    "Id": 34,
+    "AmSub": null,
+    "StatusListingId": 326906
+   },
+   {
+    "Code": "HFR",
+    "Date": "2025-03-04T10:35:23",
+    "Description": "House First Readers",
+    "Id": 33,
+    "AmSub": null,
+    "StatusListingId": 326546
+   },
+   {
+    "Code": "SPA",
+    "Date": "2025-03-03T14:43:23",
+    "Description": "Senate Passed/Adopted",
+    "Id": 99,
+    "AmSub": null,
+    "StatusListingId": 326240
+   },
+   {
+    "Code": "SCFR",
+    "Date": "2025-03-03T12:34:47",
+    "Description": "Senate Committee Favorably Reported",
+    "Id": 8,
+    "AmSub": null,
+    "StatusListingId": 326111
+   },
+   {
+    "Code": "SRAR",
+    "Date": "2025-02-24T10:09:11",
+    "Description": "Senate Read and Referred",
+    "Id": 3,
+    "AmSub": null,
+    "StatusListingId": 324526
+   },
+   {
+    "Code": "SH",
+    "Date": "2025-02-21T10:32:44",
+    "Description": "Senate Hopper",
+    "Id": 67,
+    "AmSub": null,
+    "StatusListingId": 324407
+   }
+  ]
+ },
+ "Summary": "A BILL to be entitled an Act to provide a homestead exemption from City of Dalton independent school district ad valorem taxes for educational purposes in an amount equal to the amount by which the current year assessed value of a homestead exceeds the adjusted base year assessed value of such homestead; to provide for definitions; to specify the terms and conditions of the exemption and the procedures relating thereto; to provide for applicability; to provide for compliance with constitutional requirements; to provide for a referendum, effective dates, automatic repeal, mandatory execution of election, and judicial remedies regarding failure to comply; to provide for related matters; to repeal conflicting laws; and for other purposes. ",
+ "Versions": {
+  "DocumentDescription": [
+   {
+    "Description": "SB 234/AP*",
+    "Id": 239527,
+    "LegislationId": 70650,
+    "Url": "https://www.legis.ga.gov/api/legislation/document/20252026/239527",
+    "Version": 6
+   },
+   {
+    "Description": "As Passed Senate",
+    "Id": 234893,
+    "LegislationId": 70650,
+    "Url": "https://www.legis.ga.gov/api/legislation/document/20252026/234893",
+    "Version": 4
+   },
+   {
+    "Description": "As introduced LC 44 3080",
+    "Id": 233401,
+    "LegislationId": 70650,
+    "Url": "https://www.legis.ga.gov/api/legislation/document/20252026/233401",
+    "Version": 3
+   },
+   {
+    "Description": "SB 234 Local Ad",
+    "Id": 233412,
+    "LegislationId": 70650,
+    "Url": "https://www.legis.ga.gov/api/legislation/document/20252026/233412",
+    "Version": 2
+   }
+  ]
+ },
+ "Votes": {
+  "VoteListing": [
+   {
+    "Branch": "Senate",
+    "Caption": "LOCAL CONSENT CALENDAR",
+    "Date": "2025-03-03T14:40:00",
+    "Day": "3/3/2025",
+    "Description": "Senate Vote #114",
+    "Excused": 0,
+    "Legislation": null,
+    "Nays": 0,
+    "NotVoting": 4,
+    "Number": 114,
+    "Session": {
+     "IsDefault": true,
+     "Id": 1033,
+     "Description": "2025-2026 Regular Session",
+     "Library": "20252026"
+    },
+    "Time": "2:40 PM",
+    "VoteId": 24929,
+    "Yeas": 52
+   },
+   {
+    "Branch": "House",
+    "Caption": "Local Calendar ",
+    "Date": "2025-04-04T17:33:00",
+    "Day": "4/4/2025",
+    "Description": "House Vote #434",
+    "Excused": 8,
+    "Legislation": null,
+    "Nays": 59,
+    "NotVoting": 1,
+    "Number": 434,
+    "Session": {
+     "IsDefault": true,
+     "Id": 1033,
+     "Description": "2025-2026 Regular Session",
+     "Library": "20252026"
+    },
+    "Time": "5:33 PM",
+    "VoteId": 25595,
+    "Yeas": 112
+   },
+   {
+    "Branch": "House",
+    "Caption": "Recon SB 234,  235,  & 336",
+    "Date": "2025-04-04T19:13:00",
+    "Day": "4/4/2025",
+    "Description": "House Vote #435",
+    "Excused": 10,
+    "Legislation": null,
+    "Nays": 0,
+    "NotVoting": 35,
+    "Number": 435,
+    "Session": {
+     "IsDefault": true,
+     "Id": 1033,
+     "Description": "2025-2026 Regular Session",
+     "Library": "20252026"
+    },
+    "Time": "7:13 PM",
+    "VoteId": 25618,
+    "Yeas": 135
+   },
+   {
+    "Branch": "House",
+    "Caption": "SBs 234,  235,  & 336 Passage",
+    "Date": "2025-04-04T19:17:00",
+    "Day": "4/4/2025",
+    "Description": "House Vote #436",
+    "Excused": 14,
+    "Legislation": null,
+    "Nays": 2,
+    "NotVoting": 17,
+    "Number": 436,
+    "Session": {
+     "IsDefault": true,
+     "Id": 1033,
+     "Description": "2025-2026 Regular Session",
+     "Library": "20252026"
+    },
+    "Time": "7:17 PM",
+    "VoteId": 25577,
+    "Yeas": 147
+   }
+  ]
+ }
+}
