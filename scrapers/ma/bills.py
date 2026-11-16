@@ -301,6 +301,33 @@ def _senate_vote_dedupe_key(
     )
 
 
+def meta_id(bill_meta):
+    """A Documents-list row's bill number, in fix_bill_id form ("H 4001")."""
+    return fix_bill_id(bill_meta["BillNumber"] or bill_meta["DocketNumber"])
+
+
+def meta_chamber(bill_meta):
+    """The chamber a Documents-list row is scraped under (the split chamber_bill_list makes)."""
+    return (
+        "lower"
+        if "H" in (bill_meta["BillNumber"] or bill_meta["DocketNumber"])
+        else "upper"
+    )
+
+
+def rollcall_of(vote):
+    """OPEN-568: which roll call a vote is, whatever bill cited it: its dedupe key without the bill number.
+
+    None for a Senate vote whose action cites no roll-call number (`_senate_vote_dedupe_key`'s fallback, keyed by
+    the bill's own page): date and tally alone do not identify a roll call, so it is never matched (0 of the 236
+    roll-call actions of the 194th take that path).
+    """
+    key = vote.dedupe_key or ""
+    if "#senate-" in key:
+        return None
+    return key.rsplit("#", 1)[0]
+
+
 class MABillScraper(Scraper):
     verify = False
 
@@ -332,8 +359,13 @@ class MABillScraper(Scraper):
         self.paper_links = {}
         self.amendment_papers = set()
         self.prefetched_pages = {}
-        # OPEN-568: amendment paper (fix_bill_id) -> the real bill its roll calls are recorded on
+        # OPEN-568: amendment paper (fix_bill_id) -> the real bill its roll calls are recorded on; the bills this
+        # run has yielded whole, the roll calls each cited, paper votes waiting for their real bill, failed histories
         self.paper_parents = {}
+        self.yielded_bills = set()
+        self.rollcalls_by_bill = {}
+        self.pending_paper_votes = {}
+        self.failed_histories = set()
 
     def label_non_bill(self, bill, page_title):
         """OPEN-518: give a paper that is not a bill the label for what it is, instead of skipping it.
@@ -414,19 +446,51 @@ class MABillScraper(Scraper):
         self.scrape_amendment_papers(session)
 
         # optionally scrape a single bill then exit
+        metas = []
         if bill_no:
-            single_bill_chamber = "lower" if "H" in bill_no else "upper"
-            for bill_meta in self.bill_list:
-                if bill_no in [bill_meta["DocketNumber"], bill_meta["BillNumber"]]:
-                    yield from self.scrape_bill(session, bill_meta, single_bill_chamber)
-                    self.info("Finished individual bill scrape, exiting.")
-                    return
+            metas = [
+                bill_meta
+                for bill_meta in self.bill_list
+                if bill_no in [bill_meta["DocketNumber"], bill_meta["BillNumber"]]
+            ][:1]
+        if not metas:
+            for one_chamber in [chamber] if chamber else ["lower", "upper"]:
+                metas += self.chamber_bill_list(one_chamber, scrape_chunk_number)
 
-        if not chamber:
-            yield from self.scrape_chamber("lower", session, scrape_chunk_number)
-            yield from self.scrape_chamber("upper", session, scrape_chunk_number)
-        else:
-            yield from self.scrape_chamber(chamber, session, scrape_chunk_number)
+        for bill_meta in self.with_paper_pairs(metas):
+            yield from self.scrape_bill(session, bill_meta, meta_chamber(bill_meta))
+        yield from self.unclaimed_paper_votes()
+        if bill_no and len(metas) == 1:
+            self.info("Finished individual bill scrape, exiting.")
+
+    def with_paper_pairs(self, metas):
+        """OPEN-568: `metas`, plus the rest of each paper-and-real-bill group, so a run scrapes them together.
+
+        A real bill's votes now come from its own history and from its papers'. The import deletes every stored vote
+        of a bill that gets any vote in the run unless the run brings it again (openstates-core vote_events.py), so
+        a run holding only one side would delete the other side's votes: `bill_no=S3` would delete H 4001's own
+        votes, `bill_no=H4001` the votes moved from S 3. A full run holds every group already; a single-bill,
+        single-chamber or chunk run adds the missing members (in the 194th, 152 linked papers on 102 bills; the
+        largest group, H 5576, adds 27 papers).
+        """
+        ids = {meta_id(meta) for meta in metas}
+        roots = {self.paper_parents.get(bill_id, bill_id) for bill_id in ids}
+        wanted = roots | {
+            paper for paper, parent in self.paper_parents.items() if parent in roots
+        }
+        extra = []
+        for bill_meta in self.bill_list:
+            bill_id = meta_id(bill_meta)
+            if bill_id in wanted and bill_id not in ids:
+                ids.add(bill_id)
+                extra.append(bill_meta)
+        if extra:
+            self.info(
+                "OPEN-568: also scraping {} so each amendment paper is scraped with its real bill".format(
+                    ", ".join(meta_id(m) for m in extra)
+                )
+            )
+        return list(metas) + extra
 
     def scrape_amendment_papers(self, session):
         """OPEN-509/512 pre-pass: read every amendment paper's real bill before any bill is scraped.
@@ -500,11 +564,6 @@ class MABillScraper(Scraper):
             papers[fix_bill_id(bill_id)] = paper
 
         self.amendment_papers = set(papers)
-        listed = {
-            fix_bill_id(meta["BillNumber"])
-            for meta in self.bill_list
-            if meta["BillNumber"]
-        }
         for paper_id, parent in resolve_paper_parents(papers).items():
             paper = papers[paper_id]
             if parent is None:
@@ -512,10 +571,8 @@ class MABillScraper(Scraper):
                     f"OPEN-509: amendment paper {paper_id} names no single bill; not linked"
                 )
                 continue
-            # OPEN-568: the paper's roll calls go on the real bill (see paper_vote_event). Only a bill in this
-            # session's own list: the vote names its bill by number, and a number the import cannot find stops it.
-            if parent in listed:
-                self.paper_parents[paper_id] = parent
+            # OPEN-568: the paper's roll calls go on the real bill (see paper_vote_event and scrape_bill)
+            self.paper_parents[paper_id] = parent
             if paper["substituted_for"] and paper["media_type"] == "application/pdf":
                 # OPEN-512: the chamber adopted this draft as the bill's text. "Substituted text (S2512)" ranks
                 # as an amendment-stage version in openstates-core's version ordering (after "Bill Text", before
@@ -616,7 +673,7 @@ class MABillScraper(Scraper):
                 {"BillNumber": row["BillNumber"], "DocketNumber": row["DocketNumber"]}
             )
 
-    def scrape_chamber(self, chamber, session, scrape_chunk_number):
+    def chamber_bill_list(self, chamber, scrape_chunk_number):
         chamber_code = "H" if chamber == "lower" else "S"
         chamber_bill_list = []
         for bill_meta in self.bill_list:
@@ -642,8 +699,7 @@ class MABillScraper(Scraper):
 
             chamber_bill_list = bill_chunks[chunk_number - 1]
 
-        for chamber_bill_meta in chamber_bill_list:
-            yield from self.scrape_bill(session, chamber_bill_meta, chamber)
+        return chamber_bill_list
 
     def scrape_bill(self, session, bill_meta, chamber):
         # https://malegislature.gov/Bills/189/SD2739
@@ -764,9 +820,72 @@ class MABillScraper(Scraper):
             )
             add_link(note, url, date=date, media_type=media_type)
 
-        yield from self.scrape_actions(bill, bill_url, session)
+        bill_key = fix_bill_id(bill.identifier)
+        paper_votes = []
+        for vote in self.scrape_actions(bill, bill_url, session):
+            if "ddp_amendment_paper" in vote.extras:
+                paper_votes.append(vote)
+                continue
+            self.rollcalls_by_bill.setdefault(bill_key, set()).add(rollcall_of(vote))
+            yield vote
         self.label_non_bill(bill, page_title)
         yield bill
+
+        # OPEN-568: a paper's votes go out only once its real bill has been yielded in this run with its whole
+        # history read (see with_paper_pairs); until then they wait, and unclaimed_paper_votes() puts back on the
+        # paper any whose real bill never was (its page or a history page failed, or it is missing from the list).
+        # Otherwise the moved votes would make the import delete the real bill's own votes it did not read again,
+        # and a parent that is never imported would stop the import (the vote names its bill by number).
+        if bill_url not in self.failed_histories:
+            self.yielded_bills.add(bill_key)
+        for vote in paper_votes:
+            if vote.bill_identifier in self.yielded_bills:
+                yield from self.claimed_paper_vote(vote)
+            else:
+                self.pending_paper_votes.setdefault(vote.bill_identifier, []).append(
+                    (vote, bill)
+                )
+        for vote, _paper in self.pending_paper_votes.pop(bill_key, ()):
+            yield from self.claimed_paper_vote(vote)
+
+    def claimed_paper_vote(self, vote):
+        """Yield a paper's vote on its real bill, unless the real bill already yielded the same roll call.
+
+        Its key names the paper, so a roll call both histories cite would otherwise be stored twice (none in the
+        194th). Skipped, the paper's copy is not imported, and a copy stored on the real bill is deleted by the
+        import as one this run did not bring.
+        """
+        rollcall = rollcall_of(vote)
+        if rollcall and rollcall in self.rollcalls_by_bill.get(
+            vote.bill_identifier, ()
+        ):
+            self.info(
+                "OPEN-568: {} roll call {} is already on {}; not added again".format(
+                    vote.extras["ddp_amendment_paper"],
+                    rollcall,
+                    vote.bill_identifier,
+                )
+            )
+            return
+        yield vote
+
+    def unclaimed_paper_votes(self):
+        """Paper votes whose real bill was not yielded in this run, put back on their paper, as before OPEN-568.
+
+        Their key is the paper's, so a stored row already moved to the real bill comes back to the paper: nothing is
+        lost, and the real bill, which brought no votes, has none deleted.
+        """
+        for parent, waiting in sorted(self.pending_paper_votes.items()):
+            for vote, paper in waiting:
+                self.warning(
+                    "OPEN-568: {} was not scraped in this run; {} vote of {} stays on the paper".format(
+                        parent, vote.start_date, paper.identifier
+                    )
+                )
+                vote.set_bill(paper)
+                del vote.extras["ddp_amendment_paper"]
+                yield vote
+        self.pending_paper_votes = {}
 
     def paper_vote_event(self, bill, **kwargs):
         """A VoteEvent for a roll call in `bill`'s history, recorded on the bill it really decides.
@@ -836,6 +955,7 @@ class MABillScraper(Scraper):
         page = self.get_action_page(bill_url, 1)
         if page is None:
             self.warning("Skipping actions for {} -- fetch failed".format(bill_url))
+            self.failed_histories.add(bill_url)
             return
         yield page
 
@@ -853,6 +973,7 @@ class MABillScraper(Scraper):
                             counter, bill_url
                         )
                     )
+                    self.failed_histories.add(bill_url)
                     continue
                 yield page
 
