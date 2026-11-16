@@ -111,6 +111,10 @@ _SENATE_TALLY_RES = (
 # NAYS (See YEA and NAY No. 249 )") are House counts that were minting Senate
 # vote events -- they are the 2 remaining Senate events whose source URL points
 # at a *House* roll-call PDF.
+#
+# OPEN-567: the same two lines also carry "YEA and NAY", so the House branch
+# stored them as House votes (No. 249 on H 5620, No. 154 on S 2581), shown on the
+# site as unanimous "yes" votes on those bills. Neither branch records one now.
 _QUORUM_RE = re.compile(r"Quorum\s+Roll\s+Call", re.I)
 
 
@@ -685,9 +689,10 @@ class MABillScraper(Scraper):
             #
             # "Supplement" is kept in the condition rather than replaced: older sessions
             # may still use it, and dropping it would trade this bug for its mirror image.
-            if "Supplement" in action_name or re.search(
-                r"YEA and NAY", action_name, re.IGNORECASE
-            ):
+            if (
+                "Supplement" in action_name
+                or re.search(r"YEA and NAY", action_name, re.IGNORECASE)
+            ) and not _QUORUM_RE.search(action_name):
                 actor = "lower"
 
                 if not re.findall(r"(.+)-\s*\d+\s*YEAS", action_name):
