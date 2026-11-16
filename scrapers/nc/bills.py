@@ -6,6 +6,7 @@ import re
 from openstates.scrape import Bill, Scraper, VoteEvent
 import pytz
 from collections import defaultdict
+from classify_motion import classify_motion
 
 
 eastern = pytz.timezone("US/Eastern")
@@ -63,6 +64,33 @@ def roll_call_votes(vdoc):
             if name[1] == "." and name[2] != " ":
                 name = name[:2] + " " + name[2:]
             yield vote_type, name
+
+
+# OPEN-572: a roll call on a reading of the bill itself (not an amendment or a motion made on that reading)
+READING_ROLL_CALL = re.compile(r"^(second|third) reading$", re.I)
+
+
+def vote_classification(subject, rcs, roll_calls):
+    """The vote's motion classification. `rcs` is the page's roll-call number ("[H]-794": a chamber's numbers
+    only grow within a session); `roll_calls` is (subject, rcs) of every roll call on the bill page.
+
+    NC passes most bills on a second-reading roll call and reads them a third time the same day without one;
+    a revenue bill or a bill ruled material gets a third-reading roll call too, and that one is the passage.
+    So a "Second Reading" roll call is passage only when no later second- or third-reading roll call of the
+    same chamber follows it on the bill (OPEN-572, measured on all stored NC votes). Everything else is the
+    nc block of config/motion_classification.yaml."""
+    if subject.strip().lower() == "second reading":
+        chamber, number = rcs.strip().split("-")
+        for other_subject, other_rcs in roll_calls:
+            other_chamber, other_number = other_rcs.strip().split("-")
+            if (
+                other_chamber == chamber
+                and int(other_number) > int(number)
+                and READING_ROLL_CALL.match(other_subject.strip())
+            ):
+                return []
+        return ["passage"]
+    return classify_motion("nc", subject)
 
 
 class NCBillScraper(Scraper):
@@ -283,8 +311,13 @@ class NCBillScraper(Scraper):
             '//div[contains(concat(" ", normalize-space(@class), " "), " row ")]'
         )
 
-        for vote_row in doc.xpath(vote_tr_path):
-            entries = [each.text_content() for each in vote_row.xpath("div")[1:-1:2]]
+        vote_rows = [
+            (row, [each.text_content() for each in row.xpath("div")[1:-1:2]])
+            for row in doc.xpath(vote_tr_path)
+        ]
+        roll_calls = [(entries[1], entries[2]) for _, entries in vote_rows]
+
+        for vote_row, entries in vote_rows:
             date, subject, rcs, aye, no, nv, abs, exc, total = entries
             result = vote_row.xpath("div/a")[0]
             result_text = result.text
@@ -306,7 +339,7 @@ class NCBillScraper(Scraper):
                 motion_text=subject,
                 result="pass" if "PASS" in result_text else "fail",
                 bill=bill,
-                classification="passage",  # TODO: classify votes
+                classification=vote_classification(subject, rcs, roll_calls),
             )
             ve.dedupe_key = vote_dedupe_key(bill.legislative_session, rcs)
             ve.set_count("yes", int(aye))

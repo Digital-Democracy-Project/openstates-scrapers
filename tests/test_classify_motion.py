@@ -19,7 +19,7 @@ def test_yaml_loads_without_error():
 
 
 def test_all_expected_jurisdiction_keys_present():
-    expected = {"us", "az", "ut", "fl", "mi", "ma", "wa", "va", "pa", "ne", "la", "al"}
+    expected = {"us", "az", "ut", "fl", "mi", "ma", "wa", "va", "pa", "ne", "la", "al", "nc"}
     assert expected == KNOWN_JURISDICTIONS
 
 
@@ -548,3 +548,80 @@ def test_ma_does_not_need_two_thirds(text):
 def test_jurisdiction_without_a_two_thirds_list_is_never_two_thirds():
     assert not needs_two_thirds("wa", "Item 4000-0051 passed over veto")
     assert not needs_two_thirds("xx", "Item 4000-0051 passed over veto")
+
+
+# ---------------------------------------------------------------------------
+# OPEN-572: North Carolina. Every motion text stored for NC (Mac replica, sessions 2025 and 2025E1,
+# 781 roll calls, 2026-11-15), as the bill page's vote table writes it. A bare "Second Reading" is
+# decided by the nc scraper from the bill's later roll calls (tests/test_nc_votes.py); here it is [].
+# ---------------------------------------------------------------------------
+
+NC_CASES = [
+    # passage: third readings, conference reports, concurrences, resolution adoptions
+    ("Third Reading", ["passage"]),
+    ("Third Reading Motion 9 To Concur", ["passage"]),
+    ("Conference Rpt Third Reading", ["passage"]),
+    ("Conference Report Motion 8 To Adopt", ["passage"]),
+    ("Conference Rpt Motion 8 To Adopt", ["passage"]),
+    ("C RPT Adoption", ["passage"]),
+    ("R3 Ruled Mat'l C RPT Adoption", ["passage"]),
+    ("M11 Concur", ["passage"]),
+    ("M11 Concur Sen. Amd. 1", ["passage"]),
+    ("R3 Ruled Mat'l M11 Concur", ["passage"]),
+    ("Motion 9 To Concur", ["passage"]),
+    ("Motion 9 To Concur House Amend", ["passage"]),
+    ("Motion 8 To Adopt", ["passage"]),
+    ("R2 For Adoption", ["passage"]),
+    # veto overrides: Ramon, 2026-11-16, "Veto overrides count as passage"
+    ("Veto Override", ["passage"]),
+    ("Motion 11 Veto Override", ["passage"]),
+    # second readings that a third-reading roll call follows
+    ("Second Reading", []),
+    ("Second Reading Motion 9 To Concur", []),
+    ("R2 Ruled Mat'l C RPT Adoption", []),
+    ("R2 Ruled Mat'l M11 Concur", []),
+    ("Conference Rpt Second Reading", []),
+    # amendments
+    ("Amendment 1", []),
+    ("Amendment 2", []),
+    ("A1 Chesser Second Reading", []),
+    ("A1 Jones, B. Second Reading", []),
+    ("A2 Pierce, R. Second Reading", []),
+    ("A2 Par\u00e9 Second Reading", []),
+    ("A3 Budd Second Reading", []),
+    ("A4 Morey R2 For Adoption", []),
+    # non-concurrence
+    ("M11 Not Concur", []),
+    # procedure
+    ("Amendment 2  Motion 1 To Table", []),
+    ("A1 Morey Second Reading M3 To Lay On The Table", []),
+    ("Veto Override M4 Previous Question", []),
+    ("Second Reading M4 Previous Question", []),
+    ("R2 For Adoption M4 Previous Question", []),
+    ("M6 Reconsider", []),
+    ("Second Reading Motion 12/Appeal Ruling of Chair", []),
+    ("Second Reading Motion 12/Divide", []),
+    # an unknown text stays unclassified
+    ("Motion To Adjourn", []),
+]
+
+
+@pytest.mark.parametrize("text,expected", NC_CASES)
+def test_nc(text, expected):
+    assert classify_motion("nc", text) == expected
+
+
+@pytest.mark.parametrize("text,expected", NC_CASES[:-1])
+def test_nc_every_real_text_is_decided_by_a_rule(text, expected):
+    # the not-passage texts are named on purpose, so a later, wider passage pattern cannot pick them up
+    cfg = _config["jurisdictions"]["nc"]
+    key = "passage" if expected else "not_passage"
+    assert any(re.search(p, text.lower()) for p in cfg[key])
+
+
+def test_nc_scraper_uses_classify_motion():
+    root = os.path.join(os.path.dirname(__file__), "..", "scrapers")
+    src = open(os.path.join(root, "nc", "bills.py")).read()
+    assert "from classify_motion import classify_motion" in src
+    assert 'classify_motion("nc"' in src
+    assert 'classification="passage"' not in src

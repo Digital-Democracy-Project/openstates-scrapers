@@ -217,3 +217,38 @@ jurisdictions:
       - "motion to adopt"                        # resolution adoption (amendments are labelled by the scraper first)
       - "concur(-| )in and adopt"                # concurrence in amendments / conference report = passage (ut, mi, wa, va)
     default: null
+
+  # OPEN-572 (North Carolina, gate E). The motion text is the "Subject" column of the bill page's vote
+  # table. Rules written from every stored NC motion text (Mac replica, sessions 2025 and 2025E1,
+  # 781 roll calls, 2026-11-15). NC reads a bill a second and a third time; the second-reading roll call
+  # is the recorded vote and the third reading usually follows the same day without one (421 of 439
+  # "Second Reading" roll calls). Revenue bills and bills ruled material need a roll call on both
+  # readings, and then the third-reading one is the passage. So a bare "Second Reading" is listed under
+  # not_passage here and the nc scraper calls it passage when no later second- or third-reading roll
+  # call of the same chamber follows it on the bill (vote_classification() in nc/bills.py).
+  # The same split holds for a conference report or concurrence "ruled material": R2 (second reading)
+  # is not passage, R3 (third reading) is.
+  nc:
+    not_passage:
+      - "^second reading$"                       # see above: the scraper decides from the bill's later roll calls
+      - '^a\d+ '                                 # House amendment: "A1 Chesser Second Reading", "A4 Morey R2 For Adoption"
+      - '^amendment \d+'                         # Senate amendment: "Amendment 1", "Amendment 2  Motion 1 To Table"
+      - "previous question"                      # "Veto Override M4 Previous Question", "Second Reading M4 Previous Question"
+      - "to (lay on the )?table"
+      - "reconsider"                             # "M6 Reconsider"
+      - "^second reading motion "                # "... Motion 9 To Concur" (third reading follows), "... Motion 12/Divide", "/Appeal Ruling of Chair"
+      - "not concur"                             # "M11 Not Concur": the House refuses the Senate's changes, a conference follows
+      - "^r2 ruled mat'l"                        # second-reading roll call on a conference report / concurrence ruled material
+      - "^conference rpt second reading$"
+    passage:
+      - "^third reading$"
+      - "^third reading motion 9 to concur$"     # concurrence on its third reading (the second one is not passage)
+      - "^conference rpt third reading$"         # Senate adopts a conference report (ut, mi, va, al precedent)
+      - "^conference (report|rpt) motion 8 to adopt$"
+      - "^(r3 ruled mat'l )?c rpt adoption$"     # House adopts a conference report, R3 = its third reading when ruled material
+      - "^(r3 ruled mat'l )?m11 concur"          # House concurs in Senate amendments ("M11 Concur Sen. Amd. 1" too)
+      - "^motion 9 to concur"                    # Senate concurs in House amendments ("... House Amend" too); a failed one is a lost passage vote
+      - "^motion 8 to adopt$"                    # Senate adopts a simple resolution
+      - "^r2 for adoption$"                      # House adopts a simple resolution (one reading)
+      - "veto override"                          # "Veto Override", "Motion 11 Veto Override": Ramon, 2026-11-16, "Veto overrides count as passage" (unlike ma, ne); "... M4 Previous Question" stays procedure
+    default: null
