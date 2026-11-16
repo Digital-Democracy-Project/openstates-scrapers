@@ -3,6 +3,7 @@ import requests
 
 import os
 import json
+import zlib
 from datetime import datetime
 import lxml.html
 from openstates.scrape import Scraper, Bill, VoteEvent
@@ -19,11 +20,24 @@ try:
     # openstates package has no version_ordering, and an older fork has no non_bill_kind; without it every
     # paper is yielded as an ordinary bill, as before OPEN-508 (and the scraper says so once). Only those
     # names being absent is forgiven: any other import failure is a real defect and stays loud.
-    from openstates.utils.version_ordering import NON_BILL_AMENDMENT, non_bill_kind
+    from openstates.utils.version_ordering import (
+        NON_BILL_AMENDMENT,
+        ORIGINAL_CLASSIFICATION_KEY,
+        non_bill_kind,
+    )
 except ImportError as exc:
     if exc.name not in ("openstates.utils.version_ordering", "openstates.utils"):
         raise
-    NON_BILL_AMENDMENT = non_bill_kind = None
+    NON_BILL_AMENDMENT = ORIGINAL_CLASSIFICATION_KEY = non_bill_kind = None
+
+# OPEN-509: an amendment paper is saved with the label "amendment" only when openstates-core accepts it as a bill
+# label (the core change that adds it); with an older core it stays an ordinary bill, as before, rather than failing
+# the import's schema check.
+from openstates.data.common import BILL_CLASSIFICATIONS  # noqa: E402
+
+AMENDMENT_LABEL_OK = (
+    bool(NON_BILL_AMENDMENT) and NON_BILL_AMENDMENT in BILL_CLASSIFICATIONS
+)
 
 
 requests.packages.urllib3.disable_warnings()
@@ -116,6 +130,75 @@ _SENATE_TALLY_RES = (
 # stored them as House votes (No. 249 on H 5620, No. 154 on S 2581), shown on the
 # site as unanimous "yes" votes on those bills. Neither branch records one now.
 _QUORUM_RE = re.compile(r"Quorum\s+Roll\s+Call", re.I)
+
+
+# A bill-history link to another bill's page, e.g. /Bills/194/S2957.
+_BILL_HREF_RE = re.compile(r"^/Bills/\d+/([A-Za-z]+\d+)/?$")
+
+# OPEN-512: the action by which a chamber adopted a draft as the bill's text, read from the draft's own history:
+# "Substituted, as amended for H4010", "Substituted as a new text for H4282", "Substituted for S2726".
+_SUBSTITUTED_FOR_RE = re.compile(r"\bSubstituted\b.*?\bfor\s+([HS])\.?\s*(\d+)\b", re.I)
+
+
+# The h1 of a page whose title is missing: "Bill S.757", "Bill SD.3528". A number, not a title.
+_BILL_PLACEHOLDER_H1_RE = re.compile(r"\s*Bill\s+[A-Za-z]+\.?\s*\d+[A-Za-z]?\s*")
+
+
+def page_titles(page):
+    """Return (own_title, display_title) of a bill page, or (None, None) when it has neither.
+
+    `own_title` is what the paper calls itself, the only text the kind label reads (OPEN-508/518): the h2, or,
+    when there is none, the h1 unless the h1 is the "Bill <number>" placeholder. OPEN-509: amendment papers
+    ("Amendment S.2512") and a few messages and orders ("Governor's Message H.5712", "Extension Order H.4819")
+    have no h2 at all; their h1 is their title. `display_title` is the stored title, unchanged: the h2, else the
+    h1 with "Bill" removed.
+    """
+    try:
+        h2 = page.xpath('//div[@id="contentContainer"]/div/div/h2/text()')[0]
+    except IndexError:
+        h2 = None
+    if h2 is not None:
+        return h2, h2
+    try:
+        h1 = page.xpath('//div[contains(@class,"followable")]/h1/text()')[0]
+    except IndexError:
+        return None, None
+    own = None if _BILL_PLACEHOLDER_H1_RE.fullmatch(h1) else h1.strip()
+    return own, h1.replace("Bill", "").strip()
+
+
+def resolve_paper_parents(papers):
+    """OPEN-509/512: the real bill each amendment paper belongs to, or None.
+
+    `papers` maps a paper's id (fix_bill_id form) to {"refs": [bill ids its history links to],
+    "substituted_for": the bill id its "Substituted ... for <bill>" action names, or None}. A paper that points at
+    another paper belongs to that paper's bill: a floor amendment's history says "See S3178", the committee draft
+    it amends, and S3178 was substituted for H5576. A paper whose links lead to no bill (no history), or to two
+    different bills, gets None: it is never attached by guessing.
+    """
+
+    def bills_of(paper_id, seen):
+        paper = papers[paper_id]
+        targets = (
+            [paper["substituted_for"]] if paper["substituted_for"] else paper["refs"]
+        )
+        found = []
+        for target in targets:
+            if target == paper_id or target in seen:
+                continue
+            reached = (
+                bills_of(target, seen | {paper_id}) if target in papers else [target]
+            )
+            for bill_id in reached:
+                if bill_id not in found:
+                    found.append(bill_id)
+        return found
+
+    parents = {}
+    for paper_id in papers:
+        found = bills_of(paper_id, frozenset())
+        parents[paper_id] = found[0] if len(found) == 1 else None
+    return parents
 
 
 def parse_senate_tally(action_name):
@@ -242,6 +325,13 @@ class MABillScraper(Scraper):
         self.raise_errors = False
         self.verify = False
         self.retry_attempts = 0
+        self._warned_no_title_rule = False
+        # OPEN-509/512, filled by scrape_amendment_papers(): what each real bill gets from its amendment papers
+        # (fix_bill_id -> [(kind, note, url, date, media_type)]), the papers it read, and the bill pages it already
+        # fetched (url -> compressed html), so scrape_bill does not fetch them twice.
+        self.paper_links = {}
+        self.amendment_papers = set()
+        self.prefetched_pages = {}
 
     def label_non_bill(self, bill, page_title):
         """OPEN-518: give a paper that is not a bill the label for what it is, instead of skipping it.
@@ -252,10 +342,11 @@ class MABillScraper(Scraper):
         (OPEN-517), the same one `os-text-extract relabel-non-bills ma` uses, so the two always agree; this
         only asks it, with the page's own title and the actions (a committee study order titled by its subject
         is known by its action). A blank or missing title leaves an ordinary bill (the state site sometimes
-        lacks one for a few days), and amendment papers are left as they are for OPEN-509.
+        lacks one for a few days). OPEN-509: amendment papers are labelled "amendment" too, and the label the
+        paper would otherwise have is saved under ORIGINAL_CLASSIFICATION_KEY, as the relabel command saves it.
         """
         if non_bill_kind is None:
-            if not getattr(self, "_warned_no_title_rule", False):
+            if not self._warned_no_title_rule:
                 self._warned_no_title_rule = True
                 self.warning(
                     "OPEN-518: openstates-core's non_bill_kind is not installed; "
@@ -265,11 +356,23 @@ class MABillScraper(Scraper):
         kind = non_bill_kind(
             "Massachusetts", page_title, [a["description"] for a in bill.actions]
         )
-        if kind is None or kind == NON_BILL_AMENDMENT:
+        if kind is None:
             return
+        if kind == NON_BILL_AMENDMENT:
+            # OPEN-509: an amendment paper is labelled too (Ramon, 2026-11-15), so it leaves Explore and search;
+            # it is listed under its real bill instead (see scrape_amendment_papers).
+            if fix_bill_id(bill.identifier) not in self.amendment_papers:
+                self.warning(
+                    f"OPEN-509: {bill.identifier} is an amendment paper the pre-pass did not read; "
+                    "it is not linked from its bill this run"
+                )
+            if not AMENDMENT_LABEL_OK:
+                return
         self.info(
             f"OPEN-518: {bill.identifier} is a {kind} ({page_title.strip()[:60]!r})"
         )
+        # the label it would otherwise have, kept so the relabel can be undone (as `relabel-non-bills` does)
+        bill.extras[ORIGINAL_CLASSIFICATION_KEY] = list(bill.classification)
         bill.classification = [kind]
 
     def format_bill_number(self, raw):
@@ -306,6 +409,7 @@ class MABillScraper(Scraper):
         start=None,
     ):
         self.scrape_bill_list(session, start=start)
+        self.scrape_amendment_papers(session)
 
         # optionally scrape a single bill then exit
         if bill_no:
@@ -321,6 +425,121 @@ class MABillScraper(Scraper):
             yield from self.scrape_chamber("upper", session, scrape_chunk_number)
         else:
             yield from self.scrape_chamber(chamber, session, scrape_chunk_number)
+
+    def scrape_amendment_papers(self, session):
+        """OPEN-509/512 pre-pass: read every amendment paper's real bill before any bill is scraped.
+
+        malegislature.gov files a committee's redraft, a reprint and a member's amendment as a paper of its own
+        ("Amendment S.2512"). Ramon (2026-11-15): each is labelled an amendment, and listed on its real bill: the
+        drafts a chamber formally substituted for the bill (the paper's own history says "Substituted ... for
+        H4010") as a new version of that bill, so LegBot's changelogs can use them; every other paper as a
+        supporting document. A bill already yielded cannot be added to, and the paper and its bill can fall in
+        different chunks, so the papers are read first, every run and every chunk.
+
+        Only the page says a paper is one: the Documents list's Title is a subject or an "An Act ..." line for
+        them (OPEN-509 comment 19566). The list does narrow the search: every amendment paper of the 194th has
+        no docket number (145 of 145 in the 2026-08-30 list), against 1,205 other rows without one. Those pages
+        are fetched here and kept for scrape_bill, so the pre-pass costs only the papers' histories.
+        """
+        if non_bill_kind is None:
+            return
+        session_for_url = self.replace_non_digits(session)
+        papers = {}
+        for bill_meta in self.bill_list:
+            bill_id = bill_meta["BillNumber"]
+            if bill_meta["DocketNumber"] or not bill_id:
+                continue
+            bill_url = "https://malegislature.gov/Bills/{}/{}".format(
+                session_for_url, bill_id
+            )
+            html = self.fetch_bill_page(bill_url)
+            if html is None:
+                continue
+            self.prefetched_pages[bill_url] = zlib.compress(html.encode("utf-8"))
+            page = lxml.html.fromstring(html)
+            own_title, display_title = page_titles(page)
+            if non_bill_kind("Massachusetts", own_title) != NON_BILL_AMENDMENT:
+                continue
+            paper = {
+                "title": display_title,
+                "url": bill_url,
+                "media_type": "text/html",
+                "refs": [],
+                "substituted_for": None,
+                "substituted_on": None,
+                "first_date": None,
+            }
+            pdf = page.xpath(
+                "//div[contains(@class, 'modalBtnGroup')]/"
+                "a[contains(text(), 'Download PDF') and not(@disabled)]/@href"
+            )
+            if pdf:
+                paper["url"] = "https://malegislature.gov{}".format(pdf[0])
+                paper["media_type"] = "application/pdf"
+            for action_page in self.action_pages(bill_url):
+                for row in action_page.xpath("//tbody/tr"):
+                    if not row.xpath("td[1]/text()"):
+                        continue
+                    date = datetime.strptime(
+                        row.xpath("td[1]/text()")[0].strip(), "%m/%d/%Y"
+                    ).strftime("%Y-%m-%d")
+                    paper["first_date"] = paper["first_date"] or date
+                    text = row.xpath("string(td[3])")
+                    substituted = _SUBSTITUTED_FOR_RE.search(text)
+                    if substituted and not paper["substituted_for"]:
+                        paper["substituted_for"] = fix_bill_id(
+                            substituted.group(1) + substituted.group(2)
+                        )
+                        paper["substituted_on"] = date
+                    for href in row.xpath("td[3]//a/@href"):
+                        ref = _BILL_HREF_RE.match(href)
+                        if ref and fix_bill_id(ref.group(1)) not in paper["refs"]:
+                            paper["refs"].append(fix_bill_id(ref.group(1)))
+            papers[fix_bill_id(bill_id)] = paper
+
+        self.amendment_papers = set(papers)
+        for paper_id, parent in resolve_paper_parents(papers).items():
+            paper = papers[paper_id]
+            if parent is None:
+                self.warning(
+                    f"OPEN-509: amendment paper {paper_id} names no single bill; not linked"
+                )
+                continue
+            if paper["substituted_for"] and paper["media_type"] == "application/pdf":
+                # OPEN-512: the chamber adopted this draft as the bill's text. "Substituted text (S2512)" ranks
+                # as an amendment-stage version in openstates-core's version ordering (after "Bill Text", before
+                # "Chapter Law Text (Enacted)"); the date is the day it was substituted. A version is the bill's
+                # text, so it needs the draft's PDF: without one (none of the 30 substituted in the 194th lacks it)
+                # the paper's page is linked as a document instead, never archived as bill text.
+                link = (
+                    "version",
+                    "Substituted text ({})".format(paper_id.replace(" ", "")),
+                    paper["url"],
+                    paper["substituted_on"],
+                    paper["media_type"],
+                )
+            else:
+                link = (
+                    "document",
+                    paper["title"],
+                    paper["url"],
+                    paper["first_date"] or "",
+                    paper["media_type"],
+                )
+            self.paper_links.setdefault(parent, []).append(link)
+        self.info(
+            f"OPEN-509: {len(papers)} amendment papers read, linked to {len(self.paper_links)} bills"
+        )
+
+    def fetch_bill_page(self, bill_url):
+        """A bill page's html, or None when it could not be fetched (warned)."""
+        try:
+            response = self.get(bill_url, verify=False)
+            self.info("GET (with `requests`) - {}".format(bill_url))
+        except requests.exceptions.RequestException:
+            self.warning("Server Error on {}".format(bill_url))
+            return None
+        return response.text
 
     def scrape_bill_list(self, session, start=None):
         session_numeric = re.sub(r"[^0-9]", "", session)
@@ -424,14 +643,13 @@ class MABillScraper(Scraper):
             session_for_url, bill_id
         )
 
-        try:
-            response = self.get(bill_url, verify=False)
-            self.info("GET (with `requests`) - {}".format(bill_url))
-        except requests.exceptions.RequestException:
-            self.warning("Server Error on {}".format(bill_url))
-            return False
-
-        html = response.text
+        prefetched = self.prefetched_pages.pop(bill_url, None)
+        if prefetched is not None:
+            html = zlib.decompress(prefetched).decode("utf-8")
+        else:
+            html = self.fetch_bill_page(bill_url)
+            if html is None:
+                return False
 
         page = lxml.html.fromstring(html)
 
@@ -442,29 +660,15 @@ class MABillScraper(Scraper):
         # The state website will periodically miss a few bills' titles for a few days
         # These titles will be extant on the bill list page, but missing on the bill detail page
         # The titles are eventually populated under one of two markups
-        try:
-            bill_title = page.xpath('//div[@id="contentContainer"]/div/div/h2/text()')[
-                0
-            ]
-        except IndexError:
-            bill_title = None
-            pass
-
-        # OPEN-508/518: only the page's own title says what a paper is (the h1 fallback below is a bill number,
-        # not a title). The Documents list's `Title` is NOT the same text and must not be used for this: on the
-        # live list (2026-11-08) 19 real bills show a title without "An Act" (H5174, S2630, H70, ...) and
-        # amendment papers show a subject ("Rural Jobs") where their page says "Amendment S.3207".
-        page_title = bill_title
-
+        #
+        # OPEN-508/518: only the page's own title says what a paper is (see page_titles: a "Bill <number>" h1
+        # is a placeholder, not a title). The Documents list's `Title` is NOT the same text and must not be used
+        # for this: on the live list (2026-11-08) 19 real bills show a title without "An Act" (H5174, S2630, H70,
+        # ...) and amendment papers show a subject ("Rural Jobs") where their page says "Amendment S.3207".
+        page_title, bill_title = page_titles(page)
         if bill_title is None:
-            try:
-                bill_title = page.xpath(
-                    '//div[contains(@class,"followable")]/h1/text()'
-                )[0]
-                bill_title = bill_title.replace("Bill", "").strip()
-            except IndexError:
-                self.warning("Couldn't find title for {}; skipping".format(bill_id))
-                return False
+            self.warning("Couldn't find title for {}; skipping".format(bill_id))
+            return False
 
         bill_types = ["H", "HD", "S", "SD", "SRes"]
         if re.sub("[0-9]", "", bill_id) not in bill_types:
@@ -540,6 +744,15 @@ class MABillScraper(Scraper):
                 "Bill Text", version_url, media_type="application/pdf"
             )
 
+        # OPEN-509/512: this bill's amendment papers, read by the pre-pass
+        for kind, note, url, date, media_type in self.paper_links.get(
+            fix_bill_id(bill.identifier), ()
+        ):
+            add_link = (
+                bill.add_version_link if kind == "version" else bill.add_document_link
+            )
+            add_link(note, url, date=date, media_type=media_type)
+
         yield from self.scrape_actions(bill, bill_url, session)
         self.label_non_bill(bill, page_title)
         yield bill
@@ -580,14 +793,18 @@ class MABillScraper(Scraper):
                 )
 
     def scrape_actions(self, bill, bill_url, session):
-        # scrape_action_page adds the actions, and also returns the Page xpath object
-        # so that we can check for a paginator
+        for page in self.action_pages(bill_url):
+            yield from self.scrape_action_page(bill, page)
+
+    def action_pages(self, bill_url):
+        """Every page of a bill's history, e.g. https://malegislature.gov/Bills/189/S3/BillHistory?pageNumber=2"""
         page = self.get_action_page(bill_url, 1)
         if page is None:
             self.warning("Skipping actions for {} -- fetch failed".format(bill_url))
             return
-        yield from self.scrape_action_page(bill, page)
+        yield page
 
+        # the first page holds the paginator
         max_page = page.xpath(
             '//ul[contains(@class,"pagination-sm")]/li[last()]/a/@onclick'
         )
@@ -602,8 +819,7 @@ class MABillScraper(Scraper):
                         )
                     )
                     continue
-                yield from self.scrape_action_page(bill, page)
-                # https://malegislature.gov/Bills/189/S3/BillHistory?pageNumber=2
+                yield page
 
     def get_action_page(self, bill_url, page_number):
         actions_url = "{}/BillHistory?pageNumber={}".format(bill_url, page_number)
@@ -648,7 +864,7 @@ class MABillScraper(Scraper):
                     )
                     continue
 
-                bill_ref_match = re.match(r"^/Bills/\d+/([A-Za-z]+\d+)/?$", href)
+                bill_ref_match = _BILL_HREF_RE.match(href)
                 if bill_ref_match:
                     # relation_type="related" (not "replaces"/"replaced-by"):
                     # OPEN-36 found these cross-references form a directed

@@ -29,6 +29,7 @@ if not hasattr(version_ordering, "non_bill_kind"):
     )
 
 from ma import Massachusetts  # noqa: E402
+import ma.bills as bills  # noqa: E402
 from ma.bills import MABillScraper  # noqa: E402
 
 SESSION = "194th"
@@ -73,8 +74,9 @@ AMENDMENT_PAPERS = [
     "Amendment H.5665",
     "Amendment S.3290",
     "  amendment H.4265",
-    # a notice, but it opens with "Amendment": the core rule (and so relabel-non-bills) leaves it as filed;
-    # OPEN-508 used to skip it, and it is now kept unchanged rather than lost
+    # a notice, but it opens with "Amendment", so the core rule calls it an amendment paper; OPEN-508 used to
+    # skip it, and since OPEN-509 it is labelled an amendment like the others (it names no bill, so it is
+    # linked nowhere)
     "Amendment Filing Deadline for House No. 5151",
 ]
 
@@ -179,6 +181,9 @@ def test_a_paper_that_is_not_a_bill_is_saved_with_its_label(title, kind):
     s, out = run_scrape_bill(title)
     assert labels(out) == [("H1", [kind])]
     assert out[0].title == title
+    # OPEN-509: the label it would otherwise have is kept, as relabel-non-bills keeps it, so it can be undone
+    # (the 8 papers with votes that the scraper labelled after OPEN-518 have none)
+    assert out[0].extras == {"ddp_open517_original_classification": ["bill"]}
     out[0].validate()  # the import accepts the label (openstates-core's bill schema)
 
 
@@ -201,9 +206,13 @@ def test_a_measure_is_still_a_bill(title):
 
 
 @pytest.mark.parametrize("title", AMENDMENT_PAPERS)
-def test_an_amendment_paper_comes_through_unchanged(title):
+def test_an_amendment_paper_is_labelled_an_amendment(title):
+    # OPEN-509 (Ramon, 2026-11-15): amendment papers are labelled too, and listed on their real bill (see
+    # test_ma_amendment_papers.py). With a core that lacks the label they stay ordinary bills.
     s, out = run_scrape_bill(title)
-    assert labels(out) == [("H1", ["bill"])]
+    expected = "amendment" if bills.AMENDMENT_LABEL_OK else "bill"
+    assert labels(out) == [("H1", [expected])]
+    out[0].validate()
 
 
 def test_a_paper_keeps_its_links_to_other_bills():
