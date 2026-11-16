@@ -3,6 +3,7 @@ import requests
 from collections import defaultdict
 
 from openstates.scrape import Scraper, Bill, VoteEvent
+from classify_motion import classify_motion
 
 from .util import (
     get_client,
@@ -38,32 +39,69 @@ SOURCE_URL = "https://www.legis.ga.gov/legislation/{bid}"
 vote_name_pattern = re.compile(r"(.*), (\d+(?:ST|ND|RD|TH))", re.IGNORECASE)
 
 OUTCOME_STATUS = r"Reconsidered|Passed|Adopted|Agreed|Lost"
+# "Local Calendar", "Previous Local Calendar", "LOCAL CONSENT CALENDAR"
+CALENDAR = re.compile(r"calendar", re.IGNORECASE)
 
 
-def vote_classification(caption):
-    """Classify a vote from its Caption, the motion voted on."""
-    caption = caption.upper()
-    if re.search(
-        r"RECON|TABLE|ENGROSS|PREVIOUS QUESTION|WITHDRAW|\bCOMMIT\b|RULING|SUSPEND"
-        r"|DISAGREE|INSIST|RECEDE|POSTPONE|REMOVE",
-        caption,
-    ):
+def vote_classification(caption, reconsidered=False):
+    """Classify a vote from its Caption, the motion voted on.
+
+    The rules are the ga block of config/motion_classification.yaml. One case the
+    caption cannot tell: the House reconsiders a local calendar under the same caption
+    ("Local Calendar"), so a calendar roll call that pair_outcomes() pairs with a
+    "Reconsidered" status is the reconsideration, not passage.
+    """
+    classification = classify_motion("ga", caption)
+    if reconsidered and classification == ["passage"]:
         return []
-    # "AGREE TO HOUSE SUBSTITUTE", "Agree to Senate Amendment"
-    if "AGREE" in caption:
-        return ["passage"]
-    if "VETO" in caption:
-        return ["veto-override"]
-    if re.search(r"AMEND|SUBSTITUTE", caption) and not re.search(
-        r"PASSAGE|CONSTITUTIONAL|BY SUBSTITUTE", caption
-    ):
-        return ["amendment"]
-    # "PASSAGE BY SUBSTITUTE", "ADOPTION BY SUBSTITUTE",
-    # "ADOPTION OF CONSTITUTIONAL AMENDMENT",
-    # "Local Calendar", "UNCONTESTED HOUSE RESOLUTIONS"
-    if re.search(r"PASSAGE|ADOPT|LOCAL|CALENDAR|UNCONTESTED", caption):
-        return ["passage"]
-    return []
+    return classification
+
+
+def pair_outcomes(listed_votes, history):
+    """Pair a bill's passage votes with the outcomes in its status history.
+
+    GetVote has no result, and yeas > nays isn't enough to pass (HB 1324: 87-76,
+    short of the 91 needed). The status history logs each outcome ("House Third
+    Reading Lost", "House Reconsidered", "Senate Passed/Adopted") minutes to an
+    hour after the vote, so pair a chamber's outcomes for the day, in order, with
+    its passage votes for the day, in order. Returns the ids of the votes paired
+    with a "Lost" status, and of the calendar votes paired with a "Reconsidered"
+    one ("House Lost Reconsidered Bill/Resolution" is the failed vote after it).
+
+    A "Reconsidered" status pairs only with a calendar vote: any other
+    reconsideration has its own caption ("Reconsider", "Recon SB 234, 235, & 336"),
+    is not a passage vote, and the re-vote after it gets its own outcome
+    (SB 234, 2025: "House Reconsidered" 19:18, then "House Passed/Adopted" 19:22).
+    """
+    lost, reconsidered = set(), set()
+    unpaired = sorted(
+        (
+            v
+            for v in listed_votes
+            if vote_classification(v["Caption"] or "") == ["passage"]
+        ),
+        key=lambda v: v["Date"],
+    )
+    for status in sorted(history, key=lambda s: s["Date"]):
+        branch = {"H": "House", "S": "Senate"}.get(status["Code"][0])
+        if not branch or not re.search(OUTCOME_STATUS, status["Description"]):
+            continue
+        is_lost = "Lost" in status["Description"]
+        is_reconsidered = not is_lost and "Reconsidered" in status["Description"]
+        for v in unpaired:
+            if (
+                v["Branch"] == branch
+                and v["Date"].date() == status["Date"].date()
+                and v["Date"] <= status["Date"]
+                and (not is_reconsidered or CALENDAR.search(v["Caption"] or ""))
+            ):
+                unpaired.remove(v)
+                if is_lost:
+                    lost.add(v["VoteId"])
+                elif is_reconsidered:
+                    reconsidered.add(v["VoteId"])
+                break
+    return lost, reconsidered
 
 
 class GABillScraper(Scraper):
@@ -278,38 +316,7 @@ class GABillScraper(Scraper):
                     for v in instrument["Votes"]["VoteListing"]
                 ]
 
-                # GetVote has no result, and yeas > nays isn't enough to pass
-                # (HB 1324: 87-76, short of the 91 needed). The status history
-                # logs each outcome ("House Third Reading Lost", "House
-                # Reconsidered", "Senate Passed/Adopted") minutes to an hour
-                # after the vote, so pair a chamber's outcomes for the day, in
-                # order, with its passage votes for the day, in order, and fail
-                # the votes paired with a "Lost" status.
-                lost_votes = set()
-                unpaired = sorted(
-                    (
-                        v
-                        for v in listed_votes
-                        if vote_classification(v["Caption"] or "") == ["passage"]
-                    ),
-                    key=lambda v: v["Date"],
-                )
-                for status in sorted(history, key=lambda s: s["Date"]):
-                    branch = {"H": "House", "S": "Senate"}.get(status["Code"][0])
-                    if not branch or not re.search(
-                        OUTCOME_STATUS, status["Description"]
-                    ):
-                        continue
-                    for v in unpaired:
-                        if (
-                            v["Branch"] == branch
-                            and v["Date"].date() == status["Date"].date()
-                            and v["Date"] <= status["Date"]
-                        ):
-                            unpaired.remove(v)
-                            if "Lost" in status["Description"]:
-                                lost_votes.add(v["VoteId"])
-                            break
+                lost_votes, reconsidered_votes = pair_outcomes(listed_votes, history)
 
                 for listed_vote in listed_votes:
                     date = listed_vote["Date"].strftime("%Y-%m-%d")
@@ -335,7 +342,9 @@ class GABillScraper(Scraper):
                             listed_vote["Branch"]
                         ],
                         result=result,
-                        classification=vote_classification(caption),
+                        classification=vote_classification(
+                            caption, listed_vote["VoteId"] in reconsidered_votes
+                        ),
                         bill=bill,
                     )
                     vote.set_count("yes", listed_vote["Yeas"])

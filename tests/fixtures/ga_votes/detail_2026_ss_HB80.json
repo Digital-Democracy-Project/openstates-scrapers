@@ -1,0 +1,228 @@
+{
+ "ActVetoNumber": null,
+ "Authors": {
+  "Sponsorship": [
+   {
+    "Id": 308380,
+    "MemberDescription": "Bonner, Josh 73rd",
+    "MemberId": 4893,
+    "Sequence": 1,
+    "Type": "HouseAuthor"
+   },
+   {
+    "Id": 308381,
+    "MemberDescription": "Mathiak, Karen 82nd",
+    "MemberId": 4894,
+    "Sequence": 2,
+    "Type": "HouseAuthor"
+   },
+   {
+    "Id": 308382,
+    "MemberDescription": "Bazemore, Debra 69th",
+    "MemberId": 4890,
+    "Sequence": 3,
+    "Type": "HouseAuthor"
+   },
+   {
+    "Id": 308383,
+    "MemberDescription": "Jackson, Derrick 68th",
+    "MemberId": 4891,
+    "Sequence": 4,
+    "Type": "HouseAuthor"
+   }
+  ]
+ },
+ "Caption": "Fayette County; ad valorem tax; provide homestead exemption",
+ "Committees": {
+  "CommitteeListing": [
+   {
+    "Code": "IGC",
+    "Id": 94,
+    "Name": "Intragovernmental Coordination",
+    "Type": "House"
+   }
+  ]
+ },
+ "DocumentType": "HB",
+ "Id": 74848,
+ "LatestVersion": {
+  "Description": "LC 65 0103/a",
+  "Id": 249460,
+  "LegislationId": 74848,
+  "Url": "https://www.legis.ga.gov/api/legislation/document/2026EX/249460",
+  "Version": 3
+ },
+ "LegislationType": "LOC",
+ "Number": 80,
+ "Session": {
+  "IsDefault": false,
+  "Id": 1034,
+  "Description": "2026 Special Session",
+  "Library": "2026EX"
+ },
+ "Status": {
+  "Code": "HRECL",
+  "Date": "2026-06-23T11:38:53",
+  "Description": "House Lost Reconsidered Bill/Resolution",
+  "Id": 56,
+  "AmSub": null,
+  "StatusListingId": 347385
+ },
+ "Suffix": "EX",
+ "Footnotes": null,
+ "Sponsor": null,
+ "StatusHistory": {
+  "StatusListing": [
+   {
+    "Code": "HRECL",
+    "Date": "2026-06-23T11:38:53",
+    "Description": "House Lost Reconsidered Bill/Resolution",
+    "Id": 56,
+    "AmSub": null,
+    "StatusListingId": 347385
+   },
+   {
+    "Code": "HRECO",
+    "Date": "2026-06-23T10:08:11",
+    "Description": "House Reconsidered",
+    "Id": 53,
+    "AmSub": null,
+    "StatusListingId": 347364
+   },
+   {
+    "Code": "HTRL",
+    "Date": "2026-06-23T09:57:03",
+    "Description": "House Third Reading Lost",
+    "Id": 37,
+    "AmSub": null,
+    "StatusListingId": 347355
+   },
+   {
+    "Code": "HTR",
+    "Date": "2026-06-23T09:04:16",
+    "Description": "House Third Readers",
+    "Id": 35,
+    "AmSub": null,
+    "StatusListingId": 347330
+   },
+   {
+    "Code": "HCFR",
+    "Date": "2026-06-23T08:56:43",
+    "Description": "House Committee Favorably Reported",
+    "Id": 39,
+    "AmSub": null,
+    "StatusListingId": 347313
+   },
+   {
+    "Code": "HSR",
+    "Date": "2026-06-22T14:55:21",
+    "Description": "House Second Readers",
+    "Id": 34,
+    "AmSub": null,
+    "StatusListingId": 347071
+   },
+   {
+    "Code": "HFR",
+    "Date": "2026-06-20T09:38:13",
+    "Description": "House First Readers",
+    "Id": 33,
+    "AmSub": null,
+    "StatusListingId": 346570
+   },
+   {
+    "Code": "HH",
+    "Date": "2026-06-18T11:04:45",
+    "Description": "House Hopper",
+    "Id": 40,
+    "AmSub": null,
+    "StatusListingId": 346521
+   }
+  ]
+ },
+ "Summary": "A BILL to be entitled an Act to provide a homestead exemption from Fayette County ad valorem taxes in the amount of the assessed value of the homestead property determined annually for the special district based upon the proceeds of a new Local Homestead Option Sales Tax (LHOST) to be imposed within the special district conterminous with Fayette County; to provide for definitions; to specify the terms and conditions of the exemption and the procedures relating thereto; to provide for applicability; to provide for compliance with constitutional requirements and the provisions of Article 2C of Chapter 8 of Title 48 of the O.C.G.A.; to provide for a referendum, effective dates, automatic repeal, mandatory execution of election, and judicial remedies regarding failure to comply; to provide for related matters; to repeal conflicting laws; and for other purposes. ",
+ "Versions": {
+  "DocumentDescription": [
+   {
+    "Description": "LC 65 0103/a",
+    "Id": 249460,
+    "LegislationId": 74848,
+    "Url": "https://www.legis.ga.gov/api/legislation/document/2026EX/249460",
+    "Version": 3
+   },
+   {
+    "Description": "Local Ad",
+    "Id": 249584,
+    "LegislationId": 74848,
+    "Url": "https://www.legis.ga.gov/api/legislation/document/2026EX/249584",
+    "Version": 2
+   }
+  ]
+ },
+ "Votes": {
+  "VoteListing": [
+   {
+    "Branch": "House",
+    "Caption": "Local Calendar ",
+    "Date": "2026-06-23T08:37:00",
+    "Day": "6/23/2026",
+    "Description": "House Vote #13",
+    "Excused": 4,
+    "Legislation": null,
+    "Nays": 71,
+    "NotVoting": 9,
+    "Number": 13,
+    "Session": {
+     "IsDefault": false,
+     "Id": 1034,
+     "Description": "2026 Special Session",
+     "Library": "2026EX"
+    },
+    "Time": "8:37 AM",
+    "VoteId": 26680,
+    "Yeas": 96
+   },
+   {
+    "Branch": "House",
+    "Caption": "Local Calendar",
+    "Date": "2026-06-23T08:40:00",
+    "Day": "6/23/2026",
+    "Description": "House Vote #14",
+    "Excused": 4,
+    "Legislation": null,
+    "Nays": 72,
+    "NotVoting": 7,
+    "Number": 14,
+    "Session": {
+     "IsDefault": false,
+     "Id": 1034,
+     "Description": "2026 Special Session",
+     "Library": "2026EX"
+    },
+    "Time": "8:40 AM",
+    "VoteId": 26681,
+    "Yeas": 97
+   },
+   {
+    "Branch": "House",
+    "Caption": "Local Calendar ",
+    "Date": "2026-06-23T08:43:00",
+    "Day": "6/23/2026",
+    "Description": "House Vote #15",
+    "Excused": 4,
+    "Legislation": null,
+    "Nays": 72,
+    "NotVoting": 7,
+    "Number": 15,
+    "Session": {
+     "IsDefault": false,
+     "Id": 1034,
+     "Description": "2026 Special Session",
+     "Library": "2026EX"
+    },
+    "Time": "8:43 AM",
+    "VoteId": 26682,
+    "Yeas": 97
+   }
+  ]
+ }
+}
