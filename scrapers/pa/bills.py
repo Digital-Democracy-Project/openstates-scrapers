@@ -54,10 +54,11 @@ class PABillScraper(Scraper):
         # it, only the bills the legislature's Bill History export marks as changed are
         # fetched; without it (or if the export cannot be used) every bill is, as before.
         self.changed_bills = self.known_bills = None
+        # OPEN-576: the export is read on full walks too, for its fiscal and actuarial notes
+        export = self.read_export(session, special)
+        self.export_documents = self.documents_from_export(export)
         if start:
-            self.changed_bills, self.known_bills = self.changed_since(
-                session, special, start
-            )
+            self.changed_bills, self.known_bills = self.changed_since(export, start)
         self.incremental_stats = {"listed": 0, "selected": 0}
 
         for chamber in chambers:
@@ -74,7 +75,30 @@ class PABillScraper(Scraper):
             self.info("PA OPEN-574: no bill changed since %s", start)
             raise EmptyScrape
 
-    def changed_since(self, session, special, start):
+    def read_export(self, session, special):
+        """The Bill History export's XML, or None (with a warning) if it cannot be read."""
+        url = utils.bill_history_url(session, special)
+        try:
+            response = self.get(url, verify=False)
+            with zipfile.ZipFile(io.BytesIO(response.content)) as archive:
+                names = [n for n in archive.namelist() if n.lower().endswith(".xml")]
+                return archive.read(names[0])
+        except Exception as e:
+            self.warning("PA: could not read the Bill History export %s (%s)", url, e)
+            return None
+
+    def documents_from_export(self, export):
+        """OPEN-576: {bill key: [(note, url)]} of the export's fiscal and actuarial notes,
+        or {} (the bill pages alone, as before) when the export cannot be read."""
+        if export is None:
+            return {}
+        try:
+            return utils.supporting_documents(export)
+        except Exception as e:
+            self.warning("PA OPEN-576: could not read the export's documents (%s)", e)
+            return {}
+
+    def changed_since(self, export, start):
         """OPEN-574: (changed, known) bill keys from the Bill History export, or
         (None, None) for a full walk when the export cannot be trusted."""
         try:
@@ -82,21 +106,17 @@ class PABillScraper(Scraper):
         except ValueError:
             self.warning("PA OPEN-574: invalid start=%r, doing a full walk", start)
             return None, None
+        if export is None:
+            self.warning("PA OPEN-574: no Bill History export, doing a full walk")
+            return None, None
         # the runners' watermark is UTC (run-scrape.sh writes `date -u`)
         start_dt = start_dt.replace(tzinfo=datetime.timezone.utc)
-        url = utils.bill_history_url(session, special)
         try:
-            response = self.get(url, verify=False)
-            with zipfile.ZipFile(io.BytesIO(response.content)) as archive:
-                names = [n for n in archive.namelist() if n.lower().endswith(".xml")]
-                xml_bytes = archive.read(names[0])
             export_date, changed, known = utils.bills_changed_since(
-                xml_bytes, start_dt - EXPORT_LOOKBACK
+                export, start_dt - EXPORT_LOOKBACK
             )
         except Exception as e:
-            self.warning(
-                "PA OPEN-574: could not read %s (%s), doing a full walk", url, e
-            )
+            self.warning("PA OPEN-574: unreadable export (%s), doing a full walk", e)
             return None, None
         if export_date < _utcnow() - EXPORT_MAX_AGE:
             self.warning(
@@ -198,6 +218,20 @@ class PABillScraper(Scraper):
         )
         bill.add_source(url)
 
+        # OPEN-576: some nights a bill's page gives none of its fiscal notes (about 70 bills
+        # a night in November 2026, usually all of a bill's notes at once, never seen again
+        # on a later fetch), and the import then deletes the stored notes until a later
+        # walk sees them. The daily export lists the same notes under the same names and
+        # links, so they are added from it first, in its order; the page can still add one
+        # filed since the export was built.
+        for note, doc_url in self.export_documents.get(utils.bill_key(bill_id), []):
+            bill.add_document_link(
+                note,
+                doc_url,
+                media_type=utils.document_media_type(doc_url),
+                on_duplicate="ignore",
+            )
+
         self.parse_bill_versions(bill, page)
 
         self.parse_history(
@@ -254,7 +288,9 @@ class PABillScraper(Scraper):
                     # Senate & House Fiscal Notes
                     mimetype = self.mimetype_from_class(a)
                     bill.add_document_link(
-                        doc_title,
+                        # stored stripped anyway; stripped here so it matches the
+                        # export's note of the same name (OPEN-576)
+                        doc_title.strip(),
                         doc_url,
                         media_type=mimetype,
                         on_duplicate="ignore",

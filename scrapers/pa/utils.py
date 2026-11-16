@@ -1,4 +1,6 @@
 import datetime
+import mimetypes
+import urllib.parse
 from typing import Literal
 
 import lxml.etree
@@ -101,6 +103,44 @@ def bills_changed_since(xml_bytes, since):
                 changed.add(key)
                 break
     return export_date, changed, known
+
+
+def supporting_documents(xml_bytes):
+    """OPEN-576: the fiscal and actuarial notes a Bill History export lists, as
+    {"HB1088": [(note, url), ...]}, named as the bill page's links are named by
+    PABillScraper.parse_bill_versions ("House Fiscal Note", "Senate Fiscal Note",
+    "Actuarial Note PN1888"), in the export's order. Other document kinds are left out,
+    as the page parser leaves them out.
+    """
+    root = lxml.etree.fromstring(xml_bytes)
+    documents = {}
+    for bill in root.iter("bill"):
+        key = "%s%s%d" % (
+            bill.findtext("body"),
+            bill.findtext("type"),
+            int(bill.findtext("number")),
+        )
+        notes = []
+        for pn_docs in bill.iterfind("supportingDocuments/pnSupportingDocuments"):
+            for doc in pn_docs.iterfind("document"):
+                title = (doc.text or "").strip()
+                url = doc.get("documentUrl")
+                if not url:
+                    continue
+                if "Fiscal Note" in title:
+                    notes.append((title, url))
+                elif "Actuarial Note" in title:
+                    notes.append(
+                        ("Actuarial Note PN%s" % pn_docs.get("relatedPN"), url)
+                    )
+        if notes:
+            documents[key] = notes
+    return documents
+
+
+def document_media_type(url):
+    # the export gives no type; the page's icons say PDF for every note link seen so far
+    return mimetypes.guess_type(urllib.parse.urlsplit(url).path)[0] or ""
 
 
 def info_url(session, special, bill_number):
