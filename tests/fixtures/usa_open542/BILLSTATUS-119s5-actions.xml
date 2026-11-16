@@ -1,0 +1,448 @@
+<?xml version='1.0' encoding='utf-8'?>
+<billStatus>
+  <bill>
+    <number>5</number>
+    <type>S</type>
+    <congress>119</congress>
+    <originChamber>Senate</originChamber>
+    <actions>
+      <item>
+        <actionDate>2025-01-29</actionDate>
+        <text>Became Public Law No: 119-1.</text>
+        <type>President</type>
+        <actionCode>E40000</actionCode>
+        <sourceSystem>
+          <code>9</code>
+          <name>Library of Congress</name>
+        </sourceSystem>
+      </item>
+      <item>
+        <actionDate>2025-01-29</actionDate>
+        <text>Became Public Law No: 119-1.</text>
+        <type>BecameLaw</type>
+        <actionCode>36000</actionCode>
+        <sourceSystem>
+          <code>9</code>
+          <name>Library of Congress</name>
+        </sourceSystem>
+      </item>
+      <item>
+        <actionDate>2025-01-29</actionDate>
+        <text>Signed by President.</text>
+        <type>President</type>
+        <actionCode>E30000</actionCode>
+        <sourceSystem>
+          <code>9</code>
+          <name>Library of Congress</name>
+        </sourceSystem>
+      </item>
+      <item>
+        <actionDate>2025-01-29</actionDate>
+        <text>Signed by President.</text>
+        <type>BecameLaw</type>
+        <actionCode>36000</actionCode>
+        <sourceSystem>
+          <code>9</code>
+          <name>Library of Congress</name>
+        </sourceSystem>
+      </item>
+      <item>
+        <actionDate>2025-01-23</actionDate>
+        <text>Presented to President.</text>
+        <type>Floor</type>
+        <actionCode>E20000</actionCode>
+        <sourceSystem>
+          <code>2</code>
+          <name>House floor actions</name>
+        </sourceSystem>
+      </item>
+      <item>
+        <actionDate>2025-01-23</actionDate>
+        <text>Presented to President.</text>
+        <type>President</type>
+        <actionCode>28000</actionCode>
+        <sourceSystem>
+          <code>9</code>
+          <name>Library of Congress</name>
+        </sourceSystem>
+      </item>
+      <item>
+        <actionDate>2025-01-22</actionDate>
+        <actionTime>17:04:57</actionTime>
+        <text>Motion to reconsider laid on the table Agreed to without objection.</text>
+        <type>Floor</type>
+        <actionCode>H38310</actionCode>
+        <sourceSystem>
+          <code>2</code>
+          <name>House floor actions</name>
+        </sourceSystem>
+      </item>
+      <item>
+        <actionDate>2025-01-22</actionDate>
+        <actionTime>17:04:55</actionTime>
+        <text>On passage Passed by the Yeas and Nays: 263 - 156 (Roll no. 23). (text: CR H277-278)</text>
+        <type>Floor</type>
+        <actionCode>H37100</actionCode>
+        <sourceSystem>
+          <code>2</code>
+          <name>House floor actions</name>
+        </sourceSystem>
+        <recordedVotes>
+          <recordedVote>
+            <rollNumber>23</rollNumber>
+            <url>https://clerk.house.gov/evs/2025/roll023.xml</url>
+            <chamber>House</chamber>
+            <congress>119</congress>
+            <date>2025-01-22T22:04:55Z</date>
+            <sessionNumber>1</sessionNumber>
+          </recordedVote>
+        </recordedVotes>
+      </item>
+      <item>
+        <actionDate>2025-01-22</actionDate>
+        <actionTime>17:04:55</actionTime>
+        <text>Passed/agreed to in House: On passage Passed by the Yeas and Nays: 263 - 156 (Roll no. 23). (text: CR H277-278)</text>
+        <type>Floor</type>
+        <actionCode>8000</actionCode>
+        <sourceSystem>
+          <code>9</code>
+          <name>Library of Congress</name>
+        </sourceSystem>
+        <recordedVotes>
+          <recordedVote>
+            <rollNumber>23</rollNumber>
+            <url>https://clerk.house.gov/evs/2025/roll023.xml</url>
+            <chamber>House</chamber>
+            <congress>119</congress>
+            <date>2025-01-22T22:04:55Z</date>
+            <sessionNumber>1</sessionNumber>
+          </recordedVote>
+        </recordedVotes>
+      </item>
+      <item>
+        <actionDate>2025-01-22</actionDate>
+        <actionTime>16:58:40</actionTime>
+        <text>Considered as unfinished business. (consideration: CR H285-286)</text>
+        <type>Floor</type>
+        <actionCode>H30000</actionCode>
+        <sourceSystem>
+          <code>2</code>
+          <name>House floor actions</name>
+        </sourceSystem>
+      </item>
+      <item>
+        <actionDate>2025-01-22</actionDate>
+        <actionTime>15:14:40</actionTime>
+        <text>POSTPONED PROCEEDINGS - At the conclusion of the debate on S. 5, the Chair put the question on passage of the bill and by voice vote announced that the ayes had prevailed. Mr. Raskin demanded the yeas and nays and the Chair postponed further proceedings until a time to be announced.</text>
+        <type>Floor</type>
+        <actionCode>H8D000</actionCode>
+        <sourceSystem>
+          <code>2</code>
+          <name>House floor actions</name>
+        </sourceSystem>
+      </item>
+      <item>
+        <actionDate>2025-01-22</actionDate>
+        <actionTime>15:14:13</actionTime>
+        <text>The previous question was ordered pursuant to the rule.</text>
+        <type>Floor</type>
+        <actionCode>H35000</actionCode>
+        <sourceSystem>
+          <code>2</code>
+          <name>House floor actions</name>
+        </sourceSystem>
+      </item>
+      <item>
+        <actionDate>2025-01-22</actionDate>
+        <actionTime>14:11:59</actionTime>
+        <text>DEBATE - The House proceeded with one hour of debate on S. 5.</text>
+        <type>Floor</type>
+        <actionCode>H8D000</actionCode>
+        <sourceSystem>
+          <code>2</code>
+          <name>House floor actions</name>
+        </sourceSystem>
+      </item>
+      <item>
+        <actionDate>2025-01-22</actionDate>
+        <actionTime>14:11:35</actionTime>
+        <text>Rule provides for consideration of H.R. 471 and S. 5. The resolution provides for consideration of H.R. 471 under a structured rule with one hour of general debate and one motion to recommit. Also, the resolution provides for consideration of S. 5 under a closed rule with one hour of general debate and one motion to commit.</text>
+        <type>Floor</type>
+        <actionCode>H8D000</actionCode>
+        <sourceSystem>
+          <code>2</code>
+          <name>House floor actions</name>
+        </sourceSystem>
+      </item>
+      <item>
+        <actionDate>2025-01-22</actionDate>
+        <actionTime>14:11:30</actionTime>
+        <text>Considered under the provisions of rule H. Res. 53. (consideration: CR H277-284)</text>
+        <type>Floor</type>
+        <actionCode>H30000</actionCode>
+        <sourceSystem>
+          <code>2</code>
+          <name>House floor actions</name>
+        </sourceSystem>
+      </item>
+      <item>
+        <actionDate>2025-01-22</actionDate>
+        <actionTime>14:07:22</actionTime>
+        <text>Rule H. Res. 53 passed House.</text>
+        <type>Floor</type>
+        <actionCode>H1L220</actionCode>
+        <sourceSystem>
+          <code>2</code>
+          <name>House floor actions</name>
+        </sourceSystem>
+      </item>
+      <item>
+        <actionDate>2025-01-21</actionDate>
+        <actionTime>19:28:38</actionTime>
+        <text>Rules Committee Resolution H. Res. 53 Reported to House. Rule provides for consideration of H.R. 471 and S. 5. The resolution provides for consideration of H.R. 471 under a structured rule with one hour of general debate and one motion to recommit. Also, the resolution provides for consideration of S. 5 under a closed rule with one hour of general debate and one motion to commit.</text>
+        <type>Floor</type>
+        <actionCode>H1L210</actionCode>
+        <sourceSystem>
+          <code>2</code>
+          <name>House floor actions</name>
+        </sourceSystem>
+      </item>
+      <item>
+        <actionDate>2025-01-21</actionDate>
+        <actionTime>14:54:53</actionTime>
+        <text>Held at the desk.</text>
+        <type>Floor</type>
+        <actionCode>H15000</actionCode>
+        <sourceSystem>
+          <code>2</code>
+          <name>House floor actions</name>
+        </sourceSystem>
+      </item>
+      <item>
+        <actionDate>2025-01-21</actionDate>
+        <actionTime>14:03:37</actionTime>
+        <text>Received in the House.</text>
+        <type>Floor</type>
+        <actionCode>H14000</actionCode>
+        <sourceSystem>
+          <code>2</code>
+          <name>House floor actions</name>
+        </sourceSystem>
+      </item>
+      <item>
+        <actionDate>2025-01-21</actionDate>
+        <sourceSystem>
+          <name>Senate</name>
+        </sourceSystem>
+        <text>Message on Senate action sent to the House.</text>
+        <type>Floor</type>
+      </item>
+      <item>
+        <actionDate>2025-01-20</actionDate>
+        <sourceSystem>
+          <name>Senate</name>
+        </sourceSystem>
+        <text>Passed Senate with an amendment by Yea-Nay Vote. 64 - 35. Record Vote Number: 7. (text: CR S250-251)</text>
+        <type>Floor</type>
+        <recordedVotes>
+          <recordedVote>
+            <rollNumber>7</rollNumber>
+            <url>https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_00007.xml</url>
+            <chamber>Senate</chamber>
+            <congress>119</congress>
+            <date>2025-01-20T23:30:58Z</date>
+            <sessionNumber>1</sessionNumber>
+          </recordedVote>
+        </recordedVotes>
+      </item>
+      <item>
+        <actionDate>2025-01-20</actionDate>
+        <text>Passed/agreed to in Senate: Passed Senate with an amendment by Yea-Nay Vote. 64 - 35. Record Vote Number: 7.</text>
+        <type>Floor</type>
+        <actionCode>17000</actionCode>
+        <sourceSystem>
+          <code>9</code>
+          <name>Library of Congress</name>
+        </sourceSystem>
+        <recordedVotes>
+          <recordedVote>
+            <rollNumber>7</rollNumber>
+            <url>https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_00007.xml</url>
+            <chamber>Senate</chamber>
+            <congress>119</congress>
+            <date>2025-01-20T23:30:58Z</date>
+            <sessionNumber>1</sessionNumber>
+          </recordedVote>
+        </recordedVotes>
+      </item>
+      <item>
+        <actionDate>2025-01-20</actionDate>
+        <sourceSystem>
+          <name>Senate</name>
+        </sourceSystem>
+        <text>Considered by Senate. (consideration: CR S246-251)</text>
+        <type>Floor</type>
+      </item>
+      <item>
+        <actionDate>2025-01-17</actionDate>
+        <sourceSystem>
+          <name>Senate</name>
+        </sourceSystem>
+        <text>Cloture on the measure invoked in Senate by Yea-Nay Vote. 61 - 35. Record Vote Number: 5. (CR S240)</text>
+        <type>Floor</type>
+        <recordedVotes>
+          <recordedVote>
+            <rollNumber>5</rollNumber>
+            <url>https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_00005.xml</url>
+            <chamber>Senate</chamber>
+            <congress>119</congress>
+            <date>2025-01-17T15:47:29Z</date>
+            <sessionNumber>1</sessionNumber>
+          </recordedVote>
+        </recordedVotes>
+      </item>
+      <item>
+        <actionDate>2025-01-17</actionDate>
+        <sourceSystem>
+          <name>Senate</name>
+        </sourceSystem>
+        <text>Considered by Senate. (consideration: CR S237-241)</text>
+        <type>Floor</type>
+      </item>
+      <item>
+        <actionDate>2025-01-16</actionDate>
+        <sourceSystem>
+          <name>Senate</name>
+        </sourceSystem>
+        <text>Considered by Senate. (consideration: CR S198-218)</text>
+        <type>Floor</type>
+      </item>
+      <item>
+        <actionDate>2025-01-15</actionDate>
+        <sourceSystem>
+          <name>Senate</name>
+        </sourceSystem>
+        <text>Cloture motion on the measure presented in Senate. (CR S182)</text>
+        <type>Floor</type>
+      </item>
+      <item>
+        <actionDate>2025-01-15</actionDate>
+        <sourceSystem>
+          <name>Senate</name>
+        </sourceSystem>
+        <text>Considered by Senate. (consideration: CR S161-182)</text>
+        <type>Floor</type>
+      </item>
+      <item>
+        <actionDate>2025-01-14</actionDate>
+        <sourceSystem>
+          <name>Senate</name>
+        </sourceSystem>
+        <text>Considered by Senate. (consideration: CR S130)</text>
+        <type>Floor</type>
+      </item>
+      <item>
+        <actionDate>2025-01-13</actionDate>
+        <sourceSystem>
+          <name>Senate</name>
+        </sourceSystem>
+        <text>Measure laid before Senate by motion.</text>
+        <type>Floor</type>
+      </item>
+      <item>
+        <actionDate>2025-01-13</actionDate>
+        <sourceSystem>
+          <name>Senate</name>
+        </sourceSystem>
+        <text>Motion to proceed to consideration of measure agreed to in Senate by Yea-Nay Vote. 82 - 10. Record Vote Number: 2. (CR S87)</text>
+        <type>Floor</type>
+        <recordedVotes>
+          <recordedVote>
+            <rollNumber>2</rollNumber>
+            <url>https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_00002.xml</url>
+            <chamber>Senate</chamber>
+            <congress>119</congress>
+            <date>2025-01-13T23:33:38Z</date>
+            <sessionNumber>1</sessionNumber>
+          </recordedVote>
+        </recordedVotes>
+      </item>
+      <item>
+        <actionDate>2025-01-13</actionDate>
+        <sourceSystem>
+          <name>Senate</name>
+        </sourceSystem>
+        <text>Motion to proceed to measure considered in Senate. (CR S83)</text>
+        <type>Floor</type>
+      </item>
+      <item>
+        <actionDate>2025-01-09</actionDate>
+        <sourceSystem>
+          <name>Senate</name>
+        </sourceSystem>
+        <text>Cloture on the motion to proceed to the measure invoked in Senate by Yea-Nay Vote. 84 - 9. Record Vote Number: 1. (CR S73)</text>
+        <type>Floor</type>
+        <recordedVotes>
+          <recordedVote>
+            <rollNumber>1</rollNumber>
+            <url>https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_00001.xml</url>
+            <chamber>Senate</chamber>
+            <congress>119</congress>
+            <date>2025-01-09T20:32:41Z</date>
+            <sessionNumber>1</sessionNumber>
+          </recordedVote>
+        </recordedVotes>
+      </item>
+      <item>
+        <actionDate>2025-01-09</actionDate>
+        <sourceSystem>
+          <name>Senate</name>
+        </sourceSystem>
+        <text>Motion to proceed to measure considered in Senate. (CR S70)</text>
+        <type>Floor</type>
+      </item>
+      <item>
+        <actionDate>2025-01-08</actionDate>
+        <sourceSystem>
+          <name>Senate</name>
+        </sourceSystem>
+        <text>Cloture motion on the motion to proceed to the measure presented in Senate. (CR S46)</text>
+        <type>Floor</type>
+      </item>
+      <item>
+        <actionDate>2025-01-08</actionDate>
+        <sourceSystem>
+          <name>Senate</name>
+        </sourceSystem>
+        <text>Motion to proceed to consideration of measure made in Senate. (CR S46)</text>
+        <type>Floor</type>
+      </item>
+      <item>
+        <actionDate>2025-01-07</actionDate>
+        <sourceSystem>
+          <name>Senate</name>
+        </sourceSystem>
+        <text>Read the second time. Placed on Senate Legislative Calendar under General Orders. Calendar No. 1.</text>
+        <type>Calendars</type>
+      </item>
+      <item>
+        <actionDate>2025-01-06</actionDate>
+        <sourceSystem>
+          <name>Senate</name>
+        </sourceSystem>
+        <text>Introduced in the Senate. Read the first time. Placed on Senate Legislative Calendar under Read the First Time.</text>
+        <type>Calendars</type>
+      </item>
+      <item>
+        <actionDate>2025-01-06</actionDate>
+        <text>Introduced in Senate</text>
+        <type>IntroReferral</type>
+        <actionCode>10000</actionCode>
+        <sourceSystem>
+          <code>9</code>
+          <name>Library of Congress</name>
+        </sourceSystem>
+      </item>
+    </actions>
+  </bill>
+</billStatus>
