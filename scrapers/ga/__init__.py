@@ -12,6 +12,7 @@ class Georgia(State):
     legislative_sessions = [
         {
             "_scraped_name": "2011-2012 Regular Session",
+            "classification": "primary",
             "identifier": "2011_12",
             "name": "2011-2012 Regular Session",
             "start_date": "2011-01-10",
@@ -19,6 +20,7 @@ class Georgia(State):
         },
         {
             "_scraped_name": "2011 Special Session",
+            "classification": "special",
             "identifier": "2011_ss",
             "name": "2011 Special Session",
             "start_date": "2011-08-15",
@@ -26,6 +28,7 @@ class Georgia(State):
         },
         {
             "_scraped_name": "2013-2014 Regular Session",
+            "classification": "primary",
             "identifier": "2013_14",
             "name": "2013-2014 Regular Session",
             "start_date": "2013-01-14",
@@ -33,6 +36,7 @@ class Georgia(State):
         },
         {
             "_scraped_name": "2015-2016 Regular Session",
+            "classification": "primary",
             "identifier": "2015_16",
             "name": "2015-2016 Regular Session",
             "start_date": "2015-01-12",
@@ -40,6 +44,7 @@ class Georgia(State):
         },
         {
             "_scraped_name": "2017-2018 Regular Session",
+            "classification": "primary",
             "identifier": "2017_18",
             "name": "2017-2018 Regular Session",
             "start_date": "2017-01-09",
@@ -47,6 +52,7 @@ class Georgia(State):
         },
         {
             "_scraped_name": "2018 Special Session",
+            "classification": "special",
             "identifier": "2018_ss",
             "name": "2018 Special Session",
             "start_date": "2018-11-13",
@@ -54,6 +60,7 @@ class Georgia(State):
         },
         {
             "_scraped_name": "2020 Special Session",
+            "classification": "special",
             "identifier": "2020_ss",
             "name": "2020 Special Session",
             "start_date": "2020-03-16",
@@ -61,6 +68,7 @@ class Georgia(State):
         },
         {
             "_scraped_name": "2019-2020 Regular Session",
+            "classification": "primary",
             "identifier": "2019_20",
             "name": "2019-2020 Regular Session",
             "start_date": "2019-01-14",
@@ -68,6 +76,7 @@ class Georgia(State):
         },
         {
             "_scraped_name": "2021-2022 Regular Session",
+            "classification": "primary",
             "identifier": "2021_22",
             "name": "2021-2022 Regular Session",
             "start_date": "2021-01-11",
@@ -76,6 +85,7 @@ class Georgia(State):
         },
         {
             "_scraped_name": "2021 Special Session",
+            "classification": "special",
             "identifier": "2021_ss",
             "name": "2021 Special Session",
             "start_date": "2021-11-03",
@@ -84,6 +94,7 @@ class Georgia(State):
         },
         {
             "_scraped_name": "2023-2024 Regular Session",
+            "classification": "primary",
             "identifier": "2023_24",
             "name": "2023-2024 Regular Session",
             "start_date": "2023-01-09",
@@ -92,6 +103,7 @@ class Georgia(State):
         },
         {
             "_scraped_name": "2023 Special Session",
+            "classification": "special",
             "identifier": "2023_ss",
             "name": "2023 Special Session",
             "start_date": "2023-11-29",
@@ -100,6 +112,7 @@ class Georgia(State):
         },
         {
             "_scraped_name": "2025-2026 Regular Session",
+            "classification": "primary",
             "identifier": "2025_26",
             "name": "2025-2026 Regular Session",
             "start_date": "2025-01-13",
@@ -108,6 +121,7 @@ class Georgia(State):
         },
         {
             "_scraped_name": "2026 Special Session",
+            "classification": "special",
             "identifier": "2026_ss",
             "name": "2026 Special Session",
             "start_date": "2026-06-17",

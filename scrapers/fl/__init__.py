@@ -157,7 +157,7 @@ class Florida(State):
         {
             "name": "2021 Special Session A",
             "identifier": "2021A",
-            "classification": "primary",
+            "classification": "special",
             "start_date": "2021-05-12",
             "end_date": "2021-05-17",
             "extras": {"session_number": "92"},

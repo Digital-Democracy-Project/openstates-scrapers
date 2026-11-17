@@ -233,7 +233,7 @@ class Louisiana(State):
         },
         {
             "_scraped_name": "2023 First Extraordinary Session",
-            "classification": "primary",
+            "classification": "special",
             "identifier": "2023s1",
             "name": "2023 First Extraordinary Session",
             "start_date": "2023-01-30",
