@@ -1,7 +1,15 @@
+from datetime import date
+
 from utils import url_xpath
 from openstates.scrape import State
 from .bills import NVBillScraper
 from .events import NVEventScraper
+
+# OPEN-606: the 84th (2027) session becomes the active session on its start date. Until then
+# the 2025 special session stays the only active one (Ramon, 2026-11-16: "Special session only
+# now"). Read once per run, so the first run on or after 2027-02-01 scrapes 84 instead.
+SESSION_84_START = "2027-02-01"
+SESSION_84_STARTED = date.today() >= date.fromisoformat(SESSION_84_START)
 
 
 class Nevada(State):
@@ -195,7 +203,7 @@ class Nevada(State):
             "name": "36th (2026) Special Session",
             "start_date": "2025-11-13",
             "end_date": "2025-11-21",
-            "active": True,
+            "active": not SESSION_84_STARTED,
             "extras": {"session_slug": "36th2025Special"},
         },
         {
@@ -203,9 +211,9 @@ class Nevada(State):
             "classification": "primary",
             "identifier": "84",
             "name": "2027 Regular Session",
-            "start_date": "2027-02-01",
+            "start_date": SESSION_84_START,
             "end_date": "2027-05-31",
-            "active": False,
+            "active": SESSION_84_STARTED,
             "extras": {"session_slug": "84th2027"},
         },
     ]
