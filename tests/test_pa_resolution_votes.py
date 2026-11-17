@@ -15,12 +15,15 @@ Fixtures (pa_open582/), all real and unchanged, as palegis.us served them on 202
 No request leaves the test.
 """
 import os
+import sys
 
 import lxml.html
 import pytest
 
-from openstates.scrape import Bill
-from pa.bills import PABillScraper
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
+
+from openstates.scrape import Bill  # noqa: E402
+from pa.bills import PABillScraper  # noqa: E402
 
 FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures", "pa_open582")
 BASE = "https://www.palegis.us"
@@ -33,7 +36,9 @@ def scraped_vote(fixture, url, identifier, chamber, committee=False):
     scraper = PABillScraper(jurisdiction="x", datadir="/tmp")
     scraper.get_page = lambda u: page
     classification = "resolution" if identifier[1] == "R" else "bill"
-    bill = Bill(identifier, "2025-2026", "x", chamber=chamber, classification=classification)
+    bill = Bill(
+        identifier, "2025-2026", "x", chamber=chamber, classification=classification
+    )
     parse = scraper.parse_committee_votes if committee else scraper.parse_chamber_votes
     (vote,) = list(parse(bill, BASE + url))
     return vote
@@ -60,7 +65,9 @@ def scraped_vote(fixture, url, identifier, chamber, committee=False):
         ),
     ],
 )
-def test_resolution_floor_adoption_is_passage(fixture, url, identifier, chamber, motion, counts):
+def test_resolution_floor_adoption_is_passage(
+    fixture, url, identifier, chamber, motion, counts
+):
     vote = scraped_vote(fixture, url, identifier, chamber)
     assert vote.motion_text == motion
     assert vote.motion_classification == ["passage"]
