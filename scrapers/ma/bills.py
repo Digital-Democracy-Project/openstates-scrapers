@@ -6,14 +6,22 @@ import json
 import zlib
 from datetime import datetime
 import lxml.html
+from openstates.exceptions import EmptyScrape
 from openstates.scrape import Scraper, Bill, VoteEvent
 from classify_motion import classify_motion
 from openstates.utils import convert_pdf
 from openstates.utils.transformers import fix_bill_id
 
+from . import catchup
 from .actions import Categorizer
 from .voter_names import senate_voter_name
-from .votes import HouseVoteRecordParser, vote_result
+from .votes import (
+    JOURNAL_MONTH_URL,
+    JOURNAL_PDF_LINKS,
+    HouseVoteRecordParser,
+    journal_date,
+    vote_result,
+)
 
 try:
     # DDP's openstates-core fork at or after OPEN-517 (what the scraper image is built with). Upstream's
@@ -315,6 +323,15 @@ def meta_chamber(bill_meta):
     )
 
 
+def meta_numbers(bill_meta):
+    """OPEN-609: every number a Documents-list row is known by: its bill number and its docket number."""
+    return {
+        fix_bill_id(number)
+        for number in (bill_meta["BillNumber"], bill_meta["DocketNumber"])
+        if number
+    }
+
+
 def rollcall_of(vote):
     """OPEN-568: which roll call a vote is, whatever bill cited it: its dedupe key without the bill number.
 
@@ -445,7 +462,19 @@ class MABillScraper(Scraper):
         start=None,
     ):
         self.scrape_bill_list(session, start=start)
-        self.scrape_amendment_papers(session)
+
+        # OPEN-609: a whole run (no chamber, bill or chunk) given start= reads only the bills the catch-up sources
+        # name (see catch_up), unless a full walk is due or a source cannot answer, and remembers this run's lists
+        # for the next one. A run without start= (a first or manual run) or a partial run is as before: it reads
+        # every bill it covers and neither uses nor changes that record.
+        whole_run = bool(start) and not (chamber or bill_no or scrape_chunk_number)
+        selected = hearings = None
+        if whole_run:
+            state = catchup.load_state(catchup.state_path(session))
+            selected, hearings = self.catch_up(session, start, state)
+            if hearings is None and state is not None:
+                # the hearing list could not be read: the next run compares with the older one
+                hearings = state["hearings"]
 
         # optionally scrape a single bill then exit
         metas = []
@@ -458,12 +487,187 @@ class MABillScraper(Scraper):
         if not metas:
             for one_chamber in [chamber] if chamber else ["lower", "upper"]:
                 metas += self.chamber_bill_list(one_chamber, scrape_chunk_number)
+        if selected is not None:
+            metas = [m for m in metas if meta_numbers(m) & selected]
+            self.info(
+                "OPEN-609: catch-up run reads {} of {} bills".format(
+                    len(metas), len(self.bill_list)
+                )
+            )
+            if not metas:
+                # a quiet week is a real answer (as PA and GA): nothing to read, nothing deleted
+                self.save_catch_up(session, hearings, state["full_walk_on"], set())
+                raise EmptyScrape
 
+        self.scrape_amendment_papers(session)
+
+        unread = set()
         for bill_meta in self.with_paper_pairs(metas):
-            yield from self.scrape_bill(session, bill_meta, meta_chamber(bill_meta))
+            read = False
+            for obj in self.scrape_bill(session, bill_meta, meta_chamber(bill_meta)):
+                read = read or isinstance(obj, Bill)
+                yield obj
+            if not read:
+                unread.add(meta_id(bill_meta))
             yield from self.group_member_done(meta_id(bill_meta))
         if bill_no and len(metas) == 1:
             self.info("Finished individual bill scrape, exiting.")
+        if whole_run:
+            # a bill that could not be read is read again next run, whatever named it
+            walked_on = (
+                datetime.utcnow().date() if selected is None else state["full_walk_on"]
+            )
+            self.save_catch_up(session, hearings, walked_on, unread)
+
+    def catch_up(self, session, start, state):
+        """OPEN-609: (the numbers of the bills to read, this run's hearing ids); the numbers are None for a full walk.
+
+        With the last whole run's record, the bills to read are those named in the House and Senate
+        journals dated from 21 days before start= (catchup.JOURNAL_LOOKBACK), the bills the governor approved in
+        that time (Session Laws), the bills on hearings posted since the last run, the bills new in the Documents
+        list since the last run, and the bills the last run could not read. Without a record, when
+        the last full walk is catchup.FULL_WALK_EVERY old, or when any source fails or answers implausibly (as GA,
+        OPEN-604), every bill is read: never a partial run.
+        """
+        session_number = self.replace_non_digits(session)
+        hearings = None
+        try:
+            hearings = self.hearing_ids()
+        except Exception as e:
+            self.warning("OPEN-609: could not list the hearings ({})".format(e))
+        reason = None
+        if not self.bill_list:
+            reason = "the bill list is empty"  # not a quiet week: a run without bills fails, as before
+        elif state is None:
+            reason = "no record of the last run's lists"
+        elif (
+            datetime.utcnow().date() - state["full_walk_on"] >= catchup.FULL_WALK_EVERY
+        ):
+            reason = "the last full walk was on {}".format(state["full_walk_on"])
+        elif hearings is None or state["hearings"] is None:
+            reason = "no hearing list to compare"
+        if reason is None:
+            try:
+                since = (
+                    datetime.strptime(start[:19], "%Y-%m-%dT%H:%M:%S").date()
+                    - catchup.JOURNAL_LOOKBACK
+                )
+            except ValueError:
+                reason = "start={!r} is not a date".format(start)
+        if reason is None:
+            try:
+                journals = self.journal_bills(session_number, since)
+                laws = self.session_law_bills(session_number, since)
+                heard = set()
+                for event_id in sorted(hearings - state["hearings"]):
+                    heard |= self.hearing_bills(session_number, event_id)
+            except Exception as e:
+                reason = "a source could not be read ({})".format(e)
+        if reason is not None:
+            self.info("OPEN-609: reading every bill: {}".format(reason))
+            return None, hearings
+
+        listed = set().union(*(meta_numbers(m) for m in self.bill_list))
+        new = listed - state["bills"]
+        selected = journals | laws | heard | new | state["retry"]
+        self.info(
+            "OPEN-609: since {} (start={} less {} days): {} named in journals, {} signed, {} on {} new hearings, "
+            "{} new in the bill list, {} to retry".format(
+                since,
+                start,
+                catchup.JOURNAL_LOOKBACK.days,
+                len(journals),
+                len(laws),
+                len(heard),
+                len(hearings - state["hearings"]),
+                len(new),
+                len(state["retry"]),
+            )
+        )
+        return selected, hearings
+
+    def save_catch_up(self, session, hearings, full_walk_on, retry):
+        listed = set().union(*(meta_numbers(m) for m in self.bill_list))
+        catchup.save_state(
+            catchup.state_path(session), listed, hearings, full_walk_on, retry
+        )
+
+    def fetch_ok(self, url):
+        """A source request that must succeed: the scraper's own get() does not raise on an error status here."""
+        response = self.get(url, verify=False)
+        if response.status_code != 200:
+            raise ValueError("HTTP {} from {}".format(response.status_code, url))
+        return response
+
+    def journal_bills(self, session_number, since):
+        """Bills named in every House and Senate journal dated on or after `since` (OPEN-609)."""
+        today = datetime.utcnow().date()
+        found = set()
+        for chamber in ("House", "Senate"):
+            named, read = set(), 0
+            for month in catchup.months(since, today):
+                index = self.fetch_ok(
+                    JOURNAL_MONTH_URL.format(
+                        chamber=chamber, session=session_number, month=month
+                    )
+                )
+                page = lxml.html.fromstring(index.text)
+                page.make_links_absolute("https://malegislature.gov")
+                for url in JOURNAL_PDF_LINKS.match(page, min_items=0):
+                    sitting = journal_date(url)
+                    if sitting is None or sitting < since:
+                        continue
+                    named |= catchup.journal_bills(self.journal_text(url))
+                    read += 1
+            # each chamber sits at least weekly and every sitting names bills, so a chamber whose journals of the last
+            # three weeks name nothing (or that has none) means its listing or its files changed shape (pm-review)
+            if not named:
+                raise ValueError(
+                    "{} {} journals since {} name no bill".format(read, chamber, since)
+                )
+            found |= named
+        return found
+
+    def journal_text(self, url):
+        path, response = self.urlretrieve(url)
+        try:
+            with open(path, "rb") as f:
+                if response.status_code != 200 or not f.read(5).startswith(b"%PDF"):
+                    raise ValueError("{} is not a PDF".format(url))
+            return convert_pdf(path, "text").decode("utf-8", "replace")
+        finally:
+            os.remove(path)
+
+    def session_law_bills(self, session_number, since):
+        """Bills the governor approved on or after `since`, from each year's Session Laws page (OPEN-609)."""
+        found, chapters = set(), 0
+        for year in range(since.year, datetime.utcnow().year + 1):
+            page = self.fetch_ok(
+                "https://malegislature.gov/Laws/SessionLaws/Acts/{}".format(year)
+            )
+            signed, listed = catchup.session_law_bills(page.text, session_number, since)
+            found |= signed
+            chapters += listed
+        if not chapters:
+            raise ValueError("the Session Laws pages list no chapter")
+        return found
+
+    def hearing_ids(self):
+        listing = json.loads(
+            self.fetch_ok("https://malegislature.gov/api/Hearings").content
+        )
+        ids = {row["EventId"] for row in listing}
+        if not ids:
+            raise ValueError("the hearing list is empty")
+        return ids
+
+    def hearing_bills(self, session_number, event_id):
+        detail = json.loads(
+            self.fetch_ok(
+                "https://malegislature.gov/api/Hearings/{}".format(event_id)
+            ).content
+        )
+        return catchup.hearing_bills(detail, session_number)
 
     def with_paper_pairs(self, metas):
         """OPEN-568: `metas`, plus the rest of each paper-and-real-bill group, so a run scrapes them together.
