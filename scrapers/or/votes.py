@@ -4,6 +4,7 @@ import logging
 from collections import Counter
 
 from openstates.scrape import VoteEvent, Scraper
+from openstates.exceptions import EmptyScrape
 from classify_motion import classify_motion
 from .apiclient import OregonLegislatorODataClient
 from .utils import index_legislators, get_timezone, SESSION_KEYS
@@ -43,7 +44,16 @@ class ORVoteScraper(Scraper):
     def scrape(self, session=None):
         self.api_client = OregonLegislatorODataClient(self)
 
-        yield from self.scrape_votes(session)
+        found = False
+        for vote in self.scrape_votes(session):
+            found = True
+            yield vote
+
+        # OPEN-607: a session can have bills but no roll calls yet (pre-filing). Reaching here
+        # means Oregon's data service answered (api_client.get raises on an outage or error), so
+        # no roll calls is "nothing to scrape", as in or/events.py, not a failed run.
+        if not found:
+            raise EmptyScrape
 
     def scrape_votes(self, session):
         self.session_key = SESSION_KEYS[session]
