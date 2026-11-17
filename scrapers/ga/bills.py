@@ -53,10 +53,12 @@ TWO_THIRDS_OF_MEMBERS = {"House": 120, "Senate": 38}
 # 2026-11-16). Georgia publishes some records days after the date they carry, so a run
 # cannot ask only for what is dated since the last run. Measured on 2025_26 from the
 # publish order (a record whose id follows one dated later was published after it):
-# House Vote #113 (HB 307, 2025-02-28 10:11) came after Senate Vote #134 (2025-03-03
-# 20:37), at least 3 days 10 h late, and 10 roll calls were 2 to 7 days late; SB 185 and
-# SB 201's "Signed by Governor" (2025-05-08 11:28) came after a status dated 2025-05-09
-# 16:13, at least 28 h late. Seven days of lookback covers both with room to spare.
+# House Votes #113-#122 (HB 307 and nine more, 2025-02-28 10:11-11:12) came after Senate
+# Vote #134 (2025-03-03 20:37), at least 3 days 9-10 h late, the most of any of the 1,870
+# roll calls (none other is a day late); SB 185 and SB 201's "Signed by Governor"
+# (2025-05-08 11:28) came after a status dated 2025-05-09 16:13, at least 28 h 45 m late.
+# These are lower bounds. Seven days of lookback, at worst about 6.5 days before the
+# previous run listed its bills (12 h runs, start = watermark - 1 h), covers both.
 # A correction entered months later (SR 5's 2025-01-13 statuses, entered in May 2025)
 # is out of reach of any lookback: only a full walk picks it up.
 EASTERN = pytz.timezone("America/New_York")

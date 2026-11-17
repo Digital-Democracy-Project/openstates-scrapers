@@ -249,16 +249,22 @@ def test_a_roll_call_published_days_late_is_still_read():
 def test_a_status_entered_with_an_older_date_is_still_read():
     # SB 201's "Senate Date Signed by Governor" is dated 2025-05-08 11:28, but its status id
     # (333276) follows HB 782's signing, dated 2025-05-09 16:13 (333273): it was entered at
-    # least 28 h after its date. A run whose start is just before it appeared still reads
-    # SB 201. (SB 201's signing is still its current status, so the recorded row is what
-    # that run's search would have seen.)
+    # least 28 h 45 m after its date. (SB 201's signing is still its current status, so the
+    # recorded row is what a run then would have seen.)
     rows = {f"{r['DocumentType']} {r['Number']}": r["Status"] for r in SEARCH_ROWS}
     late, earlier = rows["SB 201"], rows["HB 782"]
     assert late["StatusListingId"] > earlier["StatusListingId"]
     assert late["Date"] < earlier["Date"]
+    assert late["Date"] + datetime.timedelta(hours=28, minutes=45) <= earlier["Date"]
 
+    # Worst case for the next run: the run before listed its bills at 05-09 16:12 EDT, just
+    # before the signing appeared, then ran its 12 h and wrote its watermark at about
+    # 05-10 04:12 EDT; this run starts an hour before that, 05-10 03:12 EDT (07:12 UTC). Its
+    # Eastern day is 05-10, so only a lookback of two days or more reaches 05-08: with one
+    # day the cutoff is 05-09 and SB 201 is never read again.
     scraper = make_scraper()
-    run(scraper, start="2025-05-09T20:13:00")  # 16:13 EDT on 05-09
+    run(scraper, start="2025-05-10T07:12:00")
+    assert ga_bills.changed_cutoff("2025-05-10T07:12:00") <= late["Date"].date()
     assert "SB 201" in scraper.lservice.details
 
 
