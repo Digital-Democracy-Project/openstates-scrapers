@@ -11,6 +11,9 @@ test, so the PDF reader is replaced by a fixed body. No request leaves the test.
   Senate refused the House's amendments), two "FINAL PASSAGE".
 - HB 675: House "CONCUR IN SENATE AMENDMENTS (#1224)", Senate "CO-AUTHORS (#673)", two
   "FINAL PASSAGE".
+- HCR 108: House "FINAL CONSIDERATION (#1421)" (history 2026-05-20: "roll called on final
+  consideration ... The resolution was adopted"), Senate "CONCUR (#1104)" (2026-05-21: "concurred
+  in by a vote of 35 yeas and 0 nays"), Senate "CO-AUTHORS (#1105)".
 """
 import json
 import os
@@ -82,6 +85,14 @@ def scraped_votes(bill_id):
                 ("upper", "CO-AUTHORS (#673)"): [],
                 ("upper", "FINAL PASSAGE (#672)"): ["passage"],
                 ("lower", "FINAL PASSAGE (#18)"): ["passage"],
+            },
+        ),
+        (
+            "HCR 108",
+            {
+                ("lower", "FINAL CONSIDERATION (#1421)"): ["passage"],
+                ("upper", "CONCUR (#1104)"): ["passage"],
+                ("upper", "CO-AUTHORS (#1105)"): [],
             },
         ),
     ],
