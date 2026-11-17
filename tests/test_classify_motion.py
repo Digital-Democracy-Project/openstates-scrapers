@@ -671,6 +671,11 @@ GA_FUTURE = [
     ("INSIST ON HOUSE SUBSTITUTE", []),
     ("MOTION TO INSIST", []),
     ("SUSPEND THE RULES", []),
+    # with a passage word in them, so the procedure rule, not the default, decides
+    ("MOTION TO POSTPONE PASSAGE", []),
+    ("POSTPONE LOCAL CALENDAR", []),
+    ("DISAGREE TO SENATE AMENDMENT TO PASSAGE", []),
+    ("INSIST ON HOUSE POSITION ON PASSAGE", []),
     ("PASSAGE OF THE TIMETABLE ACT", ["passage"]),  # "table" inside a word
     ("PASSAGE OF THE BUDGET RECONCILIATION ACT", ["passage"]),  # "recon" inside a word
     ("ADOPTION OF THE ADJOURNMENT RESOLUTION", ["passage"]),  # "adjourn" mid-text
