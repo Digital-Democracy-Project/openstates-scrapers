@@ -10,6 +10,7 @@ Fixtures (pa_open582/), all real and unchanged, as palegis.us served them on 202
 - Senate roll call 69 (2025): SR 94, 2025-05-12, 50-0. The bill history says "Adopted,
   May 12, 2025 (50-0)".
 - House committee roll call 1615: HR 401 in Tourism, Recreation & Economic Development.
+- House committee roll call 3136: SB 1431 in Appropriations, "Adopt Amendment A04721" (2026-10-21).
 - House roll calls 765 and 794 (2025): HB 1663. 765 has a blank Action too (2025-12-16, 102-101,
   the day of "Second consideration, with amendments"); 794 is "FINAL PASSAGE" (2025-12-17).
 No request leaves the test.
@@ -87,6 +88,19 @@ def test_resolution_committee_vote_stays_committee_passage():
     )
     assert vote.motion_text.startswith("Committee vote (")
     assert vote.motion_classification == ["committee-passage"]
+
+
+def test_committee_amendment_vote_stays_unlabelled():
+    vote = scraped_vote(
+        "house_committee_3136_sb1431.html",
+        "/house/committees/roll-call-votes/vote-list/vote-summary"
+        "?committeecode=62&rollcallid=3136&sessYr=2025&sessInd=0",
+        "SB 1431",
+        "lower",
+        committee=True,
+    )
+    assert vote.motion_text == "Committee vote (Appropriations): Adopt Amendment A04721"
+    assert vote.motion_classification == []
 
 
 def test_blank_action_on_a_bill_stays_unlabelled():
