@@ -246,6 +246,18 @@ jurisdictions:
       - "^motion to reconsider"
     passage:
       - "final pass(age|ge)"                     # "FINAL PASSAGE", "BY CLOUD, FINAL PASSAGE", "FINAL PASSAGE, SB 444 BY EDMONDS"
+      # OPEN-583: a bill's last floor vote is often a concurrence or a conference report, and a
+      # resolution's is its adoption (ut, mi, wa, va, al, nc precedent). Each text below was checked
+      # against the bill history's own entry for that day and chamber (Mac replica, 2026 session):
+      - "^concur in (senate|house) amendments$"  # House: "Read by title, roll called, ..., Senate amendments concurred in."
+      - "^adopt conference report$"              # House: "Conference Committee Report read, roll called, ... adopted."
+      - "^concur$"                               # Senate: "Amendments proposed by the House read and concurred in ...",
+                                                 # or a House concurrent resolution "... concurred in by a vote of ..."
+      - "^adopt$"                                # Senate: "Conference Committee Report read; adopted ..." (HB, SB),
+                                                 # or a Senate resolution "Read by title and adopted ..." (SR, SCR)
+      - "^final consideration$"                  # House: a resolution "... roll called on final consideration ... adopted"
+    # Left unclassified (default): "REJECT" / "REJECT SENATE AMENDMENTS" (refuse the other chamber's
+    # amendments, a conference follows), "CO-AUTHORS", "MODIFY TIME LIMITS" and other procedure.
     default: null
 
   # OPEN-527 (Alabama, gate E). The motion text is ALISON's action text for the roll call, with its
