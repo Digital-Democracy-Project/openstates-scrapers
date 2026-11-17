@@ -121,6 +121,58 @@ def test_a_bill_without_notes_is_left_out():
     assert utils.supporting_documents(xml) == {}
 
 
+# HB 349 and HB 797 as the 2026-11-15 export lists their notes: the actuarial note's address
+# has %20 where the bill page (and the stored row) has a space
+PERCENT_EXPORT = b"""<historyExport exportDate="November 15, 2026 7:30:14 PM EST"><session>
+<bill><body>H</body><type>B</type><number>0349</number><supportingDocuments>
+<pnSupportingDocuments relatedPN="4024">
+<document documentUrl="https://www.palegis.us/WU01/LI/BI/FN/2025/0/HB0349P4024.pdf">House Fiscal Note</document>
+</pnSupportingDocuments>
+<pnSupportingDocuments relatedPN="3943">
+<document documentUrl="https://www.ifo.state.pa.us/Resources/Documents/Actuarial/ALTR_HB%20349_PN3943.pdf">Actuarial Note</document>
+</pnSupportingDocuments>
+</supportingDocuments></bill>
+<bill><body>H</body><type>B</type><number>0797</number><supportingDocuments>
+<pnSupportingDocuments relatedPN="0821">
+<document documentUrl="https://www.ifo.state.pa.us/Resources/Documents/Actuarial/ALTR_HB797_PN%20821.pdf">Actuarial Note</document>
+</pnSupportingDocuments>
+</supportingDocuments></bill>
+</session></historyExport>"""
+HB349_ACTUARIAL = (
+    "https://www.ifo.state.pa.us/Resources/Documents/Actuarial/ALTR_HB 349_PN3943.pdf"
+)
+
+
+def test_export_address_is_decoded_as_the_page_gives_it():
+    documents = utils.supporting_documents(PERCENT_EXPORT)
+    assert documents["HB349"] == [
+        ("House Fiscal Note", FN + "HB0349P4024.pdf"),
+        ("Actuarial Note PN3943", HB349_ACTUARIAL),
+    ]
+    assert documents["HB797"] == [
+        (
+            "Actuarial Note PN0821",
+            "https://www.ifo.state.pa.us/Resources/Documents/Actuarial/"
+            "ALTR_HB797_PN 821.pdf",
+        )
+    ]
+
+
+def test_percent_address_and_page_address_store_one_note():
+    # parse_bill adds the export's notes, then the page's, each with on_duplicate="ignore"
+    bill = Bill("HB 349", "2025-2026", "x", chamber="lower")
+    for note, url in utils.supporting_documents(PERCENT_EXPORT)["HB349"]:
+        bill.add_document_link(note, url, on_duplicate="ignore")
+    bill.add_document_link(
+        "Actuarial Note PN3943", HB349_ACTUARIAL, on_duplicate="ignore"
+    )
+    assert as_pairs(bill.documents) == {
+        ("House Fiscal Note", FN + "HB0349P4024.pdf"),
+        ("Actuarial Note PN3943", HB349_ACTUARIAL),
+    }
+    assert sum(len(d["links"]) for d in bill.documents) == 2
+
+
 def test_media_type_comes_from_the_link():
     assert utils.document_media_type(FN + "HB1088P1205.pdf") == "application/pdf"
     assert utils.document_media_type("https://x/y.htm?a=b") == "text/html"

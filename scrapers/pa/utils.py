@@ -111,6 +111,10 @@ def supporting_documents(xml_bytes):
     PABillScraper.parse_bill_versions ("House Fiscal Note", "Senate Fiscal Note",
     "Actuarial Note PN1888"), in the export's order. Other document kinds are left out,
     as the page parser leaves them out.
+
+    Addresses are decoded: the export writes a space as %20 ("ALTR_HB%20349_PN3943.pdf")
+    where the page, and so the stored row, has the space itself, and the two must match
+    for add_document_link's duplicate check (HB 349, HB 797).
     """
     root = lxml.etree.fromstring(xml_bytes)
     documents = {}
@@ -124,7 +128,7 @@ def supporting_documents(xml_bytes):
         for pn_docs in bill.iterfind("supportingDocuments/pnSupportingDocuments"):
             for doc in pn_docs.iterfind("document"):
                 title = (doc.text or "").strip()
-                url = doc.get("documentUrl")
+                url = urllib.parse.unquote(doc.get("documentUrl") or "")
                 if not url:
                     continue
                 if "Fiscal Note" in title:
