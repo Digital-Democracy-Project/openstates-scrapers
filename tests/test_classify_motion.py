@@ -374,7 +374,6 @@ def test_va_committee_passage(text):
     ("Committee vote (Judiciary): Adopt Resolution", []),
     ("Committee vote (Judiciary): Adopt Amendment A1101", []),
     ("Committee vote (Judiciary): Vote To Table", []),
-    ("CONCURRENCE", []),
     ("MOTION TO TABLE", []),
     ("MOTION TO SUSPEND RULES", []),
     ("MOTION TO APPEAL RULING OF THE CHAIR", []),
@@ -389,6 +388,24 @@ def test_va_committee_passage(text):
     ("Senate Resolution 94", ["passage"]),
     ("MOTION TO TABLE HOUSE RESOLUTION 401", []),
     ("House Resolution 401 A1363", []),
+    # OPEN-617: a concurrence in the other chamber's amendments is passage. The first four are the
+    # stored 2025-2026 texts (House: bare CONCURRENCE; Senate: names the amendments); the last three
+    # are the same motions from the other chamber, supported on purpose (SB 315's history has "House
+    # concurred in Senate amendments to House amendments"; the old scraper branch took any chamber)
+    ("CONCURRENCE", ["passage"]),
+    ("CONCUR IN HOUSE AMENDMENTS", ["passage"]),
+    ("CONCUR IN HOUSE AMENDMENTS TO SENATE AMENDMENTS", ["passage"]),
+    ("CONCURRENCE IN HOUSE AMENDMENTS AS AMENDED", ["passage"]),
+    ("CONCUR IN SENATE AMENDMENTS", ["passage"]),
+    ("CONCUR IN SENATE AMENDMENTS TO HOUSE AMENDMENTS", ["passage"]),
+    ("CONCURRENCE IN SENATE AMENDMENTS AS AMENDED", ["passage"]),
+    # other concur texts and procedure on a concurrence are not
+    ("MOTION TO CONCUR", []),
+    ("MOTION TO TABLE CONCURRENCE", []),
+    ("CONCURRENCE - RECONSIDERATION", []),
+    ("NONCONCURRENCE", []),
+    ("CONCUR IN HOUSE AMENDMENTS TO HOUSE AMENDMENTS", []),
+    ("CONCUR IN HOUSE AMENDMENTS TO SENATE AMENDMENTS AS AMENDED", []),
 ])
 def test_pa(text, expected):
     # the pa scraper upper-cases floor motions before classifying

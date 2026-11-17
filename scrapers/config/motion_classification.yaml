@@ -210,7 +210,6 @@ jurisdictions:
       - "^constitutionality"                     # constitutionality of a bill: a ruling, not passage
       - "^re-referred"
       - "^recommit"
-      - "^concur"                                # concurrence in the other chamber's amendments: left unclassified
       - '^committee vote \(.*?\): (adopt|vote to table|re-refer)'
       - '^a\d+$'                                # a bare amendment number ("A1363") is an amendment vote
     committee_passage:
@@ -224,6 +223,18 @@ jurisdictions:
       # day it was amended on second consideration and re-committed; its final passage was a
       # "FINAL PASSAGE" roll call the next day.
       - '^(house|senate) resolution \d+$'
+      # OPEN-617: a chamber's vote to concur in the other chamber's amendments is its last vote on
+      # the bill, and passage (la, nc, ut precedent). The House's text is a bare "CONCURRENCE", the
+      # Senate's names the amendments. "AS AMENDED" is a concurrence that also amends them (the bill
+      # goes back to the other chamber); it is still that chamber's vote on the bill's final text.
+      # All 79 stored votes of 2025-2026 match a same-day "House/Senate concurred in ..." entry in
+      # the voting chamber's bill history (Mac replica, 2026-11-17; SB 160's House vote of
+      # 2025-11-12 on palegis.us, 156-47, since the scraper drops that entry). Any other concur
+      # text stays unclassified.
+      - "^concurrence$"                                          # House
+      - "^concur in (house|senate) amendments$"                  # Senate (and the House's form, if it ever names them)
+      - "^concur in (house amendments to senate|senate amendments to house) amendments$"
+      - "^concurrence in (house|senate) amendments as amended$"
     default: null
 
   ne:
