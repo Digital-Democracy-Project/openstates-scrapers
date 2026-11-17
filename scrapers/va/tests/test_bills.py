@@ -328,3 +328,70 @@ def test_add_actions_event_with_no_chamber_or_known_actor_is_logged_not_a_nameer
 
     assert "legislature" in bill.actions[0]["organization_id"]
     assert "unexpected action actor for HB1 LegislationEventID e1" in caplog.text
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# OPEN-545: Virginia's resolutions carry their own label, read from the bill number
+# (upstream's rule, openstates-scrapers #5909). Real 2026 rows from the Mac replica of
+# production (number and short title as the LIS API gives them, 2026-11-17).
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+@pytest.mark.parametrize(
+    "number, description, expected",
+    [
+        (
+            "HB1",
+            "Minimum wage; increases incrementally to $15.00 per hour by January 1, 2028.",
+            "bill",
+        ),
+        (
+            "SB1",
+            "Minimum wage; increases incrementally to $15.00 per hour by January 1, 2028.",
+            "bill",
+        ),
+        ("HR1", "Celebrating the life of Christina Kaye Shinall.", "resolution"),
+        ("SR1", "Commending Pat B. Huber.", "resolution"),
+        ("HJ10", "Commending Charles W. Foster, Jr.", "joint resolution"),
+        ("SJ10", "Commending Historic Huntley.", "joint resolution"),
+        # the title's own words still win, on any number (unchanged): an HJ amending the
+        # constitution, and an HB that sends an amendment to the voters
+        (
+            "HJ1",
+            "Constitutional amendment (second reference); fundamental right to "
+            "reproductive freedom.",
+            "constitutional amendment",
+        ),
+        (
+            "HB1384",
+            "Constitutional amendment; gen. approp. act, reapportionment, redistricting "
+            "congressional districts.",
+            "constitutional amendment",
+        ),
+    ],
+)
+def test_classify_bill_labels_resolutions_by_number(number, description, expected):
+    row = _bill_row(number)
+    row["Description"] = description
+    assert make_scraper().classify_bill(row) == expected
+
+
+def test_scraped_resolution_carries_its_label(monkeypatch):
+    # through scrape() itself, so the label reaches the Bill the importer receives
+    rows = [
+        _bill_row("HB1", legislation_id="1"),
+        _bill_row("SR1", chamber_code="S", legislation_id="2"),
+        _bill_row("HJ10", legislation_id="3"),
+    ]
+    _mock_bill_list(monkeypatch, rows)
+    _mock_downstream(monkeypatch)
+    bills = {
+        b.identifier: b.classification
+        for b in make_scraper().scrape(session="2026")
+        if hasattr(b, "classification")
+    }
+    assert bills == {
+        "HB1": ["bill"],
+        "SR1": ["resolution"],
+        "HJ10": ["joint resolution"],
+    }

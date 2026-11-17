@@ -603,12 +603,18 @@ class VaBillScraper(Scraper):
                 self.info(f"Skipping vote {row['BatchNumber']} with no pass fail")
 
     def classify_bill(self, row: dict):
-        btype = "bill"
-
+        # OPEN-545: resolutions are labelled by their number, as upstream does since
+        # openstates-scrapers #5909 (this function only): HB/SB stay "bill", HJ/SJ are
+        # "joint resolution", HR/SR "resolution". Before this every Virginia item was
+        # "bill" (1,579 stored resolutions, 2026-11-17) and the broker read the type from
+        # the number instead (BROKER-478). Core's openstates/ddp_states/va.py holds the
+        # same rule for `os-text-extract relabel va` (stored history); keep the two equal.
         if "constitutional amendment" in row["Description"].lower():
-            btype = "constitutional amendment"
-
-        return btype
+            return "constitutional amendment"
+        # HB/SB, HJ/SJ, HR/SR
+        return {"J": "joint resolution", "R": "resolution"}.get(
+            row["LegislationNumber"][1], "bill"
+        )
 
     def text_from_html(self, html: str):
         return lxml.html.fromstring(html).text_content()
