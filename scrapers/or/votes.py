@@ -1,13 +1,32 @@
-import re
 import datetime
+import re
 import logging
 from collections import Counter
 
 from openstates.scrape import VoteEvent, Scraper
+from classify_motion import classify_motion
 from .apiclient import OregonLegislatorODataClient
 from .utils import index_legislators, get_timezone, SESSION_KEYS
 
 logger = logging.getLogger("openstates")
+
+# OPEN-598: Oregon needs a majority of all members (31 of 60, 16 of 30) to pass a bill and several
+# motions, so a roll call can have more yes than no and still fail. The legislature's own text names
+# the outcome; the tally decides only when the text does not. "Carried by <names>." names the members
+# who carry the bill on the floor, not an outcome, so it is removed first.
+CARRIER = re.compile(r"carried by [^.]*\.", re.I)
+FAILED = re.compile(r"\bfailed\b", re.I)
+PASSED = re.compile(r"\b(passed|repassed|adopted|readopted|carried)\b", re.I)
+
+
+def result_from_text(text):
+    """'pass' or 'fail' when the motion text states the outcome, else None."""
+    t = CARRIER.sub("", text or "")
+    if FAILED.search(t):
+        return "fail"
+    if PASSED.search(t):
+        return "pass"
+    return None
 
 
 class ORVoteScraper(Scraper):
@@ -20,23 +39,6 @@ class ORVoteScraper(Scraper):
         "Excused for Business": "absent",
         "Absent": "absent",
     }
-
-    vote_classifiers = (
-        (".*Introduction and first reading.*", ["introduction", "reading-1"]),
-        (".*First reading.*", ["introduction", "reading-1"]),
-        (".*Second reading.*", ["reading-2"]),
-        (".*Referred to .*", ["referral-committee"]),
-        (".*Assigned to Subcommittee.*", ["referral-committee"]),
-        (".*Recommendation: Do pass.*", ["committee-passage-favorable"]),
-        (".*Governor signed.*", ["executive-signature"]),
-        (".*Third reading.* Passed", ["passage", "reading-3"]),
-        (".*Third reading.* Failed", ["reading-3"]),
-        (".*President signed.*", ["passage"]),
-        (".*Speaker signed.*", ["passage"]),
-        (".*Final reading.* Adopted", ["passage"]),
-        (".*Read third time .* Passed", ["passage", "reading-3"]),
-        (r".*Read\. .* Adopted.*", ["passage"]),
-    )
 
     def scrape(self, session=None):
         self.api_client = OregonLegislatorODataClient(self)
@@ -57,11 +59,12 @@ class ORVoteScraper(Scraper):
             for event in measure_history:
                 if event["MeasureVotes"]:
                     tally = self.tally_votes(event, "measure")
-                    passed = self.passed_vote(tally)
+                    result = result_from_text(event["ActionText"])
+                    if result is None:
+                        result = "pass" if self.passed_vote(tally) else "fail"
 
-                    classification = self.determine_vote_classifiers(
-                        event["ActionText"]
-                    )
+                    # OPEN-597: floor votes take the or block of config/motion_classification.yaml
+                    classification = classify_motion("or", event["ActionText"])
                     when = datetime.datetime.strptime(
                         event["ActionDate"], "%Y-%m-%dT%H:%M:%S"
                     )
@@ -72,7 +75,7 @@ class ORVoteScraper(Scraper):
                         bill_chamber=self.chamber_code[bid[0]],
                         motion_text=event["ActionText"],
                         classification=classification,
-                        result="pass" if passed else "fail",
+                        result=result,
                         legislative_session=session,
                         bill=bid,
                         chamber=self.chamber_code[event["Chamber"]],
@@ -110,7 +113,10 @@ class ORVoteScraper(Scraper):
                     # there is at least one event w/o an Action listed
                     action = event["Action"] or event["Comments"]
 
-                    classification = self.determine_vote_classifiers(action)
+                    # OPEN-597: a committee agenda item's roll call is the committee's vote on the
+                    # measure ("Heard and Reported Out", "... with Amendments"), labelled by where it
+                    # comes from rather than by its text.
+                    classification = ["committee-passage"]
                     when = datetime.datetime.strptime(
                         event["MeetingDate"], "%Y-%m-%dT%H:%M:%S"
                     )
@@ -199,11 +205,3 @@ class ORVoteScraper(Scraper):
             if code not in tally:
                 tally[code] = 0
         return tally
-
-    def determine_vote_classifiers(self, vote):
-        types = []
-        for expr, types_ in self.vote_classifiers:
-            m = re.match(expr, vote)
-            if m:
-                types += types_
-        return types
