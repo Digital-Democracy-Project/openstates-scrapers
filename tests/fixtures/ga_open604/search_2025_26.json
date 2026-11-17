@@ -755,5 +755,231 @@
    "StatusListingId": 344175
   },
   "Suffix": null
+ },
+ {
+  "ActVetoNumber": "13",
+  "Authors": {
+   "Sponsorship": [
+    {
+     "Id": 280061,
+     "MemberDescription": "Ballard, Bethany 147th",
+     "MemberId": 5051,
+     "Sequence": 1,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 280062,
+     "MemberDescription": "Erwin, Chris 32nd",
+     "MemberId": 4965,
+     "Sequence": 2,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 280063,
+     "MemberDescription": "Jones, Jan 47th",
+     "MemberId": 142,
+     "Sequence": 3,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 280064,
+     "MemberDescription": "Dubnik, Matt 29th",
+     "MemberId": 4886,
+     "Sequence": 4,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 280065,
+     "MemberDescription": "Corbett, John 174th",
+     "MemberId": 859,
+     "Sequence": 5,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 280066,
+     "MemberDescription": "Rice, Carmen 139th",
+     "MemberId": 5064,
+     "Sequence": 6,
+     "Type": "HouseAuthor"
+    }
+   ]
+  },
+  "Caption": "Quality Basic Education Act; students significantly at risk of not achieving grade level reading proficiency or with characteristics of dyslexia; include provisions",
+  "DocumentType": "HB",
+  "HouseCommittee": {
+   "Code": "Ed",
+   "Id": 102,
+   "Name": "Education",
+   "Type": "House"
+  },
+  "Id": 70018,
+  "Number": 307,
+  "SenateCommittee": {
+   "Code": "ED&Y",
+   "Id": 120,
+   "Name": "Education and Youth",
+   "Type": "Senate"
+  },
+  "Session": {
+   "IsDefault": true,
+   "Id": 1033,
+   "Description": "2025-2026 Regular Session",
+   "Library": "20252026"
+  },
+  "Status": {
+   "Code": "HDSG",
+   "Date": "2025-04-28T09:50:18",
+   "Description": "House Date Signed by Governor ",
+   "Id": 110,
+   "AmSub": null,
+   "StatusListingId": 333193
+  },
+  "Suffix": null
+ },
+ {
+  "ActVetoNumber": "105",
+  "Authors": {
+   "Sponsorship": [
+    {
+     "Id": 288686,
+     "MemberDescription": "Stephens, Ron 164th",
+     "MemberId": 219,
+     "Sequence": 1,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 288687,
+     "MemberDescription": "Petrea, Jesse 166th",
+     "MemberId": 862,
+     "Sequence": 2,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 288688,
+     "MemberDescription": "Gilliard, Carl 162nd",
+     "MemberId": 4881,
+     "Sequence": 3,
+     "Type": "HouseAuthor"
+    },
+    {
+     "Id": 288689,
+     "MemberDescription": "Hitchens, Bill 161st",
+     "MemberId": 823,
+     "Sequence": 4,
+     "Type": "HouseAuthor"
+    }
+   ]
+  },
+  "Caption": "Chatham County Schools' Tax Relief Act; enact",
+  "DocumentType": "HB",
+  "HouseCommittee": {
+   "Code": "IGC",
+   "Id": 94,
+   "Name": "Intragovernmental Coordination",
+   "Type": "House"
+  },
+  "Id": 71404,
+  "Number": 782,
+  "SenateCommittee": {
+   "Code": "SLGO",
+   "Id": 85,
+   "Name": "State and Local Governmental Operations",
+   "Type": "Senate"
+  },
+  "Session": {
+   "IsDefault": true,
+   "Id": 1033,
+   "Description": "2025-2026 Regular Session",
+   "Library": "20252026"
+  },
+  "Status": {
+   "Code": "HDSG",
+   "Date": "2025-05-09T16:13:59",
+   "Description": "House Date Signed by Governor ",
+   "Id": 110,
+   "AmSub": null,
+   "StatusListingId": 333273
+  },
+  "Suffix": null
+ },
+ {
+  "ActVetoNumber": "71",
+  "Authors": {
+   "Sponsorship": [
+    {
+     "Id": 282960,
+     "MemberDescription": "Walker, III, Larry 20th",
+     "MemberId": 4878,
+     "Sequence": 1,
+     "Type": "SenateAuthor"
+    },
+    {
+     "Id": 282961,
+     "MemberDescription": "Goodman, Russ 8th",
+     "MemberId": 4977,
+     "Sequence": 2,
+     "Type": "SenateAuthor"
+    },
+    {
+     "Id": 282962,
+     "MemberDescription": "Hodges, Mike 3rd",
+     "MemberId": 5013,
+     "Sequence": 3,
+     "Type": "SenateAuthor"
+    },
+    {
+     "Id": 282963,
+     "MemberDescription": "Tillery, Blake 19th",
+     "MemberId": 4908,
+     "Sequence": 4,
+     "Type": "SenateAuthor"
+    },
+    {
+     "Id": 282964,
+     "MemberDescription": "Watson, Sam 11th",
+     "MemberId": 837,
+     "Sequence": 5,
+     "Type": "SenateAuthor"
+    },
+    {
+     "Id": 282965,
+     "MemberDescription": "Summers, Carden 13th",
+     "MemberId": 4971,
+     "Sequence": 6,
+     "Type": "SenateAuthor"
+    }
+   ]
+  },
+  "Caption": "Consumer Transactions; increased consumer protection for homeowners entering into contracts with contractors following natural disasters; provide",
+  "DocumentType": "SB",
+  "HouseCommittee": {
+   "Code": "A&CA",
+   "Id": 87,
+   "Name": "Agriculture & Consumer Affairs",
+   "Type": "House"
+  },
+  "Id": 70494,
+  "Number": 201,
+  "SenateCommittee": {
+   "Code": "I&L",
+   "Id": 78,
+   "Name": "Insurance and Labor",
+   "Type": "Senate"
+  },
+  "Session": {
+   "IsDefault": true,
+   "Id": 1033,
+   "Description": "2025-2026 Regular Session",
+   "Library": "20252026"
+  },
+  "Status": {
+   "Code": "SDSG",
+   "Date": "2025-05-08T11:28:53",
+   "Description": "Senate Date Signed by Governor ",
+   "Id": 111,
+   "AmSub": null,
+   "StatusListingId": 333276
+  },
+  "Suffix": null
  }
 ]

@@ -47,10 +47,17 @@ CALENDAR = re.compile(r"calendar", re.IGNORECASE)
 
 # OPEN-604: catch-up runs. Georgia's service dates are Eastern local time, and its search
 # compares them by calendar day (both ends inclusive, the time of day ignored; measured
-# 2026-11-16). A day of lookback covers a roll call or status published the day after it
-# is dated.
+# 2026-11-16). Georgia publishes some records days after the date they carry, so a run
+# cannot ask only for what is dated since the last run. Measured on 2025_26 from the
+# publish order (a record whose id follows one dated later was published after it):
+# House Vote #113 (HB 307, 2025-02-28 10:11) came after Senate Vote #134 (2025-03-03
+# 20:37), at least 3 days 10 h late, and 10 roll calls were 2 to 7 days late; SB 185 and
+# SB 201's "Signed by Governor" (2025-05-08 11:28) came after a status dated 2025-05-09
+# 16:13, at least 28 h late. Seven days of lookback covers both with room to spare.
+# A correction entered months later (SR 5's 2025-01-13 statuses, entered in May 2025)
+# is out of reach of any lookback: only a full walk picks it up.
 EASTERN = pytz.timezone("America/New_York")
-CHANGED_LOOKBACK = datetime.timedelta(days=1)
+CHANGED_LOOKBACK = datetime.timedelta(days=7)
 # the service refuses a page size over 250; StartIndex is a row offset
 SEARCH_PAGE_SIZE = 250
 
@@ -168,9 +175,11 @@ class GABillScraper(Scraper):
 
         Only the current status can be searched: an ExistingStatusConstraint (any status in
         the range) fails on the service with "Object reference not set to an instance of an
-        object" (2026-11-16). The current one is enough, because a bill that gained a status
-        since the cutoff has a current status at least that recent; the open-ended DateEnd
-        keeps a later status from hiding an earlier one.
+        object" (2026-11-16). The current status is the one with the latest date, so a
+        status dated on or after the cutoff leaves the current one on or after it too: a
+        status entered since the last run is found when its date is within the lookback
+        (CHANGED_LOOKBACK). One entered with an older date than that (SR 5's, four months
+        late) is found only by a full walk. The open-ended DateEnd keeps a later status from hiding one in range.
         """
         constraints = self.lclient.factory.create("ns2:LegislationSearchConstraints")
         constraints.Session.Id = session_id
