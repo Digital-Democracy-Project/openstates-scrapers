@@ -6,7 +6,7 @@ from collections import defaultdict
 import pytz
 from openstates.exceptions import EmptyScrape
 from openstates.scrape import Scraper, Bill, VoteEvent
-from classify_motion import classify_motion
+from classify_motion import classify_motion, needs_two_thirds
 
 from .util import (
     get_client,
@@ -44,6 +44,9 @@ vote_name_pattern = re.compile(r"(.*), (\d+(?:ST|ND|RD|TH))", re.IGNORECASE)
 OUTCOME_STATUS = r"Reconsidered|Passed|Adopted|Agreed|Lost"
 # "Local Calendar", "Previous Local Calendar", "LOCAL CONSENT CALENDAR"
 CALENDAR = re.compile(r"calendar", re.IGNORECASE)
+# Ga. Const. art. V, sec. II, para. IV: a veto is overridden by two thirds of the members
+# to which each house is entitled (House 180 seats, Senate 56), not of those voting.
+TWO_THIRDS_OF_MEMBERS = {"House": 120, "Senate": 38}
 
 # OPEN-604: catch-up runs. Georgia's service dates are Eastern local time, and its search
 # compares them by calendar day (both ends inclusive, the time of day ignored; measured
@@ -99,6 +102,22 @@ def vote_classification(caption, reconsidered=False):
     if reconsidered and classification == ["passage"]:
         return []
     return classification
+
+
+def vote_result(listed_vote, lost):
+    """The result, "pass" or "fail", of one roll call.
+
+    lost: pair_outcomes() paired it with a "Lost" status. A motion in the ga block's
+    two_thirds list (a veto override) needs two thirds of the chamber's members, so a
+    majority is not enough: HB 1192's override (2026_ss, House #11) won 94-77 and failed.
+    Anything else passes on yeas > nays, as before.
+    """
+    if lost:
+        return "fail"
+    if needs_two_thirds("ga", listed_vote["Caption"] or ""):
+        needed = TWO_THIRDS_OF_MEMBERS[listed_vote["Branch"]]
+        return "pass" if listed_vote["Yeas"] >= needed else "fail"
+    return "pass" if listed_vote["Yeas"] > listed_vote["Nays"] else "fail"
 
 
 def pair_outcomes(listed_votes, history):
@@ -467,12 +486,9 @@ class GABillScraper(Scraper):
                     )
                     caption = (listed_vote["Caption"] or "").strip()
 
-                    if listed_vote["VoteId"] in lost_votes:
-                        result = "fail"
-                    elif listed_vote["Yeas"] > listed_vote["Nays"]:
-                        result = "pass"
-                    else:
-                        result = "fail"
+                    result = vote_result(
+                        listed_vote, listed_vote["VoteId"] in lost_votes
+                    )
 
                     vote = VoteEvent(
                         start_date=date,

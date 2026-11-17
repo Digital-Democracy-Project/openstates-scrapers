@@ -656,6 +656,52 @@ def test_ga_default_texts_are_unclassified(text):
     assert classify_motion("ga", text) == []
 
 
+# OPEN-590 follow-up (review 20779): texts not in today's data, written to pin the anchors.
+# A caption that only contains the letters of a procedure word keeps its label, an
+# "ADOPT AMENDMENT ..." is an amendment, and POSTPONE, DISAGREE and INSIST (in the scraper's
+# old label list) are procedure.
+GA_FUTURE = [
+    ("ADOPT AMENDMENT #1", []),
+    ("ADOPT FLOOR AMENDMENT #2 BY REP FROM THE 5TH", []),
+    ("ADOPT THE AMENDMENT", []),
+    ("MOTION TO POSTPONE", []),
+    ("POSTPONE INDEFINITELY", []),
+    ("DISAGREE TO SENATE AMENDMENT", []),
+    ("MOTION TO DISAGREE", []),
+    ("INSIST ON HOUSE SUBSTITUTE", []),
+    ("MOTION TO INSIST", []),
+    ("SUSPEND THE RULES", []),
+    ("PASSAGE OF THE TIMETABLE ACT", ["passage"]),  # "table" inside a word
+    ("PASSAGE OF THE BUDGET RECONCILIATION ACT", ["passage"]),  # "recon" inside a word
+    ("ADOPTION OF THE ADJOURNMENT RESOLUTION", ["passage"]),  # "adjourn" mid-text
+    ("PASSAGE OF THE SUSPENDED LICENSE ACT", ["passage"]),  # "suspend" not at the start
+]
+
+
+@pytest.mark.parametrize("text,expected", GA_FUTURE)
+def test_ga_anchored_rules(text, expected):
+    assert classify_motion("ga", text) == expected
+
+
+GA_OVERRIDES = ["Veto Override", "VETO OVERRIDE", "OVERRIDE THE GOVERNOR'S VETO"]
+
+
+@pytest.mark.parametrize("text", GA_OVERRIDES)
+def test_ga_override_needs_two_thirds(text):
+    assert needs_two_thirds("ga", text)
+
+
+@pytest.mark.parametrize("text,expected", GA_CASES)
+def test_ga_only_the_override_needs_two_thirds(text, expected):
+    # of every real Georgia caption, only "Veto Override" is decided by two thirds
+    assert needs_two_thirds("ga", text) == (text == "Veto Override")
+
+
+def test_ga_tabling_an_override_is_not_two_thirds():
+    assert not needs_two_thirds("ga", "MOTION TO TABLE VETO OVERRIDE")
+    assert classify_motion("ga", "MOTION TO TABLE VETO OVERRIDE") == []
+
+
 def test_ga_scraper_uses_classify_motion():
     root = os.path.join(os.path.dirname(__file__), "..", "scrapers")
     src = open(os.path.join(root, "ga", "bills.py")).read()
