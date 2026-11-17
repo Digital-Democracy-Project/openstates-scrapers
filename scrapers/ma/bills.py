@@ -468,6 +468,10 @@ class MABillScraper(Scraper):
         # for the next one. A run without start= (a first or manual run) or a partial run is as before: it reads
         # every bill it covers and neither uses nor changes that record.
         whole_run = bool(start) and not (chamber or bill_no or scrape_chunk_number)
+        if whole_run and not self.bill_list:
+            # review 21038: not a quiet week. A hard error, so the collector fails the run instead of taking an empty
+            # incremental run for a no-op and advancing the watermark
+            raise ValueError("OPEN-609: the Documents list is empty")
         selected = hearings = None
         if whole_run:
             state = catchup.load_state(catchup.state_path(session))
@@ -507,7 +511,8 @@ class MABillScraper(Scraper):
             for obj in self.scrape_bill(session, bill_meta, meta_chamber(bill_meta)):
                 read = read or isinstance(obj, Bill)
                 yield obj
-            if not read:
+            # a bill whose page failed, or whose history only partly loaded, is read again next run (review 21038)
+            if not read or self.bill_url(session, bill_meta) in self.failed_histories:
                 unread.add(meta_id(bill_meta))
             yield from self.group_member_done(meta_id(bill_meta))
         if bill_no and len(metas) == 1:
@@ -536,9 +541,7 @@ class MABillScraper(Scraper):
         except Exception as e:
             self.warning("OPEN-609: could not list the hearings ({})".format(e))
         reason = None
-        if not self.bill_list:
-            reason = "the bill list is empty"  # not a quiet week: a run without bills fails, as before
-        elif state is None:
+        if state is None:
             reason = "no record of the last run's lists"
         elif (
             datetime.utcnow().date() - state["full_walk_on"] >= catchup.FULL_WALK_EVERY
@@ -615,6 +618,9 @@ class MABillScraper(Scraper):
                 page.make_links_absolute("https://malegislature.gov")
                 for url in JOURNAL_PDF_LINKS.match(page, min_items=0):
                     sitting = journal_date(url)
+                    if sitting is None and url.lower().endswith(".pdf"):
+                        # a journal file named some new way: its date, and so whether to read it, is unknown
+                        raise ValueError("cannot date the journal {}".format(url))
                     if sitting is None or sitting < since:
                         continue
                     named |= catchup.journal_bills(self.journal_text(url))
@@ -958,14 +964,16 @@ class MABillScraper(Scraper):
 
         return chamber_bill_list
 
-    def scrape_bill(self, session, bill_meta, chamber):
+    def bill_url(self, session, bill_meta):
         # https://malegislature.gov/Bills/189/SD2739
-        bill_id = bill_meta["BillNumber"] or bill_meta["DocketNumber"]
-
-        session_for_url = self.replace_non_digits(session)
-        bill_url = "https://malegislature.gov/Bills/{}/{}".format(
-            session_for_url, bill_id
+        return "https://malegislature.gov/Bills/{}/{}".format(
+            self.replace_non_digits(session),
+            bill_meta["BillNumber"] or bill_meta["DocketNumber"],
         )
+
+    def scrape_bill(self, session, bill_meta, chamber):
+        bill_id = bill_meta["BillNumber"] or bill_meta["DocketNumber"]
+        bill_url = self.bill_url(session, bill_meta)
 
         prefetched = self.prefetched_pages.pop(bill_url, None)
         if prefetched is not None:

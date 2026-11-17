@@ -207,9 +207,12 @@ def write_state(
     )
 
 
-def make(overrides=None, texts=None, bill_list=BILL_LIST, unreadable=()):
+def make(
+    overrides=None, texts=None, bill_list=BILL_LIST, unreadable=(), part_history=()
+):
     """A scraper on the fake site: every page is a real fixture unless `overrides` says otherwise (url -> (status,
-    body)); journal PDFs read as `texts` (url -> text). Bills in `unreadable` fail as the site fails them."""
+    body)); journal PDFs read as `texts` (url -> text). Bills in `unreadable` fail as the site fails them; bills in
+    `part_history` are saved, but a page of their history failed (as action_pages records it)."""
     pages = {
         SITE
         + "/Journal/House/194/11-01-2026": (200, fixture("journal_House_11-2026.html")),
@@ -253,6 +256,8 @@ def make(overrides=None, texts=None, bill_list=BILL_LIST, unreadable=()):
         number = meta["BillNumber"] or meta["DocketNumber"]
         if number in unreadable:
             return
+        if number in part_history:
+            s.failed_histories.add(s.bill_url(session, meta))
         yield Bill(number, legislative_session=session, chamber=chamber, title="An Act")
 
     s.scrape_bill = scrape_bill
@@ -520,9 +525,77 @@ def test_a_catch_up_run_naming_no_group_member_reads_none_of_it(cache):
     assert bills == ["H1"]
 
 
-def test_an_empty_bill_list_is_not_a_quiet_week(cache):
-    # no EmptyScrape: os-update then reports "no objects returned" and the run fails, as before
+def test_an_empty_bill_list_fails_the_run(cache):
+    # review 21038: not a quiet week and not "no objects returned" (which the collector takes for a no-op): an error
     write_state()
     s = make(bill_list=[])
-    assert run(s, start=START) == []
+    with pytest.raises(ValueError, match="Documents list is empty"):
+        run(s, start=START)
     assert not any("/Journal/" in u for u in s.requested)
+
+
+def test_an_empty_bill_list_without_start_is_as_before(cache):
+    assert run(make(bill_list=[])) == []
+
+
+def test_a_bill_whose_history_only_partly_loaded_is_retried_next_run(cache):
+    write_state()
+    bills = run(make(part_history=("H5668",)), start=START)
+    assert "H5668" in bills  # saved this run, with the history it got
+    assert saved()["retry"] == ["H 5668"]
+
+
+@needs_pdftotext
+def test_one_failed_journal_of_a_chamber_whose_other_journals_read_is_a_full_walk(
+    cache,
+):
+    # review 21038: the Senate has four journals since 10-26; the 11-09 one fails, the 11-12 one reads and names bills
+    write_state()
+    s = make()
+    texts = {url: s.journal_text(url) for url in JOURNALS}
+    failing = SITE + "/Journal/Senate/194/1166/sj11092026_1100AM.pdf"
+
+    def journal_text(url):
+        s.requested.append(url)
+        if url == failing:
+            raise ValueError("{} is not a PDF".format(url))
+        return texts.get(url, "")
+
+    s.journal_text = journal_text
+    assert run(s, start=START) == ALL_IN_ORDER
+    assert failing in s.requested
+
+
+@needs_pdftotext
+def test_a_journal_from_three_weeks_back_is_read(cache):
+    # review 21038: START less 18 days (2026-10-29) is inside JOURNAL_LOOKBACK; a week's lookback would miss H 1
+    write_state()
+    house_oct = SITE + "/Journal/House/194/hj10292026.pdf"
+    texts = {
+        u: (house_text() if w == "house" else fixture("sj11122026_1100AM.txt"))
+        for u, w in JOURNALS.items()
+    }
+    texts[house_oct] = "Mr. Smith, for the committee, reported on House, No. 1."
+    s = make(
+        texts=texts,
+        overrides={
+            SITE
+            + "/Journal/House/194/10-01-2026": (
+                200,
+                fixture("journal_House_10-2026.html"),
+            )
+        },
+    )
+    assert "H1" in run(s, start=START)
+    assert house_oct in s.requested
+    # and nothing before the window is read
+    assert SITE + "/Journal/House/194/hj10222026.pdf" not in s.requested
+
+
+def test_a_journal_file_that_cannot_be_dated_is_a_failed_source(cache):
+    write_state()
+    page = fixture("journal_House_11-2026.html").replace(
+        "hj11162026.pdf", "hj-special-session.pdf"
+    )
+    s = make(overrides={SITE + "/Journal/House/194/11-01-2026": (200, page)})
+    assert run(s, start=START) == ALL_IN_ORDER
