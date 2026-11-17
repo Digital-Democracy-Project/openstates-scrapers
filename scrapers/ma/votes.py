@@ -55,6 +55,25 @@ def vote_result(motion_text, yes, no):
     return "pass" if yes > 0 and yes * 3 >= (yes + no) * 2 else "fail"
 
 
+# The daily journals' listing, shared with bills.py's catch-up runs (OPEN-609), which read the
+# same files for the bill numbers they name. Each chamber has one page per month,
+# /Journal/{House|Senate}/{session}/{MM}-01-{YYYY}, listing that month's journal PDFs in a table
+# (hj11122026.pdf; Senate sj11122026_1100AM.pdf, one per sitting); the date is the file's name.
+JOURNAL_MONTH_URL = (
+    "https://malegislature.gov/Journal/{chamber}/{session}/{month:%m}-01-{month:%Y}"
+)
+JOURNAL_PDF_LINKS = XPath("//tr/td/a/@href")
+_JOURNAL_DATE_RE = re.compile(r"/[hs]j(\d{8})(?:_[^/]*)?\.pdf$", re.I)
+
+
+def journal_date(url):
+    """The sitting date a journal PDF's name gives (hj11122026.pdf, sj11122026_1100AM.pdf), or None."""
+    match = _JOURNAL_DATE_RE.search(url)
+    if not match:
+        return None
+    return dt.datetime.strptime(match.group(1), "%m%d%Y").date()
+
+
 class VoteTotalMismatch(Exception):
     def __init__(self):
         super().__init__("Vote total mismatch")
@@ -117,7 +136,7 @@ class SenateJournalMonth(HtmlListPage):
         self.session = session
 
     def process_page(self):
-        journal_pdf_links = XPath("//tr/td/a/@href").match(self.root)
+        journal_pdf_links = JOURNAL_PDF_LINKS.match(self.root)
         for journal_pdf_link in journal_pdf_links:
             # if journal_pdf_link in (
             #     "https://malegislature.gov/Journal/Senate/193/806/sj03302023_1100AM.pdf",
@@ -164,8 +183,6 @@ class SenateJournal(PdfPage):
         r"approving.+plan": "passage",
     }
 
-    date_time_re = re.compile(r"sj(\d{8})_")
-
     text = None
     journal_date = None
     bill_id = None
@@ -177,20 +194,12 @@ class SenateJournal(PdfPage):
         self.session = session
 
     def process_date(self):
-        # Find the match
-        datetime_match = self.date_time_re.search(self.source.url)
-
-        if datetime_match:
-            date_str = datetime_match.group(1)
-            vote_date = dt.datetime.strptime(date_str, "%m%d%Y")
-            formatted_date = vote_date.strftime("%Y-%m-%d")
-
-            return formatted_date
-
-        else:
+        vote_date = journal_date(self.source.url)
+        if vote_date is None:
             raise Exception(
                 f"Datetime with known format not in pdf url: {self.source.url}"
             )
+        return vote_date.strftime("%Y-%m-%d")
 
     def process_page(self):
         self.vote_date = self.process_date()
