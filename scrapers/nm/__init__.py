@@ -1,8 +1,17 @@
+from datetime import date
+
 from utils import url_xpath
 from openstates.scrape import State
 from .bills import NMBillScraper
 from .votes import NMVoteScraper
 from .events import NMEventScraper
+
+# OPEN-619: the 2027 Regular session becomes the active session on its start date (the third
+# Tuesday of January). Until then 2026 stays the only active one. Read once per run, so the
+# first run on or after 2027-01-19 scrapes 2027 instead. The site folder (Sessions/27%20Regular/)
+# and zip (LegInfo27) follow the pattern of every earlier year; they are not published yet.
+SESSION_2027_START = "2027-01-19"
+SESSION_2027_STARTED = date.today() >= date.fromisoformat(SESSION_2027_START)
 
 
 class NewMexico(State):
@@ -241,7 +250,16 @@ class NewMexico(State):
             "name": "2026 Regular Session",
             "start_date": "2026-01-20",
             "end_date": "2026-02-19",
-            "active": True,
+            "active": not SESSION_2027_STARTED,
+        },
+        {
+            "_scraped_name": "2027 Regular",
+            "classification": "primary",
+            "identifier": "2027",
+            "name": "2027 Regular Session",
+            "start_date": SESSION_2027_START,
+            "end_date": "2027-03-20",
+            "active": SESSION_2027_STARTED,
         },
     ]
     ignored_scraped_sessions = [
