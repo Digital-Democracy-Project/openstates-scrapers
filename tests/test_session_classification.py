@@ -75,6 +75,9 @@ def test_every_session_is_classified_as_the_legislature_lists_it(state):
     sessions = _sessions(state)
     assert sessions
     got = {s["identifier"]: s.get("classification") for s in sessions}
+    # one entry per identifier: the import keys sessions by identifier, and a dict would hide a
+    # duplicate with a different classification
+    assert len(got) == len(sessions)
     expected = {i: ("special" if i in SPECIAL[state] else "primary") for i in got}
     assert got == expected
     # every special named above is in the list (a typo here would otherwise pass silently)
