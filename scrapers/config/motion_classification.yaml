@@ -67,7 +67,8 @@ jurisdictions:
   # ("Local Calendar", "LOCAL CONSENT CALENDAR"): passage for each bill on it. The caption does not
   # change when the House reconsiders a calendar, so the ga scraper (vote_classification() in
   # ga/bills.py) unclassifies a calendar roll call that the bill's status history pairs with a
-  # "Reconsidered" status. Pass/fail comes from the status history too ("... Lost"), not from here.
+  # "Reconsidered" status. Pass/fail comes from the status history too ("... Lost"), and for a veto
+  # override from the two_thirds list below (vote_result() in ga/bills.py).
   ga:
     # OPEN-590 follow-up (review 20779): the procedure rules are anchored (a word boundary or the
     # start of the caption), so a future caption that only contains one of these letters, or an
