@@ -67,22 +67,29 @@ jurisdictions:
   # ("Local Calendar", "LOCAL CONSENT CALENDAR"): passage for each bill on it. The caption does not
   # change when the House reconsiders a calendar, so the ga scraper (vote_classification() in
   # ga/bills.py) unclassifies a calendar roll call that the bill's status history pairs with a
-  # "Reconsidered" status. Pass/fail comes from the status history too ("... Lost"), not from here.
+  # "Reconsidered" status. Pass/fail comes from the status history too ("... Lost"), and for a veto
+  # override from the two_thirds list below (vote_result() in ga/bills.py).
   ga:
+    # OPEN-590 follow-up (review 20779): the procedure rules are anchored (a word boundary or the
+    # start of the caption), so a future caption that only contains one of these letters, or an
+    # "ADOPT AMENDMENT ...", cannot change label by accident.
     not_passage:
-      - "recon"                                  # "Reconsider", "MOTION FOR RECONSIDERATION", "SB614 & SB627 RECON", "MOTION TO RECONSIDER LOCAL CONSENT CALENDAR"
-      - '^adoption of (the )?amend'              # Senate floor amendments: "ADOPTION OF AMENDMENT #1 BY THE SENATOR FROM THE 44TH", "ADOPTION OF AMEND #1A BY SEN ..."
+      - '\brecon(sider(ation)?)?\b'              # "Reconsider", "MOTION FOR RECONSIDERATION", "SB614 & SB627 RECON", "MOTION TO RECONSIDER LOCAL CONSENT CALENDAR"
+      - '^adopt(ion of)? (the )?((floor|committee) )?amend'  # Senate floor amendments: "ADOPTION OF AMENDMENT #1 BY THE SENATOR FROM THE 44TH", "ADOPTION OF AMEND #1A BY SEN ...", and any "ADOPT AMENDMENT ..."; not "ADOPTION OF CONSTITUTIONAL AMENDMENT"
       - '^am \d'                                 # an amendment's number: "AM 62 0077"
-      - "table"                                  # "MOTION TO TABLE", "TABLE", "MOTION TO REMOVE FROM THE TABLE", "... REMAINING LEGISLATION ON THE RULES CALENDAR"
-      - "engross"                                # "MOTION TO ENGROSS" (closes a bill to amendment)
+      - '\btable\b'                              # "MOTION TO TABLE", "TABLE", "MOTION TO REMOVE FROM THE TABLE", "MOTION TO TABLE REMAINING LEGISLATION ON THE RULES CALENDAR"
+      - '\bengross'                              # "MOTION TO ENGROSS" (closes a bill to amendment)
       - "previous question"
       - "withdraw and commit"
       - "ruling of the chair"
-      - "suspend"                                # "MOTION TO SUSPEND SENATE RULE 7-1-6(b)"
+      - '^(motion to )?suspend\b'                # "MOTION TO SUSPEND SENATE RULE 7-1-6(b)"
       - "immediately transmit"                   # "Immediately Transmit", "MOTION TO IMMEDIATELY TRANSMIT TO GOVERNOR"
       - "resolve debate"
-      - "adjourn"
-      - "recede"                                 # "RECEDE FROM SENATE AMENDMENT"
+      - '^(motion to )?adjourn'                  # "MOTION TO ADJOURN", "Adjournment"
+      - '\brecede\b'                             # "RECEDE FROM SENATE AMENDMENT"
+      - '\bpostpone'                             # not in 2025_26 or 2026_ss; the scraper's old label list had POSTPONE
+      - '\bdisagree'                             # likewise DISAGREE (a refusal to concur, not passage)
+      - '\binsist'                               # likewise INSIST
       - "^motion to print$"
       - "^move from "                            # committee move: "Move from P&CH to Hth"
       - "^remove from local cal"                 # "Remove from Local Cal/Vote Separately"
@@ -95,6 +102,11 @@ jurisdictions:
       - "^consent calendar "                     # Senate resolutions: "CONSENT CALENDAR FOR SENATE STUDY COMMITTEES", "... EXPRESSING THE WILL OF THE SENATE"
       - "^uncontested house resolutions$"
     default: null                                # attendance, roll calls, confirmations, "Speaker of the House", "Dispense with Reading of Journal"
+    # Motions decided by two thirds of the members, not yeas > nays. Read only by
+    # needs_two_thirds() (the ga scraper's pass/fail), never by classify_motion(). Ga. Const.
+    # art. V, sec. II, para. IV: a veto is overridden by two thirds of the members of each house.
+    two_thirds:
+      - '^(motion to )?(veto override|override (the )?(governor''?s )?veto)'  # "Veto Override" (HB 1192, 2026_ss, House #11, 94-77: failed)
 
   mi:
     passage:

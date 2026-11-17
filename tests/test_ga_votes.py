@@ -227,13 +227,13 @@ def _suds_like(detail):
     return inst
 
 
-def test_scrape_labels_hb1_votes():
-    detail = load("detail_2026_ss_HB1.json")
+def _scrape(detail):
+    """Run the scraper on one bill detail; returns {roll call: (motion, labels, result)}."""
     scraper = ga_bills.GABillScraper(Georgia(), "/tmp/")
     scraper._subjects = {}
     lservice = mock.Mock()
     lservice.GetLegislationForSession.return_value = {
-        "LegislationIndex": [{"Id": 74753}]
+        "LegislationIndex": [{"Id": detail["Id"]}]
     }
     lservice.GetLegislationDetail.return_value = _suds_like(detail)
     vservice = mock.Mock()
@@ -257,14 +257,89 @@ def test_scrape_labels_hb1_votes():
     ):
         out = list(scraper.scrape(session="2026_ss"))
 
-    assert [o.identifier for o in out if isinstance(o, Bill)] == ["HB 1"]
-    got = {
+    assert [o.identifier for o in out if isinstance(o, Bill)] == [
+        "%s %s" % (detail["DocumentType"], detail["Number"])
+    ]
+    return {
         o.identifier: (o.motion_text, o.motion_classification, o.result)
         for o in out
         if isinstance(o, VoteEvent)
     }
-    assert got == {
+
+
+def test_scrape_labels_hb1_votes():
+    assert _scrape(load("detail_2026_ss_HB1.json")) == {
         "House Vote #5": ("Local Calendar", ["passage"], "fail"),
         "House Vote #9": ("Local Calendar", [], "pass"),
         "House Vote #10": ("Local Calendar", ["passage"], "fail"),
+    }
+
+
+# ---------------------------------------------------------------------------
+# OPEN-590 follow-up (review 20779): a veto override needs two thirds of the members
+# (Ga. Const. art. V, sec. II, para. IV: House 120 of 180, Senate 38 of 56), not yeas > nays.
+# HB 1192's override is Georgia's one override roll call (GetVotes, 2026_ss, House #11,
+# 2026-06-22 15:22, VoteId 26675): 94-77, failed.
+# ---------------------------------------------------------------------------
+
+HB1192_OVERRIDE = {
+    "VoteId": 26675,
+    "Number": 11,
+    "Description": "House Vote #11",
+    "Branch": "House",
+    "Caption": "Veto Override",
+    "Yeas": 94,
+    "Nays": 77,
+}
+
+
+def test_hb1192_override_is_a_failed_passage_vote():
+    assert ga_bills.vote_classification(HB1192_OVERRIDE["Caption"]) == ["passage"]
+    assert ga_bills.vote_result(HB1192_OVERRIDE, lost=False) == "fail"
+
+
+def test_override_with_two_thirds_of_the_members_passes():
+    house = dict(HB1192_OVERRIDE, Yeas=120, Nays=55)
+    assert ga_bills.vote_result(house, lost=False) == "pass"
+    senate = dict(HB1192_OVERRIDE, Branch="Senate", Yeas=38, Nays=17)
+    assert ga_bills.vote_result(senate, lost=False) == "pass"
+
+
+def test_override_counts_members_not_those_voting():
+    # two thirds of those voting, but short of two thirds of the members
+    assert (
+        ga_bills.vote_result(dict(HB1192_OVERRIDE, Yeas=119, Nays=40), False) == "fail"
+    )
+    assert (
+        ga_bills.vote_result(
+            dict(HB1192_OVERRIDE, Branch="Senate", Yeas=37, Nays=10), False
+        )
+        == "fail"
+    )
+
+
+def test_ordinary_motion_is_still_yeas_over_nays():
+    passage = dict(HB1192_OVERRIDE, Caption="PASSAGE")
+    assert ga_bills.vote_result(passage, lost=False) == "pass"
+    assert ga_bills.vote_result(passage, lost=True) == "fail"
+    assert ga_bills.vote_result(dict(passage, Yeas=77, Nays=94), False) == "fail"
+
+
+def test_scrape_fails_hb1192_override_when_attached_to_its_bill():
+    # Georgia's bill detail does not list the override today; if it ever does, the scraper
+    # must store a failed passage vote. HB 1's detail stands in for the bill, with the
+    # override as its only roll call and no outcome status that day.
+    detail = load("detail_2026_ss_HB1.json")
+    detail["StatusHistory"]["StatusListing"] = [
+        s for s in history(detail) if s["Date"].date() < datetime.date(2026, 6, 22)
+    ]
+    detail["Votes"]["VoteListing"] = [
+        dict(
+            detail["Votes"]["VoteListing"][0],
+            Date=_dt("2026-06-22T15:22:00"),
+            **HB1192_OVERRIDE,
+        )
+    ]
+    assert _scrape(detail) == {
+        "House Vote #11": ("Veto Override", ["passage"], "fail"),
     }
