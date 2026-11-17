@@ -384,6 +384,11 @@ def test_va_committee_passage(text):
     ("RECOMMIT TO THE COMMITTEE ON RULES", []),
     ("A1363", []),
     ("House Bill 1663", []),
+    # OPEN-582: a resolution's floor adoption vote, stored under the resolution's own name
+    ("House Resolution 401", ["passage"]),
+    ("Senate Resolution 94", ["passage"]),
+    ("MOTION TO TABLE HOUSE RESOLUTION 401", []),
+    ("House Resolution 401 A1363", []),
 ])
 def test_pa(text, expected):
     # the pa scraper upper-cases floor motions before classifying

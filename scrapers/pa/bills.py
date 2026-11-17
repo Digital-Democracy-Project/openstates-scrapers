@@ -469,12 +469,15 @@ class PABillScraper(Scraper):
         if re.match(r"CONCUR(RENCE)? IN \w+ AMENDMENTS", motion):
             type = "amendment"
         else:
-            # OPEN-478: rules live in config/motion_classification.yaml (pa block)
-            type = classify_motion("pa", motion)
             if not motion:
+                # A roll call with no Action is the vote on the measure itself; its text
+                # becomes the measure's name ("House Resolution 401"). OPEN-582: classify
+                # after that, so a resolution's adoption vote is passage (pa block).
                 xpath = '//div[contains(@class,h6)][contains(text(), "Bill")]/../a'
                 motion = page.xpath(xpath)[1].text_content().strip()
                 motion = re.sub(r"\s+", " ", motion)
+            # OPEN-478: rules live in config/motion_classification.yaml (pa block)
+            type = classify_motion("pa", motion)
 
         yeas_elements = page.xpath(
             '//div[@id="voteSummary"]//div[contains(., "Yea")]/div[2]'

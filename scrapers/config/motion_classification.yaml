@@ -217,6 +217,12 @@ jurisdictions:
       - '^committee vote \(.*?\): (re-)?report(ed)?( bill)? as (committed|amended)'
     passage:
       - "^final passage"                         # also "FINAL PASSAGE - RECONSIDERATION" / "FINAL PASSAGE-RECONSIDERED"
+      # OPEN-582: a floor roll call with no Action is the vote on the measure itself, and the
+      # scraper stores the measure's name as its text. On a resolution that is the adoption vote
+      # (HR 401, 2026-02-04: "House Resolution 401", history "Adopted (194-4)"; SR 94, 2025-05-12).
+      # A bill's ("House Bill 1663") stays unclassified: HB 1663's two of 2025-12-16 were cast on
+      # second consideration, and its final passage was a "FINAL PASSAGE" roll call the next day.
+      - '^(house|senate) resolution \d+$'
     default: null
 
   ne:
