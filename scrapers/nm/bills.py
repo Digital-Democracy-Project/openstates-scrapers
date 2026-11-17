@@ -464,11 +464,19 @@ class NMBillScraper(Scraper):
         # these actions need a committee name spliced in
         actions_with_committee = ("SENT", "7650", "7654")
 
-        for action in [
-            row
-            for row in self.access_to_csv("Actions")
-            if row["BillID"].startswith(chamber_letter)
-        ]:
+        # The Actions table's row order is neither date order nor the bill's history
+        # (HB 103 of 2026 starts with its recall from the Senate). Each row carries the
+        # legislature's own place in that bill's history in Sequence (1, 2, 3 ... and 99
+        # for the final action); on all 812 bills of 2026 it is unique per bill and agrees
+        # with KeyID (the row's id), which breaks any tie.
+        for action in sorted(
+            (
+                row
+                for row in self.access_to_csv("Actions")
+                if row["BillID"].startswith(chamber_letter)
+            ),
+            key=lambda row: (int(row["Sequence"]), int(row["KeyID"])),
+        ):
             bill_key = action["BillID"].replace(" ", "")
 
             if bill_key not in bills:
