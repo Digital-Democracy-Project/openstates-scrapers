@@ -24,7 +24,7 @@ class Nebraska(State):
             "identifier": "102S1",
             "name": "102nd Legislature, 1st Special Session (2011)",
             "start_date": "2011-11-01",
-            "classification": "primary",
+            "classification": "special",
         },
         {
             "_scraped_name": "103rd Legislature 1st and 2nd Sessions",

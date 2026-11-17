@@ -13,6 +13,7 @@ class Washington(State):
     legislative_sessions = [
         {
             "_scraped_name": "2009-10",
+            "classification": "primary",
             "identifier": "2009-2010",
             "name": "2009-2010 Regular Session",
             "start_date": "2009-01-12",
@@ -20,6 +21,7 @@ class Washington(State):
         },
         {
             "_scraped_name": "2011-12",
+            "classification": "primary",
             "identifier": "2011-2012",
             "name": "2011-2012 Regular Session",
             "start_date": "2011-01-10",
@@ -27,6 +29,7 @@ class Washington(State):
         },
         {
             "_scraped_name": "2013-14",
+            "classification": "primary",
             "identifier": "2013-2014",
             "name": "2013-2014 Regular Session",
             "start_date": "2013-01-14",
@@ -34,6 +37,7 @@ class Washington(State):
         },
         {
             "_scraped_name": "2015-16",
+            "classification": "primary",
             "identifier": "2015-2016",
             "name": "2015-2016 Regular Session",
             "start_date": "2015-01-12",
@@ -41,6 +45,7 @@ class Washington(State):
         },
         {
             "_scraped_name": "2017-18",
+            "classification": "primary",
             "identifier": "2017-2018",
             "name": "2017-2018 Regular Session",
             "start_date": "2017-01-09",
@@ -48,6 +53,7 @@ class Washington(State):
         },
         {
             "_scraped_name": "2019-20",
+            "classification": "primary",
             "identifier": "2019-2020",
             "name": "2019-2020 Regular Session",
             "start_date": "2019-01-14",

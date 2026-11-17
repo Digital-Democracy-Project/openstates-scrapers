@@ -158,7 +158,7 @@ class Arizona(State):
         },
         {
             "_scraped_name": "2013 - Fifty-first Legislature - First Special Session",
-            "classification": "primary",
+            "classification": "special",
             "identifier": "51st-1st-special",
             "name": "51st Legislature - 1st Special Session (2013)",
             "start_date": "2013-06-11",
@@ -263,7 +263,7 @@ class Arizona(State):
         },
         {
             "_scraped_name": "2022 - Fifty-fifth Legislature - Second Regular Session",
-            "classification": "special",
+            "classification": "primary",
             "identifier": "55th-2nd-regular",
             "name": "Fifty-fifth Legislature - Second Regular Session",
             "start_date": "2022-01-10",

@@ -13,6 +13,7 @@ class Oregon(State):
     legislative_sessions = [
         {
             "_scraped_name": "2007 Regular Session",
+            "classification": "primary",
             "identifier": "2007 Regular Session",
             "name": "2007 Regular Session",
             "start_date": "2007-01-08",
@@ -20,6 +21,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2008 Special Session",
+            "classification": "special",
             "identifier": "2008 Special Session",
             "name": "2008 Special Session",
             "start_date": "2008-02-04",
@@ -27,6 +29,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2009 Regular Session",
+            "classification": "primary",
             "identifier": "2009 Regular Session",
             "name": "2009 Regular Session",
             "start_date": "2009-01-12",
@@ -34,6 +37,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2010 Special Session",
+            "classification": "special",
             "identifier": "2010 Special Session",
             "name": "2010 Special Session",
             "start_date": "2010-02-01",
@@ -41,6 +45,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2011 Regular Session",
+            "classification": "primary",
             "identifier": "2011 Regular Session",
             "name": "2011 Regular Session",
             "start_date": "2011-02-01",
@@ -48,6 +53,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2012 Regular Session",
+            "classification": "primary",
             "identifier": "2012 Regular Session",
             "name": "2012 Regular Session",
             "start_date": "2012-02-01",
@@ -55,6 +61,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2012 Special Session",
+            "classification": "special",
             "identifier": "2012 Special Session",
             "name": "2012 Speical Session",
             "start_date": "2012-12-14",
@@ -62,6 +69,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2013 Regular Session",
+            "classification": "primary",
             "identifier": "2013 Regular Session",
             "name": "2013 Regular Session",
             "start_date": "2013-02-04",
@@ -69,6 +77,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2013 Special Session",
+            "classification": "special",
             "identifier": "2013 Special Session",
             "name": "2013 Special Session",
             "start_date": "2013-09-30",
@@ -76,6 +85,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2014 Regular Session",
+            "classification": "primary",
             "identifier": "2014 Regular Session",
             "name": "2014 Regular Session",
             "start_date": "2014-02-03",
@@ -83,6 +93,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2015 Regular Session",
+            "classification": "primary",
             "identifier": "2015 Regular Session",
             "name": "2015 Regular Session",
             "start_date": "2015-02-02",
@@ -90,6 +101,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2016 Regular Session",
+            "classification": "primary",
             "identifier": "2016 Regular Session",
             "name": "2016 Regular Session",
             "start_date": "2016-02-01",
@@ -97,6 +109,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2017 Regular Session",
+            "classification": "primary",
             "identifier": "2017 Regular Session",
             "name": "2017 Regular Session",
             "start_date": "2017-02-01",
@@ -104,6 +117,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2018 Regular Session",
+            "classification": "primary",
             "identifier": "2018 Regular Session",
             "name": "2018 Regular Session",
             "start_date": "2018-02-05",
@@ -111,6 +125,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2018 1st Special Session",
+            "classification": "special",
             "identifier": "2018 Special Session",
             "name": "2018 Special Session",
             "start_date": "2018-05-21",
@@ -118,6 +133,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2019 Regular Session",
+            "classification": "primary",
             "identifier": "2019 Regular Session",
             "name": "2019 Regular Session",
             "start_date": "2019-01-14",
@@ -125,6 +141,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2020 Regular Session",
+            "classification": "primary",
             "identifier": "2020 Regular Session",
             "name": "2020 Regular Session",
             "start_date": "2020-02-03",
@@ -132,6 +149,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2020 1st Special Session",
+            "classification": "special",
             "identifier": "2020S1",
             "name": "2020 Special Session",
             "start_date": "2020-06-26",
@@ -139,6 +157,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2020 2nd Special Session",
+            "classification": "special",
             "identifier": "2020S2",
             "name": "2020 Special Session 2",
             "start_date": "2020-08-10",
@@ -154,6 +173,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2021 Regular Session",
+            "classification": "primary",
             "identifier": "2021 Regular Session",
             "name": "2021 Regular Session",
             "start_date": "2021-01-11",
@@ -161,6 +181,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2021 1st Special Session",
+            "classification": "special",
             "identifier": "2021S1",
             "name": "2021 Special Session",
             "start_date": "2021-09-20",
@@ -169,6 +190,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2021 2nd Special Session",
+            "classification": "special",
             "identifier": "2021S2",
             "name": "2021 Special Session 2",
             "start_date": "2021-12-13",
@@ -177,6 +199,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2022 Regular Session",
+            "classification": "primary",
             "identifier": "2022R1",
             "name": "2022 Regular Session",
             "start_date": "2022-02-01",
@@ -185,6 +208,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2023 Regular Session",
+            "classification": "primary",
             "identifier": "2023R1",
             "name": "2023 Regular Session",
             "start_date": "2023-01-09",
@@ -193,6 +217,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2024 Regular Session",
+            "classification": "primary",
             "identifier": "2024R1",
             "name": "2024 Regular Session",
             "start_date": "2024-02-05",
@@ -201,6 +226,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2024 1st Special Session",
+            "classification": "special",
             "identifier": "2024S1",
             "name": "2024 Special Session",
             "start_date": "2024-12-12",
@@ -209,6 +235,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2025 Regular Session",
+            "classification": "primary",
             "identifier": "2025R1",
             "name": "2025 Regular Session",
             "start_date": "2025-01-21",
@@ -226,6 +253,7 @@ class Oregon(State):
         },
         {
             "_scraped_name": "2026 Regular Session",
+            "classification": "primary",
             "identifier": "2026R1",
             "name": "2026 Regular Session",
             "start_date": "2026-02-02",
