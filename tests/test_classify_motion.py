@@ -427,14 +427,24 @@ def test_ne(text, expected):
     ("AMENDMENT # 3891 BY AMEDEE, MOTION TO ADOPT (#14)", []),
     ("AMENDMENT # 4587 BY LUNEAU, HB 1098 BY MCFARLAND (#9)", []),
     ("MOTION TO RECONSIDER (#4)", []),
-    ("CONCUR (#4)", []),
-    ("CONCUR IN SENATE AMENDMENTS (#4)", []),
-    ("FINAL CONSIDERATION (#4)", []),
-    ("ADOPT (#4)", []),
-    ("ADOPT CONFERENCE REPORT (#4)", []),
+    # OPEN-583: concurrences, conference reports and resolution adoptions are passage
+    ("CONCUR IN SENATE AMENDMENTS (#1674)", ["passage"]),      # HB 313, House, 2026-05-29
+    ("CONCUR IN SENATE AMENDMENTS (#1224)", ["passage"]),      # HB 675, House, 2026-05-13
+    ("ADOPT CONFERENCE REPORT (#1794)", ["passage"]),          # SB 149, House, 2026-05-31
+    ("CONCUR (#4)", ["passage"]),                              # Senate concurs in House amendments / an HCR
+    ("ADOPT (#4)", ["passage"]),                               # Senate adopts a conference report / a resolution
+    ("FINAL CONSIDERATION (#4)", ["passage"]),                 # House adopts a resolution
+    # procedure stays unclassified
     ("REJECT SENATE AMENDMENTS (#4)", []),
+    ("REJECT (#4)", []),
     ("CO-AUTHORS (#4)", []),
+    ("ADD CO-AUTHORS (#4)", []),
     ("MODIFY TIME LIMITS (#4)", []),
+    ("ADOPT AMENDMENTS (#4)", []),                             # only the exact texts above are passage
+    ("MOTION TO CONCUR (#4)", []),
+    ("SUSPEND THE RULES (#1)", []),
+    ("LAY ON THE TABLE (#1)", []),
+    ("SB 243 BY KLEINPETER (#1)", []),
 ])
 def test_la(text, expected):
     assert classify_motion("la", text) == expected
