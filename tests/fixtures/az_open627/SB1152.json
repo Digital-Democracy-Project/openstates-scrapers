@@ -1,0 +1,233 @@
+{
+ "BillId": 83935,
+ "Number": "SB1152",
+ "FloorHeaders": [
+  {
+   "CommitteeShortName": "COW",
+   "CommitteeName": "Committee of the Whole",
+   "LegislativeBody": "S",
+   "BillStatusActionId": 241391,
+   "ActionDate": "2026-02-23T13:40:15"
+  },
+  {
+   "CommitteeShortName": "THIRD",
+   "CommitteeName": "Third Reading",
+   "LegislativeBody": "S",
+   "BillStatusActionId": 241466,
+   "ActionDate": "2026-02-23T16:06:00"
+  }
+ ],
+ "FloorActions": {
+  "241391": [
+   {
+    "Action": "do pass",
+    "ReportDate": "2026-02-23T13:40:15",
+    "ReferralNumber": 1,
+    "Ayes": 0,
+    "Nays": 0,
+    "Present": null,
+    "Absent": null,
+    "Excused": 0,
+    "NotVoting": 0,
+    "UnanimouslyAdopted": false,
+    "Votes": []
+   }
+  ],
+  "241466": [
+   {
+    "Action": "failed to pass",
+    "ReportDate": "2026-02-23T16:06:00",
+    "ReferralNumber": 1,
+    "Ayes": 16,
+    "Nays": 11,
+    "Present": null,
+    "Absent": null,
+    "Excused": 0,
+    "NotVoting": 3,
+    "UnanimouslyAdopted": false,
+    "Votes": [
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Lela Alston"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Hildy Angius"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Shawnna Bolick"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Flavio Bravo"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Frank Carroll"
+      }
+     },
+     {
+      "Vote": "NV",
+      "Legislator": {
+       "FullName": "Eva Diaz"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Timothy \"Tim\" Dunn"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Denise \u201cMitzi\u201d Epstein"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "David C. Farnsworth"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Brian Fernandez"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Mark Finchem"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Rosanna Gabald\u00f3n"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Sally Ann Gonzales"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "David Gowan"
+      }
+     },
+     {
+      "Vote": "NV",
+      "Legislator": {
+       "FullName": "Theresa Hatathlie"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Jake Hoffman"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "John Kavanagh"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Lauren Kuby"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Venden \"Vince\" Leach"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "J.D. Mesnard"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Catherine Miranda"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Analise Ortiz"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Kevin Payne"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Wendy Rogers"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Kiana Sears"
+      }
+     },
+     {
+      "Vote": "NV",
+      "Legislator": {
+       "FullName": "Janae Shamp"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Thomas \"T.J.\" Shope"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Priya Sundareshan"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Carine Werner"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Warren Petersen"
+      }
+     }
+    ]
+   }
+  ]
+ }
+}

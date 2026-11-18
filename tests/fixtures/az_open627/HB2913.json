@@ -1,0 +1,413 @@
+{
+ "BillId": 84813,
+ "Number": "HB2913",
+ "FloorHeaders": [
+  {
+   "CommitteeShortName": "COW",
+   "CommitteeName": "Committee of the Whole",
+   "LegislativeBody": "H",
+   "BillStatusActionId": 242053,
+   "ActionDate": "2026-02-25T14:19:52"
+  },
+  {
+   "CommitteeShortName": "THIRD",
+   "CommitteeName": "Third Reading",
+   "LegislativeBody": "H",
+   "BillStatusActionId": 244087,
+   "ActionDate": "2026-03-09T16:40:54"
+  }
+ ],
+ "FloorActions": {
+  "242053": [
+   {
+    "Action": "do pass",
+    "ReportDate": "2026-02-25T14:19:52",
+    "ReferralNumber": 1,
+    "Ayes": 0,
+    "Nays": 0,
+    "Present": null,
+    "Absent": null,
+    "Excused": 0,
+    "NotVoting": 0,
+    "UnanimouslyAdopted": false,
+    "Votes": []
+   }
+  ],
+  "244087": [
+   {
+    "Action": "failed to pass",
+    "ReportDate": "2026-03-09T16:40:54",
+    "ReferralNumber": 1,
+    "Ayes": 22,
+    "Nays": 30,
+    "Present": null,
+    "Absent": null,
+    "Excused": 0,
+    "NotVoting": 7,
+    "UnanimouslyAdopted": false,
+    "Votes": [
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Anna Abeytia"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Cesar Aguilar"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Lorena Austin"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Leo Biasiucci"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Walt Blackman"
+      }
+     },
+     {
+      "Vote": "NV",
+      "Legislator": {
+       "FullName": "Seth Blattman"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Selina Bliss"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Michael Carbone"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Neal Carter"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Pamela Carter"
+      }
+     },
+     {
+      "Vote": "NV",
+      "Legislator": {
+       "FullName": "Junelle Cavero"
+      }
+     },
+     {
+      "Vote": "V",
+      "Legislator": {
+       "FullName": "Joseph Chaplik"
+      }
+     },
+     {
+      "Vote": "NV",
+      "Legislator": {
+       "FullName": "Janeen Connolly"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Lupe Contreras"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Patty Contreras"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Quant\u00e1 Crews"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Oscar De Los Santos"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Lupe Diaz"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Lisa Fink"
+      }
+     },
+     {
+      "Vote": "NV",
+      "Legislator": {
+       "FullName": "Brian Garcia"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "John Gillette"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Matt Gress"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Gail Griffin"
+      }
+     },
+     {
+      "Vote": "NV",
+      "Legislator": {
+       "FullName": "Nancy Gutierrez"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Ralph Heap"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Laurin Hendrix"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Alma Hernandez"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Consuelo Hernandez"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Lydia Hernandez"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Rachel Keshel"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Alexander Kolodin"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Nick Kupper"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Sarah Liguori"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "David Livingston"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Chris Lopez"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Elda Luna-N\u00e1jera"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Aaron M\u00e1rquez"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "David Marshall, Sr."
+      }
+     },
+     {
+      "Vote": "NV",
+      "Legislator": {
+       "FullName": "Teresa Martinez"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Christopher Mathis"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Quang H Nguyen"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Justin Olson"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Michele Pe\u00f1a"
+      }
+     },
+     {
+      "Vote": "NV",
+      "Legislator": {
+       "FullName": "Mae Peshlakai"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Beverly Pingerelli"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Khyl Powell"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Tony Rivero"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Mariana Sandoval"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Stephanie Simacek"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Stephanie Stahl Hamilton"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "James Taylor"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Stacey Travers"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Myron Tsosie"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Betty J Villegas"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Kevin Volk"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Michael Way"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Jeff Weninger"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Julie Willoughby"
+      }
+     },
+     {
+      "Vote": "Y",
+      "Legislator": {
+       "FullName": "Justin Wilmeth"
+      }
+     },
+     {
+      "Vote": "N",
+      "Legislator": {
+       "FullName": "Steve Montenegro"
+      }
+     }
+    ]
+   }
+  ]
+ }
+}

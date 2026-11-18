@@ -70,14 +70,15 @@ def test_present_without_excused_does_not_invent_an_excused_count():
 # trimmed to the fields scrape_votes reads: tests/fixtures/az_open625/<bill>.json holds the
 # bill's FloorHeaders and the BillStatusFloorAction answer for each header.
 FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures", "az_open625")
+FIXTURES_OPEN627 = os.path.join(os.path.dirname(__file__), "fixtures", "az_open627")
 
 
 def chamber(vote):
     return json.loads(vote.organization[1:])["classification"]
 
 
-def scrape_bill(number):
-    with open(os.path.join(FIXTURES, number + ".json")) as f:
+def scrape_bill(number, fixtures=FIXTURES):
+    with open(os.path.join(fixtures, number + ".json")) as f:
         data = json.load(f)
     scraper = AZBillScraper(Arizona(), "/tmp/")
 
@@ -127,10 +128,10 @@ def test_third_readings_final_reading_and_reconsider_motion():
     # to reconsider it passed 16-8 the same day, the third reading passed 16-14 on 3/3 and
     # the final reading (after the House amended it) passed 16-11 on 6/11. The House's
     # third reading passed 31-23 on 6/9. Every third and final reading is passage, failed
-    # or passed; the reconsider motion is not. The failed reading's "pass" result is the
-    # yeas > nays rule, unchanged here.
+    # or passed; the reconsider motion is not. The failed reading is "fail" although its yeas
+    # outnumber its nays (OPEN-627).
     assert scrape_bill("SB1418") == {
-        ("upper", "2026-02-25", "failed to pass", "pass"): (["passage"], 15, 12),
+        ("upper", "2026-02-25", "failed to pass", "fail"): (["passage"], 15, 12),
         ("upper", "2026-02-25", "Passed", "pass"): ([], 16, 8),
         ("upper", "2026-03-03", "Passed", "pass"): (["passage"], 16, 14),
         ("upper", "2026-06-11", "Passed", "pass"): (["passage"], 16, 11),
@@ -160,6 +161,54 @@ def test_only_third_and_final_readings_are_passage(floor_step, motion_text):
     assert vote_classification(floor_step, motion_text) == []
     assert vote_classification("THIRD", motion_text) == ["passage"]
     assert vote_classification("FINAL", motion_text) == ["passage"]
+
+
+# OPEN-627: a reading's result is azleg's own outcome ("Passed" / "failed to pass"), not yeas > nays.
+# Real 2026 rows: tests/fixtures/az_open627/<bill>.json, built like az_open625's.
+def test_failed_reading_with_more_yeas_than_nays_is_a_fail():
+    # HB 2918: the House's third reading failed 28-25 on 2/26 (31 needed); it passed 32-24 on 3/3.
+    # Its Committee of the Whole reports and the empty 0-0 roll calls are not emitted.
+    assert scrape_bill("HB2918", FIXTURES_OPEN627) == {
+        ("lower", "2026-02-26", "failed to pass", "fail"): (["passage"], 28, 25),
+        ("lower", "2026-03-03", "Passed", "pass"): (["passage"], 32, 24),
+    }
+
+
+def test_plain_failed_reading_is_a_fail():
+    # HB 2913: the House's third reading failed 22-30 on 3/9.
+    assert scrape_bill("HB2913", FIXTURES_OPEN627) == {
+        ("lower", "2026-03-09", "failed to pass", "fail"): (["passage"], 22, 30),
+    }
+
+
+def test_azleg_outcome_wins_over_a_majority_count():
+    # SB 1152: the Senate's third reading failed 16-11 on 2/23 although 16 is a majority of 30;
+    # some readings need more, and azleg's own outcome says which.
+    assert scrape_bill("SB1152", FIXTURES_OPEN627) == {
+        ("upper", "2026-02-23", "failed to pass", "fail"): (["passage"], 16, 11),
+    }
+
+
+@pytest.mark.parametrize(
+    "chamber, motion_text, yes_count, unanimous, expected",
+    [
+        ("lower", "Passed", 32, False, "pass"),
+        ("lower", "failed to pass", 28, False, "fail"),
+        ("upper", "failed to pass", 16, False, "fail"),
+        ("lower", "do pass amended", 0, False, "pass"),
+        # no outcome in the text: a majority of the chamber's members (31 of 60, 16 of 30)
+        ("lower", "Retained on the Calendar", 31, False, "pass"),
+        ("lower", "Retained on the Calendar", 30, False, "fail"),
+        ("upper", "retained", 16, False, "pass"),
+        ("upper", "retained", 15, False, "fail"),
+        ("upper", "", 0, True, "pass"),
+        ("lower", None, 0, False, "fail"),
+    ],
+)
+def test_vote_result(chamber, motion_text, yes_count, unanimous, expected):
+    from az.bills import vote_result
+
+    assert vote_result(chamber, motion_text, yes_count, unanimous) == expected
 
 
 # OPEN-628: Arizona prints no roll-call number, so each roll call carries the time of day its ReportDate gives,
