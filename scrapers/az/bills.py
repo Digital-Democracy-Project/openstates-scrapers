@@ -51,7 +51,6 @@ def vote_classification(floor_step, motion_text):
     return classify_motion("az", motion_text)
 
 
-
 def undated_version_name(name):
     match = ENGROSSED_DATE_SUFFIX.match(name)
     return match.group(1) if match else name
