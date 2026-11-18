@@ -431,6 +431,15 @@ class AZBillScraper(Scraper):
                     bill=bill,
                 )
                 vote.add_source(resp.url)
+                # OPEN-628: Arizona prints no roll-call number, but ReportDate carries the time
+                # the roll call was taken. start_date stays the day (the broker matches a stored
+                # vote on its date), so the time goes here as HHMMSS: the extras key the broker
+                # reads into Motion.rollcall_num to order two same-day votes in one chamber.
+                vote.extras[
+                    "senate-rollcall-num"
+                    if header["LegislativeBody"] == "S"
+                    else "house-rollcall-num"
+                ] = action_date.strftime("%H%M%S")
                 vote.set_count("yes", ayes)
                 vote.set_count("no", nays)
                 vote.set_count(

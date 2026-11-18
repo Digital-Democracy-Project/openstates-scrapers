@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfRollCall xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://WSLWebServices.leg.wa.gov/">
+  <RollCall>
+    <Agency>House</Agency>
+    <BillId>E2SHB 1131</BillId>
+    <Biennium>2025-26</Biennium>
+    <Motion>Final Passage on Reconsideration</Motion>
+    <SequenceNumber>19</SequenceNumber>
+    <VoteDate>2025-03-07T00:00:00</VoteDate>
+    <YeaVotes>
+      <Count>53</Count>
+      <MembersVoting></MembersVoting>
+    </YeaVotes>
+    <NayVotes>
+      <Count>44</Count>
+      <MembersVoting></MembersVoting>
+    </NayVotes>
+    <AbsentVotes>
+      <Count>0</Count>
+      <MembersVoting />
+    </AbsentVotes>
+    <ExcusedVotes>
+      <Count>1</Count>
+      <MembersVoting></MembersVoting>
+    </ExcusedVotes>
+    <Votes>
+      <Vote>
+        <MemberId>31526</MemberId>
+        <Name>Abbarno</Name>
+        <VOte>Nay</VOte>
+      </Vote>
+      <Vote>
+        <MemberId>35407</MemberId>
+        <Name>Abell</Name>
+        <VOte>Nay</VOte>
+      </Vote>
+    </Votes>
+  </RollCall>
+  <RollCall>
+    <Agency>House</Agency>
+    <BillId>E2SHB 1131</BillId>
+    <Biennium>2025-26</Biennium>
+    <Motion>3rd Reading &amp; Final Passage</Motion>
+    <SequenceNumber>7</SequenceNumber>
+    <VoteDate>2025-03-07T00:00:00</VoteDate>
+    <YeaVotes>
+      <Count>52</Count>
+      <MembersVoting></MembersVoting>
+    </YeaVotes>
+    <NayVotes>
+      <Count>44</Count>
+      <MembersVoting></MembersVoting>
+    </NayVotes>
+    <AbsentVotes>
+      <Count>0</Count>
+      <MembersVoting />
+    </AbsentVotes>
+    <ExcusedVotes>
+      <Count>2</Count>
+      <MembersVoting></MembersVoting>
+    </ExcusedVotes>
+    <Votes>
+      <Vote>
+        <MemberId>31526</MemberId>
+        <Name>Abbarno</Name>
+        <VOte>Nay</VOte>
+      </Vote>
+      <Vote>
+        <MemberId>35407</MemberId>
+        <Name>Abell</Name>
+        <VOte>Nay</VOte>
+      </Vote>
+    </Votes>
+  </RollCall>
+</ArrayOfRollCall>

@@ -1053,3 +1053,45 @@ def test_parse_roll_call_a_header_in_the_last_table_row_does_not_leak_past_the_t
 
     assert results["yes"] == ["Smith", "Jones"]
     assert results["no"] == ["Brown"]
+
+
+# --- OPEN-628: each roll call carries its journal number under the chamber's roll-call key ---
+#
+# The broker orders two same-day votes in one chamber by that key (Michigan's dates carry no
+# time). The rows are HB 4079's real history lines for 2026-02-19: the House passed it as Roll
+# Call #45, reconsidered, and passed it again as #47.
+HB4079_HISTORY_HTML = b"""
+<html><body>
+<div id="History"><table><tbody>
+<tr>
+<td>02/19/2026</td>
+<td><a href="https://legislature.mi.gov/mileg.aspx?page=getObject&objectName=2026-HJ-02-19-013">HJ 13 Pg. 239</a></td>
+<td>passed; given immediate effect Roll Call #45 Yeas 96 Nays 12 Excused 0 Not Voting 2</td>
+</tr>
+<tr>
+<td>02/19/2026</td>
+<td><a href="https://legislature.mi.gov/mileg.aspx?page=getObject&objectName=2026-HJ-02-19-013">HJ 13 Pg. 240</a></td>
+<td>passed Roll Call #47 Yeas 98 Nays 10 Excused 0 Not Voting 2</td>
+</tr>
+</tbody></table></div>
+</body></html>
+"""
+
+
+def test_scrape_votes_keeps_each_roll_call_number(monkeypatch):
+    scraper = _make_scraper()
+    # No journal fetch: parse_roll_call's own parsing is covered above; this pins what
+    # scrape_votes writes on the VoteEvent.
+    monkeypatch.setattr(
+        scraper,
+        "parse_roll_call",
+        lambda url, rc_num, session: {"yes": ["Smith"], "no": ["Doe"], "other": []},
+    )
+    bill = Bill(
+        "HB 4079", "2025-2026", "A bill", chamber="lower", classification="bill"
+    )
+    votes = list(scraper.scrape_votes(bill, lxml.html.fromstring(HB4079_HISTORY_HTML)))
+    assert [(str(v.start_date), v.extras) for v in votes] == [
+        ("2026-02-19", {"house-rollcall-num": "45"}),
+        ("2026-02-19", {"house-rollcall-num": "47"}),
+    ]
