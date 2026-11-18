@@ -1,10 +1,11 @@
-"""OPEN-622: Utah stores a floor passage line under the chamber that voted.
+"""OPEN-622: Utah stores a chamber's floor vote line under the chamber that voted.
 
 le.utah.gov's bill JSON gives each action an "owner": the office holding the bill after the action. For "House/ passed
 3rd reading" that is the "Senate Secretary", so the scraper stored the House's passage under the Senate (930 of 1,260
-passage lines on the replica, 2026-11-18), and the broker had to re-point it from the text (`_read_utah`). The
-fixtures are le.utah.gov's own action lists for HB 209 and SB 98 (2026GS), as fetched by the scraper, cut to the
-action fields.
+passage lines on the replica, 2026-11-18), and the broker had to re-point it from the text (`_read_utah`). Concurrence
+lines and conference "Final Passage" lines had the same fault, which kept their roll calls from pairing with their own
+line. The fixtures are le.utah.gov's own action lists for HB 209, HB 136 and SB 98 (2026GS), as fetched by the
+scraper, cut to the action fields.
 """
 import json
 import os
@@ -16,7 +17,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
 
 from openstates.scrape import Bill  # noqa: E402
 from ut import Utah  # noqa: E402
-from ut.bills import UTBillScraper, passage_chamber  # noqa: E402
+from ut.bills import UTBillScraper, voting_chamber  # noqa: E402
 
 FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures", "ut_open622")
 
@@ -90,16 +91,45 @@ def test_a_passage_already_owned_by_its_own_chamber_stays_there():
     assert chamber_of(actions, "House/ passed 3rd reading") == "lower"
 
 
+def test_concurrence_owned_by_the_senate_president_is_stored_under_the_house():
+    # HB 209: "House/ concurs with Senate amendment", owner "Senate President", House roll call 1249
+    actions = scraped_actions("HB0209-2026GS.json")
+    assert chamber_of(actions, "House/ concurs with Senate amendment") == "lower"
+
+
+def test_refusal_and_conference_final_passage_go_under_the_chamber_that_voted():
+    # HB 136: "House/ refuse to concur ..." (owner Senate Secretary) and "House Conference Committee - Final Passage"
+    # (owner Senate President; a 57-13-5 House roll call, 1419) are the House's; the Senate's own final passage
+    # (owner "Conference Committee") is the Senate's.
+    actions = scraped_actions("HB0136-2026GS.json")
+    assert (
+        chamber_of(actions, "House/ refuse to concur with Senate amendment") == "lower"
+    )
+    house_final = [
+        c
+        for text, c, _ in actions
+        if text.startswith("House Conference Committee - Final Passage")
+    ]
+    senate_final = [
+        c
+        for text, c, _ in actions
+        if text.startswith("Senate Conference Committee - Final Passage")
+    ]
+    assert house_final == ["lower"] and senate_final == ["upper"]
+    assert (
+        chamber_of(actions, "House/ substitute adoption failed") == "lower"
+    )  # owner House calendar
+
+
 def test_other_lines_keep_the_owner_chamber():
-    # Only passage lines move. "House/ to Senate" (owner Senate Secretary), the concurrence and the presiding
-    # officers' "signed by" lines stay where the owner puts them.
+    # Only floor vote lines move. "House/ to Senate" (owner Senate Secretary) and the presiding officers' "signed by"
+    # lines stay where the owner puts them.
     actions = scraped_actions("HB0209-2026GS.json")
     assert (
         chamber_of(actions, "Senate/ passed 2nd reading") == "upper"
     )  # owner Senate calendar
     to_senate = [c for text, c, _ in actions if text == "House/ to Senate"]
     assert to_senate and all(c == "upper" for c in to_senate)
-    assert chamber_of(actions, "House/ concurs with Senate amendment") == "upper"
     assert (
         chamber_of(actions, "Senate/ signed by President/ returned to House") == "lower"
     )
@@ -121,14 +151,24 @@ def test_only_the_chamber_changes_not_the_labels():
         ("Senate/ passed 3rd reading", "upper"),
         ("Senate/ passed 2nd & 3rd readings/ suspension", "upper"),
         ("House/ passed 2nd & 3rd readings/ suspension", "lower"),
+        ("House/ concurs with Senate amendment", "lower"),
+        ("Senate/ concurs with House amendment", "upper"),
+        ("House/ refuse to concur with Senate amendment", "lower"),
+        ("Senate/ refuse to concur with House amendments", "upper"),
+        ("House/ failed", "lower"),
+        ("Senate/ failed", "upper"),
+        ("House Conference Committee - Final Passage", "lower"),
+        ("Senate Conference Committee - Final Passage", "upper"),
         ("Senate/ passed 2nd reading", None),
-        ("House/ concurs with Senate amendment", None),
+        ("House/ substitute adoption failed", None),
+        ("House/ floor amendment failed", None),
         ("Senate/ signed by President/ returned to House", None),
-        ("House/ failed", None),
+        ("House/ to Senate", None),
+        ("House Conference Committee Appointed", None),
         ("passed 3rd reading", None),
         ("", None),
         (None, None),
     ],
 )
-def test_passage_chamber(description, chamber):
-    assert passage_chamber(description) == chamber
+def test_voting_chamber(description, chamber):
+    assert voting_chamber(description) == chamber
