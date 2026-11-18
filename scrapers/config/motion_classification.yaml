@@ -26,6 +26,9 @@ jurisdictions:
       - "^passage,"
     default: null
 
+  # OPEN-625: these text rules apply only to Third and Final Reading roll calls. Every other floor
+  # step (Committee of the Whole, its motions to amend, reconsiderations, ...) is not a vote on the
+  # bill whatever its text: vote_classification() in az/bills.py, from the roll call's FloorHeader.
   az:
     committee_passage:
       - "^do pass"                               # "do pass", "do pass amended" — committee votes
