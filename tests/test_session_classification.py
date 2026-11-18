@@ -67,7 +67,19 @@ def _sessions(state):
         if isinstance(n, ast.Assign)
         and any(getattr(t, "id", None) == "legislative_sessions" for t in n.targets)
     ]
-    return ast.literal_eval(node.value)
+    # A session switched on by date (OPEN-632, Arizona's 2027) sets "active" or "start_date"
+    # from a module constant; those values are read as None, the rest stays plain data.
+    return ast.literal_eval(_NamesToNone().visit(node.value))
+
+
+class _NamesToNone(ast.NodeTransformer):
+    def visit_Name(self, node):
+        return ast.copy_location(ast.Constant(None), node)
+
+    def visit_UnaryOp(self, node):
+        if isinstance(node.operand, ast.Name):
+            return ast.copy_location(ast.Constant(None), node)
+        return self.generic_visit(node)
 
 
 @pytest.mark.parametrize("state", sorted(SPECIAL))
