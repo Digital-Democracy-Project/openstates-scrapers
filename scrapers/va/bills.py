@@ -525,6 +525,16 @@ class VaBillScraper(Scraper):
                     )
                     continue
                 v.dedupe_key = (f"{row['VoteID']}-{bill.identifier.strip()}")[:500]
+                # OPEN-628: VoteDate carries the time the vote was taken. start_date stays the day
+                # (the broker matches a stored vote on its date), so the time goes here as HHMMSS:
+                # the extras key the broker reads into Motion.rollcall_num to order two same-day
+                # votes in one chamber. LIS's VoteID is not in that order (HB 29, 2026-02-09). Some
+                # committee votes come with no time (00:00:00); they sort first on their day.
+                v.extras[
+                    "senate-rollcall-num"
+                    if self.chamber_map[row["ChamberCode"]] == "upper"
+                    else "house-rollcall-num"
+                ] = dateutil.parser.parse(row["VoteDate"]).strftime("%H%M%S")
 
                 tally = {
                     "Y": 0,

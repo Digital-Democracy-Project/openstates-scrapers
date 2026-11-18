@@ -209,3 +209,34 @@ def test_vote_result(chamber, motion_text, yes_count, unanimous, expected):
     from az.bills import vote_result
 
     assert vote_result(chamber, motion_text, yes_count, unanimous) == expected
+
+
+# OPEN-628: Arizona prints no roll-call number, so each roll call carries the time of day its ReportDate gives,
+# under the roll-call key the broker orders same-day votes by. start_date stays the day.
+def test_each_roll_call_carries_its_time_under_the_chambers_roll_call_key():
+    with open(os.path.join(FIXTURES, "SB1418.json")) as f:
+        data = json.load(f)
+    scraper = AZBillScraper(Arizona(), "/tmp/")
+
+    def get(url, timeout=None, params=None):
+        response = mock.Mock()
+        response.url = f"{url}?billStatusActionId={params['billStatusActionId']}"
+        response.content = json.dumps(
+            data["FloorActions"][str(params["billStatusActionId"])]
+        ).encode("utf-8")
+        return response
+
+    scraper.get = get
+    bill = Bill("SB1418", "57th-2nd-regular", "A bill", chamber="upper")
+    numbers = {
+        (chamber(v), v.start_date, v.motion_text): v.extras
+        for v in scraper.scrape_votes(bill, data)
+    }
+    assert numbers == {
+        # 2/25 in the Senate: the third reading failed at 15:42:49, the motion to reconsider it passed at 17:06
+        ("upper", "2026-02-25", "failed to pass"): {"senate-rollcall-num": "154249"},
+        ("upper", "2026-02-25", "Passed"): {"senate-rollcall-num": "170600"},
+        ("upper", "2026-03-03", "Passed"): {"senate-rollcall-num": "140909"},
+        ("upper", "2026-06-11", "Passed"): {"senate-rollcall-num": "201236"},
+        ("lower", "2026-06-09", "Passed"): {"house-rollcall-num": "145504"},
+    }

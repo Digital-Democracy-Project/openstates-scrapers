@@ -478,3 +478,88 @@ def test_vote_legislation_entries_missing_a_field_do_not_stop_the_scrape(monkeyp
     (vote,) = run_add_votes_many(monkeypatch, [row])
 
     assert vote.motion_text == "Fallback text"
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# OPEN-628: each vote carries the time LIS records for it (VoteDate) as HHMMSS under the
+# chamber's roll-call key, which the broker orders same-day votes by. start_date stays the day.
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+def hb29_house_row(vote_id, vote_date, action):
+    # Real LIS rows (getvotebyidasync, HB 29, 2026 session, read 2026-11-18), trimmed to the
+    # fields add_votes reads; the 63-34 / 90-7 rolls are shortened to three members.
+    return {
+        "VoteID": vote_id,
+        "PassFail": "P",
+        "IsVoice": False,
+        "VoteDate": vote_date,
+        "LegislationActionDescription": None,
+        "VoteActionDescription": "H VOTE:",
+        "VoteLegislation": [
+            {"LegislationNumber": "HB29", "LegislationActionDescription": action}
+        ],
+        "ChamberCode": "H",
+        "BatchNumber": None,
+        "VoteMember": [
+            {"ResponseCode": "Y", "MemberDisplayName": "Member One"},
+            {"ResponseCode": "Y", "MemberDisplayName": "Member Two"},
+            {"ResponseCode": "N", "MemberDisplayName": "Member Three"},
+        ],
+    }
+
+
+def test_same_day_votes_carry_their_time_in_the_order_they_were_taken(monkeypatch):
+    # On 2026-02-09 the House took four HB 29 votes; LIS's VoteIDs are not in that order
+    # (the engrossment vote, last at 09:42:58, has the lowest id), the times are.
+    rows = [
+        hb29_house_row(
+            295480,
+            "2026-02-09T09:42:58",
+            "Engrossed by House as amended (63-Y 34-N 0-A)",
+        ),
+        hb29_house_row(
+            295495,
+            "2026-02-09T09:15:42",
+            "Uncontested Appropriations Committee Amendments agreed to (90-Y 7-N 0-A)",
+        ),
+        hb29_house_row(
+            295496,
+            "2026-02-09T09:16:38",
+            "Contested committee amendment Item 4-5.04 #1h agreed to (63-Y 34-N 0-A)",
+        ),
+        hb29_house_row(
+            295497,
+            "2026-02-09T09:38:08",
+            "Contested committee amendment Item 4-14 #2h agreed to (63-Y 34-N 0-A)",
+        ),
+    ]
+    scraper = VaBillScraper(Virginia(), "/tmp/")
+    scraper.session_code = "20261"
+    fake_response = mock.Mock(content=json.dumps({"Votes": rows}).encode())
+    monkeypatch.setattr(VaBillScraper, "get", mock.Mock(return_value=fake_response))
+    from openstates.scrape import Bill
+
+    bill = Bill("HB29", "2026", "Budget Bill", chamber="lower", classification="bill")
+    votes = list(scraper.add_votes(bill, "100000"))
+    assert {str(v.start_date) for v in votes} == {"2026-02-09"}
+    by_time = sorted(votes, key=lambda v: v.extras["house-rollcall-num"])
+    assert [v.dedupe_key for v in by_time] == [
+        "295495-HB29",
+        "295496-HB29",
+        "295497-HB29",
+        "295480-HB29",
+    ]
+    assert [v.extras for v in by_time] == [
+        {"house-rollcall-num": "091542"},
+        {"house-rollcall-num": "091638"},
+        {"house-rollcall-num": "093808"},
+        {"house-rollcall-num": "094258"},
+    ]
+
+
+def test_senate_vote_uses_the_senate_key(monkeypatch):
+    row = make_vote_row("SV824", batch_number=None)
+    row.update(ChamberCode="S", VoteDate="2026-03-02T14:18:19")
+    (vote,) = run_add_votes(monkeypatch, row)
+    assert vote.extras == {"senate-rollcall-num": "141819"}

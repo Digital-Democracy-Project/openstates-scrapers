@@ -5,6 +5,7 @@ from utils import url_xpath
 from openstates.exceptions import ScrapeError
 from openstates.scrape import State
 from openstates.scrape.base import get_random_user_agent
+from openstates.utils.ddp_manifest import manifest_value
 from .events import UTEventScraper
 from .bills import UTBillScraper
 
@@ -35,8 +36,10 @@ logger = logging.getLogger("openstates")
 # (blend in vs. self-identify) are in real tension -- worth a human decision
 # on whether DDP should honor Utah's identification request going forward
 # rather than silently picking one side during this routine upstream merge.
-_SESSION_LIST_MAX_ATTEMPTS = 3
-_SESSION_LIST_BACKOFF_SECONDS = 2
+# OPEN-555: read from the manifest's scrape.session_list_attempts / session_list_backoff_s; the
+# numbers are the fallback until both hosts and the image carry the fields.
+_SESSION_LIST_MAX_ATTEMPTS = manifest_value("ut", "scrape.session_list_attempts", 3)
+_SESSION_LIST_BACKOFF_SECONDS = manifest_value("ut", "scrape.session_list_backoff_s", 2)
 
 
 class Utah(State):
