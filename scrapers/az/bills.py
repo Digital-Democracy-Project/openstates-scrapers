@@ -28,6 +28,28 @@ ENGROSSED_DATE_SUFFIX = re.compile(
     r"^((?:House|Senate|Conference) Engrossed Version)\s*\(\d{1,2}/\d{1,2}/\d{4}\)\s*$"
 )
 
+# OPEN-625: a floor roll call's motion text is only "Passed" or "failed to pass"; which vote it
+# was is the floor step it is filed under (its FloorHeader's CommitteeShortName). Only Third
+# Reading and Final Reading (the vote after concurrence or a conference report) are votes on the
+# bill. Committee of the Whole (COW, ADDCOW), its motions to amend (MOTION), motions to
+# reconsider (RECON_3RD, RECON_FNL), miscellaneous motions (MISC), motions to return a bill
+# (MOTIONRETURN), concurrence (CONCUR) and conference (CONF) roll calls are not, so they get no
+# classification. Floor steps read from every 2026 header (57th-2nd-regular, 2,190 bills).
+BILL_VOTE_FLOOR_STEPS = frozenset({"THIRD", "FINAL"})
+
+
+def vote_classification(floor_step, motion_text):
+    """Classify one floor roll call from its floor step and motion text.
+
+    The text rules (the az block of config/motion_classification.yaml) apply only to a Third
+    or Final Reading roll call; any other floor step, or none, is not a vote on the bill.
+    HB 2689 (2026): the House's "COW Motion to Amend" roll call failed 24-32 and was stored
+    as a passage vote.
+    """
+    if floor_step not in BILL_VOTE_FLOOR_STEPS:
+        return []
+    return classify_motion("az", motion_text)
+
 
 def undated_version_name(name):
     match = ENGROSSED_DATE_SUFFIX.match(name)
@@ -401,7 +423,9 @@ class AZBillScraper(Scraper):
                 vote = VoteEvent(
                     chamber={"S": "upper", "H": "lower"}[header["LegislativeBody"]],
                     motion_text=action["Action"],
-                    classification=classify_motion("az", action["Action"]),
+                    classification=vote_classification(
+                        header.get("CommitteeShortName"), action["Action"]
+                    ),
                     result=result,
                     start_date=action_date.strftime("%Y-%m-%d"),
                     bill=bill,
