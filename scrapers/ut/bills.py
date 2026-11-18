@@ -44,6 +44,21 @@ SPONSOR_HOUSE_TO_CHAMBER = {
 BILL_NO_RE = re.compile(r"^([A-Z.]+)\s*0*(\d+)")
 
 
+# OPEN-622: a floor passage line names the chamber that voted ("House/ passed 3rd reading", "Senate/ passed 2nd & 3rd
+# readings/ suspension"), but le.utah.gov's "owner" of it is the office holding the bill next: "House/ passed 3rd
+# reading" is owned by the "Senate Secretary" (HB 209, 2026). On the replica (2026-11-18) 930 of 1,260 such lines were
+# stored under the chamber the bill went to. The same pattern as core's `ddp_states/ut.py` and the broker's `_read_utah`.
+PASSAGE_LINE_RE = re.compile(r"^(Senate|House)/ passed (2nd & )?3rd readings?\b", re.I)
+
+
+def passage_chamber(description):
+    """The chamber that voted on a floor passage line ("upper"/"lower"), or None for any other line."""
+    match = PASSAGE_LINE_RE.match(description or "")
+    if not match:
+        return None
+    return "upper" if match.group(1).lower() == "senate" else "lower"
+
+
 def _normalize_bill_no(raw):
     """Canonical form for matching a bill_no= target against a bill-list
     label, e.g. "H.B. 5 First Substitute", "hb5", and "HB0005" all normalize
@@ -454,6 +469,8 @@ class UTBillScraper(Scraper, LXMLMixin):
                     self.warning(
                         f"Found unexpected actor {action_data['owner']} at {api_url}"
                     )
+                # a passage line goes under the chamber that voted, not the one the bill goes to (OPEN-622)
+                actor = passage_chamber(action_data["description"]) or actor
 
                 if ":" in action_data["actionDate"]:
                     date = parser.parse(action_data["actionDate"])
