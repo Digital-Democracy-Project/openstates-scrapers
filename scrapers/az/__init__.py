@@ -1,9 +1,17 @@
+from datetime import date
+
 import lxml.html
 import re
 import requests
 from openstates.scrape import State
 from .bills import AZBillScraper
 from .events import AZEventScraper
+
+# OPEN-632: azleg lists the 2027 session (session id 131) since 2026-11-18. It becomes the
+# active session on its start date (the second Monday of January); until then 2026 stays the
+# only active one. Read once per run, so the first run on or after 2027-01-11 scrapes 2027.
+SESSION_2027_START = "2027-01-11"
+SESSION_2027_STARTED = date.today() >= date.fromisoformat(SESSION_2027_START)
 
 
 class Arizona(State):
@@ -307,7 +315,20 @@ class Arizona(State):
             "extras": {
                 "session_id": 130,
             },
-            "active": True,
+            "active": not SESSION_2027_STARTED,
+        },
+        {
+            "_scraped_name": "2027 - Fifty-eighth Legislature - First Regular Session",
+            "classification": "primary",
+            "identifier": "58th-1st-regular",
+            "name": "58th Legislature - First Regular Session",
+            "start_date": SESSION_2027_START,
+            # TODO: Correct end date (sine die is not known until the session ends)
+            "end_date": "2027-06-30",
+            "extras": {
+                "session_id": 131,
+            },
+            "active": SESSION_2027_STARTED,
         },
     ]
     ignored_scraped_sessions = [
