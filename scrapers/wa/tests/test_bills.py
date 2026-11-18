@@ -1,9 +1,11 @@
 import datetime
+import os
 import tempfile
 
 import lxml.html
 import scrapelib
 
+from openstates.scrape import Bill
 from wa.bills import WABillScraper, _wa_bill_id_to_no
 
 
@@ -434,3 +436,34 @@ def test_start_filter_on_the_per_bill_path_for_resolutions_uses_its_own_date(
     assert check("2026-01-05T00:00:00") is False
     assert check("2026-04-05T00:00:00") is True
     assert check(UNSET) is True
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# OPEN-628: the broker orders two same-day votes in one chamber by the vote's
+# roll-call key. Washington's VoteDate has no time (always T00:00:00); its
+# SequenceNumber is the chamber's roll-call order for that day.
+# ═══════════════════════════════════════════════════════════════════════════
+
+FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures")
+
+
+def test_same_day_reconsideration_carries_the_later_sequence_number(monkeypatch):
+    # Real GetRollCalls answer for HB 1131 (2025-26, saved 2026-06-23), votes trimmed to two
+    # members: on 2025-03-07 the House passed it as #7, reconsidered, and passed it again as #19.
+    with open(os.path.join(FIXTURES, "getrollcalls_hb1131_2025-26.xml"), "rb") as f:
+        content = f.read()
+    scraper = _make_scraper()
+    monkeypatch.setattr(
+        scraper, "get", lambda url: type("R", (), {"content": content})()
+    )
+    bill = Bill("HB 1131", "2025-2026", "A bill", chamber="lower")
+    votes = {
+        v.motion_text: (str(v.start_date), v.extras) for v in scraper.scrape_votes(bill)
+    }
+    assert votes == {
+        "3rd Reading & Final Passage (#7)": ("2025-03-07", {"house-rollcall-num": "7"}),
+        "Final Passage on Reconsideration (#19)": (
+            "2025-03-07",
+            {"house-rollcall-num": "19"},
+        ),
+    }
