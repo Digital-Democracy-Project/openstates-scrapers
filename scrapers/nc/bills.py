@@ -4,6 +4,7 @@ import lxml.etree
 import lxml.html
 import re
 from openstates.scrape import Bill, Scraper, VoteEvent
+from openstates.utils.ddp_manifest import manifest_value
 import pytz
 from collections import defaultdict
 from classify_motion import classify_motion
@@ -13,7 +14,9 @@ eastern = pytz.timezone("US/Eastern")
 
 
 # The one session whose votes are already stored with a bare roll-call number as their key (774 votes, OPEN-397).
-_BARE_KEY_SESSION = "2025"
+# OPEN-555: read from the manifest's votes.bare_key_session; "2025" is the fallback until both hosts and the image
+# carry the field.
+_BARE_KEY_SESSION = manifest_value("nc", "votes.bare_key_session", "2025")
 
 
 def vote_dedupe_key(session, rcs):

@@ -15,6 +15,8 @@ into its letter and name; that is `HOUSE_CELL_RE`, not a name rule.
 """
 import re
 
+from openstates.utils.ddp_manifest import manifest_value
+
 # One "<vote letter> <name>" cell of the House roll grid in `pdftotext -layout` output,
 # e.g. "Y   Mr. Speaker", "N   Tyler *" or "X Silvia" (a single space happens). The letter
 # is paired with the name printed beside it; reading letters and names as two separate
@@ -27,12 +29,17 @@ HOUSE_CELL_RE = re.compile(
 # listed: Ronald Mariano was elected Speaker on 2020-12-30 and has held it since. For
 # any other session the name is left as printed (so it stays visibly unmatched rather
 # than being given to the wrong person); add the session here when a new Speaker is
-# elected.
-HOUSE_SPEAKER_BY_SESSION = {
-    "192nd": "Ronald Mariano",
-    "193rd": "Ronald Mariano",
-    "194th": "Ronald Mariano",
-}
+# elected. OPEN-555: read from the manifest's votes.house_speaker_by_session (add a new session
+# there); this table is the fallback until both hosts and the image carry the field.
+HOUSE_SPEAKER_BY_SESSION = manifest_value(
+    "ma",
+    "votes.house_speaker_by_session",
+    {
+        "192nd": "Ronald Mariano",
+        "193rd": "Ronald Mariano",
+        "194th": "Ronald Mariano",
+    },
+)
 
 _SURNAME_INITIAL_RE = re.compile(r"^(?P<surname>[^,]+?) (?P<initial>[A-Z]\.)$")
 _SUFFIX_RE = re.compile(r"^(Jr|Sr|II|III|IV)\.?$")
