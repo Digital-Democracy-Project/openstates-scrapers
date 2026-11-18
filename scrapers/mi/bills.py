@@ -19,6 +19,7 @@ from openstates.utils.cookie_provider import (
     content_matches_fake_404_block,
     matched_block_marker,
 )
+from openstates.utils.ddp_manifest import manifest_value
 from openstates.utils.mi_cookies import MI_COOKIE_PROVIDER
 from classify_motion import classify_motion
 from ._waf_circuit_breaker import MIWafCircuitBreakerMixin
@@ -68,7 +69,13 @@ BASE_URL = "https://legislature.mi.gov"
 # OPEN-22's sustained-blocking-escalation investigation has more data. Env-configurable
 # (like the platform's own SCRAPELIB_RPM/STATS_BATCH_SIZE-style settings) so it can be
 # tuned without a redeploy.
-MI_SCRAPELIB_RPM = int(os.environ.get("MI_SCRAPELIB_RPM", 10))
+# OPEN-555: the env var still wins; otherwise the manifest's waf.requests_per_minute, else 10 (the
+# fallback until both hosts and the image carry the field).
+MI_SCRAPELIB_RPM = int(
+    os.environ.get(
+        "MI_SCRAPELIB_RPM", manifest_value("mi", "waf.requests_per_minute", 10)
+    )
+)
 
 # OPEN-81: normalizes search-result link text (already short form, e.g. "HB 0001", "SJR A" --
 # scrape()'s own " of <year>" split already happened by the time this is called) into the same

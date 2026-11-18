@@ -13,6 +13,7 @@ import requests
 from openstates.scrape import Bill, VoteEvent, Scraper
 from classify_motion import classify_motion
 from openstates.utils import format_datetime
+from openstates.utils.ddp_manifest import manifest_value
 from openstates.utils.resilience_profiles import RESILIENCE_PROFILES
 from openstates.utils.cookie_provider import (
     WafBlockDetected,
@@ -764,7 +765,15 @@ class UpperComVote(PdfPage):
 # updating in one place -- mirrors scrapers/mi/_waf_circuit_breaker.py, which
 # exists for the same reason (OPEN-18 -> OPEN-22 -> OPEN-30 kept extending a
 # fix that started out living in only one call site).
-FLHOUSE_WAF_MAX_ATTEMPTS = 3
+# OPEN-555: read from the manifest's waf.max_attempts; 3 is the fallback until both hosts and the
+# image carry the field.
+FLHOUSE_WAF_MAX_ATTEMPTS = manifest_value("fl", "waf.max_attempts", 3)
+
+# OPEN-555: the bill loop's own circuit breaker (_process_bill_list): after this many bills fail in a
+# row, pause this many seconds. Read from the manifest's waf.cooldown_after_failures / waf.cooldown_s;
+# 3 and 300 (5 minutes) are the fallback until both hosts and the image carry the fields.
+FL_COOLDOWN_AFTER_FAILURES = manifest_value("fl", "waf.cooldown_after_failures", 3)
+FL_COOLDOWN_SECONDS = manifest_value("fl", "waf.cooldown_s", 300)
 
 
 def _flhouse_bill_label(page) -> str:
@@ -1281,8 +1290,8 @@ class FlBillScraper(Scraper):
 
         # Set up a circuit breaker to track consecutive failures
         self._consecutive_failures = 0
-        self._max_consecutive_failures = 3
-        self._circuit_breaker_timeout = 300  # 5 minutes
+        self._max_consecutive_failures = FL_COOLDOWN_AFTER_FAILURES
+        self._circuit_breaker_timeout = FL_COOLDOWN_SECONDS
 
         self.headers["User-Agent"] = get_random_user_agent()
 
