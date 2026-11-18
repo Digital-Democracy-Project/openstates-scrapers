@@ -44,6 +44,30 @@ SPONSOR_HOUSE_TO_CHAMBER = {
 BILL_NO_RE = re.compile(r"^([A-Z.]+)\s*0*(\d+)")
 
 
+# OPEN-622: a chamber's floor vote line names the chamber that voted, but le.utah.gov's "owner" of the line is the
+# office holding the bill next: "House/ passed 3rd reading" is owned by the "Senate Secretary" and "House/ concurs with
+# Senate amendment" by the "Senate President" (HB 209, 2026). On the replica (2026-11-18) 930 of 1,260 passage lines,
+# all 214 concurrence lines and 12 of 26 conference "Final Passage" lines (full-chamber roll calls) were stored under
+# the other chamber. Passage lines use the same pattern as core's `ddp_states/ut.py` and the broker's `_read_utah`.
+VOTE_LINE_RES = (
+    re.compile(
+        r"^(Senate|House)/ (passed (2nd & )?3rd readings?\b|concurs with\b|refuse to concur with\b|failed$)",
+        re.I,
+    ),
+    re.compile(r"^(Senate|House) Conference Committee - Final Passage\b", re.I),
+)
+
+
+def voting_chamber(description):
+    """The chamber that voted ("upper"/"lower") on a floor vote line (passage, concurrence or its refusal, a failed
+    vote, a conference committee report's final passage), or None for any other line."""
+    for pattern in VOTE_LINE_RES:
+        match = pattern.match(description or "")
+        if match:
+            return "upper" if match.group(1).lower() == "senate" else "lower"
+    return None
+
+
 def _normalize_bill_no(raw):
     """Canonical form for matching a bill_no= target against a bill-list
     label, e.g. "H.B. 5 First Substitute", "hb5", and "HB0005" all normalize
@@ -454,6 +478,8 @@ class UTBillScraper(Scraper, LXMLMixin):
                     self.warning(
                         f"Found unexpected actor {action_data['owner']} at {api_url}"
                     )
+                # a floor vote line goes under the chamber that voted, not the one the bill goes to (OPEN-622)
+                actor = voting_chamber(action_data["description"]) or actor
 
                 if ":" in action_data["actionDate"]:
                     date = parser.parse(action_data["actionDate"])

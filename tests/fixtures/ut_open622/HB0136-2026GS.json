@@ -1,0 +1,748 @@
+{
+ "actionHistoryList": [
+  {
+   "actionDate": "2026-01-05 11:33:51.987",
+   "description": "Bill Numbered but not Distributed",
+   "owner": "Legislative Research and General Counsel",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-05 11:33:51.987",
+   "description": "Numbered Bill Publicly Distributed",
+   "owner": "Legislative Research and General Counsel",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-05 11:33:54.277",
+   "description": "LFA/ bill assigned to staff for fiscal analysis for HB0136",
+   "owner": "Legislative Fiscal Analyst",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-05 11:33:54.277",
+   "description": "LFA/ bill sent to agencies for fiscal input for HB0136",
+   "owner": "Legislative Fiscal Agency",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-14 13:53:52.000",
+   "description": "House/ received bill from Legislative Research",
+   "owner": "Clerk of the House",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-18 07:30:20.903",
+   "description": "LFA/ fiscal note sent to sponsor for HB0136",
+   "owner": "Version Sponsor",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-18 10:26:25.385",
+   "description": "LFA/ fiscal note publicly available for HB0136",
+   "owner": "Released",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-20 09:23:39.000",
+   "description": "House/ received fiscal note from Fiscal Analyst",
+   "owner": "Clerk of the House",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-20 15:38:23.000",
+   "description": "House/ 1st reading (Introduced)",
+   "owner": "House Rules Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-22 11:44:27.000",
+   "description": "House/ to standing committee",
+   "owner": "House Transportation Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-23 15:10:38.990",
+   "description": "House Comm - Amendment Recommendation",
+   "owner": "House Transportation Committee",
+   "voteID": "38776",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-23 15:12:19.713",
+   "description": "House Comm - Favorable Recommendation",
+   "owner": "House Transportation Committee",
+   "voteID": "38778",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-26 11:18:07.980",
+   "description": "House/ comm rpt/ amended",
+   "owner": "House Transportation Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-26 11:18:08.980",
+   "description": "House/ 2nd reading",
+   "owner": "House 3rd Reading Calendar for House bills",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-28 09:09:04.440",
+   "description": "LFA/ fiscal note sent to sponsor for HB0136",
+   "owner": "Version Sponsor",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-29 14:31:41.727",
+   "description": "LFA/ fiscal note publicly available for HB0136",
+   "owner": "Released",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-03 15:14:26.230",
+   "description": "LFA/ bill assigned to staff for fiscal analysis for HB0136S01",
+   "owner": "Legislative Fiscal Analyst",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-03 15:14:26.230",
+   "description": "LFA/ bill sent to agencies for fiscal input for HB0136S01",
+   "owner": "Legislative Fiscal Agency",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-04 14:13:52.890",
+   "description": "House/ 3rd reading",
+   "owner": "House 3rd Reading Calendar for House bills",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-04 14:14:11.703",
+   "description": "House/ circled",
+   "owner": "House 3rd Reading Calendar for House bills",
+   "voteID": "176",
+   "voiceVote": "1",
+   "voteHouse": "H"
+  },
+  {
+   "actionDate": "2026-02-04 17:46:40.018",
+   "description": "LFA/ fiscal note sent to sponsor for HB0136S01",
+   "owner": "Version Sponsor",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-05 11:09:40.675",
+   "description": "LFA/ fiscal note publicly available for HB0136S01",
+   "owner": "Released",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-09 14:58:09.060",
+   "description": "LFA/ bill assigned to staff for fiscal analysis for HB0136S02",
+   "owner": "Legislative Fiscal Analyst",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-09 14:58:09.060",
+   "description": "LFA/ bill sent to agencies for fiscal input for HB0136S02",
+   "owner": "Legislative Fiscal Agency",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-09 15:22:00.940",
+   "description": "House/ uncircled",
+   "owner": "House 3rd Reading Calendar for House bills",
+   "voteID": "297",
+   "voiceVote": "1",
+   "voteHouse": "H"
+  },
+  {
+   "actionDate": "2026-02-09 15:24:07.023",
+   "description": "House/ substituted",
+   "owner": "House 3rd Reading Calendar for House bills",
+   "voteID": "298",
+   "voiceVote": "1",
+   "voteHouse": "H"
+  },
+  {
+   "actionDate": "2026-02-09 15:33:00.093",
+   "description": "LFA/ bill assigned to staff for fiscal analysis for HB0136S03",
+   "owner": "Legislative Fiscal Analyst",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-09 15:33:00.093",
+   "description": "LFA/ bill sent to agencies for fiscal input for HB0136S03",
+   "owner": "Legislative Fiscal Agency",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-09 15:43:43.563",
+   "description": "House/ substitute adoption failed",
+   "owner": "House 3rd Reading Calendar for House bills",
+   "voteID": "300",
+   "voiceVote": "0",
+   "voteHouse": "H"
+  },
+  {
+   "actionDate": "2026-02-09 15:50:07.523",
+   "description": "House/ passed 3rd reading",
+   "owner": "Senate Secretary",
+   "voteID": "302",
+   "voiceVote": "0",
+   "voteHouse": "H"
+  },
+  {
+   "actionDate": "2026-02-09 15:50:09.523",
+   "description": "House/ to Senate",
+   "owner": "Senate Secretary",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-09 16:49:22.000",
+   "description": "Senate/ received from House",
+   "owner": "Waiting for Introduction in the Senate",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-10 11:13:48.000",
+   "description": "Senate/ 1st reading (Introduced)",
+   "owner": "Senate Rules Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-12 10:31:45.476",
+   "description": "LFA/ fiscal note sent to sponsor for HB0136S02",
+   "owner": "Version Sponsor",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-12 10:38:25.520",
+   "description": "LFA/ fiscal note publicly available for HB0136S02",
+   "owner": "Released",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-12 10:42:55.199",
+   "description": "LFA/ fiscal note sent to sponsor for HB0136S03",
+   "owner": "Version Sponsor",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-13 10:44:22.316",
+   "description": "LFA/ fiscal note publicly available for HB0136S03",
+   "owner": "Released",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-23 14:31:06.000",
+   "description": "Senate/ to standing committee",
+   "owner": "Senate Transportation, Public Utilities, Energy, and Technology Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-24 12:49:41.870",
+   "description": "LFA/ bill assigned to staff for fiscal analysis for HB0136S04",
+   "owner": "Legislative Fiscal Analyst",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-24 12:49:41.870",
+   "description": "LFA/ bill sent to agencies for fiscal input for HB0136S04",
+   "owner": "Legislative Fiscal Agency",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-24 17:35:40.313",
+   "description": "Senate Comm - Substitute Recommendation",
+   "owner": "Senate Transportation, Public Utilities, Energy, and Technology Committee",
+   "voteID": "40914",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-24 17:35:54.777",
+   "description": "Senate Comm - Amendment Recommendation",
+   "owner": "Senate Transportation, Public Utilities, Energy, and Technology Committee",
+   "voteID": "40915",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-24 17:36:26.993",
+   "description": "Senate Comm - Favorable Recommendation",
+   "owner": "Senate Transportation, Public Utilities, Energy, and Technology Committee",
+   "voteID": "40916",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-25 10:20:50.827",
+   "description": "Senate/ comm rpt/ substituted/ amended",
+   "owner": "Senate Transportation, Public Utilities, Energy, and Technology Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-25 10:20:51.827",
+   "description": "Senate/ placed on 2nd Reading Calendar",
+   "owner": "Senate 2nd Reading Calendar",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-26 15:14:04.042",
+   "description": "LFA/ fiscal note sent to sponsor for HB0136S04",
+   "owner": "Version Sponsor",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-26 15:20:55.381",
+   "description": "LFA/ fiscal note publicly available for HB0136S04",
+   "owner": "Released",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-27 08:43:56.807",
+   "description": "LFA/ bill assigned to staff for fiscal analysis for HB0136S05",
+   "owner": "Legislative Fiscal Analyst",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-27 08:43:56.807",
+   "description": "LFA/ bill sent to agencies for fiscal input for HB0136S05",
+   "owner": "Legislative Fiscal Agency",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-02 13:42:20.905",
+   "description": "LFA/ fiscal note sent to sponsor for HB0136S05",
+   "owner": "Version Sponsor",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-03 08:48:24.379",
+   "description": "LFA/ fiscal note publicly available for HB0136S05",
+   "owner": "Released",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-04 17:03:05.000",
+   "description": "Senate/ 2nd Reading Calendar to Rules",
+   "owner": "Senate Rules Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-05 10:56:34.000",
+   "description": "Senate/ Rules to 2nd Reading Calendar",
+   "owner": "Senate 2nd Reading Calendar",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-05 11:33:46.423",
+   "description": "Senate/ 2nd & 3rd readings/ suspension",
+   "owner": "Senate 2nd Reading Calendar",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-05 11:34:03.693",
+   "description": "Senate/ circled",
+   "owner": "Senate 2nd Reading Calendar",
+   "voteID": "1852",
+   "voiceVote": "1",
+   "voteHouse": "S"
+  },
+  {
+   "actionDate": "2026-03-05 15:30:27.497",
+   "description": "Senate/ uncircled",
+   "owner": "Senate 2nd Reading Calendar",
+   "voteID": "1880",
+   "voiceVote": "1",
+   "voteHouse": "S"
+  },
+  {
+   "actionDate": "2026-03-05 15:35:55.580",
+   "description": "Senate/ circled",
+   "owner": "Senate 2nd Reading Calendar",
+   "voteID": "1881",
+   "voiceVote": "1",
+   "voteHouse": "S"
+  },
+  {
+   "actionDate": "2026-03-05 15:52:41.450",
+   "description": "Senate/ uncircled",
+   "owner": "Senate 2nd Reading Calendar",
+   "voteID": "1889",
+   "voiceVote": "1",
+   "voteHouse": "S"
+  },
+  {
+   "actionDate": "2026-03-05 15:56:43.207",
+   "description": "Senate/ passed 2nd & 3rd readings/ suspension",
+   "owner": "Clerk of the House",
+   "voteID": "1890",
+   "voiceVote": "0",
+   "voteHouse": "S"
+  },
+  {
+   "actionDate": "2026-03-05 15:56:44.207",
+   "description": "Senate/ to House with amendments",
+   "owner": "Clerk of the House",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-05 16:47:11.937",
+   "description": "House/ received from Senate",
+   "owner": "Clerk of the House",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-05 16:47:12.937",
+   "description": "House/ placed on Concurrence Calendar",
+   "owner": "House Concurrence Calendar",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-05 18:10:23.590",
+   "description": "House/ refuse to concur with Senate amendment",
+   "owner": "Senate Secretary",
+   "voteID": "1355",
+   "voiceVote": "1",
+   "voteHouse": "H"
+  },
+  {
+   "actionDate": "2026-03-05 18:10:24.590",
+   "description": "House/ to Senate",
+   "owner": "Senate Secretary",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-05 19:01:38.413",
+   "description": "Senate/ refused to recede from Senate amendments",
+   "owner": "Senate Secretary",
+   "voteID": "1943",
+   "voiceVote": "1",
+   "voteHouse": "S"
+  },
+  {
+   "actionDate": "2026-03-05 19:02:57.000",
+   "description": "Senate Conference Committee Appointed",
+   "owner": "Conference Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-05 19:02:58.000",
+   "description": "Senate/ to House",
+   "owner": "Conference Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-05 19:13:00.000",
+   "description": "House/ received from Senate",
+   "owner": "Conference Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-05 19:13:01.000",
+   "description": "House Conference Committee Appointed",
+   "owner": "Conference Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-05 19:13:02.000",
+   "description": "House/ to Senate",
+   "owner": "Conference Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-05 19:21:46.407",
+   "description": "Bill Substituted by Conference Committee",
+   "owner": "Conference Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-05 19:21:58.527",
+   "description": "Bill amended by Conference Committee",
+   "owner": "Conference Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-05 19:22:04.527",
+   "description": "Conference Committee Report",
+   "owner": "Conference Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-05 20:22:09.923",
+   "description": "Senate/ received from House",
+   "owner": "Conference Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-05 20:22:10.937",
+   "description": "Senate Motion to Adopt Joint Conference Comm Rpt",
+   "owner": "Conference Committee",
+   "voteID": "1972",
+   "voiceVote": "1",
+   "voteHouse": "S"
+  },
+  {
+   "actionDate": "2026-03-05 20:24:28.033",
+   "description": "Senate Conference Committee - Final Passage",
+   "owner": "Conference Committee",
+   "voteID": "1973",
+   "voiceVote": "0",
+   "voteHouse": "S"
+  },
+  {
+   "actionDate": "2026-03-05 20:24:28.033",
+   "description": "Senate/ to House",
+   "owner": "Conference Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-06 09:41:07.220",
+   "description": "House/ received from Senate",
+   "owner": "Conference Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-06 09:41:08.220",
+   "description": "House Motion to Adopt Joint Conference Comm Rpt",
+   "owner": "Conference Committee",
+   "voteID": "1418",
+   "voiceVote": "1",
+   "voteHouse": "H"
+  },
+  {
+   "actionDate": "2026-03-06 09:41:54.580",
+   "description": "House Conference Committee - Final Passage",
+   "owner": "Senate President",
+   "voteID": "1419",
+   "voiceVote": "0",
+   "voteHouse": "H"
+  },
+  {
+   "actionDate": "2026-03-06 09:41:55.597",
+   "description": "House/ to Senate",
+   "owner": "Senate President",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-06 13:56:59.000",
+   "description": "Senate/ received from House",
+   "owner": "Senate President",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-06 13:57:00.000",
+   "description": "Senate/ signed by President/ returned to House",
+   "owner": "House Speaker",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-06 13:57:01.000",
+   "description": "Senate/ to House",
+   "owner": "House Speaker",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-06 15:35:33.000",
+   "description": "House/ received from Senate",
+   "owner": "House Speaker",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-06 15:35:34.000",
+   "description": "House/ signed by Speaker/ sent for enrolling",
+   "owner": "Legislative Research and General Counsel / Enrolling",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-06 23:46:50.270",
+   "description": "Bill Received from House for Enrolling",
+   "owner": "Legislative Research and General Counsel / Enrolling",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-06 23:46:53.307",
+   "description": "Draft of Enrolled Bill Prepared",
+   "owner": "Legislative Research and General Counsel / Enrolling",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-11 13:43:25.830",
+   "description": "Enrolled Bill Returned to House or Senate",
+   "owner": "Clerk of the House",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-11 13:43:30.013",
+   "description": "House/ enrolled bill to Printing",
+   "owner": "Clerk of the House",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-12 11:09:30.000",
+   "description": "House/ received enrolled bill from Printing",
+   "owner": "Clerk of the House",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-12 11:09:32.000",
+   "description": "House/ to Governor",
+   "owner": "Executive Branch - Governor",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-26 13:10:56.850",
+   "description": "Governor Signed",
+   "owner": "Lieutenant Governor's office for filing",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  }
+ ]
+}

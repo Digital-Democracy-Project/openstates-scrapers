@@ -1,0 +1,348 @@
+{
+ "actionHistoryList": [
+  {
+   "actionDate": "2026-01-07 13:52:43.390",
+   "description": "Bill Numbered but not Distributed",
+   "owner": "Legislative Research and General Counsel",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-07 13:52:43.390",
+   "description": "Numbered Bill Publicly Distributed",
+   "owner": "Legislative Research and General Counsel",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-07 13:52:47.033",
+   "description": "LFA/ bill assigned to staff for fiscal analysis for SB0098",
+   "owner": "Legislative Fiscal Analyst",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-07 13:52:47.033",
+   "description": "LFA/ bill sent to agencies for fiscal input for SB0098",
+   "owner": "Legislative Fiscal Agency",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-12 10:06:11.000",
+   "description": "Senate/ received bill from Legislative Research",
+   "owner": "Waiting for Introduction in the Senate",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-16 11:09:27.166",
+   "description": "LFA/ fiscal note sent to sponsor for SB0098",
+   "owner": "Version Sponsor",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-20 11:07:25.000",
+   "description": "Senate/ 1st reading (Introduced)",
+   "owner": "Senate Rules Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-20 15:08:33.000",
+   "description": "Senate/ to standing committee",
+   "owner": "Senate Economic Development and Workforce Services Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-21 10:03:41.173",
+   "description": "LFA/ bill assigned to staff for fiscal analysis for SB0098S01",
+   "owner": "Legislative Fiscal Analyst",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-21 10:03:41.173",
+   "description": "LFA/ bill sent to agencies for fiscal input for SB0098S01",
+   "owner": "Legislative Fiscal Agency",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-25 13:26:37.818",
+   "description": "LFA/ fiscal note sent to sponsor for SB0098S01",
+   "owner": "Version Sponsor",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-28 09:52:34.707",
+   "description": "LFA/ bill assigned to staff for fiscal analysis for SB0098S02",
+   "owner": "Legislative Fiscal Analyst",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-28 09:52:34.707",
+   "description": "LFA/ bill sent to agencies for fiscal input for SB0098S02",
+   "owner": "Legislative Fiscal Agency",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-28 14:02:22.407",
+   "description": "Senate Comm - Substitute Recommendation",
+   "owner": "Senate Economic Development and Workforce Services Committee",
+   "voteID": "39009",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-28 14:16:14.910",
+   "description": "Senate Comm - Favorable Recommendation",
+   "owner": "Senate Economic Development and Workforce Services Committee",
+   "voteID": "39017",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-29 11:44:00.000",
+   "description": "Senate/ comm rpt/ substituted",
+   "owner": "Senate Economic Development and Workforce Services Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-01-29 11:44:01.000",
+   "description": "Senate/ placed on 2nd Reading Calendar",
+   "owner": "Senate 2nd Reading Calendar",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-02 05:31:53.559",
+   "description": "LFA/ fiscal note sent to sponsor for SB0098S02",
+   "owner": "Version Sponsor",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-02 08:08:40.986",
+   "description": "LFA/ fiscal note publicly available for SB0098S02",
+   "owner": "Released",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-13 11:32:25.653",
+   "description": "Senate/ 2nd reading",
+   "owner": "Senate 2nd Reading Calendar",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-13 11:36:03.547",
+   "description": "Senate/ passed 2nd reading",
+   "owner": "Senate 3rd Reading Calendar",
+   "voteID": "479",
+   "voiceVote": "0",
+   "voteHouse": "S"
+  },
+  {
+   "actionDate": "2026-02-17 11:19:36.787",
+   "description": "Senate/ 3rd reading",
+   "owner": "Senate 3rd Reading Calendar",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-17 11:21:10.163",
+   "description": "Senate/ passed 3rd reading",
+   "owner": "Clerk of the House",
+   "voteID": "521",
+   "voiceVote": "0",
+   "voteHouse": "S"
+  },
+  {
+   "actionDate": "2026-02-17 11:21:11.163",
+   "description": "Senate/ to House",
+   "owner": "Clerk of the House",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-17 13:01:50.000",
+   "description": "House/ received from Senate",
+   "owner": "Clerk of the House",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-17 14:13:49.000",
+   "description": "House/ 1st reading (Introduced)",
+   "owner": "House Rules Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-23 11:02:56.000",
+   "description": "House/ to standing committee",
+   "owner": "House Health and Human Services Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-24 18:22:03.960",
+   "description": "House Comm - Favorable Recommendation",
+   "owner": "House Health and Human Services Committee",
+   "voteID": "40936",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-25 10:13:06.637",
+   "description": "House/ committee report favorable",
+   "owner": "House Health and Human Services Committee",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-25 10:13:07.637",
+   "description": "House/ 2nd reading",
+   "owner": "House 3rd Reading Calendar for Senate bills",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-26 14:39:15.307",
+   "description": "House/ 3rd reading",
+   "owner": "House 3rd Reading Calendar for Senate bills",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-26 14:42:58.387",
+   "description": "House/ passed 3rd reading",
+   "owner": "House Speaker",
+   "voteID": "900",
+   "voiceVote": "0",
+   "voteHouse": "H"
+  },
+  {
+   "actionDate": "2026-02-26 14:42:59.387",
+   "description": "House/ signed by Speaker/ returned to Senate",
+   "owner": "Senate President",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-26 14:43:00.387",
+   "description": "House/ to Senate",
+   "owner": "Senate President",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-26 18:13:30.000",
+   "description": "Senate/ received from House",
+   "owner": "Senate President",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-02-26 18:13:31.000",
+   "description": "Senate/ signed by President/ sent for enrolling",
+   "owner": "Legislative Research and General Counsel / Enrolling",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-02 09:38:03.440",
+   "description": "Bill Received from Senate for Enrolling",
+   "owner": "Legislative Research and General Counsel / Enrolling",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-02 09:38:04.097",
+   "description": "Draft of Enrolled Bill Prepared",
+   "owner": "Legislative Research and General Counsel / Enrolling",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-04 19:03:45.707",
+   "description": "Enrolled Bill Returned to House or Senate",
+   "owner": "Senate Secretary",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-04 19:03:48.497",
+   "description": "Senate/ enrolled bill to Printing",
+   "owner": "Senate Secretary",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-11 10:58:18.000",
+   "description": "Senate/ received enrolled bill from Printing",
+   "owner": "Senate Secretary",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-11 10:58:20.000",
+   "description": "Senate/ to Governor",
+   "owner": "Executive Branch - Governor",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  },
+  {
+   "actionDate": "2026-03-25 10:28:00.000",
+   "description": "Governor Signed",
+   "owner": "Lieutenant Governor's office for filing",
+   "voteID": "",
+   "voiceVote": "",
+   "voteHouse": ""
+  }
+ ]
+}
