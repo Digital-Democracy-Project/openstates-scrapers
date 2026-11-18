@@ -51,6 +51,25 @@ def vote_classification(floor_step, motion_text):
     return classify_motion("az", motion_text)
 
 
+# OPEN-627: a reading fails when it gets fewer yeas than it needs, not when the nays outnumber
+# them: HB 2918's third reading (2026) failed 28-25, short of the House's 31. azleg says which:
+# the roll call's Action text is "Passed" or "failed to pass" (a Committee of the Whole report,
+# "do pass" or "do pass amended"). Some readings need more than a majority: SB 1152's third
+# reading (2026) failed 16-11 although 16 is a Senate majority. So the text decides; only when it
+# says neither does the count, against a majority of the chamber's members (60 House, 30 Senate).
+CHAMBER_MAJORITY = {"lower": 31, "upper": 16}
+
+
+def vote_result(chamber, motion_text, yes_count, unanimous=False):
+    """'pass' or 'fail' for one floor roll call, from azleg's own outcome where it gives one."""
+    text = (motion_text or "").lower()
+    if "fail" in text:
+        return "fail"
+    if "pass" in text or unanimous:
+        return "pass"
+    return "pass" if yes_count >= CHAMBER_MAJORITY[chamber] else "fail"
+
+
 def undated_version_name(name):
     match = ENGROSSED_DATE_SUFFIX.match(name)
     return match.group(1) if match else name
@@ -405,28 +424,19 @@ class AZBillScraper(Scraper):
                 )
                 if not votes_list and ayes == 0 and nays == 0:
                     continue
-                """
-                safer to fall back to negative results than
-                to incorrectly mark votes as passed
-
-                Some example votes don't have every key we expect, either,
-                so we should try to handle comparisons cleanly
-                """
-                result = "fail"
-                if (
-                    action.get("UnanimouslyAdopted", False)
-                    or ayes > nays
-                    or action["Action"] == "Passed"
-                ):
-                    result = "pass"
-
+                vote_chamber = {"S": "upper", "H": "lower"}[header["LegislativeBody"]]
                 vote = VoteEvent(
-                    chamber={"S": "upper", "H": "lower"}[header["LegislativeBody"]],
+                    chamber=vote_chamber,
                     motion_text=action["Action"],
                     classification=vote_classification(
                         header.get("CommitteeShortName"), action["Action"]
                     ),
-                    result=result,
+                    result=vote_result(
+                        vote_chamber,
+                        action["Action"],
+                        ayes,
+                        action.get("UnanimouslyAdopted", False),
+                    ),
                     start_date=action_date.strftime("%Y-%m-%d"),
                     bill=bill,
                 )
