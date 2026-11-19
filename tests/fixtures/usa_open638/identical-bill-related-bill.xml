@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<billStatus><bill><number>3791</number>
+    <type>S</type>
+    <congress>118</congress>
+    <relatedBills><item>
+        <title>America’s Conservation Enhancement Reauthorization Act of 2024</title>
+        <congress>118</congress>
+        <number>8811</number>
+        <type>HR</type>
+        <latestAction>
+          <actionDate>2024-12-19</actionDate>
+          <text>Placed on the Union Calendar, Calendar No. 778.</text>
+        </latestAction>
+        <relationshipDetails>
+          <item>
+            <type>Identical bill</type>
+            <identifiedBy>CRS</identifiedBy>
+          </item>
+          <item>
+            <type>Related bill</type>
+            <identifiedBy>House</identifiedBy>
+          </item>
+        </relationshipDetails>
+      </item>
+    </relatedBills></bill></billStatus>

@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<billStatus><bill><number>3977</number>
+    <type>S</type>
+    <congress>119</congress>
+    <relatedBills><item>
+        <title>Bankruptcy Threshold Adjustment Act</title>
+        <congress>119</congress>
+        <number>7730</number>
+        <type>HR</type>
+        <latestAction>
+          <actionDate>2026-11-10</actionDate>
+          <text>Became Public Law No: 119-142.</text>
+        </latestAction>
+        <relationshipDetails>
+          <item>
+            <type>Related bill</type>
+            <identifiedBy>House</identifiedBy>
+          </item>
+          <item>
+            <type>Related bill</type>
+            <identifiedBy>CRS</identifiedBy>
+          </item>
+          <item>
+            <type>Contained in public law</type>
+            <identifiedBy>CRS</identifiedBy>
+          </item>
+        </relationshipDetails>
+      </item>
+    </relatedBills></bill></billStatus>

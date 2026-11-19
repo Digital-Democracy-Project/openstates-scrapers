@@ -690,16 +690,28 @@ class USBillScraper(Scraper):
                 f"US {law_type}", law_ref, citation_type="final", url=law_url
             )
 
+    # OPEN-638 (PLAN-companion-lineage phase 1, D1): congress.gov gives each related bill one or more types under
+    # relationshipDetails. Only "Identical bill" makes a companion; every other type ("Related bill", "Procedurally
+    # related", a House rules resolution, "Cross-Congress related bill", "Public law contains the text", ...) is stored
+    # as "related": still listed, never a scorecard stand-in. Every link used to be "companion".
+    COMPANION_TYPES = {"Identical bill"}
+
     def scrape_related_bills(self, bill, xml):
         for row in xml.findall("bill/relatedBills/item"):
             identifier = (
                 f"{self.get_xpath(row, 'type')} {self.get_xpath(row, 'number')}"
             )
+            kinds = {
+                (t.text or "").strip()
+                for t in row.findall("relationshipDetails/item/type")
+            }
 
             bill.add_related_bill(
                 identifier=identifier,
                 legislative_session=self.get_xpath(row, "congress"),
-                relation_type="companion",
+                relation_type=(
+                    "companion" if kinds & self.COMPANION_TYPES else "related"
+                ),
             )
 
     def scrape_sponsors(self, bill, xml):
