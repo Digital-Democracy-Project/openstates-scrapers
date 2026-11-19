@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<billStatus><bill><number>1</number>
+    <type>HJRES</type>
+    <congress>119</congress>
+    <relatedBills><item>
+        <title>Proposing an amendment to the Constitution of the United States to require that the Supreme Court of the United States be composed of nine justices.</title>
+        <congress>118</congress>
+        <number>1</number>
+        <type>HJRES</type>
+        <latestAction>
+          <actionDate>2023-01-09</actionDate>
+          <text>Referred to the House Committee on the Judiciary.</text>
+        </latestAction>
+        <relationshipDetails>
+          <item>
+            <type>Cross-Congress related bill</type>
+            <identifiedBy>CRS</identifiedBy>
+          </item>
+        </relationshipDetails>
+      </item>
+      </relatedBills></bill></billStatus>

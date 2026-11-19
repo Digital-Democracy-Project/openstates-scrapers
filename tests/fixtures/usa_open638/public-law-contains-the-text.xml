@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<billStatus><bill><number>1968</number>
+    <type>HR</type>
+    <congress>119</congress>
+    <relatedBills><item>
+        <title>Temporary Extension of Fentanyl-Related Substances Scheduling Act</title>
+        <congress>119</congress>
+        <number>724</number>
+        <type>S</type>
+        <latestAction>
+          <actionDate>2025-02-25</actionDate>
+          <text>Read twice and referred to the Committee on the Judiciary.</text>
+        </latestAction>
+        <relationshipDetails>
+          <item>
+            <type>Public law contains the text</type>
+            <identifiedBy>CRS</identifiedBy>
+          </item>
+        </relationshipDetails>
+      </item>
+      </relatedBills></bill></billStatus>

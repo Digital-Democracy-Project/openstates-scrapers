@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<billStatus><bill><number>1449</number>
+    <type>HR</type>
+    <congress>118</congress>
+    <relatedBills><item>
+        <title>Providing for consideration of the bill (H.R. 1449) to amend the Geothermal Steam Act of 1970 to increase the frequency of lease sales, to require replacement sales, and for other purposes, and providing for consideration of the bill (H.R. 9495) to amend the Internal Revenue Code of 1986 to postpone tax deadlines and reimburse paid late fees for United States nationals who are unlawfully or wrongfully detained or held hostage abroad, to terminate the tax-exempt status of terrorist supporting organizations, and for other purposes.</title>
+        <congress>118</congress>
+        <number>1576</number>
+        <type>HRES</type>
+        <latestAction>
+          <actionDate>2024-11-19</actionDate>
+          <text>Motion to reconsider laid on the table Agreed to without objection.</text>
+          <actionTime>14:06:04</actionTime>
+        </latestAction>
+        <relationshipDetails>
+          <item>
+            <type>Related bill</type>
+            <identifiedBy>House</identifiedBy>
+          </item>
+          <item>
+            <type>Procedurally-related</type>
+            <identifiedBy>House</identifiedBy>
+          </item>
+        </relationshipDetails>
+      </item>
+    </relatedBills></bill></billStatus>

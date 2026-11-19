@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<billStatus><bill><number>5371</number>
+    <type>HR</type>
+    <congress>119</congress>
+    <relatedBills><item>
+        <title>Military Construction and Veterans Affairs, Agriculture, and Legislative Branch Appropriations Act, 2026</title>
+        <congress>119</congress>
+        <number>3944</number>
+        <type>HR</type>
+        <latestAction>
+          <actionDate>2025-09-18</actionDate>
+          <text>Message on House action received in Senate and at desk: House requests a conference.</text>
+        </latestAction>
+        <relationshipDetails>
+          <item>
+            <type>Related bill</type>
+            <identifiedBy>CRS</identifiedBy>
+          </item>
+          <item>
+            <type>Public law contains the text</type>
+            <identifiedBy>CRS</identifiedBy>
+          </item>
+        </relationshipDetails>
+      </item>
+      </relatedBills></bill></billStatus>

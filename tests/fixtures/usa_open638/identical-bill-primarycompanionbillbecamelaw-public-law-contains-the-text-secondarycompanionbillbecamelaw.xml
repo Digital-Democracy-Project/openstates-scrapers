@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<billStatus><bill><number>2481</number>
+    <type>HR</type>
+    <congress>119</congress>
+    <relatedBills><item>
+        <title>Romance Scam Prevention Act</title>
+        <congress>119</congress>
+        <number>841</number>
+        <type>S</type>
+        <latestAction>
+          <actionDate>2025-09-02</actionDate>
+          <text>Placed on Senate Legislative Calendar under General Orders. Calendar No. 145.</text>
+        </latestAction>
+        <relationshipDetails>
+          <item>
+            <type>Identical bill</type>
+            <identifiedBy>CRS</identifiedBy>
+          </item>
+          <item>
+            <type>PrimaryCompanionBillBecameLaw</type>
+            <identifiedBy>U.S. Government Publishing Office</identifiedBy>
+          </item>
+          <item>
+            <type>SecondaryCompanionBillBecameLaw</type>
+            <identifiedBy>U.S. Government Publishing Office</identifiedBy>
+          </item>
+          <item>
+            <type>Public law contains the text</type>
+            <identifiedBy>CRS</identifiedBy>
+          </item>
+        </relationshipDetails>
+      </item>
+    </relatedBills></bill></billStatus>

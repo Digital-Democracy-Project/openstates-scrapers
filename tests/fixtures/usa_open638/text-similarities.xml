@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<billStatus><bill><number>6513</number>
+    <type>HR</type>
+    <congress>118</congress>
+    <relatedBills><item>
+        <title>ACE Act</title>
+        <congress>118</congress>
+        <number>4563</number>
+        <type>HR</type>
+        <latestAction>
+          <actionDate>2025-01-03</actionDate>
+          <text>Placed on the Union Calendar, Calendar No. 825.</text>
+        </latestAction>
+        <relationshipDetails>
+          <item>
+            <type>Text similarities</type>
+            <identifiedBy>House</identifiedBy>
+          </item>
+        </relationshipDetails>
+      </item>
+      </relatedBills></bill></billStatus>

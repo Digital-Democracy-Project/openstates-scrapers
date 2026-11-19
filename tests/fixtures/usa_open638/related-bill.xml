@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<billStatus><bill><number>165</number>
+    <type>HJRES</type>
+    <congress>118</congress>
+    <relatedBills><item>
+        <title>A joint resolution providing for congressional disapproval under chapter 8 of title 5, United States Code, of the rule submitted by the Department of Education relating to "Nondiscrimination on the Basis of Sex in Education Programs or Activities Receiving Federal Financial Assistance".</title>
+        <congress>118</congress>
+        <number>96</number>
+        <type>SJRES</type>
+        <latestAction>
+          <actionDate>2024-06-12</actionDate>
+          <text>Read twice and referred to the Committee on Health, Education, Labor, and Pensions.</text>
+        </latestAction>
+        <relationshipDetails>
+          <item>
+            <type>Related bill</type>
+            <identifiedBy>CRS</identifiedBy>
+          </item>
+        </relationshipDetails>
+      </item>
+    </relatedBills></bill></billStatus>
