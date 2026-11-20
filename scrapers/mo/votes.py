@@ -185,7 +185,14 @@ def parse_senate_journal(text):
     roll_calls, context_start, i = [], 0, 0
     while i < len(lines):
         page, line = lines[i]
-        if not re.search(r"following vote:\s*$", line):
+        # OPEN-707: the lead-in can wrap, "... passed by the following" / "vote:"
+        if (
+            re.search(r"\bfollowing\s*$", line)
+            and i + 1 < len(lines)
+            and re.match(r"^\s*vote:\s*$", lines[i + 1][1])
+        ):
+            i += 1
+        elif not re.search(r"following vote:\s*$", line):
             i += 1
             continue
         # the motion is the paragraph ending here: a paragraph opens indented and runs on
