@@ -11,7 +11,8 @@ The bills scraper only makes totals-only votes. Member names come from two place
 
 Roll calls not tied to a bill (approving the journal, appointments) are skipped.
 What each roll call decides comes from the mo block of config/motion_classification.yaml
-(OPEN-705, vote_classification() below).
+(OPEN-705, vote_classification() below); a concurrence or conference report vote followed by
+the bill's final passage roll call is not passage (OPEN-714, final_vote_only() below).
 """
 
 import datetime as dt
@@ -87,6 +88,19 @@ MOTION_ON_RE = re.compile(r" - (PREVIOUS QUESTION|\*?THAT )|\breconsider", re.I)
 # a House roll-call PDF names no motion, so the emergency clause vote that follows a bill's
 # passage has the same header; the House scraper adds this to tell them apart
 EMERGENCY_CLAUSE = " - EMERGENCY CLAUSE"
+
+# OPEN-714 (Ramon 2026-11-20, "Final vote only"): the vote that takes the other chamber's
+# version (House "HBs WITH SENATE AMENDMENTS", whose header repeats on the final vote that
+# follows; Senate "moved that HCS for SB 982 be adopted") or adopts a conference report
+# (House "BILLS IN CONFERENCE - CCR ...", then "- CCS ..."; Senate "the above conference
+# committee report be adopted", then "Was read the 3rd time and passed") is passage only
+# when no final passage roll call on the bill follows it in that chamber.
+CONCURRENCE_RE = re.compile(
+    r"^HBs (WITH|W/) ?SENATE AMENDMENTS - |\bmoved that (HCS|HS|HA \d+) (for|to) ", re.I
+)
+CONFERENCE_REPORT_RE = re.compile(
+    r"^BILLS IN CONFERENCE - CCR |\bconference committee report\b", re.I
+)
 
 
 def bill_from_text(text, last=False):
@@ -204,9 +218,13 @@ def parse_senate_journal(text):
         motion = re.sub(r"\s+", " ", motion).strip()
         # "Was read the 3rd time and passed" and "the above conference committee report"
         # name no bill; it is the last one named since the previous roll call
-        bill = bill_from_text(motion) or bill_from_text(
-            " ".join(ln for _, ln in lines[context_start:start]), last=True
-        )
+        context = " ".join(ln for _, ln in lines[context_start:start])
+        # OPEN-714: "Was read the 3rd time" follows "CCS for ... HBs 2637 and 3155,
+        # entitled:" and the bill's title, which can name other bills ("... as enacted by
+        # ... house bills nos. 2273, 1946 ...")
+        if motion.startswith("Was read the 3rd time") and "entitled:" in context:
+            context = context[: context.rindex("entitled:")]
+        bill = bill_from_text(motion) or bill_from_text(context, last=True)
         # "The emergency clause was adopted" follows the passage of the bill voted on last
         if not bill and "emergency clause" in motion.lower() and roll_calls:
             bill = roll_calls[-1]["bill"]
@@ -271,6 +289,31 @@ def vote_classification(motion):
     return []
 
 
+def final_vote_only(roll_calls):
+    """One chamber's roll calls of a session, in order -> each one's classification.
+    A concurrence or conference report vote followed by a later passage roll call on the
+    same bill is not passage (OPEN-714): a concurrence is labelled "amendment" (it takes
+    the other chamber's changes, as ia labels it), a conference report vote is left
+    unlabelled. One with no passage vote after it stays passage (pa OPEN-617, la
+    OPEN-583)."""
+    labels = [vote_classification(rc["motion"]) for rc in roll_calls]
+    for i, rc in enumerate(roll_calls):
+        if "passage" not in labels[i]:
+            continue
+        if CONCURRENCE_RE.search(rc["motion"]):
+            first = ["amendment"]
+        elif CONFERENCE_REPORT_RE.search(rc["motion"]):
+            first = []
+        else:
+            continue
+        if any(
+            "passage" in labels[j] and roll_calls[j]["bill"] == rc["bill"]
+            for j in range(i + 1, len(roll_calls))
+        ):
+            labels[i] = first
+    return labels
+
+
 def mark_emergency_clauses(roll_calls):
     """One House session day's roll calls, in order. A bill with an emergency clause
     (", E.C." in its header) is voted on and then its emergency clause is, both under the
@@ -313,7 +356,7 @@ class MOVoteScraper(Scraper):
         finally:
             os.remove(path)
 
-    def _make_vote(self, session, chamber, rc, dedupe_key, sources):
+    def _make_vote(self, session, chamber, rc, dedupe_key, sources, classification):
         counts = {}
         for option, _ in rc["votes"]:
             counts[option] = counts.get(option, 0) + 1
@@ -336,7 +379,7 @@ class MOVoteScraper(Scraper):
             motion_text=rc["motion"],
             result=result,
             legislative_session=session,
-            classification=vote_classification(rc["motion"]),
+            classification=classification,
             bill=rc["bill"],
             bill_chamber="lower" if rc["bill"].startswith("H") else "upper",
         )
@@ -353,7 +396,7 @@ class MOVoteScraper(Scraper):
     def _scrape_lower_chamber(self, session):
         # the bills scraper's House session code: 2026 -> 261, 2025S1 -> 253
         code = MOBillScraper._get_session_code(self, session)
-        day, empty_days = 0, 0
+        day, empty_days, roll_calls = 0, 0, []
         while empty_days < HOUSE_EMPTY_DAYS_TO_STOP:
             day += 1
             rc, found = 1, []
@@ -368,11 +411,13 @@ class MOVoteScraper(Scraper):
                     parsed["url"] = url
                     found.append(parsed)
                 rc += 1
-            for parsed in mark_emergency_clauses(found):
-                yield self._make_vote(
-                    session, "lower", parsed, parsed["key"], [parsed["url"]]
-                )
+            roll_calls.extend(mark_emergency_clauses(found))
             empty_days = empty_days + 1 if rc == 1 else 0
+        # the whole session first: a final passage vote can come on a later day
+        for parsed, label in zip(roll_calls, final_vote_only(roll_calls)):
+            yield self._make_vote(
+                session, "lower", parsed, parsed["key"], [parsed["url"]], label
+            )
 
     def _scrape_upper_chamber(self, session):
         year, kind = session[:4], session[4:]
@@ -383,7 +428,7 @@ class MOVoteScraper(Scraper):
         pattern = re.compile(
             rf"/{year[2:]}info/Journals/({prefixes})Day[^/]*\.pdf$", re.I
         )
-        seen = set()
+        seen, roll_calls = set(), []
         for url in dict.fromkeys(page.xpath("//a/@href")):
             if not pattern.search(url):
                 continue
@@ -401,7 +446,14 @@ class MOVoteScraper(Scraper):
                 if key in seen:
                     continue
                 seen.add(key)
-                yield self._make_vote(session, "upper", rc, key, [list_url, url])
+                rc["key"], rc["sources"] = key, [list_url, url]
+                rc["order"] = (rc["date"], rc["page"], per_page[rc["page"]])
+                roll_calls.append(rc)
+        # the whole session in journal order (the list is not: RDay21.pdf comes first):
+        # SB 973's conference report was adopted on May 11 and the bill passed on May 15
+        roll_calls.sort(key=lambda rc: rc["order"])
+        for rc, label in zip(roll_calls, final_vote_only(roll_calls)):
+            yield self._make_vote(session, "upper", rc, rc["key"], rc["sources"], label)
 
     def scrape(self, chamber=None, session=None):
         if chamber in ["upper", None]:
