@@ -12,9 +12,34 @@ import scrapelib
 
 from openstates.scrape import Scraper, Bill, VoteEvent
 
+from classify_motion import classify_motion
+
 from .actions import Categorizer
 
 BLACKLISTED_BILL_IDS = {"128": ("SP 601", "SP 602"), "129": (), "130": ()}
+
+# OPEN-698: a floor amendment roll call ("ADOPT HAH-126 to CAS-44", "INDEF PP HAH-2 TO
+# CAH-1", "IPP HAH-640", "INDEFINITELY POSTPONE SENATE AMENDMENT (SAS-1)"), labelled here
+# because config/motion_classification.yaml only decides passage. It needs both an adopt or
+# postpone verb and an amendment (the word, or a filing number such as CAH-1 or S-426), so
+# a bare "INDEFINITELY POSTPONE" of the bill itself is not one.
+AMENDMENT_VOTE = re.compile(
+    r"^(adopt|indef(initely)?\.? ?pp|indefinitely postpone|ipp)\b"
+    r".*(\bamend|\b[a-z]{1,3}-\d+\b|\bc ?a\b)",
+    re.I,
+)
+
+
+def vote_classification(motion):
+    """What a floor roll call decides: passage from the me block of
+    config/motion_classification.yaml, else "amendment" for an amendment roll call,
+    else nothing (committee-report, postponement, recede and procedural votes)."""
+    classification = classify_motion("me", motion)
+    if classification:
+        return classification
+    if AMENDMENT_VOTE.search(motion):
+        return ["amendment"]
+    return []
 
 
 class MEBillScraper(Scraper):
@@ -440,7 +465,7 @@ class MEBillScraper(Scraper):
             start_date=date.strftime("%Y-%m-%d"),
             motion_text=motion,
             result="pass" if outcome == "PREVAILS" else "fail",
-            classification="passage",
+            classification=vote_classification(motion),
             bill=bill,
         )
         vote.set_count("yes", yes_count)

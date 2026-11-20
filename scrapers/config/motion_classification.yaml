@@ -111,6 +111,33 @@ jurisdictions:
     two_thirds:
       - '^(motion to )?(veto override|override (the )?(governor''?s )?veto)'  # "Veto Override" (HB 1192, 2026_ss, House #11, 94-77: failed)
 
+  # OPEN-698 (Maine, gate E). The motion text is the link text of a roll call on a paper's Roll-calls tab
+  # (legislature.maine.gov/LawMakerWeb/rollcalls.asp?ID=<paper>), as the me scraper reads it. Rules written from
+  # every roll call on 485 session-132 papers (1,057 roll calls, House 525, Senate 532, read 2026-11-20), each
+  # checked against the paper's own docket entry for that roll call. Passage: "Enactment" / "ENACTMENT" and its
+  # emergency, mandate and bond-issue forms (a bill's final vote in each chamber); "Final Passage" (a resolve's
+  # or constitutional resolution's final vote); "PASSAGE TO BE ENGROSSED (AS AMENDED)" (the chamber passing the
+  # bill's text, as ma "passed to be engrossed"); "PASSAGE OF EMERGENCY MEASURE" (House RC 13: the docket says
+  # PASSAGE TO BE ENACTED FAILED); a bare "PASSAGE" / "ADOPTION" (a joint or House order "READ and PASSED", a
+  # resolution "READ and ADOPTED"); "Reconsideration - Veto" / "VETO OVERRIDE (2/3)" (all six seen are whole-bill:
+  # "Shall this Bill become a law notwithstanding the objections of the Governor?", Ramon OPEN-677).
+  # Left unlabelled on purpose, for Ramon to decide (see the OPEN-698 PR): accepting a committee report ("ACC MAJ
+  # OUGHT NOT TO PASS REP", "ACCEPT REPORT 'A' OUGHT TO PASS AS AMENDED", ...; accepting Ought Not to Pass often
+  # kills the bill), "INDEFINITELY POSTPONE" (the bill, or once an amendment), "RECEDE AND CONCUR" (concurs in
+  # whatever the other chamber did: engrossment, a report, an enactment, a failure), "SUBSTITUTE JOINT RES FOR
+  # COMMITTEE RPT". Not passage: "INSIST", "RECEDE", "RECONSIDER", "TABLE UNTIL LATER", "REFERENCE", "COMMIT",
+  # "SUSPEND RULES", "CONFIRMATION BE OVERRIDDEN" (a nomination), "PLACE ON FILE", "FORTHWITH" and other
+  # procedure. Amendment votes ("ADOPT HAH-126 to CAS-44", "INDEF PP HAH-2 TO CAH-1") are labelled amendment by
+  # vote_classification() in me/bills.py.
+  me:
+    passage:
+      - '^enact(ment)?\b'                        # "Enactment", "Enactment - Emer", "ENACTMENT-BOND ISSUE", "ENACT-EMER 2/3 ELECT"
+      - '^final passage\b'                       # "Final Passage", "Final Passage - Con Res", "FINAL PASSAGE-EMERGENCY 2/3 ELECTED"
+      - '^passage( to be engrossed( as amended)?| of emergency measure)?$'
+      - '^adoption$'
+      - '^(reconsideration ?- ?veto|veto override \(2/3\))$'   # whole-bill override; an unseen line-item text stays unlabelled
+    default: null                                # committee reports, postponement, recede and anything unseen stay unclassified
+
   mi:
     passage:
       - "^passed"                                # roll call# embedded after the verb
