@@ -1,7 +1,6 @@
-"""OPEN-606: Nevada's 84th (2027) session becomes the active session on its start date.
-
-Until 2027-02-01 the 2025 special session (2025Special36) stays the only active session
-(Ramon, 2026-11-16: "Special session only now"). openstates-core scrapes the sessions marked
+"""Nevada's sessions: the 84th (2027) is active now for its pre-filed bills (OPEN-659, Ramon
+2026-11-20), and the 2025 special session (2025Special36) stays active beside it until the 84th
+starts on 2027-02-01 (OPEN-606), then drops. openstates-core scrapes the sessions marked
 active when no session= is given, which is how our runs call it (session_arg: null), so the
 active flags below are exactly what a run would scrape on that day.
 """
@@ -40,12 +39,13 @@ def _reload_with_real_date(monkeypatch):
 @pytest.mark.parametrize(
     "day", [datetime.date(2026, 11, 17), datetime.date(2027, 1, 31)]
 )
-def test_before_84_starts_only_the_2025_special_is_active(monkeypatch, day):
-    assert _active_on(monkeypatch, day) == {"2025Special36"}
+def test_before_84_starts_84_and_the_2025_special_are_active(monkeypatch, day):
+    # OPEN-659: 84's pre-filed bills are scraped now; the special session is not dropped yet
+    assert _active_on(monkeypatch, day) == {"84", "2025Special36"}
 
 
 @pytest.mark.parametrize("day", [datetime.date(2027, 2, 1), datetime.date(2027, 3, 15)])
-def test_84_is_active_from_its_start(monkeypatch, day):
+def test_from_84s_start_only_84_is_active(monkeypatch, day):
     assert _active_on(monkeypatch, day) == {"84"}
 
 
