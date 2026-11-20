@@ -136,10 +136,25 @@ class IAVoteScraper(Scraper):
             ]
         )
 
+        # OPEN-713: a bill number wrapped onto a line of its own (House 2026-04-30, "Shall amendment
+        # H-8439, as amended, be adopted?" / "(H.F. 2783)") is joined back onto the question it ends,
+        # because the House question pattern matches as soon as the question's closing quote is read.
+        bill_only_re = re.compile(r"\(\s*[HS]\.[A-Z\.]*\s\d+\s*\)$")
+        joined = []
+        for line in lines:
+            if joined and bill_only_re.match(line):
+                joined[-1] += f" {line}"
+            else:
+                joined.append(line)
+        lines = iter(joined)
+
         # bill_id -> motion -> count
         motions_per_bill = collections.defaultdict(collections.Counter)
 
-        bill_re = re.compile(r"\(\s*([A-Z\.]+\s\d+)\s*\)")
+        # The bill number follows the question in brackets, "(S.F. 2385)", or, in some Senate
+        # journals (2025-03-19 SF 603, 2025-04-07 SF 167), without them after the closing quote:
+        # 'On the question "Shall the bill pass?" S.F. 603, the vote was:' (OPEN-713).
+        bill_re = re.compile(r'(?:\(\s*([A-Z\.]+\s\d+)\s*\)|"\s+([A-Z\.]+\s\d+))')
         chamber_motion_re = {
             "upper": re.compile(r".* the vote was:\s*"),
             "lower": re.compile(r'.*Shall.*(?:\?"?|")(\s{bill_re.pattern})?\s*'),
@@ -158,7 +173,8 @@ class IAVoteScraper(Scraper):
                 line += f" {next(lines)}"
 
             try:
-                bill_id = bill_re.search(line).group(1)
+                bill_match = bill_re.search(line)
+                bill_id = bill_match.group(1) or bill_match.group(2)
             except AttributeError:
                 self.warning(f"This motion did not pertain to legislation: {line}")
                 continue
