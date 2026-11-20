@@ -306,7 +306,10 @@ class MOBillScraper(Scraper, LXMLMixin):
             self.error(f"500 Error, unable to fetch {url}")
             return
         page = lxml.html.fromstring(page)
-        for row in page.cssselect("table tbody tr"):
+        # The Senate lists a bill's actions newest first, a day's actions included; they are
+        # read oldest first, so the last action is the latest (OPEN-695). The House XML is
+        # already oldest first.
+        for row in reversed(page.cssselect("table tbody tr")):
             tds = row.cssselect("td")
             date = tds[0].text_content().strip()
             date = dt.datetime.strptime(date, "%m/%d/%Y")
