@@ -8,6 +8,7 @@ import lxml.html
 from .actions import Categorizer
 from .voter_names import add_voter
 from scrapelib import HTTPError
+from classify_motion import classify_motion
 
 
 BILLS_URL = "https://legislature.idaho.gov/sessioninfo/%s/legislation/minidata/"
@@ -53,6 +54,10 @@ _COMMITTEES = {
         "Transp": "Transportation",
     },
 }
+
+
+def _motion_text(text):
+    return (text or "").replace("\u00a0", " ").replace("-", "").strip()
 
 
 def get_bill_type(bill_id):
@@ -206,9 +211,12 @@ class IDBillScraper(Scraper):
         # if a bill has passed a chamber or been 'received from'
         # then the next committee passage is in the opposite chamber
         has_moved_chambers = False
+        # OPEN-682: the action row above a roll call, for a tally row printed without its own text
+        previous_action = ""
         for row in bill_tables[2]:
             # lots of empty rows
             if len(row) == 1:
+                previous_action = ""
                 continue
             _, date, action, _ = [x.text_content().strip() for x in row]
 
@@ -226,15 +234,24 @@ class IDBillScraper(Scraper):
                 actor = "upper"
 
             # votes
-            if "AYES" in action or "NAYS" in action:
+            is_vote = "AYES" in action or "NAYS" in action
+            if is_vote:
                 yield from self.parse_vote(
-                    actor, date, row[2], session, bill_id, chamber, url
+                    actor,
+                    date,
+                    row[2],
+                    session,
+                    bill_id,
+                    chamber,
+                    url,
+                    previous_action,
                 )
                 # bill.add_vote_event(vote)
             # some td's text is separated by br elements
             if len(row[2]):
                 action = "".join(row[2].itertext())
             action = action.replace("\xa0", " ").strip()
+            previous_action = "" if is_vote else action
             attrs = self.categorizer.categorize(action)
             atype = attrs["classification"]
             if atype and "passage" in atype:
@@ -297,13 +314,27 @@ class IDBillScraper(Scraper):
             return name_list
         return []
 
-    def parse_vote(self, actor, date, row, session, bill_id, bill_chamber, source):
+    def parse_vote(
+        self,
+        actor,
+        date,
+        row,
+        session,
+        bill_id,
+        bill_chamber,
+        source,
+        previous_action="",
+    ):
         """
         takes the actor, date and row element and returns a Vote object
         """
         spans = row.xpath(".//span")
-        motion = row.text.replace("\u00a0", " ").replace("-", "").strip()
-        motion = motion if motion else "passage"
+        # OPEN-682: the motion is the text in front of the tally. A tally row printed without one
+        # ("PASSED - 61-6-3", 2025 H 231) is the vote on the reading in the action row just above
+        # it ("Rules Suspended: ..., read in full as required"), so that text is the motion; failing
+        # that (a roll call right after another), the tally itself, which classifies as nothing.
+        motion = _motion_text(row.text) or _motion_text(previous_action)
+        motion = motion or spans[0].text_content().replace("\u00a0", " ").strip()
         passed, yes_count, no_count, other_count = (
             spans[0].text_content().rsplit("-", 3)
         )
@@ -329,7 +360,8 @@ class IDBillScraper(Scraper):
             bill=bill_id,
             bill_chamber=bill_chamber,
             result=passed,
-            classification="passage",
+            # OPEN-682: what the vote decides, from the id block of config/motion_classification.yaml
+            classification=classify_motion("id", motion),
             legislative_session=session,
         )
         vote.add_source(source)
