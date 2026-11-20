@@ -19,7 +19,7 @@ def test_yaml_loads_without_error():
 
 
 def test_all_expected_jurisdiction_keys_present():
-    expected = {"us", "az", "ut", "fl", "mi", "ma", "wa", "va", "pa", "ne", "la", "al", "nc", "nv", "ga", "or"}
+    expected = {"us", "az", "ut", "fl", "mi", "ma", "wa", "va", "pa", "ne", "la", "al", "nc", "nv", "ga", "or", "wy"}
     assert expected == KNOWN_JURISDICTIONS
 
 
@@ -965,3 +965,48 @@ def test_or_every_real_text_is_decided_by_a_rule(text, expected):
     cfg = _config["jurisdictions"]["or"]
     key = "passage" if expected else "not_passage"
     assert any(re.search(p, text.lower()) for p in cfg[key])
+
+
+# ---------------------------------------------------------------------------
+# OPEN-677: Wyoming. One real motion text per kind of roll call in the 2026 probe sample (107 roll calls,
+# lsoservice.wyoleg.gov, 2026-11-20); the scraper puts the amendment / report / veto number in front. Amendment,
+# line-item veto and introduction votes are not passage here (the wy scraper names their kind:
+# tests/test_wy_bills.py). The "not seen" texts must not count.
+# ---------------------------------------------------------------------------
+
+WY_CASES = [
+    ("S 3rd Reading:Passed 20-10-1-0-0", ["passage"]),  # SF 1
+    ("H 3rd Reading:Passed 55-2-5-0-0", ["passage"]),  # SF 2
+    # not seen: a lost third reading is a lost passage vote
+    ("H 3rd Reading:Failed 20-40-2-0-0", ["passage"]),
+    ("S Concur:Passed 28-1-2-0-0", ["passage"]),  # SF 4
+    # not seen: a lost concurrence is a lost passage vote
+    ("H Concur:Failed 20-40-2-0-0", ["passage"]),
+    # conference committee report
+    ("SF0001JC001: H Adopted SF0001JC001: 59-1-2-0-0", ["passage"]),
+    ("SF0001JC001: S Adopted SF0001JC001: 28-3-0-0-0", ["passage"]),
+    ("S01 - Judiciary:Recommend Do Pass 4-0-1-0-0", ["committee-passage"]),  # SF 7
+    ("H02 - Appropriations:Recommend Do Pass 7-0-0-0-0", ["committee-passage"]),  # SF 2
+    # SF 5
+    ("S10 - Labor:Recommend Amend and Do Pass 5-0-0-0-0", ["committee-passage"]),
+    # SF 8
+    ("H01 - Judiciary:Recommend Amend and Do Pass 8-0-1-0-0", ["committee-passage"]),
+    ("SF0001S2001: Amendment adopted 20-11-0-0-0", []),
+    ("SF0001S2002: Amendment failed 2-29-0-0-0", []),
+    ("SF0004H2001: Amendment failed 22-38-2-0-0", []),
+    ("S Introduced and Referred to S02 - Appropriations 31-0-0-0-0", []),  # SF 2
+    ("S Introduced and Referred to S10 - Labor 25-6-0-0-0", []),  # SF 4
+    ("S Failed Introduction 0-31-0-0-0", []),  # SF 3
+    ("SF0001VT001: Line Item Veto Override 23-6-2-0-0", []),
+    ("SF0001VT002: Did Not Override Line Item Veto 34-26-1-1-0", []),
+    # HB 10 (2026, not in the sample)
+    ("S Motion to Suspend Rules to Resolve into COW & Place at the Top of GF", []),
+    # not seen: refusing to concur sends the bill to conference
+    ("H Did Not Concur 10-50-2-0-0", []),
+    ("H01 - Judiciary:Recommend Do Not Pass 3-6-0-0-0", []),  # not seen
+]
+
+
+@pytest.mark.parametrize("text,expected", WY_CASES)
+def test_wy(text, expected):
+    assert classify_motion("wy", text) == expected

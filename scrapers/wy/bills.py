@@ -10,6 +10,7 @@ from .actions import Categorizer
 import scrapelib
 
 from utils import LXMLMixin
+from classify_motion import classify_motion
 
 
 TIMEZONE = pytz.timezone("US/Mountain")
@@ -44,6 +45,30 @@ def voting_chamber(vote_json):
     own `chamber` field."""
     match = VOTE_CHAMBER_PREFIX_RE.match(vote_json["action"] or "")
     return match.group(1) if match else vote_json["chamber"]
+
+
+# OPEN-677: the kinds of roll call that are not passage, named for what they are. Which votes are passage (and
+# committee-passage) is decided by the wy block of config/motion_classification.yaml; these apply only to what it
+# leaves unclassified. A line-item veto override is a vote on one item of the budget bill, not on the bill. In a
+# budget session a bill needs a vote to be introduced, taken on its first reading.
+OTHER_VOTE_KINDS = (
+    (re.compile(r"\bamendment (adopted|failed)\b", re.I), "amendment"),
+    (re.compile(r"\bline item veto\b", re.I), "veto-override"),
+    (
+        re.compile(r"^[SH] (introduced and referred|failed introduction)\b", re.I),
+        "reading-1",
+    ),
+)
+
+
+def vote_classification(motion):
+    classification = classify_motion("wy", motion)
+    if classification:
+        return classification
+    for pattern, kind in OTHER_VOTE_KINDS:
+        if pattern.search(motion):
+            return [kind]
+    return []
 
 
 class WYBillScraper(Scraper, LXMLMixin):
@@ -316,7 +341,7 @@ class WYBillScraper(Scraper, LXMLMixin):
             result=result,
             legislative_session=session,
             bill=bill,
-            classification=[],
+            classification=vote_classification(motion),
         )
 
         v.set_count(option="yes", value=vote_json["yesVotesCount"])
