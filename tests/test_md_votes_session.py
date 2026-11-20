@@ -70,7 +70,9 @@ class OfflineMD(MDVoteScraper):
 
 def run(session, chamber):
     scraper = OfflineMD()
-    emitted = list(scraper.scrape(chamber=chamber, session=session))
+    # scrape_chamber(), not scrape(): scrape() also pairs a chamber's VoteEvents (OPEN-700,
+    # final_vote_only), and the fake scrape_vote() above returns URLs
+    emitted = list(scraper.scrape_chamber(chamber, session))
     index_requests = [u for u in scraper.requested if INDEX in u]
     day_requests = [u for u in scraper.requested if INDEX not in u]
     return scraper, emitted, index_requests, day_requests
