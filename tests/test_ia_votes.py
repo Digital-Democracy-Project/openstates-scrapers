@@ -94,8 +94,8 @@ def test_unseen_or_procedural_texts_are_not_passage(motion):
     assert classify_motion("ia", motion) == []
 
 
-def scrape(name, chamber, monkeypatch):
-    path = os.path.join(FIXTURES, name)
+def scrape_votes(path, chamber, monkeypatch):
+    """The VoteEvents scrape_journal() returns for one saved journal excerpt."""
     with open(path, "rb") as f:
         text = f.read()
     monkeypatch.setattr(ia.votes, "convert_pdf", lambda filename, type: text)
@@ -103,10 +103,19 @@ def scrape(name, chamber, monkeypatch):
     scraper.urlretrieve = lambda url: (path, None)
     scraper.warning = scraper.error = lambda *a, **k: None
     scraper.logger = logging.getLogger("test_ia_votes")
+    return list(
+        scraper.scrape_journal(
+            "https://www.legis.iowa.gov/x.pdf",
+            chamber,
+            "2025-2026",
+            datetime(2026, 1, 1),
+        )
+    )
+
+
+def scrape(name, chamber, monkeypatch):
     out = []
-    for vote in scraper.scrape_journal(
-        "https://www.legis.iowa.gov/x.pdf", chamber, "2025-2026", datetime(2026, 1, 1)
-    ):
+    for vote in scrape_votes(os.path.join(FIXTURES, name), chamber, monkeypatch):
         counts = {c["option"]: c["value"] for c in vote.counts}
         out.append(
             (
@@ -268,3 +277,85 @@ JOURNALS = [
 @pytest.mark.parametrize("name,chamber,expected", JOURNALS)
 def test_real_journals(name, chamber, expected, monkeypatch):
     assert scrape(name, chamber, monkeypatch) == expected
+
+
+# OPEN-713: three roll calls the scraper dropped in the 2025-2026 journals, cut from the real journals
+# (legis.iowa.gov, read 2026-11-20). Bill, question, outcome and the printed tallies read off the text by hand.
+FIXTURES_713 = os.path.join(os.path.dirname(__file__), "fixtures", "ia_open713")
+DROPPED = [
+    # Senate 2025-03-19: 'On the question "Shall the bill pass?" S.F. 603, the vote was:' (no brackets);
+    # the motion to concur just before it prints "(S.F. 603)" and was already read (its question has no
+    # closing quote after the "?", so the scraper reads it without the "?", unchanged here).
+    (
+        "senate_20250319_sf603.txt",
+        "upper",
+        [
+            (
+                "SF 603",
+                "Shall the motion to concur be adopted",
+                ["amendment"],
+                "pass",
+                32,
+                15,
+                3,
+            ),
+            ("SF 603", "Shall the bill pass?", ["passage"], "pass", 32, 15, 3),
+        ],
+    ),
+    # Senate 2025-04-07: 'On the question "Shall the bill pass?" S.F. 167, the vote was:' (no brackets).
+    (
+        "senate_20250407_sf167.txt",
+        "upper",
+        [("SF 167", "Shall the bill pass?", ["passage"], "pass", 32, 15, 3)],
+    ),
+    # House 2026-04-30: '"Shall amendment H-8439, as amended, be adopted?"' ends a line and "(H.F. 2783)"
+    # is on the next; the amendment to it just before keeps its bill number on the question's line.
+    (
+        "house_20260430_hf2783_h8439.txt",
+        "lower",
+        [
+            (
+                "HF 2783",
+                "Shall amendment H-8446, to amendment H-8439, be adopted?",
+                ["amendment"],
+                "fail",
+                30,
+                55,
+                15,
+            ),
+            (
+                "HF 2783",
+                "Shall amendment H-8439, as amended, be adopted?",
+                ["amendment"],
+                "pass",
+                59,
+                25,
+                16,
+            ),
+        ],
+    ),
+]
+
+
+@pytest.mark.parametrize("name,chamber,expected", DROPPED)
+def test_dropped_roll_calls_are_found(name, chamber, expected, monkeypatch):
+    votes = scrape_votes(os.path.join(FIXTURES_713, name), chamber, monkeypatch)
+    found = []
+    for vote in votes:
+        counts = {c["option"]: c["value"] for c in vote.counts}
+        found.append(
+            (
+                vote.bill.split('"identifier": "')[1].split('"')[0],
+                vote.motion_text,
+                vote.motion_classification,
+                vote.result,
+                counts["yes"],
+                counts["no"],
+                counts["absent"],
+            )
+        )
+        # the names read add up to the totals the journal prints
+        for option in ("yes", "no", "absent"):
+            names = [v for v in vote.votes if v["option"] == option]
+            assert len(names) == counts[option], (vote.motion_text, option)
+    assert found == expected
