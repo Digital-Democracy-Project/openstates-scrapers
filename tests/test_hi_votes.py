@@ -2,7 +2,8 @@
 
 Every text below is real: the first sentence of a bill-status action that holds a tally, cut the way
 parse_vote() in hi/bills.py cuts it, from the 2026 status pages on data.capitol.hawaii.gov
-(session/measure_indiv.aspx, read 2026-11-20). The House floor texts are tallies the scraper's vote
+(session/measure_indiv.aspx, read 2026-11-20; the veto override is HB 862 of 2021). The two
+"Reconsider: " texts put the scraper's own prefix on a real text. The House floor texts are tallies the scraper's vote
 patterns do not read yet; they are ruled on now so they are right once it does.
 """
 import json
@@ -120,6 +121,16 @@ HI_CASES = [
         "Report adopted; referred to the committee(s) on FIN with none voting aye with reservations; none "
         "voting no (0) and none excused (0).",  # HB1740
         [],
+    ),
+    # whole-bill veto override, HB862 of 2021 (2021 status page; none in 2026)
+    (
+        "Veto overridden - 2/3's vote: Ayes, 17; Aye(s) with reservations: Senator(s) Moriwaki .",
+        ["passage"],
+    ),
+    (
+        "Veto overridden by 2/3's vote with 38 Ayes; 8 Noes Representative(s) Har, Kong, McDermott, Okimoto, "
+        "Takumi, Tokioka, Ward, Wildberger; and 4 Excused Representative(s) Ilagan, McKelvey, Nishimoto, Ohno",
+        ["passage"],
     ),
     # a roll call taken again after a reconsideration keeps what it decides
     ("Reconsider: Passed Final Reading, as amended (CD 1).", ["passage"]),

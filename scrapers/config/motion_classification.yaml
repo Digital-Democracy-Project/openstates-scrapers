@@ -62,10 +62,12 @@ jurisdictions:
   # Conference committee recommends ...") are committee-passage. Passage is the floor vote that passes or kills the
   # whole measure: Third Reading (the Senate writes "Report adopted; Passed Third Reading"), Final Reading (the vote
   # on a conference draft, or on the other chamber's amendments: concurrence, pa OPEN-617, la OPEN-583), and the
-  # adoption of a resolution ("Adopted ...", "Report and Resolution Adopted ..."). Not passage, named so a wider rule
-  # cannot pick them up: Second Reading and "Report adopted; referred to the committee(s) on ..." (House floor votes
-  # that move the bill on). Agreeing or disagreeing with the other chamber's amendments is a voice action with no
-  # tally, so never a roll call here. No floor amendment or veto-override roll call was seen.
+  # adoption of a resolution ("Adopted ...", "Report and Resolution Adopted ...": only resolutions are adopted). Not
+  # passage, named so a wider rule cannot pick them up: Second Reading and "Report adopted; referred to the
+  # committee(s) on ..." (House floor votes that move the bill on). Agreeing or disagreeing with the other chamber's
+  # amendments is a voice action with no tally, so never a roll call here. A whole-bill veto override ("Veto
+  # overridden - 2/3's vote: ...", HB 862 of 2021) is passage; no line-item override text was found, so one stays
+  # unlabelled. No floor amendment roll call was seen (amendments are committee drafts, HD/SD/CD).
   hi:
     not_passage:
       - '^(reconsider: )?(report adopted; )?passed second reading\b'
@@ -75,6 +77,7 @@ jurisdictions:
     passage:
       - '^(reconsider: )?(report adopted; )?passed (third|final) reading\b'
       - '^(reconsider: )?(report and resolution )?adopted\b'
+      - '^(reconsider: )?veto overridden\b'            # whole bill (HB 862 of 2021); no line-item override text seen
     default: null                                # anything not seen stays unclassified, never passage
 
   fl:
