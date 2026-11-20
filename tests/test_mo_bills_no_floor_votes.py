@@ -51,6 +51,14 @@ def test_hb2885_floor_roll_calls_make_no_vote():
     assert not any("Third Read" in m or "Truly Agreed" in m for m in motions)
 
 
+def test_hb2885_committee_reports_are_committee_passage():
+    """OPEN-706: a committee report is not a floor passage, so a reader counting passage
+    votes must not see one."""
+    _, votes = scrape_hb2885()
+    assert len(votes) == 3
+    assert [v.motion_classification for v in votes] == [["committee-passage"]] * 3
+
+
 def test_hb2885_floor_actions_keep_their_text_and_totals():
     bill, _ = scrape_hb2885()
     descriptions = [a["description"] for a in bill.actions]
