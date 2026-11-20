@@ -10,8 +10,8 @@ The bills scraper only makes totals-only votes. Member names come from two place
   call follows "... by the following vote:" as YEAS / NAYS / Absent / Absent with leave.
 
 Roll calls not tied to a bill (approving the journal, appointments) are skipped.
-Classification is left as "passage", as in the bills scraper; Missouri's motion rules
-reclassify the motions later.
+What each roll call decides comes from the mo block of config/motion_classification.yaml
+(OPEN-705, vote_classification() below).
 """
 
 import datetime as dt
@@ -22,6 +22,8 @@ import lxml.html
 
 from openstates.scrape import Scraper, VoteEvent
 from openstates.utils import convert_pdf
+
+from classify_motion import classify_motion
 
 from .bills import MOBillScraper
 
@@ -75,6 +77,16 @@ PAGE_HEADER_RE = re.compile(
 BARE_NUMBER_RE = re.compile(r"^\s*(\d+)\s*$")
 # journal files are {R|V|T1|T2}Day...pdf: regular, veto, first and second extraordinary
 SENATE_JOURNAL_PREFIXES = {"": ("R", "V"), "S1": ("T1",), "S2": ("T2",)}
+
+# OPEN-705: an amendment roll call, labelled here because config/motion_classification.yaml
+# only decides passage: a House header's amendment line ("... - *HA 1 - ...", "HA 1 HA 2")
+# or a Senate "SA 2 was adopted" / "SA 3 failed of adoption". A previous question or a
+# motion on it (" - PREVIOUS QUESTION", " - THAT ...", "... be reconsidered") is not.
+AMENDMENT_VOTE_RE = re.compile(r"(^| - )\*?[HS]A \d+\b", re.I)
+MOTION_ON_RE = re.compile(r" - (PREVIOUS QUESTION|\*?THAT )|\breconsider", re.I)
+# a House roll-call PDF names no motion, so the emergency clause vote that follows a bill's
+# passage has the same header; the House scraper adds this to tell them apart
+EMERGENCY_CLAUSE = " - EMERGENCY CLAUSE"
 
 
 def bill_from_text(text, last=False):
@@ -240,6 +252,37 @@ def parse_senate_journal(text):
     return roll_calls
 
 
+def vote_classification(motion):
+    """What a roll call decides: passage from the mo block of
+    config/motion_classification.yaml, else "amendment" for an amendment roll call, else
+    nothing."""
+    classification = classify_motion("mo", motion)
+    if classification:
+        return classification
+    if AMENDMENT_VOTE_RE.search(motion) and not MOTION_ON_RE.search(motion):
+        return ["amendment"]
+    return []
+
+
+def mark_emergency_clauses(roll_calls):
+    """One House session day's roll calls, in order. A bill with an emergency clause
+    (", E.C." in its header) is voted on and then its emergency clause is, both under the
+    same header ("HCS HB 3080 was read the third time and passed ... The emergency clause
+    was defeated", House journal day 49); the last of a run of identical headers is the
+    emergency clause."""
+    for i, rc in enumerate(roll_calls):
+        same_before = i > 0 and roll_calls[i - 1]["motion"] == rc["motion"]
+        same_after = (
+            i + 1 < len(roll_calls) and roll_calls[i + 1]["motion"] == rc["motion"]
+        )
+        if ", E.C." in rc["motion"] and same_before and not same_after:
+            rc["emergency_clause"] = True
+    for rc in roll_calls:
+        if rc.pop("emergency_clause", False):
+            rc["motion"] += EMERGENCY_CLAUSE
+    return roll_calls
+
+
 def vote_result(motion, yes, no):
     # the outcome word nearest the vote decides: "moved that the vote by which SA 1 failed
     # be reconsidered, which motion prevailed" passed
@@ -286,7 +329,7 @@ class MOVoteScraper(Scraper):
             motion_text=rc["motion"],
             result=result,
             legislative_session=session,
-            classification="passage",
+            classification=vote_classification(rc["motion"]),
             bill=rc["bill"],
             bill_chamber="lower" if rc["bill"].startswith("H") else "upper",
         )
@@ -306,7 +349,7 @@ class MOVoteScraper(Scraper):
         day, empty_days = 0, 0
         while empty_days < HOUSE_EMPTY_DAYS_TO_STOP:
             day += 1
-            rc = 1
+            rc, found = 1, []
             while True:
                 url = HOUSE_ROLLCALL_URL.format(code=code, day=day, rc=rc)
                 text = self._get_pdf_text(url)
@@ -314,9 +357,14 @@ class MOVoteScraper(Scraper):
                     break
                 parsed = parse_house_rollcall(text)
                 if parsed:
-                    key = f"mo-{session}-H-{day:03}.{rc:03}"
-                    yield self._make_vote(session, "lower", parsed, key, [url])
+                    parsed["key"] = f"mo-{session}-H-{day:03}.{rc:03}"
+                    parsed["url"] = url
+                    found.append(parsed)
                 rc += 1
+            for parsed in mark_emergency_clauses(found):
+                yield self._make_vote(
+                    session, "lower", parsed, parsed["key"], [parsed["url"]]
+                )
             empty_days = empty_days + 1 if rc == 1 else 0
 
     def _scrape_upper_chamber(self, session):

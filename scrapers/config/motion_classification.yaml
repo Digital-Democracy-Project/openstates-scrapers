@@ -155,6 +155,37 @@ jurisdictions:
     # NOTE: "Motion to Place Measure on 3rd Reading & Final Passage" starts with "Motion"
     # and does NOT match these anchored patterns — confirmed by explicit test.
 
+  # OPEN-705 (Missouri). Two sources (mo/votes.py, OPEN-696), rules written from every 2026 roll call on a bill
+  # (463 House, 187 Senate; read 2026-11-20). House: the motion is the roll-call PDF's header joined with " - ":
+  # calendar heading, bill line, an amendment line if any ("*HA 1"), sponsor, title, LR number, then a motion
+  # line if the vote is on a motion ("PREVIOUS QUESTION", "THAT ... BE REFERRED ..."). The PDF never says what
+  # was decided, so the calendar heading decides: third reading is the passage vote; under "HBs WITH SENATE
+  # AMENDMENTS" the House adopts the Senate's version and then truly agrees to and finally passes it, and under
+  # "BILLS IN CONFERENCE" adopts the CCR and then passes the CCS (concurrence and conference report adoption are
+  # passage, pa OPEN-617, la OPEN-583). The emergency clause vote after a bill's passage has the same header;
+  # the mo scraper adds " - EMERGENCY CLAUSE" to it (mark_emergency_clauses). Senate: the motion is the journal
+  # paragraph ending "by the following vote:". Not passage: perfection, amendments (the mo scraper labels
+  # them amendment), previous question, refer/commit, reconsider, emergency clause, refusing a CCR.
+  mo:
+    not_passage:
+      - '\breconsider'                           # "THAT THE VOTE BY WHICH ... WAS THIRD READ AND PASSED BE RECONSIDERED", "moved that the vote by which ... be reconsidered"
+      - ' - emergency clause$'                   # House, added by the mo scraper (a title may say "EMERGENCY"); the Senate's "The emergency clause was adopted" matches no passage rule
+      - ' - previous question$'
+      - ' - \*?that '                            # House motion line: "THAT HCS HB 1667 BE RECOMMITTED ...", "*THAT THE HOUSE REFUSE TO ADOPT CCR ..."
+      - ' - \*?ha \d+'                           # House amendment line under a third-reading heading ("SBs FOR THIRD READING - HCS SB 835 - HA 3 - ...")
+    passage:
+      - '^(h|s|ha)(b|jr|cr)s (for third reading|3rd read(ing)?) - '   # "HBs FOR THIRD READING", "HBs 3rd READ - INFORMAL", "HBs 3rd READING - CONSENT", "HABs" (appropriations), "SCRs"
+      - '^hbs (with|w/) ?senate amendments - '   # adopting the Senate's version, then truly agreed to and finally passed
+      - '^bills in conference - cc[rs] '         # CCR adopted, then the CCS truly agreed to and finally passed
+      - '^bills carrying request messages - '    # FOR RAMON: SB 1408, the House receded and the bill was truly agreed to and finally passed (one seen)
+      - '^house resolutions - '                  # FOR RAMON: resolution adoption (HR 1, 2026 veto session, informs the Governor; one seen), as ok "Adopt Resolution"
+      - '\bread the 3rd time and (finally )?(passed|failed)\b'   # Senate third reading, also "Was read the 3rd time and passed" after a CCR; "failed" unseen in 2026
+      - 'conference committee report\b.* be adopted, which motion (prevailed|failed)'   # "moved that the above conference committee report be adopted"
+      - '\bconference committee report was adopted\b'   # "On motion of Senator Black, the above conference committee report was adopted by the following vote:" (day 62 journal)
+      - 'moved that (hcs|hs|ha \d+) (for|to) .* be adopted, which motion (prevailed|failed)'   # concurrence in the House's version or amendment
+      - ', (hcr|scr|hr|sr) \d+(, as amended[^,]*,)? was adopted\b'   # "On motion of Senator X, HCR 21 was adopted", "SCR 21, as amended by SCS, was adopted"
+    default: null                                # anything else (perfection, a Senate substitute adopted, an unseen text) stays unclassified
+
   va:
     bill_action:                                 # bill_action field is the reliable committee signal
       committee_passage:
