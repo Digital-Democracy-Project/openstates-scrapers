@@ -405,3 +405,20 @@ jurisdictions:
     passage:
       - '^motion for final passage on '         # passed or failed, as amended or not, after concurrence or a conference report
     default: null                                # an unseen title stays unclassified, never passage
+
+  # OPEN-682 (Idaho, gate E). The motion text is the text in front of the tally on a bill page's action row
+  # (legislature.idaho.gov/sessioninfo/<year>/legislation/<bill>/), hyphens removed by the id scraper; when the
+  # tally row has no text of its own, the scraper uses the action row just above it (parse_vote() in id/bills.py).
+  # Idaho's bill pages carry only the vote on the bill itself (a third reading, or the same reading under
+  # suspended rules), the origin chamber's vote on the other chamber's amendments, a concurrent resolution's
+  # adoption, veto overrides and a re-vote after reconsideration: every roll call of 2025 and 2026 (1,708 on 1,607
+  # bill pages, read 2026-11-20) is one of these. A lost vote is a lost passage vote (pa, al, nc, or). Anything
+  # else stays unclassified, never passage.
+  id:
+    passage:
+      - '^read third time\b'                     # "Read Third Time in Full", "... as amended", "... as amended in the Senate" (concurrence = passage, pa OPEN-617, la OPEN-583)
+      - '\bread in full as required\b'           # "Rules Suspended: Ayes 68 Nays 0 Abs/Excd 2, read in full as required", "Rules Suspended (2/3 Vote  Read in full as required)": passed the same day
+      - '^read in full\b'                        # a concurrent resolution adopted on the tenth order ("Read in full – ADOPTED")
+      - '^(senate|house) vote to override veto$' # "Senate vote to override veto" (2025 S 1023): a whole-bill override counts (Ramon, OPEN-677); a line-item one does not match
+      - '^motion to reconsider\s+passed$'        # the row above a text-less tally: the re-vote on the bill after a reconsider motion carried (2026 H 760, Senate, failed 15-20); a roll call on the motion itself ("Motion to reconsider –") does not match
+    default: null                                # an unseen text stays unclassified
