@@ -5,6 +5,7 @@ import re
 from openstates.scrape import Scraper, Bill, VoteEvent
 from .actions import Categorizer, find_committee
 from .utils import get_short_codes, make_data_url
+from classify_motion import classify_motion
 from urllib import parse as urlparse
 import dateutil
 import pytz
@@ -208,7 +209,10 @@ class HIBillScraper(Scraper):
                     legislative_session=session,
                     motion_text=motion_text,
                     result="pass" if "passed" in string.lower() else "fail",
-                    classification="passage",
+                    # OPEN-691: what the roll call decides, from the hi block of
+                    # config/motion_classification.yaml (committee reports are
+                    # committee-passage; texts no rule names stay unlabelled)
+                    classification=classify_motion("hi", motion_text),
                 )
                 reconsiderations.discard(actor)
                 vote.add_source(url)
