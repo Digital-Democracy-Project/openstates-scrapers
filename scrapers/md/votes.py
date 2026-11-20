@@ -93,8 +93,15 @@ class MDVoteScraper(Scraper, LXMLMixin):
 
     def scrape_chamber(self, chamber, session):
         chamber_name = "senate" if chamber == "upper" else "house"
+        # without ?ys= the site shows its newest session, which is empty until it starts
+        # (OPEN-717): 2026 -> 2026rs, 2026s1 -> 2026s1. The day links the index lists
+        # already carry their session (?year=2026RS).
+        session_code = session.lower()
+        if "s" not in session_code:
+            session_code += "rs"
         # despite visible pagination on page, the HTML seems to contain everything
         url = "http://mgaleg.maryland.gov/mgawebsite/FloorActions/Index/" + chamber_name
+        url += "?ys=" + session_code
         doc = self.lxmlize(url)
         links = doc.xpath("//table[1]/tbody/tr/td[3]/a/@href")
 
