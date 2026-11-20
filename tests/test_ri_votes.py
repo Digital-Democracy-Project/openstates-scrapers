@@ -300,8 +300,11 @@ def test_shared_rules_only_decide_passage():
 @pytest.mark.parametrize(
     "motion",
     [
-        "PASSAGE OF THE RESOLUTION",  # an unseen line must never default to passage
-        "PASSAGE / VETO OVERRIDE",
+        # An unseen line must never default to passage. No veto-override or conference-report
+        # roll call appears in 2025-2026 (2,948 headers), so none is ruled on here: one would
+        # stay unlabelled until its real text is seen.
+        "PASSAGE OF THE RESOLUTION",
+        "PASSAGE / POSTPONED",
         "RELATING TO PASSAGE",  # a title fragment that contains the word
         "",
     ],
