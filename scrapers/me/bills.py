@@ -12,9 +12,49 @@ import scrapelib
 
 from openstates.scrape import Scraper, Bill, VoteEvent
 
+from classify_motion import classify_motion
+
 from .actions import Categorizer
 
 BLACKLISTED_BILL_IDS = {"128": ("SP 601", "SP 602"), "129": (), "130": ()}
+
+# OPEN-698: a floor amendment roll call ("ADOPT HAH-126 to CAS-44", "INDEF PP HAH-2 TO
+# CAH-1", "IPP HAH-640", "INDEFINITELY POSTPONE SENATE AMENDMENT (SAS-1)"), labelled here
+# because config/motion_classification.yaml only decides passage. It needs both an adopt or
+# postpone verb and an amendment (the word, or a filing number such as CAH-1 or S-426), so
+# a bare "INDEFINITELY POSTPONE" of the bill itself is not one.
+AMENDMENT_VOTE = re.compile(
+    r"^(adopt|indef(initely)?\.? ?pp|indefinitely postpone|ipp)\b"
+    r".*(\bamend|\b[a-z]{1,3}-\d+\b|\bc ?a\b)",
+    re.I,
+)
+
+
+# OPEN-698 (Ramon, comment 21956): accepting an "Ought to Pass" report ("ACC MAJ OTP AS AMENDED
+# REP", "ACCEPT REPORT 'A' OUGHT TO PASS", 'acc report "a" otp-am by ca "a"', a bare "OTP-AM") is
+# passage unless the same chamber also held the bill's enactment or final roll call (FINAL_ROLL_CALL):
+# that chamber's final roll call replaces it (Ramon, OPEN-698: per chamber, not per bill). Decided in
+# scrape_votes(), since one roll call's text cannot say.
+OUGHT_TO_PASS_REPORT = re.compile(
+    r"^((acc(ept(ance of the)?)? |report ).*\b(ought to pass|otp)\b|otp(-am)?$)", re.I
+)
+# A bill's (or resolve's, order's, resolution's) own final roll call: enactment, final passage, an
+# emergency measure's passage, an order's "PASSAGE", a resolution's "ADOPTION".
+FINAL_ROLL_CALL = re.compile(
+    r"^(enact|final passage\b|passage( of emergency measure)?$|adoption$)", re.I
+)
+
+
+def vote_classification(motion):
+    """What a floor roll call decides: passage from the me block of
+    config/motion_classification.yaml, else "amendment" for an amendment roll call,
+    else nothing (committee-report, postponement, recede and procedural votes)."""
+    classification = classify_motion("me", motion)
+    if classification:
+        return classification
+    if AMENDMENT_VOTE.search(motion):
+        return ["amendment"]
+    return []
 
 
 class MEBillScraper(Scraper):
@@ -384,6 +424,7 @@ class MEBillScraper(Scraper):
 
         path = "//div/a[contains(@href, 'rollcall.asp')]"
         seen_urls = set()
+        votes = []
         for link in page.xpath(path):
             # skip blank motions, nothing we can do with these
             # seen on /LawMakerWeb/rollcalls.asp?ID=280039835
@@ -397,7 +438,21 @@ class MEBillScraper(Scraper):
                     continue
                 seen_urls.add(url)
 
-                yield from self.scrape_vote(bill, motion, url)
+                votes.extend(self.scrape_vote(bill, motion, url))
+
+        # chambers with their own final roll call, by the identifier's "S-" / "H-" prefix
+        final_chambers = {
+            v.identifier.split("-")[0]
+            for v in votes
+            if FINAL_ROLL_CALL.search(v.motion_text)
+        }
+        for vote in votes:
+            chamber = vote.identifier.split("-")[0]
+            if chamber not in final_chambers and OUGHT_TO_PASS_REPORT.search(
+                vote.motion_text
+            ):
+                vote.motion_classification = ["passage"]
+            yield vote
 
     def scrape_vote(self, bill, motion, url):
         page = self.get(url, retry_on_404=True).text
@@ -440,7 +495,7 @@ class MEBillScraper(Scraper):
             start_date=date.strftime("%Y-%m-%d"),
             motion_text=motion,
             result="pass" if outcome == "PREVAILS" else "fail",
-            classification="passage",
+            classification=vote_classification(motion),
             bill=bill,
         )
         vote.set_count("yes", yes_count)

@@ -1,0 +1,863 @@
+[
+ {
+  "motion": "ACC MAJ OTP AS AMENDED REP",
+  "roll_calls": 139,
+  "label": "",
+  "passage_where_chamber_has_no_final": 120
+ },
+ {
+  "motion": "ACCEPT MAJORITY OUGHT TO PASS AS AMENDED REPORT",
+  "roll_calls": 135,
+  "label": "",
+  "passage_where_chamber_has_no_final": 125
+ },
+ {
+  "motion": "ACCEPT MAJORITY OUGHT NOT TO PASS REPORT",
+  "roll_calls": 130,
+  "label": "passage"
+ },
+ {
+  "motion": "ACC MAJ OUGHT NOT TO PASS REP",
+  "roll_calls": 126,
+  "label": "passage"
+ },
+ {
+  "motion": "RECEDE AND CONCUR",
+  "roll_calls": 70,
+  "label": ""
+ },
+ {
+  "motion": "CONFIRMATION BE OVERRIDDEN",
+  "roll_calls": 32,
+  "label": ""
+ },
+ {
+  "motion": "Enactment",
+  "roll_calls": 24,
+  "label": "passage"
+ },
+ {
+  "motion": "ACCEPT MAJORITY OUGHT TO PASS REPORT",
+  "roll_calls": 21,
+  "label": "",
+  "passage_where_chamber_has_no_final": 19
+ },
+ {
+  "motion": "ACC MAJ OUGHT TO PASS REP",
+  "roll_calls": 20,
+  "label": "",
+  "passage_where_chamber_has_no_final": 17
+ },
+ {
+  "motion": "ENACTMENT",
+  "roll_calls": 20,
+  "label": "passage"
+ },
+ {
+  "motion": "INDEFINITELY POSTPONE",
+  "roll_calls": 13,
+  "label": ""
+ },
+ {
+  "motion": "PASSAGE",
+  "roll_calls": 13,
+  "label": "passage"
+ },
+ {
+  "motion": "RECONSIDER",
+  "roll_calls": 13,
+  "label": ""
+ },
+ {
+  "motion": "TABLE UNTIL LATER",
+  "roll_calls": 13,
+  "label": ""
+ },
+ {
+  "motion": "ACCEPT MINORITY OUGHT TO PASS AS AMENDED REPORT",
+  "roll_calls": 12,
+  "label": "",
+  "passage_where_chamber_has_no_final": 10
+ },
+ {
+  "motion": "ACCEPT REPORT 'A' OUGHT TO PASS AS AMENDED",
+  "roll_calls": 12,
+  "label": "",
+  "passage_where_chamber_has_no_final": 11
+ },
+ {
+  "motion": "INSIST",
+  "roll_calls": 10,
+  "label": ""
+ },
+ {
+  "motion": "ACCEPT REPORT 'B' OUGHT NOT TO PASS",
+  "roll_calls": 9,
+  "label": "passage"
+ },
+ {
+  "motion": "PASSAGE TO BE ENGROSSED AS AMENDED",
+  "roll_calls": 9,
+  "label": "passage"
+ },
+ {
+  "motion": "REFERENCE",
+  "roll_calls": 9,
+  "label": ""
+ },
+ {
+  "motion": "ACC MIN OUGHT NOT TO PASS REP",
+  "roll_calls": 8,
+  "label": "passage"
+ },
+ {
+  "motion": "ACCEPT MINORITY OUGHT NOT TO PASS REPORT",
+  "roll_calls": 8,
+  "label": "passage"
+ },
+ {
+  "motion": "ACC REPORT \"B\" ONTP",
+  "roll_calls": 7,
+  "label": "passage"
+ },
+ {
+  "motion": "PASSAGE TO BE ENGROSSED",
+  "roll_calls": 7,
+  "label": "passage"
+ },
+ {
+  "motion": "ACC REPORT \"A\" OTP-AM",
+  "roll_calls": 6,
+  "label": "",
+  "passage_where_chamber_has_no_final": 6
+ },
+ {
+  "motion": "COMMIT",
+  "roll_calls": 6,
+  "label": ""
+ },
+ {
+  "motion": "ACC REPORT \"A\" ONTP",
+  "roll_calls": 5,
+  "label": "passage"
+ },
+ {
+  "motion": "ACCEPT REPORT 'A' OUGHT NOT TO PASS",
+  "roll_calls": 5,
+  "label": "passage"
+ },
+ {
+  "motion": "Enactment - Emer",
+  "roll_calls": 5,
+  "label": "passage"
+ },
+ {
+  "motion": "ACCEPT REPORT",
+  "roll_calls": 4,
+  "label": ""
+ },
+ {
+  "motion": "Acc Maj Ought Not to Pass Rep",
+  "roll_calls": 4,
+  "label": "passage"
+ },
+ {
+  "motion": "RECEDE",
+  "roll_calls": 4,
+  "label": ""
+ },
+ {
+  "motion": "SUSPEND RULES (2/3)",
+  "roll_calls": 4,
+  "label": ""
+ },
+ {
+  "motion": "ACC MIN OTP AS AMENDED REP",
+  "roll_calls": 3,
+  "label": "",
+  "passage_where_chamber_has_no_final": 3
+ },
+ {
+  "motion": "ACC OUGHT TO PASS AS AMEND REP",
+  "roll_calls": 3,
+  "label": "",
+  "passage_where_chamber_has_no_final": 3
+ },
+ {
+  "motion": "ACCEPT MINORITY OUGHT TO PASS REPORT",
+  "roll_calls": 3,
+  "label": "",
+  "passage_where_chamber_has_no_final": 3
+ },
+ {
+  "motion": "ACCEPT REPORT 'A' OUGHT TO PASS",
+  "roll_calls": 3,
+  "label": "",
+  "passage_where_chamber_has_no_final": 3
+ },
+ {
+  "motion": "INSIST/ASK FOR COMMITTEE OF CONFERENCE",
+  "roll_calls": 3,
+  "label": ""
+ },
+ {
+  "motion": "Reconsideration - Veto",
+  "roll_calls": 3,
+  "label": "passage"
+ },
+ {
+  "motion": "ACCEPTANCE OF REPORT",
+  "roll_calls": 2,
+  "label": ""
+ },
+ {
+  "motion": "ADOPT CAH-1",
+  "roll_calls": 2,
+  "label": "amendment"
+ },
+ {
+  "motion": "Adoption",
+  "roll_calls": 2,
+  "label": "passage"
+ },
+ {
+  "motion": "FORTHWITH",
+  "roll_calls": 2,
+  "label": ""
+ },
+ {
+  "motion": "OTP-AM",
+  "roll_calls": 2,
+  "label": "",
+  "passage_where_chamber_has_no_final": 1
+ },
+ {
+  "motion": "acc maj otp-am by ca \"a\"",
+  "roll_calls": 2,
+  "label": "",
+  "passage_where_chamber_has_no_final": 2
+ },
+ {
+  "motion": "acc otp-am by ca \"a\"",
+  "roll_calls": 2,
+  "label": "",
+  "passage_where_chamber_has_no_final": 2
+ },
+ {
+  "motion": "acc report \"a\" otp-am by ca \"a\"",
+  "roll_calls": 2,
+  "label": "",
+  "passage_where_chamber_has_no_final": 2
+ },
+ {
+  "motion": "1ST READING",
+  "roll_calls": 1,
+  "label": ""
+ },
+ {
+  "motion": "ACC MAJORITY REPORT",
+  "roll_calls": 1,
+  "label": ""
+ },
+ {
+  "motion": "ACC MIN OTP-AM BY CA-B",
+  "roll_calls": 1,
+  "label": "",
+  "passage_where_chamber_has_no_final": 1
+ },
+ {
+  "motion": "ACC REPORT \"A\" OTP",
+  "roll_calls": 1,
+  "label": "",
+  "passage_where_chamber_has_no_final": 1
+ },
+ {
+  "motion": "ACC REPORT \"B' ONTP",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "ACC REPORT 'B' ONTP",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "ACCEPT MAJORITY TO REFER TO COMMITTEE",
+  "roll_calls": 1,
+  "label": ""
+ },
+ {
+  "motion": "ACCEPT REPORT 'B' OUGHT TO PASS",
+  "roll_calls": 1,
+  "label": "",
+  "passage_where_chamber_has_no_final": 0
+ },
+ {
+  "motion": "ACCEPT REPORT 'C' OUGHT TO PASS AS AMENDED",
+  "roll_calls": 1,
+  "label": "",
+  "passage_where_chamber_has_no_final": 1
+ },
+ {
+  "motion": "ADOPT C A AS AM BY HRH-33",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT CAH-1 AS AMENDED BY HHH-9",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT CAH-660",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT COMMITTEE AMENDMENT AS AMENDED BY HOUSE AMENDMENT",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT COMMITTEE AMENDMENT AS AMENDED BY SENATE AMENDMENT",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT HAH-1053 TO CAS-344",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT HAH-126 to CAS-44",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT HAH-127 to CAS-45",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT HAH-293 to CAH-251",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT HAH-640",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT HAH-771 TO CAH-746",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT HAH-784 TO CAH-632",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT HAH-940 to CAH-926",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT HAH-969 to CAH-881",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT HOUSE AMENDMENT R (H-33) to COMMITEE AMENDMENT",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT HRH-33 TO CAH-13",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT SAS-1",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT SAS-226",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT SENATE AMENDMENT (S-324) to COMMITTEE AMENDMENT",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT SENATE AMENDMENT (S-351) to COMMITTEE AMENDMENT",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT SENATE AMENDMENT (S-365) to COMMITTEE AMENDMENT",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT SENATE AMENDMENT (S-392) to LD 297",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT SENATE AMENDMENT (S-403) to COMMITTEE AMENDMENT",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT SENATE AMENDMENT (S-426) to COMMITTEE AMENDMENT",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT SENATE AMENDMENT (S-709) to COMMITTEE AMENDMENT",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT SENATE AMENDMENT (S-717) to COMMITTEE AMENDMENT",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT SENATE AMENDMENT (SBS-468) to COMMITTEE AMENDMENT",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPT SFS-6",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "ADOPTION",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "Acc Maj OTP as Amended Rep",
+  "roll_calls": 1,
+  "label": "",
+  "passage_where_chamber_has_no_final": 1
+ },
+ {
+  "motion": "DISPENSE THE READING OF H\"D\"",
+  "roll_calls": 1,
+  "label": ""
+ },
+ {
+  "motion": "DISPENSING OF THE READING",
+  "roll_calls": 1,
+  "label": ""
+ },
+ {
+  "motion": "ENACT-EMER 2/3 ELECT",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "ENACTMENT-BOND ISSUE",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "ENACTMENT-EMERGENCY",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "Enactment - Bond Issue",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "Enactment - Mandate",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "FINAL PASSAGE-EMERGENCY 2/3 ELECTED",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "Final Passage",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "Final Passage - Con Res",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "Final Passage - Emer",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "INDEF PP HAH-15 TO CAH-13",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HAH-2 TO CAH-1",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HAH-34 TO SP 519",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HAH-47",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HBH-16 TO CAH-13",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HBH-3 TO CAH-1",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HCH-17 TO CAH-13",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HCH-4 TO CAH-1",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HDH-18 TO CAH-13",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HDH-5 TO CAH-1",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HEH-19 TO CAH-13",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HEH-6 TO CAH-1",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HFH-20 TO CAH-13",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HFH-7 TO CAH-1",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HGH-21 TO CAH-13",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HGH-8 TO CAH-1",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HHH-23 TO CAH-13",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HIH-24 TO CAH-13",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HKH-26 TO CAH-13",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HLH-27 TO CAH-13",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HMH-28 TO CAH-13",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HOH-30 TO CAH-13",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HPH-31 TO CAH-13",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HQH-32 TO CAH-13",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEF PP HRH-33 TO CAH-13",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEFINITELY POSTPONE SENATE AMENDMENT (SAS-1)",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEFINITELY POSTPONE SENATE AMENDMENT (SAS-433)",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEFINITELY POSTPONE SENATE AMENDMENT (SBS-2)",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEFINITELY POSTPONE SENATE AMENDMENT (SBS-434)",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEFINITELY POSTPONE SENATE AMENDMENT (SCS-3)",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEFINITELY POSTPONE SENATE AMENDMENT (SCS-436)",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEFINITELY POSTPONE SENATE AMENDMENT (SDS-4)",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "INDEFINITELY POSTPONE SENATE AMENDMENT (SES-5)",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "IPP HAH-489",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "IPP HAH-640",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "IPP HBH-490",
+  "roll_calls": 1,
+  "label": "amendment"
+ },
+ {
+  "motion": "Move the Previous Question",
+  "roll_calls": 1,
+  "label": ""
+ },
+ {
+  "motion": "PASSAGE OF EMERGENCY MEASURE",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "PLACE ON FILE",
+  "roll_calls": 1,
+  "label": ""
+ },
+ {
+  "motion": "Passage",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "Passage to be Engrossed",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "RECONSIDERATION - VETO",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "REFERENCE TO HOUSE ETHICS",
+  "roll_calls": 1,
+  "label": ""
+ },
+ {
+  "motion": "REFERENCE TO JUDICIARY",
+  "roll_calls": 1,
+  "label": ""
+ },
+ {
+  "motion": "REPORT \"A\" ONTP",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "REPORT \"B\" ONTP",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "REPORT A OTP-AM BY CA-A",
+  "roll_calls": 1,
+  "label": "",
+  "passage_where_chamber_has_no_final": 1
+ },
+ {
+  "motion": "RULE COMM",
+  "roll_calls": 1,
+  "label": ""
+ },
+ {
+  "motion": "SUBSTITUTE JOINT RES FOR COMMITTEE RPT",
+  "roll_calls": 1,
+  "label": ""
+ },
+ {
+  "motion": "SUSPEND RULE 401 PART 11",
+  "roll_calls": 1,
+  "label": ""
+ },
+ {
+  "motion": "SUSPEND RULES -",
+  "roll_calls": 1,
+  "label": ""
+ },
+ {
+  "motion": "VETO OVERRIDE (2/3)",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "acc maj otp-am by ca-a",
+  "roll_calls": 1,
+  "label": "",
+  "passage_where_chamber_has_no_final": 1
+ },
+ {
+  "motion": "acc report \"a\" otp-am",
+  "roll_calls": 1,
+  "label": "",
+  "passage_where_chamber_has_no_final": 1
+ },
+ {
+  "motion": "acc report \"a\" otp-am by ca \"c\"",
+  "roll_calls": 1,
+  "label": "",
+  "passage_where_chamber_has_no_final": 1
+ },
+ {
+  "motion": "acc report \"a\" ought to pass",
+  "roll_calls": 1,
+  "label": "",
+  "passage_where_chamber_has_no_final": 1
+ },
+ {
+  "motion": "acc report \"b\" ontp",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "acc report \"b\" otp",
+  "roll_calls": 1,
+  "label": "",
+  "passage_where_chamber_has_no_final": 0
+ },
+ {
+  "motion": "acc report \"c\" otp-am by ca \"c\"",
+  "roll_calls": 1,
+  "label": "",
+  "passage_where_chamber_has_no_final": 1
+ },
+ {
+  "motion": "acc report 'A' otp-am",
+  "roll_calls": 1,
+  "label": "",
+  "passage_where_chamber_has_no_final": 1
+ },
+ {
+  "motion": "acceptance of the otp-am report",
+  "roll_calls": 1,
+  "label": "",
+  "passage_where_chamber_has_no_final": 1
+ },
+ {
+  "motion": "final passage",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "recon of maj rep otp-am by ca-a",
+  "roll_calls": 1,
+  "label": ""
+ },
+ {
+  "motion": "reconsideration-veto",
+  "roll_calls": 1,
+  "label": "passage"
+ },
+ {
+  "motion": "report \"a\" otp-am by ca \"a\"",
+  "roll_calls": 1,
+  "label": "",
+  "passage_where_chamber_has_no_final": 0
+ },
+ {
+  "motion": "report \"a\" ought to pass",
+  "roll_calls": 1,
+  "label": "",
+  "passage_where_chamber_has_no_final": 0
+ },
+ {
+  "motion": "suspend house rule 515",
+  "roll_calls": 1,
+  "label": ""
+ },
+ {
+  "motion": "suspension of house rule 515",
+  "roll_calls": 1,
+  "label": ""
+ },
+ {
+  "motion": "suspension of house rule 524",
+  "roll_calls": 1,
+  "label": ""
+ }
+]
