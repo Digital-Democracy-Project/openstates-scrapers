@@ -209,7 +209,7 @@ class FakeResponse:
         self.content = content
 
 
-def scrape_hb1924(monkeypatch, tmp_path, history):
+def scrape_hb1924(monkeypatch, tmp_path, history, bills=None):
     """Run the real scrape_bills() over 2026 HB 1924's real history (offline)."""
     scraper = MSBillScraper.__new__(MSBillScraper)
     allmsrs = open(os.path.join(FIXTURES, "allmsrs_HB1924_2026.xml"), "rb").read()
@@ -228,9 +228,10 @@ def scrape_hb1924(monkeypatch, tmp_path, history):
     monkeypatch.setattr(
         ms.bills, "convert_pdf", lambda path, kind: open(path, "rb").read()
     )
-    votes = [
-        o for o in scraper.scrape_bills("lower", "2026") if not isinstance(o, Bill)
-    ]
+    objects = list(scraper.scrape_bills("lower", "2026"))
+    if bills is not None:
+        bills.extend(o for o in objects if isinstance(o, Bill))
+    votes = [o for o in objects if not isinstance(o, Bill)]
     return {v.motion_text: v for v in votes}
 
 
@@ -256,3 +257,100 @@ def test_whole_bill_veto_override_end_to_end(monkeypatch, tmp_path):
     history = history.replace(b"Partially Vetoed By Governor", b"Vetoed")
     votes = scrape_hb1924(monkeypatch, tmp_path, history)
     assert votes["Override Veto"].motion_classification == ["passage"]
+
+
+# OPEN-708: a roll call on an action missing from _vote_mapping ("Veto Referred To ...", 2026 HB 1653,
+# the only one in 2024-2026 histories) used to raise KeyError and stop the whole Mississippi scrape.
+UNKNOWN_ACTION = "Veto Referred To Appropriations A"
+
+
+@pytest.fixture
+def warnings(monkeypatch):
+    seen = []
+    monkeypatch.setattr(MSBillScraper, "warning", seen.append, raising=False)
+    return seen
+
+
+def test_unknown_action_is_in_no_mapping_and_no_ms_rule():
+    assert UNKNOWN_ACTION not in MSBillScraper._vote_mapping
+    assert vote_classification(UNKNOWN_ACTION) == []
+
+
+@pytest.mark.parametrize(
+    "fixture,result",
+    [
+        ("2026_house_1000005.txt", "pass"),  # "H.B. No. 1924 was adopted"
+        ("2026_house_0370008.txt", "fail"),  # "H. B. No. 362 failed to pass"
+        ("2026_senate_0860011.txt", "fail"),  # "the motion to table failed"
+    ],
+)
+def test_unknown_action_keeps_unlabelled_vote_and_warns(
+    monkeypatch, tmp_path, warnings, fixture, result
+):
+    vote, _ = run_scrape_votes(monkeypatch, tmp_path, fixture, UNKNOWN_ACTION, "lower")
+    assert vote.motion_text == UNKNOWN_ACTION
+    assert vote.motion_classification == []
+    assert vote.result == result
+    assert len(vote.votes) >= 50
+    assert len(warnings) == 1
+    assert UNKNOWN_ACTION in warnings[0] and "HB 1" in warnings[0]
+    assert "http://billstatus.ls.state.ms.us/x.pdf" in warnings[0]
+
+
+@pytest.mark.parametrize("fixture,bill,chamber,action", REAL_ROLL_CALLS)
+def test_unknown_action_result_matches_the_mapped_result(
+    monkeypatch, tmp_path, warnings, fixture, bill, chamber, action
+):
+    # every real roll call above, read as if its action were unknown, gets the result the
+    # hand-checked _vote_mapping gives it
+    vote, _ = run_scrape_votes(monkeypatch, tmp_path, fixture, UNKNOWN_ACTION, chamber)
+    passed = MSBillScraper._vote_mapping[action][1]
+    assert vote.result == ("pass" if passed else "fail")
+
+
+def test_unknown_action_with_no_result_in_heading_is_skipped_not_guessed(
+    monkeypatch, tmp_path, warnings
+):
+    text = open(os.path.join(FIXTURES, "2026_house_1000005.txt"), "rb").read()
+    text = text.replace(b"was adopted by", b"was referred by")
+    monkeypatch.setattr(ms.bills, "convert_pdf", lambda path, kind: text)
+
+    def urlretrieve(url, verify=False):
+        path = tmp_path / "vote.pdf"
+        path.write_bytes(b"")
+        return str(path), None
+
+    scraper = MSBillScraper.__new__(MSBillScraper)
+    monkeypatch.setattr(scraper, "urlretrieve", urlretrieve, raising=False)
+    bill = Bill("HB 1", legislative_session="2026", chamber="lower", title="t")
+    votes = list(
+        scraper.scrape_votes(
+            "http://billstatus.ls.state.ms.us/x.pdf",
+            UNKNOWN_ACTION,
+            datetime(2026, 1, 1),
+            "lower",
+            bill,
+        )
+    )
+    assert votes == []
+    assert len(warnings) == 1 and "skipping" in warnings[0]
+
+
+def test_unknown_action_does_not_stop_the_scrape(monkeypatch, tmp_path, warnings):
+    # 2026 HB 1924's real history with its override roll call put on an unknown action
+    history = open(os.path.join(FIXTURES, "HB1924_2026_history.xml"), "rb").read()
+    assert history.count(b"(H) Veto Overridden") == 1
+    history = history.replace(b"(H) Veto Overridden", b"(H) " + UNKNOWN_ACTION.encode())
+    bills = []
+    votes = scrape_hb1924(monkeypatch, tmp_path, history, bills)
+    # the bill itself is still yielded after the unknown roll call
+    assert [b.identifier for b in bills] == ["HB1924"]
+    assert set(votes) == {
+        "Passage",
+        "Passage as Amended",
+        "Adopt Conference Report",
+        UNKNOWN_ACTION,
+    }
+    assert votes[UNKNOWN_ACTION].motion_classification == []
+    assert votes["Passage"].motion_classification == ["passage"]
+    assert len(warnings) == 1
