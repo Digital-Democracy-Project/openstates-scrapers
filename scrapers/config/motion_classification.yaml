@@ -73,7 +73,8 @@ jurisdictions:
       - '^(reconsider: )?(report adopted; )?passed second reading\b'
       - '^(reconsider: )?report adopted; referred to\b'
     committee_passage:
-      - '^(reconsider: )?the (conference )?committee(\(s\))?\b.*\brecommends?(\(s\))? that the measure be passed\b'
+      # 2021 House pages write "The committees on FIN recommend ..."
+      - '^(reconsider: )?the (conference )?committees?(\(s\))?\b.*\brecommends?(\(s\))? that the measure be passed\b'
     passage:
       - '^(reconsider: )?(report adopted; )?passed (third|final) reading\b'
       - '^(reconsider: )?(report and resolution )?adopted\b'

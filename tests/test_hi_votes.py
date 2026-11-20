@@ -44,6 +44,11 @@ HI_CASES = [
         "The committee(s) on JDC recommend(s) that the measure be PASSED, UNAMENDED.",  # HB1628
         ["committee-passage"],
     ),
+    # the House wording on 2021 pages (HB862)
+    (
+        "The committees on FIN recommend that the measure be PASSED, WITH AMENDMENTS.",
+        ["committee-passage"],
+    ),
     # a resolution's committee vote, SR10
     (
         "The committee(s) on EIG recommend(s) that the measure be PASSED, UNAMENDED.",
