@@ -1,0 +1,28 @@
+id: ocd-person/6fb71afb-6ce8-4f21-ad16-a7255ca2bfec
+name: Tyson Miyake
+given_name: Tyson
+family_name: Miyake
+gender: Male
+email: repmiyake@capitol.hawaii.gov
+party:
+- name: Democratic
+roles:
+- start_date: 2023-12-18
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '10'
+offices:
+- classification: capitol
+  address: State Capitol Room 421, 415 S. Beretania St., Honolulu, HI 96813
+  voice: 808-586-9444
+links:
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=294
+other_names:
+- name: Miyake, T.
+- name: T. Miyake
+- name: T.K. Miyake
+sources:
+- url: https://ballotpedia.org/Tyson_Miyake
+- url: https://en.wikipedia.org/wiki/Tyson_Miyake
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=294
+- url: https://www.linkedin.com/in/tyson-miyake-tkm82

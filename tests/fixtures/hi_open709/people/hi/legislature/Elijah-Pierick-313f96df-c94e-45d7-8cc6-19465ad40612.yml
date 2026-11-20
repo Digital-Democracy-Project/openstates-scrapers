@@ -1,0 +1,42 @@
+id: ocd-person/313f96df-c94e-45d7-8cc6-19465ad40612
+name: Elijah Pierick
+given_name: Elijah
+family_name: Pierick
+birth_date: 1994-11-28
+gender: Male
+email: reppierick@capitol.hawaii.gov
+image: http://www.capitol.hawaii.gov/MemberFiles/RepSenPhotos/Pierick.jpg
+party:
+- name: Republican
+roles:
+- start_date: 2022-11-08
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '39'
+offices:
+- classification: capitol
+  address: State Capitol Room 318, 415 S. Beretania St., Honolulu, HI 96813
+  voice: 808-586-8490
+links:
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=283
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=283&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=283&year=2024
+other_names:
+- name: E. Pierick
+- name: E.I. Pierick
+- name: Pierick, E.
+ids:
+  twitter: reppierick
+  youtube: repelijahpierick
+  instagram: repelijahpierick
+  facebook: elijahforhawaii
+sources:
+- url: https://ballotpedia.org/Elijah_Pierick
+- url: https://en.wikipedia.org/wiki/Elijah_Pierick
+- url: https://justfacts.votesmart.org/candidate/208486/elijah-pierick
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=283
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=283&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=283&year=2024
+- url: https://www.capitol.hawaii.gov/members/legislators.aspx
+extras:
+  title: Asst. Minority Floor Leader

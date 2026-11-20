@@ -1,0 +1,71 @@
+id: ocd-person/3b99a717-698f-4bcf-a630-183bb63e623e
+name: Troy Hashimoto
+given_name: Troy
+family_name: Hashimoto
+birth_date: 1987-09-21
+gender: Male
+email: senhashimoto@capitol.hawaii.gov
+image: http://www.capitol.hawaii.gov/MemberFiles/RepSenPhotos/Hashimoto.jpg
+party:
+- name: Democratic
+roles:
+- start_date: 2023-11-20
+  type: upper
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '5'
+- start_date: 2018-04-18
+  end_date: 2022-11-07
+  type: upper
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '5'
+- start_date: 2022-11-08
+  end_date: 2023-11-20
+  type: upper
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '5'
+- end_date: 2022-11-07
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '8'
+- end_date: 2023-11-08
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '10'
+offices:
+- classification: capitol
+  address: State Capitol Room 222, 415 S. Beretania St., Honolulu, HI 96813
+  voice: 808-586-7344
+links:
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=hashimoto&year=2019
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=293
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=293&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=293&year=2024
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=56&year=2023
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=hashimoto&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=hashimoto&year=2022
+other_names:
+- name: Hashimoto, T.
+- name: T. Hashimoto
+- name: T.N. Hashimoto
+- name: Troy N. Hashimoto
+ids:
+  facebook: rephashimoto
+other_identifiers:
+- scheme: legacy_openstates
+  identifier: HIL000230
+sources:
+- url: https://ballotpedia.org/Troy_Hashimoto
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=hashimoto&year=2019
+- url: https://capitol.hawaii.gov/members/legislators.aspx?chamber=H
+- url: https://en.wikipedia.org/wiki/Troy_Hashimoto
+- url: https://justfacts.votesmart.org/candidate/biography/180032/troy-hashimoto
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=293
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=293&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=293&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=hashimoto&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=hashimoto&year=2022
+- url: https://www.capitol.hawaii.gov/members/legislators.aspx
+- url: https://www.linkedin.com/in/troy-hashimoto-b398523
+extras:
+  extra_social_ids:
+    flickr: 165116887n06

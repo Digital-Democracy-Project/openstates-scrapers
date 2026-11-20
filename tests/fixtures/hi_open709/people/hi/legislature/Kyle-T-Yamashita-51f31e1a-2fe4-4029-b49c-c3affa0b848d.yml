@@ -1,0 +1,48 @@
+id: ocd-person/51f31e1a-2fe4-4029-b49c-c3affa0b848d
+name: Kyle Yamashita
+given_name: Kyle
+family_name: Yamashita
+birth_date: 1959-09-02
+gender: Male
+email: repyamashita@capitol.hawaii.gov
+image: http://www.capitol.hawaii.gov/MemberFiles/RepSenPhotos/Yamashita.jpg
+party:
+- name: Democratic
+roles:
+- start_date: 2004-11-02
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '12'
+offices:
+- classification: capitol
+  address: State Capitol Room 422, 415 S. Beretania St., Honolulu, HI 96813
+  voice: 808-586-6330
+links:
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=yamashita&year=2019
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=149
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=149&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=149&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=yamashita&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=yamashita&year=2022
+other_names:
+- name: K. Yamashita
+- name: K.T. Yamashita
+- name: Kyle T. Yamashita
+- name: Yamashita, K.
+ids:
+  facebook: kyle.yamashita.77
+other_identifiers:
+- scheme: legacy_openstates
+  identifier: HIL000076
+sources:
+- url: https://ballotpedia.org/Kyle_Yamashita
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=yamashita&year=2019
+- url: https://capitol.hawaii.gov/members/legislators.aspx?chamber=H
+- url: https://en.wikipedia.org/wiki/Kyle_Yamashita
+- url: https://justfacts.votesmart.org/candidate/biography/32333/kyle-yamashita
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=149
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=149&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=149&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=yamashita&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=yamashita&year=2022
+- url: https://www.capitol.hawaii.gov/members/legislators.aspx

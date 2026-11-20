@@ -1,0 +1,50 @@
+id: ocd-person/78cc3d2c-31b6-421f-a666-5a96ca3fe65a
+name: Scot Matayoshi
+given_name: Scot
+family_name: Matayoshi
+gender: Male
+email: repmatayoshi@capitol.hawaii.gov
+image: http://www.capitol.hawaii.gov/MemberFiles/RepSenPhotos/Matayoshi.jpg
+party:
+- name: Democratic
+roles:
+- start_date: 2018-11-06
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '49'
+offices:
+- classification: capitol
+  address: State Capitol Room 433, 415 S. Beretania St., Honolulu, HI 96813
+  voice: 808-586-8470
+links:
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=Matayoshi&year=2019
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=89
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=89&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=89&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=Matayoshi&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=Matayoshi&year=2022
+other_names:
+- name: Matayoshi, S.
+- name: S. Matayoshi
+- name: S.P.Z. Matayoshi
+- name: S.Z. Matayoshi
+- name: Scot Z. Matayoshi
+ids:
+  instagram: repscotmatayoshi
+  facebook: repscotmatayoshi
+sources:
+- url: https://ballotpedia.org/Scot_Matayoshi
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=Matayoshi&year=2019
+- url: https://capitol.hawaii.gov/members/legislators.aspx?chamber=H
+- url: https://en.wikipedia.org/wiki/Scot_Matayoshi
+- url: https://justfacts.votesmart.org/candidate/biography/183682/scot-matayoshi
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=89
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=89&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=89&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=Matayoshi&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=Matayoshi&year=2022
+- url: https://www.capitol.hawaii.gov/members/legislators.aspx
+- url: https://www.honolulu-lawyers.com/lawyers/scot-z-matayoshi
+- url: https://www.linkedin.com/in/scot-matayoshi-4038ab24
+extras:
+  title: Majority Whip

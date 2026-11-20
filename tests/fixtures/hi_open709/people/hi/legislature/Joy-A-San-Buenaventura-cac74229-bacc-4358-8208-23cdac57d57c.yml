@@ -1,0 +1,60 @@
+id: ocd-person/cac74229-bacc-4358-8208-23cdac57d57c
+name: Joy San Buenaventura
+given_name: Joy
+family_name: San Buenaventura
+gender: Female
+email: sensanbuenaventura@capitol.hawaii.gov
+image: http://www.capitol.hawaii.gov/MemberFiles/RepSenPhotos/sanbuenaventura.jpg
+party:
+- name: Democratic
+roles:
+- start_date: 2020-11-03
+  type: upper
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '2'
+- start_date: 2014-11-04
+  end_date: 2020-11-02
+  type: upper
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '2'
+- end_date: 2020-12-31
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '4'
+offices:
+- classification: capitol
+  address: State Capitol Room 213, 415 S. Beretania St., Honolulu, HI 96813
+  voice: 808-586-6890
+links:
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=Sanbuenaventura&year=2019
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=206&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=206&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=sanbuenaventura&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=sanbuenaventura&year=2022
+other_names:
+- name: J. San Buenaventura
+- name: J.A. San Buenaventura
+- name: Joy A. San Buenaventura
+- name: San Buenaventura, J.
+ids:
+  twitter: senjoydistrict2
+  instagram: senjoysanbuenaventura
+  facebook: senjoydistrict2
+other_identifiers:
+- scheme: legacy_openstates
+  identifier: HIL000204
+sources:
+- url: https://ballotpedia.org/Joy_A._San_Buenaventura
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=Sanbuenaventura&year=2019
+- url: https://capitol.hawaii.gov/members/legislators.aspx?chamber=H
+- url: https://en.wikipedia.org/wiki/Joy_San_Buenaventura
+- url: https://justfacts.votesmart.org/candidate/biography/149758/joy-san-buenaventura
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=206&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=206&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=sanbuenaventura&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=sanbuenaventura&year=2022
+- url: https://www.capitol.hawaii.gov/members/legislators.aspx
+- url: https://www.linkedin.com/in/joy-san-buenaventura-hutson-72089a6
+extras:
+  extra_social_ids:
+    flickr: joy4puna
