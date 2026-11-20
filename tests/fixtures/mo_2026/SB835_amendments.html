@@ -1,0 +1,180 @@
+
+
+<div class="amendments-container" data-bill-identifier="SB 835">
+    <div class="section-header">
+
+
+        <div class="section-header__title">
+            <p tabindex="0" aria-live="polite">The following amendments are available:</p>
+        </div>
+        <div class="section-header__actions">
+            <button onclick="printAmendments()" class="btn btn-outline-primary btn-sm">
+
+                <i class="bi bi-printer"></i> Print All
+            </button>
+        </div>
+    </div>
+
+        <div class="link-card-stack">
+                <a href="https://www.senate.mo.gov/BillTracking/Bills/BillInformation?handler=AmendmentPdf&amp;year=2026&amp;amendmentId=99"
+                   target="_blank"
+                   class="link-card-item-with-chip"
+                   title="2/18/2026 - SS for SCS S offered (Crawford)--(5285S.05F)">
+                    <span>
+                        <i class="bi bi-file-earmark-text-fill" style="color: #17a2b8; margin-right: 10px;"></i>
+                        2/18/2026 - SS for SCS S offered (Crawford)--(5285S.05F)
+                    </span>
+                        <span tabindex="0" aria-live="polite" class="square-status-chip status-chip--success">2/18/2026 - Adopted, as amended</span>
+                </a>
+                <a href="https://www.senate.mo.gov/BillTracking/Bills/BillInformation?handler=AmendmentPdf&amp;year=2026&amp;amendmentId=102"
+                   target="_blank"
+                   class="link-card-item-with-chip"
+                   title="2/18/2026 - SA 1 to SS for SCS S offered &amp; adopted  (Webber)--(5285S05.03S)">
+                    <span>
+                        <i class="bi bi-file-earmark-text-fill" style="color: #17a2b8; margin-right: 10px;"></i>
+                        2/18/2026 - SA 1 to SS for SCS S offered &amp; adopted  (Webber)--(5285S05.03S)
+                    </span>
+                        <span tabindex="0" aria-live="polite" class="square-status-chip status-chip--success">2/18/2026 - Adopted</span>
+                </a>
+                <a href="https://www.senate.mo.gov/BillTracking/Bills/BillInformation?handler=AmendmentPdf&amp;year=2026&amp;amendmentId=942"
+                   target="_blank"
+                   class="link-card-item-with-chip"
+                   title="5/15/2026 - CCR S offered &amp; adopted (5285S11.1SR)">
+                    <span>
+                        <i class="bi bi-file-earmark-text-fill" style="color: #17a2b8; margin-right: 10px;"></i>
+                        5/15/2026 - CCR S offered &amp; adopted (5285S11.1SR)
+                    </span>
+                        <span tabindex="0" aria-live="polite" class="square-status-chip status-chip--success">5/15/2026 - Adopted</span>
+                </a>
+                <a href="https://www.senate.mo.gov/BillTracking/Bills/BillInformation?handler=AmendmentPdf&amp;year=2026&amp;amendmentId=943"
+                   target="_blank"
+                   class="link-card-item-with-chip"
+                   title="5/15/2026 - CCS S Third Read and Passed (5285S.11S)">
+                    <span>
+                        <i class="bi bi-file-earmark-text-fill" style="color: #17a2b8; margin-right: 10px;"></i>
+                        5/15/2026 - CCS S Third Read and Passed (5285S.11S)
+                    </span>
+                        <span tabindex="0" aria-live="polite" class="square-status-chip status-chip--success">5/15/2026 - Passed</span>
+                </a>
+        </div>
+</div>
+
+<style>
+    .link-card-item-with-chip:hover {
+        color: white !important;
+    }
+
+    /* Gap between section header and link cards */
+    .amendments-container .section-header {
+        margin-bottom: 20px;
+    }
+
+    /* Print styles */
+    @media print {
+        .section-header__actions {
+            display: none !important;
+        }
+
+        .link-card-item-with-chip {
+            border: 1px solid #000;
+            background: none !important;
+        }
+
+        .square-status-chip {
+            border: 1px solid #000;
+            background: none !important;
+            color: #000 !important;
+        }
+    }
+</style>
+
+<script>
+    // Print Amendments Function
+    function printAmendments() {
+        const amendmentsContainer = document.querySelector('.amendments-container');
+        const billIdentifier = amendmentsContainer?.getAttribute('data-bill-identifier') || 'Bill';
+        const linkCardStack = document.querySelector('.amendments-container .link-card-stack');
+
+        if (!linkCardStack) {
+            alert('No amendments data available to print.');
+            return;
+        }
+
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>${billIdentifier} - Amendments</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        margin: 20px;
+                        font-size: 12px;
+                    }
+                    h1 {
+                        font-size: 18px;
+                        text-align: center;
+                        margin-bottom: 10px;
+                    }
+                    .subtitle {
+                        text-align: center;
+                        font-size: 14px;
+                        margin-bottom: 20px;
+                        color: #666;
+                    }
+                    .print-date {
+                        text-align: right;
+                        font-size: 10px;
+                        color: #666;
+                        margin-bottom: 20px;
+                    }
+                    .amendment-item {
+                        padding: 8px 0;
+                        border-bottom: 1px solid #ccc;
+                    }
+                    .amendment-item:last-child {
+                        border-bottom: none;
+                    }
+                    .status-badge {
+                        font-size: 10px;
+                        padding: 2px 6px;
+                        border: 1px solid #000;
+                        margin-left: 10px;
+                    }
+                </style>
+            </head>
+            <body>
+                <h1>${billIdentifier}</h1>
+                <div class="subtitle">Amendments</div>
+                <div class="print-date">Printed on: ${new Date().toLocaleDateString()}</div>
+                ${generatePrintableAmendments()}
+            </body>
+            </html>
+        `);
+
+        printWindow.document.close();
+        printWindow.print();
+        printWindow.close();
+    }
+
+    // Generate Printable Amendments HTML
+    function generatePrintableAmendments() {
+        const items = document.querySelectorAll('.amendments-container .link-card-item-with-chip');
+        let html = '';
+
+        items.forEach(item => {
+            const text = item.querySelector('span:first-child')?.textContent?.trim() || '';
+            const status = item.querySelector('.square-status-chip')?.textContent?.trim() || '';
+
+            html += `
+                <div class="amendment-item">
+                    ${text}
+                    ${status ? `<span class="status-badge">${status}</span>` : ''}
+                </div>
+            `;
+        });
+
+        return html || '<p>No amendments data available.</p>';
+    }
+</script>
