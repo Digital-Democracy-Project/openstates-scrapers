@@ -49,6 +49,15 @@ vote_re_list = [
     \s*Noes?,?\s(?P<n_no>\d+)\s?\(?([^)]*)\).*\)?\.? # Capture No votes
     \s*Excused,?\s(?P<n_excused>\d+)\s?\(?(?P<excused>[^)]*)\)?\.?  # Capture Excused votes
 """,
+    # OPEN-709: Senate Final Reading, missed by every pattern above. Tried last, so a
+    # text an earlier pattern reads is read exactly as before. "Ayes, 23; Aye(s) with
+    # reservations: Senator(s) Chang . 2 No(es): Senator(s) Acasio, Fevella.  0 Excused: none."
+    r"""
+    Ayes,\s(?P<n_yes>\d+);\s*
+    Aye\(s\)\swith\sreservations:\s*(?P<yes_resv>.*?)\s*\.\s+
+    (?P<n_no>\d+)\sNo\(es\):\s*(?P<no>.*?)\.\s+
+    (?P<n_excused>\d+)\sExcused:\s*(?P<excused>.*?)\.?\s*$
+""",
 ]
 
 
