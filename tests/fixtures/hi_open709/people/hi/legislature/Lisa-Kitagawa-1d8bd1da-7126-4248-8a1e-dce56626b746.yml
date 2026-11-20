@@ -1,0 +1,51 @@
+id: ocd-person/1d8bd1da-7126-4248-8a1e-dce56626b746
+name: Lisa Kitagawa
+given_name: Lisa
+family_name: Kitagawa
+gender: Female
+email: repkitagawa@capitol.hawaii.gov
+image: http://www.capitol.hawaii.gov/MemberFiles/RepSenPhotos/Kitagawa.jpg
+party:
+- name: Democratic
+roles:
+- start_date: 2018-11-06
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '48'
+offices:
+- classification: capitol
+  address: State Capitol Room 435, 415 S. Beretania St., Honolulu, HI 96813
+  voice: 808-586-8540
+links:
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=Kitagawa&year=2019
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=76
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=76&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=76&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=Kitagawa&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=Kitagawa&year=2022
+- url: https://www.repkitagawa.com/
+other_names:
+- name: Kitagawa, L.
+- name: L. Kitagawa
+- name: L.C. Kitagawa
+ids:
+  instagram: repkitagawa
+  facebook: representative-lisa-kitagawa-110741641505108
+sources:
+- url: https://ballotpedia.org/Lisa_Kitagawa
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=Kitagawa&year=2019
+- url: https://capitol.hawaii.gov/members/legislators.aspx?chamber=H
+- url: https://en.wikipedia.org/wiki/Lisa_Kitagawa
+- url: https://justfacts.votesmart.org/candidate/biography/183678/lisa-kitagawa
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=76
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=76&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=76&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=Kitagawa&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=Kitagawa&year=2022
+- url: https://www.capitol.hawaii.gov/members/legislators.aspx
+- url: https://www.linkedin.com/in/lisa-kitagawa-9220b1191
+- url: https://www.repkitagawa.com
+- url: https://www.repkitagawa.com/about
+extras:
+  extra_social_ids:
+    flickr: 168974244n05

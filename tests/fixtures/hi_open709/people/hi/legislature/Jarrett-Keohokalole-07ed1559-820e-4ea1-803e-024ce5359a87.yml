@@ -1,0 +1,54 @@
+id: ocd-person/07ed1559-820e-4ea1-803e-024ce5359a87
+name: Jarrett Keohokalole
+given_name: Jarrett
+family_name: Keohokalole
+birth_date: 1983-08-07
+gender: Male
+email: senkeohokalole@capitol.hawaii.gov
+image: http://www.capitol.hawaii.gov/MemberFiles/RepSenPhotos/keohokalole.jpg
+party:
+- name: Democratic
+roles:
+- start_date: 2018-11-06
+  type: upper
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '24'
+- start_date: 2014-11-04
+  end_date: 2018-11-05
+  type: upper
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '24'
+- end_date: 2018-11-06
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '48'
+offices:
+- classification: capitol
+  address: State Capitol Room 205, 415 S. Beretania St., Honolulu, HI 96813
+  voice: 808-587-7215
+links:
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=jkeohokalole&year=2019
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=187&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=187&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=jkeohokalole&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=jkeohokalole&year=2022
+other_names:
+- name: J. Keohokalole
+- name: Keohokalole, J.
+other_identifiers:
+- scheme: legacy_openstates
+  identifier: HIL000208
+sources:
+- url: https://ballotpedia.org/Jarrett_K._Keohokalole
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=jkeohokalole&year=2019
+- url: https://capitol.hawaii.gov/members/legislators.aspx?chamber=S
+- url: https://en.wikipedia.org/wiki/Jarrett_Keohokalole
+- url: https://justfacts.votesmart.org/candidate/biography/153435/jarrett-keohokalole
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=187&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=187&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=jkeohokalole&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=jkeohokalole&year=2022
+- url: https://www.capitol.hawaii.gov/members/legislators.aspx
+- url: https://www.linkedin.com/in/jarrett-keohokalole-4332041a
+extras:
+  title: Assistant Majority Whip

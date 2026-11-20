@@ -1,0 +1,50 @@
+id: ocd-person/cb860f85-2006-4d5b-b1a8-1c56c1def2d7
+name: Amy Perruso
+given_name: Amy
+family_name: Perruso
+birth_date: 1968-11-05
+gender: Female
+email: repperruso@capitol.hawaii.gov
+image: http://www.capitol.hawaii.gov/MemberFiles/RepSenPhotos/Perruso.jpg
+party:
+- name: Democratic
+roles:
+- start_date: 2018-11-06
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '46'
+offices:
+- classification: capitol
+  address: State Capitol Room 444, 415 S. Beretania St., Honolulu, HI 96813
+  voice: 808-586-6700
+links:
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=perruso&year=2019
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=109
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=109&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=109&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=perruso&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=perruso&year=2022
+- url: https://www.representativeamyperruso.com/
+other_names:
+- name: A. Perruso
+- name: A.A. Perruso
+- name: Amy A. Perruso
+- name: Perruso, A.
+ids:
+  facebook: representativeperruso
+sources:
+- url: https://ballotpedia.org/Amy_Perruso
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=perruso&year=2019
+- url: https://capitol.hawaii.gov/members/legislators.aspx?chamber=H
+- url: https://en.wikipedia.org/wiki/Amy_Perruso
+- url: https://justfacts.votesmart.org/candidate/biography/172203/amy-perruso
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=109
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=109&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=109&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=perruso&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=perruso&year=2022
+- url: https://www.capitol.hawaii.gov/members/legislators.aspx
+- url: https://www.linkedin.com/in/amy-perruso-1a03a280
+- url: https://www.representativeamyperruso.com
+extras:
+  title: Majority Whip

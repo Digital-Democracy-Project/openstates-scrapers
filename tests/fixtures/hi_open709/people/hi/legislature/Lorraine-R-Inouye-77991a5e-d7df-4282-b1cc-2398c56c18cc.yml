@@ -1,0 +1,46 @@
+id: ocd-person/77991a5e-d7df-4282-b1cc-2398c56c18cc
+name: Lorraine Inouye
+given_name: Lorraine
+family_name: Inouye
+birth_date: 1940-06-22
+gender: Female
+email: seninouye@capitol.hawaii.gov
+image: http://www.capitol.hawaii.gov/MemberFiles/RepSenPhotos/inouye.jpg
+party:
+- name: Democratic
+roles:
+- start_date: 2022-11-08
+  type: upper
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '1'
+- start_date: 2014-12-01
+  end_date: 2022-11-07
+  type: upper
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '1'
+offices:
+- classification: capitol
+  address: State Capitol Room 210, 415 S. Beretania St., Honolulu, HI 96813
+  voice: 808-586-7335
+links:
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=181&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=181&year=2024
+other_names:
+- name: Inouye, L.
+- name: L. Inouye
+- name: L.R. Inouye
+- name: Lorraine R. Inouye
+ids:
+  facebook: senlorraineinouye
+sources:
+- url: https://ballotpedia.org/Lorraine_Inouye
+- url: https://en.wikipedia.org/wiki/Lorraine_Inouye
+- url: https://justfacts.votesmart.org/candidate/biography/17855/lorraine-inouye
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=181&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=181&year=2024
+- url: https://www.capitol.hawaii.gov/members/legislators.aspx
+- url: https://www.linkedin.com/in/lorraine-inouye-57431916
+extras:
+  title: Majority Whip
+  extra_social_ids:
+    flickr: 134175784n05

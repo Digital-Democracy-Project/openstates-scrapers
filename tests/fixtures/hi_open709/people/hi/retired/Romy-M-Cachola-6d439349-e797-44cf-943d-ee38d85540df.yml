@@ -1,0 +1,20 @@
+id: ocd-person/6d439349-e797-44cf-943d-ee38d85540df
+name: Romy M. Cachola
+given_name: Romy
+family_name: Cachola
+email: repcachola@Capitol.hawaii.gov
+party:
+- name: Democratic
+roles:
+- end_date: '2020-12-31'
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '30'
+links:
+- url: http://capitol.hawaii.gov/memberpage.aspx?member=cachola&year=2019
+other_identifiers:
+- scheme: legacy_openstates
+  identifier: HIL000102
+sources:
+- url: http://capitol.hawaii.gov/members/legislators.aspx?chamber=H
+- url: http://capitol.hawaii.gov/memberpage.aspx?member=cachola&year=2019

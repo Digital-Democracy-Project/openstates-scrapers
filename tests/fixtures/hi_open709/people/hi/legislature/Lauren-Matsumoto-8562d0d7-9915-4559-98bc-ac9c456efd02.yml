@@ -1,0 +1,52 @@
+id: ocd-person/8562d0d7-9915-4559-98bc-ac9c456efd02
+name: Lauren Matsumoto
+given_name: Lauren
+family_name: Matsumoto
+birth_date: 1987-08-16
+gender: Female
+email: repmatsumoto@capitol.hawaii.gov
+image: http://www.capitol.hawaii.gov/MemberFiles/RepSenPhotos/Matsumoto.jpg
+party:
+- name: Republican
+roles:
+- start_date: 2022-11-08
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '38'
+- start_date: 2012-11-06
+  end_date: 2022-11-07
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '38'
+offices:
+- classification: capitol
+  address: State Capitol Room 302, 415 S. Beretania St., Honolulu, HI 96813
+  voice: 808-586-9490
+links:
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=matsumoto&year=2019
+- url: https://repmatsumoto.com/
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=90
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=90&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=90&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=matsumoto&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=matsumoto&year=2022
+other_names:
+- name: L. Matsumoto
+- name: L.K. Matsumoto
+- name: Matsumoto, L.
+sources:
+- url: https://ballotpedia.org/Lauren_Kealohilani_Matsumoto
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=matsumoto&year=2019
+- url: https://capitol.hawaii.gov/members/legislators.aspx?chamber=H
+- url: https://en.wikipedia.org/wiki/Lauren_Matsumoto
+- url: https://justfacts.votesmart.org/candidate/biography/140641/lauren-matsumoto
+- url: https://repmatsumoto.com
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=90
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=90&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=90&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=matsumoto&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=matsumoto&year=2022
+- url: https://www.capitol.hawaii.gov/members/legislators.aspx
+- url: https://www.linkedin.com/in/lauren-cheape-matsumoto-50835960
+extras:
+  title: Minority Leader

@@ -1,0 +1,35 @@
+id: ocd-person/00c3bae0-1087-4a2f-bee8-af0fbd2c6cf6
+name: Cory Chun
+given_name: Cory
+family_name: Chun
+gender: Male
+email: repchun@capitol.hawaii.gov
+image: http://www.capitol.hawaii.gov/MemberFiles/RepSenPhotos/Chun.jpg
+party:
+- name: Democratic
+roles:
+- start_date: 2022-11-08
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '35'
+offices:
+- classification: capitol
+  address: State Capitol Room 406, 415 S. Beretania St., Honolulu, HI 96813
+  voice: 808-586-6170
+links:
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=252
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=252&year=2023
+other_names:
+- name: C. Chun
+- name: C.M. Chun
+- name: C.M.C.W. Chun
+- name: Chun, C.
+- name: Cory M. Chun
+sources:
+- url: https://ballotpedia.org/Cory_Chun
+- url: https://en.wikipedia.org/wiki/Cory_Chun
+- url: https://justfacts.votesmart.org/candidate/biography/127631/cory-chun
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=252
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=252&year=2023
+- url: https://www.capitol.hawaii.gov/members/legislators.aspx
+- url: https://www.linkedin.com/in/cory-chun-2320515a
