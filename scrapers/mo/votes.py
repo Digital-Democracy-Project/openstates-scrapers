@@ -1,211 +1,355 @@
+"""Missouri member-level floor roll calls (OPEN-696).
+
+The bills scraper only makes totals-only votes. Member names come from two places:
+
+* House: one PDF per roll call, numbered by session day and roll call
+  (documents.house.mo.gov/billtracking/bills261/rollcalls/049.010.pdf). They cover every
+  House roll call, on House and Senate bills alike; a number that does not exist answers
+  with an HTML error page instead of a PDF.
+* Senate: the daily journal PDFs listed on senate.mo.gov/journallist, where each roll
+  call follows "... by the following vote:" as YEAS / NAYS / Absent / Absent with leave.
+
+Roll calls not tied to a bill (approving the journal, appointments) are skipped.
+Classification is left as "passage", as in the bills scraper; Missouri's motion rules
+reclassify the motions later.
+"""
+
+import datetime as dt
 import os
 import re
-import pytz
-import collections
-import datetime as dt
 
-from utils import LXMLMixin
+import lxml.html
 
-from openstates.utils import convert_pdf
 from openstates.scrape import Scraper, VoteEvent
+from openstates.utils import convert_pdf
 
-motion_re = r"(?i)On motion of .*, .*"
-bill_re = r"(H|S)(C|J)?(R|M|B) (\d+)"
-date_re = (
-    r"(MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|SATURDAY|SUNDAY)"
-    r", (\w+) (\d+), (\d+)"
+from .bills import MOBillScraper
+
+HOUSE_ROLLCALL_URL = "https://documents.house.mo.gov/billtracking/bills{code}/rollcalls/{day:03}.{rc:03}.pdf"
+SENATE_JOURNAL_LIST_URL = "https://www.senate.mo.gov/journallist/?SelectedYear={year}"
+
+# a session day without roll call 001 has no roll calls; this many in a row ends the walk
+HOUSE_EMPTY_DAYS_TO_STOP = 10
+
+# "HB 2885", "SBs 835 & 1111", "SS No. 2 for SCS for HCS for HB 2292"
+SHORT_BILL_RE = re.compile(r"\b(HJR|SJR|HCR|SCR|HB|SB|HR|SR)S?\s+(\d+)", re.I)
+# "House Bill No. 2474", "SENATE BILLS NOS. 835 and 1111", "Senate Joint Resolution No. 87"
+LONG_BILL_RE = re.compile(
+    r"\b(House|Senate)\s+(Bill|Joint\s+Resolution|Concurrent\s+Resolution|Resolution)s?"
+    r"\s+Nos?\.\s*(\d+)",
+    re.I,
 )
+LONG_BILL_TYPES = {
+    "bill": "B",
+    "joint resolution": "JR",
+    "concurrent resolution": "CR",
+    "resolution": "R",
+}
 
-TIMEZONE = pytz.timezone("America/Chicago")
+HOUSE_OPTIONS = {"Y": "yes", "N": "no", "P": "other", "@": "absent"}
+HOUSE_VOTE_RE = re.compile(r"([YNP@])\s+-\s+(\S.*?)(?=\s{2,}[YNP@]\s+-|\s*$)")
+
+# Vacancies is a count, not a list of senators
+SENATE_OPTIONS = {
+    "yeas": "yes",
+    "nays": "no",
+    "present": "other",
+    "absent": "absent",
+    "absent with leave": "excused",
+    "excused from voting": "not voting",
+    "vacancies": None,
+}
+SENATE_LABEL_RE = re.compile(
+    r"^\s*(Absent with leave|Absent|Excused from voting|YEAS|NAYS|PRESENT|Vacancies)\s*[—-]",
+    re.I,
+)
+JOURNAL_DATE_RE = re.compile(
+    r"(?:MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|SATURDAY|SUNDAY),\s+([A-Z]+)\s+(\d+),\s+(\d{4})"
+)
+# running page headers: "378   Journal of the Senate" and
+# "Twentieth Day - Thursday, February 12, 2026   379"; the first page has its number at the foot
+PAGE_HEADER_RE = re.compile(
+    r"^\s*(?:(\d+)\s{2,}(?:Journal of the Senate|.*\bDay\b.*)"
+    r"|(?:Journal of the Senate|.*\bDay\b.*?)\s{2,}(\d+))\s*$"
+)
+BARE_NUMBER_RE = re.compile(r"^\s*(\d+)\s*$")
+# journal files are {R|V|T1|T2}Day...pdf: regular, veto, first and second extraordinary
+SENATE_JOURNAL_PREFIXES = {"": ("R", "V"), "S1": ("T1",), "S2": ("T2",)}
 
 
-class MOVoteScraper(Scraper, LXMLMixin):
-    def _clean_line(self, obj):
-        patterns = {"\xe2\x80\x94": "-", "—": "-"}
+def bill_from_text(text, last=False):
+    """The first (or last) bill named in the text, as 'SB 835'; None if there is none."""
+    found = [
+        (m.start(), f"{m.group(1).upper()} {int(m.group(2))}")
+        for m in SHORT_BILL_RE.finditer(text)
+    ]
+    for m in LONG_BILL_RE.finditer(text):
+        kind = LONG_BILL_TYPES[re.sub(r"\s+", " ", m.group(2).lower())]
+        found.append((m.start(), f"{m.group(1)[0].upper()}{kind} {int(m.group(3))}"))
+    if not found:
+        return None
+    found.sort()
+    return found[-1][1] if last else found[0][1]
 
-        for pattern in patterns:
-            obj = obj.replace(pattern, patterns[pattern])
 
-        return obj
+def house_voter_name(name):
+    # "SMITH 46" -> "SMITH (46)", the same-surname form the Senate journal uses
+    return re.sub(r"\s+(\d+)$", r" (\1)", name.strip())
 
-    def _get_pdf(self, url):
-        (path, response) = self.urlretrieve(url)
-        data = convert_pdf(path, type="text")
-        os.remove(path)
-        return data
 
-    def _scrape_upper_chamber(self, session):
-        if int(session[:4]) >= 2016:
-            if len(session) == 4:
-                # regular session
-                url = "http://www.senate.mo.gov/%sinfo/jrnlist/default.aspx" % (
-                    session[-2:],
-                )
-            else:
-                # special session
-                url = "http://www.senate.mo.gov/%sinfo/jrnlist/%sJournals.aspx" % (
-                    session[-4:-2],
-                    session[-2:],
-                )
-        else:
-            url = "http://www.senate.mo.gov/%sinfo/jrnlist/journals.aspx" % (
-                session[-2:]
+def parse_house_rollcall(text):
+    """One House roll-call PDF's text -> dict, or None when the roll call names no bill."""
+    lines = text.splitlines()
+    head = re.search(
+        r"Session Day\s*:\s*(\d+)\s+(.*?)\s+Date\s*:\s*(\d+/\d+/\d{4})", text
+    )
+    rc_line = next(
+        (i for i, line in enumerate(lines) if re.search(r"Roll Call\s*:", line)), None
+    )
+    if not head or rc_line is None:
+        return None
+    m = re.search(r"Roll Call\s*:\s*(\d+)\s+(.*)", lines[rc_line])
+    bill_string = m.group(2).strip()
+    bill = bill_from_text(bill_string)
+    if not bill:
+        return None
+
+    # the lines between "Roll Call" and the grid: amendment, sponsor, title, LR number, motion
+    votes, motion_lines = [], [head.group(2).strip(), bill_string]
+    for line in lines[rc_line + 1 :]:
+        found = HOUSE_VOTE_RE.findall(line)
+        if found:
+            votes.extend(
+                (HOUSE_OPTIONS[code], house_voter_name(name)) for code, name in found
             )
+        elif not votes and line.strip():
+            motion_lines.append(line.strip())
 
-        vote_types = {
-            "YEAS": "yes",
-            "NAYS": "no",
-            "Absent with leave": "other",
-            "Absent": "other",
-            "Vacancies": "other",
-        }
+    totals = {}
+    for option, label in (
+        ("yes", "Yes"),
+        ("no", "No"),
+        ("other", "Present"),
+        ("absent", "Absent"),
+    ):
+        total = re.search(rf"Total {label}\s*:\s*(\d+)", text)
+        if total:
+            totals[option] = int(total.group(1))
+    return {
+        "date": dt.datetime.strptime(head.group(3), "%m/%d/%Y"),
+        "bill": bill,
+        "motion": " - ".join(motion_lines),
+        "votes": votes,
+        "totals": totals,
+    }
 
-        page = self.lxmlize(url)
-        journs = page.xpath("//table")[0].xpath(".//a")
-        for a in journs:
-            pdf_url = a.attrib["href"]
-            data = self._get_pdf(pdf_url).decode()
-            lines = data.split("\n")
 
-            in_vote = False
-            cur_date = None
-            vote_type = "other"
-            cur_bill = ""
-            cur_motion = ""
-            bc = None
-            vote = {}
-            counts = collections.defaultdict(int)
+def _page_number(page):
+    lines = [line for line in page.splitlines() if line.strip()]
+    for line in lines[:2]:
+        m = PAGE_HEADER_RE.match(line)
+        if m:
+            return int(m.group(1) or m.group(2))
+    if lines and BARE_NUMBER_RE.match(lines[-1]):
+        return int(lines[-1])
+    return None
 
-            for line in lines:
-                line = line.strip()
 
-                if cur_date is None:
-                    matches = re.findall(date_re, line)
-                    if matches != []:
-                        date = matches[0]
-                        date = "%s, %s %s, %s" % date
-                        date = dt.datetime.strptime(date, "%A, %B %d, %Y")
-                        cur_date = date
+def parse_senate_journal(text):
+    """One Senate journal's text -> its roll calls on bills, in journal order."""
+    date = dt.datetime.strptime(
+        " ".join(JOURNAL_DATE_RE.search(text.upper()).groups()), "%B %d %Y"
+    )
 
-                matches = re.findall(motion_re, line)
-                if matches != []:
-                    cont = False
-                    for x in matches:
-                        if "vote" in x.lower():
-                            cur_motion = x
-                            bill = re.findall(bill_re, x)
-                            if bill != []:
-                                bc = {"H": "lower", "S": "upper", "J": "legislature"}[
-                                    bill[0][0]
-                                ]
+    # pdftotext separates pages with form feeds; the first page has no running header
+    pages = text.split("\f")
+    known = next(((i, n) for i, n in enumerate(map(_page_number, pages)) if n), (0, 0))
+    lines = [
+        (known[1] - known[0] + i, line)
+        for i, page in enumerate(pages)
+        for line in page.splitlines()
+    ]
 
-                                cur_bill = "%s%s%s %s" % bill[0]
-                            in_vote = True
-                            cont = True
-                    if cont:
-                        continue
-                if in_vote:
-                    if is_vote_end(line):
-                        in_vote = False
-                        yes, no, other = counts["yes"], counts["no"], counts["other"]
-                        if bc is None:
-                            continue
+    roll_calls, context_start, i = [], 0, 0
+    while i < len(lines):
+        page, line = lines[i]
+        if not re.search(r"following vote:\s*$", line):
+            i += 1
+            continue
+        # the motion is the paragraph ending here: a paragraph opens indented and runs on
+        # at column 0
+        start = i
+        while start > context_start and not re.match(r"^\s{2,}\S", lines[start][1]):
+            start -= 1
+        motion = " ".join(ln for _, ln in lines[start : i + 1])
+        motion = re.sub(r"\s+", " ", motion).strip()
+        # "Was read the 3rd time and passed" and "the above conference committee report"
+        # name no bill; it is the last one named since the previous roll call
+        bill = bill_from_text(motion) or bill_from_text(
+            " ".join(ln for _, ln in lines[context_start:start]), last=True
+        )
+        # "The emergency clause was adopted" follows the passage of the bill voted on last
+        if not bill and "emergency clause" in motion.lower() and roll_calls:
+            bill = roll_calls[-1]["bill"]
 
-                        v = VoteEvent(
-                            start_date=TIMEZONE.localize(date),
-                            motion_text=cur_motion,
-                            result="pass" if yes > no else "fail",
-                            legislative_session=session,
-                            classification="passage",
-                            bill=cur_bill,
-                            bill_chamber=bc,
-                        )
+        votes, totals, option = [], {}, None
+        i += 1
+        while i < len(lines):
+            ln = lines[i][1]
+            label = SENATE_LABEL_RE.match(ln)
+            if label:
+                i += 1
+                option = SENATE_OPTIONS[label.group(1).lower()]
+                if option is None:
+                    # "Vacancies—None"; "Excused from voting" may still follow
+                    continue
+                ln = re.sub(r"^\s*Senators?\s*[—-]?", "", ln[label.end() :])
+                if re.match(r"\s*None\b", ln):
+                    continue
+                # "NAYS—Senators—2", the names on the lines below
+                if BARE_NUMBER_RE.match(ln):
+                    totals[option] = int(ln)
+                    continue
+            elif not ln.strip() or PAGE_HEADER_RE.match(ln) or BARE_NUMBER_RE.match(ln):
+                i += 1
+                continue
+            elif option is None or re.match(r"^\s{2,}\S", ln):
+                # names run at column 0; an indented line is the journal going on
+                break
+            else:
+                i += 1
+            for name in re.split(r"\s{2,}", ln.strip()):
+                # the last name of a list carries its count: "Webber—32"
+                m = re.match(r"(.*?)\s*[—-](\d+)$", name)
+                if m:
+                    name, totals[option] = m.group(1), int(m.group(2))
+                if name:
+                    votes.append((option, name))
+        context_start = i
+        if bill and votes:
+            roll_calls.append(
+                {
+                    "page": page,
+                    "date": date,
+                    "bill": bill,
+                    "motion": motion,
+                    "votes": votes,
+                    "totals": totals,
+                }
+            )
+    return roll_calls
 
-                        v.add_source(url)
-                        v.add_source(pdf_url)
 
-                        v.set_count("yes", yes)
-                        v.set_count("no", no)
-                        v.set_count("other", other)
+def vote_result(motion, yes, no):
+    # the outcome word nearest the vote decides: "moved that the vote by which SA 1 failed
+    # be reconsidered, which motion prevailed" passed
+    words = re.findall(
+        r"\b(failed|lost|defeated|passed|prevailed|adopted)\b", motion, re.I
+    )
+    if words:
+        return "fail" if words[-1].lower() in ("failed", "lost", "defeated") else "pass"
+    return "pass" if yes > no else "fail"
 
-                        for key in vote:
-                            for person in vote[key]:
-                                v.vote(key, person)
 
-                        yield v
-                        vote = {}
-                        counts = collections.defaultdict(int)
-                        continue
-                    if "Journal of the Senate" in line:
-                        continue
-                    if re.match(
-                        r".*(Monday|Tuesday|Wednesday|Thursday|Friday|"
-                        r"Saturday|Sunday), .* \d+, \d+.*",
-                        line,
-                    ):
-                        continue
+class MOVoteScraper(Scraper):
+    def _get_pdf_text(self, url):
+        """The PDF's text, or None when the URL answers with something other than a PDF."""
+        path, _ = self.urlretrieve(url)
+        try:
+            with open(path, "rb") as f:
+                if f.read(4) != b"%PDF":
+                    return None
+            return convert_pdf(path, type="text").decode("utf-8", "replace")
+        finally:
+            os.remove(path)
 
-                    found = False
-                    rl = None
-                    for vote_type in list(vote_types):
-                        if line.lower().startswith(vote_type.lower()):
-                            if "none" in line.lower():
-                                continue
-
-                            if "Senator" in line and "Senators" not in line:
-                                line = self._clean_line(line)
-                                line = line[len(vote_type) :]
-                                line = line.replace("-Senator ", "")
-                                rl = line
-                            vote_category = vote_types[vote_type]
-                            found = True
-                            if vote_category not in vote:
-                                vote[vote_category] = []
-                    if found and rl is None:
-                        continue
-                    elif rl:
-                        line = rl
-
-                    names = [self._clean_line(x) for x in line.strip().split()]
-                    if names == []:
-                        continue
-
-                    lname = names[-1]
-                    lname = lname.rsplit("-", 1)
-                    if len(lname) > 1:
-                        person, count = lname
-                        if count.isdigit() is False:
-                            continue
-
-                        names.pop(-1)
-                        names.append(person)
-                        counts[vote_category] += int(count)
-
-                    for name in names:
-                        vote[vote_category].append(name)
+    def _make_vote(self, session, chamber, rc, dedupe_key, sources):
+        counts = {}
+        for option, _ in rc["votes"]:
+            counts[option] = counts.get(option, 0) + 1
+        for option, total in rc["totals"].items():
+            if counts.get(option, 0) != total:
+                self.warning(
+                    f"{dedupe_key}: {counts.get(option, 0)} {option} names, "
+                    f"the roll call says {total}"
+                )
+        yes, no = counts.get("yes", 0), counts.get("no", 0)
+        # the journal says whether a Senate motion passed; a House roll-call PDF does not,
+        # and its header holds the bill's short title, so it is not searched for "failed"
+        if chamber == "upper":
+            result = vote_result(rc["motion"], yes, no)
+        else:
+            result = "pass" if yes > no else "fail"
+        vote = VoteEvent(
+            chamber=chamber,
+            start_date=rc["date"].strftime("%Y-%m-%d"),
+            motion_text=rc["motion"],
+            result=result,
+            legislative_session=session,
+            classification="passage",
+            bill=rc["bill"],
+            bill_chamber="lower" if rc["bill"].startswith("H") else "upper",
+        )
+        # unique across sessions and bills (PRIMITIVES: OPEN-252, OPEN-397)
+        vote.dedupe_key = dedupe_key
+        for option, count in counts.items():
+            vote.set_count(option, count)
+        for option, name in rc["votes"]:
+            vote.vote(option, name)
+        for url in sources:
+            vote.add_source(url)
+        return vote
 
     def _scrape_lower_chamber(self, session):
-        # house_url = 'http://www.house.mo.gov/journallist.aspx'
-        yield from ()
+        # the bills scraper's House session code: 2026 -> 261, 2025S1 -> 253
+        code = MOBillScraper._get_session_code(self, session)
+        day, empty_days = 0, 0
+        while empty_days < HOUSE_EMPTY_DAYS_TO_STOP:
+            day += 1
+            rc = 1
+            while True:
+                url = HOUSE_ROLLCALL_URL.format(code=code, day=day, rc=rc)
+                text = self._get_pdf_text(url)
+                if text is None:
+                    break
+                parsed = parse_house_rollcall(text)
+                if parsed:
+                    key = f"mo-{session}-H-{day:03}.{rc:03}"
+                    yield self._make_vote(session, "lower", parsed, key, [url])
+                rc += 1
+            empty_days = empty_days + 1 if rc == 1 else 0
 
-    #  Ugh, so, the PDFs are in nasty shape. Scraping them is a mess, with
-    #  crazy spacing to break up the names. Most votes aren't on bills, but rather
-    #  the agenda of the day.
+    def _scrape_upper_chamber(self, session):
+        year, kind = session[:4], session[4:]
+        list_url = SENATE_JOURNAL_LIST_URL.format(year=year)
+        page = lxml.html.fromstring(self.get(list_url).content)
+        page.make_links_absolute(list_url)
+        prefixes = "|".join(SENATE_JOURNAL_PREFIXES[kind])
+        pattern = re.compile(
+            rf"/{year[2:]}info/Journals/({prefixes})Day[^/]*\.pdf$", re.I
+        )
+        seen = set()
+        for url in dict.fromkeys(page.xpath("//a/@href")):
+            if not pattern.search(url):
+                continue
+            text = self._get_pdf_text(url)
+            if text is None:
+                self.warning(f"not a PDF: {url}")
+                continue
+            per_page = {}
+            for rc in parse_senate_journal(text):
+                # journal pages number straight through a session, so page + order on the
+                # page is unique; the list carries some days twice (RDay21.pdf and
+                # RDay210217387-397.pdf), and the second copy is skipped
+                per_page[rc["page"]] = per_page.get(rc["page"], 0) + 1
+                key = f"mo-{session}-S-{rc['page']}-{per_page[rc['page']]}"
+                if key in seen:
+                    continue
+                seen.add(key)
+                yield self._make_vote(session, "upper", rc, key, [list_url, url])
 
     def scrape(self, chamber=None, session=None):
         if chamber in ["upper", None]:
             yield from self._scrape_upper_chamber(session)
         if chamber in ["lower", None]:
             yield from self._scrape_lower_chamber(session)
-
-
-def is_vote_end(line):
-    return (
-        (line == line.upper() and line.strip() != "")
-        or "The President" in line
-        or (
-            "senator" in line.lower()
-            and ("moved" in line.lower() or "requested" in line.lower())
-        )
-        or "assumed the chair" in line.lower()
-    )
