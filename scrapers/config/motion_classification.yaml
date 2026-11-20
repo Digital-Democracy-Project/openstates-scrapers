@@ -224,6 +224,26 @@ jurisdictions:
       - '^governor''s (amendment|recommendation)s?\b.*\b(agreed to|adopted|rejected|passed by|defeated)'
     default: null
 
+  # OPEN-687 (Oklahoma, gate E). The motion text is the link text of a floor roll call on a bill's
+  # _VOTES.HTM page (oklegislature.gov/cf/<years> SUPPORT DOCUMENTS/votes/House|Senate/<bill>_VOTES.HTM),
+  # title-cased by the ok scraper: "THIRD_READING (RCS# 0695)" -> "Third Reading". Rules written from 287
+  # roll calls on 121 vote pages (72 bills) of 2025-2026 (read 2026-11-20). Committee roll calls never reach here:
+  # the ok scraper labels them committee-passage from where they come from (vote_classification() in
+  # ok/bills.py). "Third Reading" is the floor passage vote (lost ones too). "Fourth Reading" is the final
+  # passage vote taken again after the chamber adopts a conference committee report or the other chamber's
+  # amendments (Oklahoma adopts a CCR or concurs by voice and then votes the bill on fourth reading):
+  # passage (pa OPEN-617, la OPEN-583). The veto overrides seen are whole-bill (SB 1050, HB 2785 of 2025).
+  # "Adopt Resolution" is the floor vote that adopts a resolution. Not passage (left unlabelled):
+  # "Emergency" (the emergency-clause roll call; the bill stands without it), "Advance" (Senate: advance
+  # from General Order to third reading), "Reconsider Measure", "Appeal Of The Decision Of The Chair";
+  # "Adopt Amendment" / "Table Amendment" are labelled amendment by the scraper.
+  ok:
+    passage:
+      - '^(third|fourth)\s+reading$'
+      - '^veto\s+override\s+(no\s+emergency|with\s+emergency|without\s+emer\.?|with\s+emer\.?)$'   # whole bill; an unseen line-item text stays unlabelled
+      - '^adopt\s+resolution$'
+    default: null                                # anything not seen stays unclassified, never passage
+
   # OPEN-478/479/480 (push-button onboarding, pilot #2). Rules written from the real motion texts of
   # the first full production scrape of each state (Mac replica, 2026-11-06). Anything not matched
   # stays unclassified ([]): it is better to leave a vote unclassified than to call it passage.
@@ -367,6 +387,24 @@ jurisdictions:
     passage:
       - '^(assembly|senate) \((as introduced|\d+(st|nd|rd|th) reprint)\)( \(\d+\))?$'
     default: null
+
+  # OPEN-683 (Rhode Island, gate E). The motion text is the motion lines at the end of a roll call's header on the
+  # chamber's vote report (webserver.rilegislature.gov/SVotes|HVotes/votereport.asp), joined with " / " by the ri
+  # scraper (vote_motion() in ri/bills.py). Rules written from every roll-call header of 2025 and 2026 (2,948 on the
+  # vote-date lists, 2,473 tied to a bill, read 2026-11-20). Passage is a motion made only of the lines below, in
+  # any order: House "PASSAGE", "PASSAGE / AS AMENDED", "PASSAGE / IN CONCURRENCE (/ AS AMENDED)"; Senate "Passage",
+  # "Passage as Amended (/ Passage)", "In Concurrence (/ Passage)". "In Concurrence" is the second chamber passing
+  # the other chamber's bill (or the first agreeing to its amendments): passage either way (pa OPEN-617, la
+  # OPEN-583). A lost vote is a lost passage vote. Any other line makes it not passage: an amendment vote
+  # ("PASSAGE / PASSAGE OF AMENDMENT", "Approval of Amendment / Passage": the Senate keeps "/ Passage" on the
+  # amendment vote and then votes "Passage as Amended / Passage"; labelled "amendment" by vote_classification()),
+  # "RECONSIDERATION", "RULING OF THE CHAIR", a header with no motion line (a point of order, an
+  # immediate-consideration vote: its text is then a title fragment or the item number), and the House budget's
+  # article-by-article votes, written "ARTICLE 2 PASSAGE / AS AMENDED" by the scraper.
+  ri:
+    passage:
+      - '^(passage( as amended)?|as amended|in concurrence)( / (passage( as amended)?|as amended|in concurrence))*$'
+    default: null                                # anything else (an unseen line, a title fragment) stays unclassified
 
   # OPEN-597 (Oregon, gate E). The motion text is the ActionText of a MeasureHistoryActions row that carries
   # a roll call (floor votes only). Committee votes come from CommitteeAgendaItems and are labelled

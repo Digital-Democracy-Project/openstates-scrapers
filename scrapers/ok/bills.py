@@ -12,10 +12,31 @@ from urllib import parse
 from openstates.scrape import Scraper, Bill, VoteEvent as Vote
 from .actions import Categorizer
 
+from classify_motion import classify_motion
+
 # Matches one legislator name in a vote roll line: a word, optionally
 # followed by a parenthetical disambiguator ("West (T)"), or the special
 # "Mr. Speaker" entry (which spans two words).
 NAME_RE = re.compile(r"Mr\.\s+Speaker|[A-Za-z][\w'\-]*(?:\s+\([^)]+\))?")
+
+# OPEN-687: a floor amendment roll call ("Adopt Amendment", "Table Amendment"), labelled
+# here because config/motion_classification.yaml only decides passage.
+AMENDMENT_VOTE = re.compile(r"\bamendment\b", re.I)
+
+
+def vote_classification(motion, committee):
+    """What a roll call decides. A committee roll call is committee-passage, whatever
+    its text (the Senate's is often just the committee's name). A floor roll call is
+    passage from the ok block of config/motion_classification.yaml, else "amendment"
+    for an amendment roll call, else nothing."""
+    if committee:
+        return ["committee-passage"]
+    classification = classify_motion("ok", motion)
+    if classification:
+        return classification
+    if AMENDMENT_VOTE.search(motion):
+        return ["amendment"]
+    return []
 
 
 def extract_names(line, limit):
@@ -297,6 +318,8 @@ class OKBillScraper(Scraper):
 
         seen_rcs = set()
         motions = {}
+        # roll calls the page's link list marks as committee votes
+        committee_rcs = set()
         headers_xpath = page.xpath('//p[contains(., "Top_of_Page")]')
 
         for motion in page.xpath(
@@ -324,12 +347,15 @@ class OKBillScraper(Scraper):
                     " ".join(do_pass_motion[do_index:passed_index]).strip().title()
                 )
                 motion_text = do_pass_motion or "Do Pass"
+                committee_rcs.add(motion_index)
             else:
                 motion_index = motion_link.lstrip("0").zfill(1)
                 if "OKLAHOMA" in motion_text:
                     motion_text = "Committee Vote"
                 else:
                     motion_text = motion_text.split("(")[0].strip().title()
+                if motion_text == "Committee Vote":
+                    committee_rcs.add(motion_index)
 
             motions[motion_index] = motion_text
 
@@ -385,6 +411,9 @@ class OKBillScraper(Scraper):
             ]
 
             motion_text = motions.get(rcs, "Committee Vote")
+            # committee only when the link list says so; a roll call missing from it
+            # stays unlabelled (its motion text "Committee Vote" matches no rule)
+            committee = rcs in committee_rcs
             committee_motion = ""
 
             if "Do Pass" in motion_text or "Committee" in motion_text:
@@ -490,7 +519,7 @@ class OKBillScraper(Scraper):
                 motion_text=motion,
                 result="pass" if passed else "fail",
                 bill=bill,
-                classification="passage",
+                classification=vote_classification(motion, committee),
             )
             vote.set_count("yes", counts["yes"])
             for name in votes["yes"]:
