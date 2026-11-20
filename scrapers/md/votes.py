@@ -1,7 +1,7 @@
 import re
 import datetime
-import itertools
 from collections import defaultdict
+from urllib.parse import parse_qs, urlparse
 from utils import LXMLMixin
 from utils.votes import check_counts
 from openstates.scrape import Scraper, VoteEvent
@@ -115,8 +115,9 @@ class MDVoteScraper(Scraper, LXMLMixin):
         votes, which that run does not carry."""
         if "s" in session.lower():
             return
-        for n in itertools.count(1):
-            # an index for a special session that never met lists no session days
+        # Maryland has never held more than one special session in a year; 5 bounds the walk
+        for n in range(1, 6):
+            # an index for a special session that never met lists no session days of its own
             urls = list(self.vote_urls(chamber, f"{session}s{n}"))
             if not urls:
                 return
@@ -131,6 +132,14 @@ class MDVoteScraper(Scraper, LXMLMixin):
         url += "?ys=" + session_code
         doc = self.lxmlize(url)
         links = doc.xpath("//table[1]/tbody/tr/td[3]/a/@href")
+        # only the requested session's own days: a page answering an unknown code with another
+        # session (its newest, say) then counts as empty, which ends the special-session walk
+        links = [
+            link
+            for link in links
+            if parse_qs(urlparse(link).query).get("year", [""])[0].lower()
+            == session_code.lower()
+        ]
 
         seen_urls = set()
 

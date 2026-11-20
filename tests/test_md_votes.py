@@ -401,6 +401,11 @@ def test_bills_html_parser_uses_the_same_rules(monkeypatch):
             "Shall the Bill pass notwithstanding the objections of the Chief Executive?",
             ["passage"],
         ),
+        # OPEN-718: 2025S1 Senate 0022 (HB 333) says "objection"
+        (
+            "Shall the Bill pass notwithstanding the objection of the Chief Executive?",
+            ["passage"],
+        ),
         ("Conference Committee Report - Adoption", ["passage"]),
         # 2025RS Senate SB 338, followed by its own final passage roll call like 2026's
         (

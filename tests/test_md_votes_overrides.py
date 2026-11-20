@@ -96,6 +96,8 @@ OVERRIDES = [
     ("2025S1", "house", "0034", "SB 587", 93, 35),  # "2025 VETOED SENATE BILL"
     ("2025S1", "senate", "0005", "SB 121", 42, 1),  # "2025 Vetoed Senate Bill"
     ("2025S1", "senate", "0018", "HB 56", 43, 0),  # "2025 Vetoed House Bills"
+    # HB 333: "Shall the Bill pass notwithstanding the objection of the" (singular)
+    ("2025S1", "senate", "0022", "HB 333", 35, 9),
     (
         "2026S1",
         "house",
@@ -257,3 +259,72 @@ def test_consent_calendar_votes_survive_the_chamber_pairing():
     assert len(votes) == 22 + 3 + 1
     assert all(v.motion_classification == ["passage"] for v in votes)
     assert len({v.dedupe_key for v in votes}) == len(votes)
+
+
+# The index guard: vote_urls() keeps only day links whose own year= is the requested session, so
+# a page that answers an unknown code with another session counts as empty and the walk ends.
+INDEXES = os.path.join(os.path.dirname(__file__), "fixtures", "md_open717")
+
+
+class _Site(MDVoteScraper):
+    """The real vote_urls() through lxmlize(); `answer(code)` gives the index page's HTML."""
+
+    def __init__(self, answer):
+        self.answer = answer
+        self.requested = []
+
+    def get(self, url, **kwargs):
+        self.requested.append(url)
+
+        class Resp:
+            pass
+
+        r = Resp()
+        if "/FloorActions/Index/" in url:
+            r.text = self.answer(url.rsplit("?ys=", 1)[1])
+        else:  # a day page with one roll call
+            year = url.rsplit("year=", 1)[1]
+            r.text = f'<html><body><a href="/{year}/votes/house/0001.pdf">1</a></body></html>'
+        return r
+
+    def scrape_vote(self, url, session, overrides_only=False):
+        return [url]
+
+
+def _saved_2026rs_index(code):
+    # the real ?ys=2026rs House index (81 days, every link "?year=2026RS"), whatever was asked
+    with open(os.path.join(INDEXES, "index_house_2026rs.html")) as f:
+        return f.read()
+
+
+def test_index_of_another_session_counts_as_empty():
+    site = _Site(_saved_2026rs_index)
+    assert list(site.vote_urls("lower", "2026s1")) == []
+    # no day page was read
+    assert len(site.requested) == 1
+    # the same page for its own session lists its 81 days
+    site = _Site(_saved_2026rs_index)
+    list(site.vote_urls("lower", "2026rs"))
+    assert len(site.requested) == 1 + 81
+
+
+def test_walk_stops_when_the_site_answers_with_its_newest_session():
+    site = _Site(_saved_2026rs_index)
+    assert list(site.scrape_special_session_overrides("lower", "2026")) == []
+    assert site.requested == [
+        "http://mgaleg.maryland.gov/mgawebsite/FloorActions/Index/house?ys=2026s1"
+    ]
+
+
+def test_walk_reads_at_most_five_special_sessions():
+    def every_code_has_a_day(code):
+        return (
+            "<html><body><table><tbody><tr><td></td><td></td><td>"
+            f'<a href="/mgawebsite/FloorActions/Media/house-1-?year={code.upper()}">1</a>'
+            "</td></tr></tbody></table></body></html>"
+        )
+
+    site = _Site(every_code_has_a_day)
+    list(site.scrape_special_session_overrides("lower", "2026"))
+    codes = [u.rsplit("?ys=", 1)[1] for u in site.requested if "?ys=" in u]
+    assert codes == ["2026s1", "2026s2", "2026s3", "2026s4", "2026s5"]
