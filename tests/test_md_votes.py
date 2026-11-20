@@ -463,3 +463,46 @@ def test_bills_scraper_pairs_a_bills_roll_calls():
     bill = Bill("SB 282", "2026", "x", chamber="upper")
     votes = list(_Bills().parse_bill_votes_new(doc, bill))
     assert [v.motion_classification for v in votes] == [[], ["passage"]]
+
+
+def _roll_call(seq, motion, bill="SB 282", chamber="upper"):
+    v = VoteEvent(
+        motion_text=motion,
+        start_date="2026-04-01",
+        classification=vote_classification(motion),
+        result="pass",
+        legislative_session="2026",
+        bill=bill,
+        chamber=chamber,
+    )
+    v.dedupe_key = f"https://mgaleg.maryland.gov/2026RS/votes/senate/{seq:04d}.pdf"
+    return v
+
+
+def test_only_a_final_passage_roll_call_replaces_a_ccr_adoption():
+    # a later passage-labelled roll call that is not the bill's final passage (a veto override)
+    # leaves the CCR adoption counted; "On Third Reading and Final Passage (...)" replaces it
+    ccr = "Conference Committee Report - Adoption"
+    override = (
+        "Shall the Bill pass notwithstanding the objections of the Chief Executive?"
+    )
+    votes = final_vote_only([_roll_call(740, ccr), _roll_call(900, override)])
+    assert [v.motion_classification for v in votes] == [["passage"], ["passage"]]
+    votes = final_vote_only(
+        [
+            _roll_call(740, ccr),
+            _roll_call(741, "On Third Reading and Final Passage (CCR Adp)"),
+        ]
+    )
+    assert [v.motion_classification for v in votes] == [[], ["passage"]]
+
+
+def test_only_a_reconsidered_third_reading_replaces_the_one_before():
+    # a later plain third reading on the same bill does not unlabel the earlier one
+    votes = final_vote_only(
+        [
+            _roll_call(950, "On Third Reading"),
+            _roll_call(951, "On Third Reading (Amend)"),
+        ]
+    )
+    assert [v.motion_classification for v in votes] == [["passage"], ["passage"]]

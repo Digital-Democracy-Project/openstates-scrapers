@@ -45,7 +45,14 @@ CCR_ADOPTION = re.compile(
     r"conference committee report - adoption|adoption of the conference committee report",
     re.I,
 )
-RECONSIDERED = re.compile(r"\(reconsidered\)", re.I)
+# the chamber's own final passage roll call that replaces a CCR adoption: the Senate's "Bill is on
+# Third Reading for Final Passage." and the House's "On Third Reading and Final Passage (...)"
+FINAL_PASSAGE = re.compile(
+    r"^((the )?bill (is )?on third reading for final passage|on third reading and final passage)\b",
+    re.I,
+)
+# the only reconsidered text seen: "On Third Reading (Reconsidered) (Amend)"
+RECONSIDERED = re.compile(r"^on third reading \(reconsidered\)", re.I)
 
 
 def _seq(vote):
@@ -68,9 +75,9 @@ def final_vote_only(votes):
             if (v.organization, v.bill) == (vote.organization, vote.bill)
         ]
         if CCR_ADOPTION.search(vote.motion_text):
-            if any(not CCR_ADOPTION.search(v.motion_text) for v in later):
+            if any(FINAL_PASSAGE.search(v.motion_text.strip()) for v in later):
                 replaced.append(vote)
-        elif later and RECONSIDERED.search(later[0].motion_text):
+        elif later and RECONSIDERED.search(later[0].motion_text.strip()):
             replaced.append(vote)
     for vote in replaced:
         vote.motion_classification = []
