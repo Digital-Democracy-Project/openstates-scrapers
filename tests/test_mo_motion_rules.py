@@ -319,7 +319,8 @@ def test_senate_journals():
         by_page.setdefault((page, bill), []).append(label)
     assert by_page[(1868, "SB 835")] == [["passage"]]  # CCR adopted
     assert by_page[(1869, "SB 835")] == [["passage"]]  # then passed
-    assert by_page[(1870, "SB 1572")] == [["passage"]]  # concurrence in the HCS
+    # concurrence in the HCS, then (OPEN-707, a wrapped lead-in) its final passage
+    assert by_page[(1870, "SB 1572")] == [["passage"], ["passage"]]
     assert by_page[(1877, "HB 2474")] == [[]]  # reconsider
     assert by_page[(1878, "HB 2474")] == [["passage"]]
     assert by_page[(1879, "HB 2885")] == [["passage"]]
