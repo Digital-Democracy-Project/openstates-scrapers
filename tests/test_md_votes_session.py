@@ -65,7 +65,7 @@ class OfflineMD(MDVoteScraper):
 
     def scrape_vote(self, url, session):
         self.votes_seen.append(url)
-        return url
+        return [url]
 
 
 def run(session, chamber):

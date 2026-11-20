@@ -1,6 +1,7 @@
 import re
 import datetime
 from collections import defaultdict
+from urllib.parse import parse_qs, urlparse
 from utils import LXMLMixin
 from utils.votes import check_counts
 from openstates.scrape import Scraper, VoteEvent
@@ -56,8 +57,12 @@ RECONSIDERED = re.compile(r"^on third reading \(reconsidered\)", re.I)
 
 
 def _seq(vote):
-    # the roll call's sequence number in its chamber: ".../votes/senate/0740.pdf" (or .htm)
-    return int(re.search(r"/(\d+)\.(pdf|htm)", vote.dedupe_key).group(1))
+    # the roll call's session and sequence number in its chamber: ".../2026RS/votes/senate/0740.pdf"
+    # (or .htm, or "...pdf#HB 7" for a consent calendar). A special session numbers its roll calls
+    # from 1 again, and "2025RS" sorts before "2025S1", so its veto overrides come last (OPEN-718).
+    code = re.search(r"/(\d{4}(?:rs|s\d+))/", vote.dedupe_key, re.I)
+    seq = int(re.search(r"/(\d+)\.(pdf|htm)", vote.dedupe_key).group(1))
+    return (code.group(1).upper() if code else "", seq)
 
 
 def final_vote_only(votes):
@@ -88,22 +93,53 @@ class MDVoteScraper(Scraper, LXMLMixin):
     def scrape(self, chamber=None, session=None):
         chambers = [chamber] if chamber is not None else ["upper", "lower"]
         for chamber in chambers:
+            votes = list(self.scrape_chamber(chamber, session))
+            votes.extend(self.scrape_special_session_overrides(chamber, session))
             # a chamber's roll calls are labelled together (final_vote_only)
-            yield from final_vote_only(list(self.scrape_chamber(chamber, session)))
+            yield from final_vote_only(votes)
 
     def scrape_chamber(self, chamber, session):
-        chamber_name = "senate" if chamber == "upper" else "house"
         # without ?ys= the site shows its newest session, which is empty until it starts
-        # (OPEN-717): 2026 -> 2026rs, 2026s1 -> 2026s1. The day links the index lists
-        # already carry their session (?year=2026RS).
+        # (OPEN-717): 2026 -> 2026rs, 2026s1 -> 2026s1.
         session_code = session.lower()
         if "s" not in session_code:
             session_code += "rs"
-        # despite visible pagination on page, the HTML seems to contain everything
+        for vote_url in self.vote_urls(chamber, session_code):
+            yield from self.scrape_vote(vote_url, session)
+
+    def scrape_special_session_overrides(self, chamber, session):
+        """OPEN-718: a veto override is a vote on a bill of the regular session it was vetoed
+        in, so that session's run collects the overrides taken in the year's special sessions
+        (2025S1, 2026S1). The special session's own run leaves them out (scrape_vote): bringing
+        them in under another session's run would make the importer drop the bill's other
+        votes, which that run does not carry."""
+        if "s" in session.lower():
+            return
+        # Maryland has never held more than one special session in a year; 5 bounds the walk
+        for n in range(1, 6):
+            # an index for a special session that never met lists no session days of its own
+            urls = list(self.vote_urls(chamber, f"{session}s{n}"))
+            if not urls:
+                return
+            for vote_url in urls:
+                yield from self.scrape_vote(vote_url, session, overrides_only=True)
+
+    def vote_urls(self, chamber, session_code):
+        chamber_name = "senate" if chamber == "upper" else "house"
+        # despite visible pagination on page, the HTML seems to contain everything. The day
+        # links the index lists already carry their session (?year=2026RS).
         url = "http://mgaleg.maryland.gov/mgawebsite/FloorActions/Index/" + chamber_name
         url += "?ys=" + session_code
         doc = self.lxmlize(url)
         links = doc.xpath("//table[1]/tbody/tr/td[3]/a/@href")
+        # only the requested session's own days: a page answering an unknown code with another
+        # session (its newest, say) then counts as empty, which ends the special-session walk
+        links = [
+            link
+            for link in links
+            if parse_qs(urlparse(link).query).get("year", [""])[0].lower()
+            == session_code.lower()
+        ]
 
         seen_urls = set()
 
@@ -112,12 +148,12 @@ class MDVoteScraper(Scraper, LXMLMixin):
 
             for vote_url in doc.xpath('//a[contains(@href, "/votes/")]/@href'):
                 if vote_url not in seen_urls:
-                    v = self.scrape_vote(vote_url, session)
-                    if v:
-                        yield v
+                    yield vote_url
                     seen_urls.add(vote_url)
 
-    def scrape_vote(self, url, session):
+    def scrape_vote(self, url, session, overrides_only=False):
+        """The VoteEvents of one roll-call PDF: none, one, or one per bill of a consent
+        calendar. With overrides_only, only a veto override (scrape_special_session_overrides)."""
         fname, _ = self.urlretrieve(url)
         text = convert_pdf(fname, type="text").decode()
         lines = text.splitlines()
@@ -125,7 +161,7 @@ class MDVoteScraper(Scraper, LXMLMixin):
         chamber = "upper" if "senate" in url else "lower"
         if "Maryland" not in text:
             self.warning(f"empty vote from {url}")
-            return
+            return []
         date = re.findall(r"Legislative Date: (\w+ \d+, \d{4})", text)[0]
 
         section = "preamble"
@@ -133,17 +169,30 @@ class MDVoteScraper(Scraper, LXMLMixin):
         bill_id = None
         how = None
         voters = defaultdict(list)
+        # OPEN-718: a veto override ("2025 Vetoed Senate Bills", "CALENDAR OF VETOED HOUSE BILLS
+        # NO. 2") and the year of the session the bill was vetoed in, when its header gives one
+        override = False
+        vetoed_year = None
+        # OPEN-718: a Senate third-reading consent calendar ("Consent Calendar No. 10") lists its
+        # bills on one or more lines after that header, and the roll call is a vote on each
+        consent_bills = None
+        consent_lines = []
 
         for line in lines:
             if section == "preamble":
                 if "vetoed" in line.lower():
-                    self.warning(
-                        f"skipping vote that appears to be on prior session: {line}, {bill_id}"
-                    )
-                    return
+                    override = True
+                    year = re.search(r"(\d{4})\s+vetoed", line, re.I)
+                    if year:
+                        vetoed_year = year.group(1)
+                if re.search(r"consent calendar no", line, re.I):
+                    consent_bills = []
                 possible_bill_id = re.findall(r"([HS][BJR] \d+)", line)
                 if possible_bill_id:
                     bill_id = possible_bill_id[0]
+                    if consent_bills is not None:
+                        consent_bills.extend(possible_bill_id)
+                        consent_lines.append(line.strip())
 
                 # preamble has metadata, then motion, then counts.  our process then is to
                 # store the last line as the motion, but if the last line looks like a
@@ -185,40 +234,70 @@ class MDVoteScraper(Scraper, LXMLMixin):
                     names = re.split(r"\s{2,}", line)
                     voters[how].extend(names)
 
+        if overrides_only and not override:
+            return []
         if not bill_id and not motion:
-            return
+            return []
         elif bill_id and not motion:
             self.warning(f"got {bill_id} but no motion, not registering as a vote")
         elif motion and not bill_id:
             self.warning(f"got {motion} but no bill_id, not registering as a vote")
-            return
+            return []
+
+        if override:
+            # the bill is from the session it was vetoed in: the header's year, else the year
+            # of the special session holding the roll call (".../2025S1/votes/..."). Only that
+            # session's run records it; any other run would put it on the wrong bill (the check
+            # this replaces skipped every override for that reason, 2021RS voting on 2020 bills).
+            if not vetoed_year:
+                special = re.search(r"/(\d{4})s\d+/votes/", url, re.I)
+                vetoed_year = special.group(1) if special else None
+            if vetoed_year != session:
+                self.warning(
+                    f"skipping veto override of a {vetoed_year or 'prior session'} bill "
+                    f"in {session}: {bill_id}, {url}"
+                )
+                return []
+
+        if consent_bills:
+            bill_ids = list(dict.fromkeys(consent_bills))
+            motion = " ".join(consent_lines)
+        else:
+            bill_ids = [bill_id]
 
         # bleh - result not indicated anywhere
         result = "pass" if yes_count > no_count else "fail"
-        bill_chamber = "upper" if bill_id.startswith("S") else "lower"
         date = datetime.datetime.strptime(date, "%b %d, %Y").strftime("%Y-%m-%d")
-        vote = VoteEvent(
-            chamber=chamber,
-            start_date=date,
-            result=result,
-            classification=vote_classification(motion),
-            motion_text=motion,
-            legislative_session=session,
-            bill=bill_id,
-            bill_chamber=bill_chamber,
-        )
-        # URL includes sequence ID, will be unique
-        vote.dedupe_key = url
-        vote.add_source(url)
-        vote.set_count("yes", yes_count)
-        vote.set_count("no", no_count)
-        vote.set_count("not voting", nv_count)
-        vote.set_count("excused", excused_count)
-        vote.set_count("absent", absent_count)
-        for how, names in voters.items():
-            for name in names:
-                name = name.strip().replace("*", "")
-                if name and "COPY" not in name and "Indicates Vote Change" not in name:
-                    vote.vote(how, name)
-        check_counts(vote, raise_error=True)
-        return vote
+        votes = []
+        for bill_id in bill_ids:
+            vote = VoteEvent(
+                chamber=chamber,
+                start_date=date,
+                result=result,
+                classification=vote_classification(motion),
+                motion_text=motion,
+                legislative_session=session,
+                bill=bill_id,
+                bill_chamber="upper" if bill_id.startswith("S") else "lower",
+            )
+            # URL includes sequence ID, will be unique; a consent calendar's roll call is one
+            # vote per bill, so its key adds the bill (as the bills scraper's parse_vote_pdf does)
+            vote.dedupe_key = f"{url}#{bill_id}" if consent_bills else url
+            vote.add_source(url)
+            vote.set_count("yes", yes_count)
+            vote.set_count("no", no_count)
+            vote.set_count("not voting", nv_count)
+            vote.set_count("excused", excused_count)
+            vote.set_count("absent", absent_count)
+            for how, names in voters.items():
+                for name in names:
+                    name = name.strip().replace("*", "")
+                    if (
+                        name
+                        and "COPY" not in name
+                        and "Indicates Vote Change" not in name
+                    ):
+                        vote.vote(how, name)
+            check_counts(vote, raise_error=True)
+            votes.append(vote)
+        return votes

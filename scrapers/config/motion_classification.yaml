@@ -468,7 +468,7 @@ jurisdictions:
       - '^on third reading\b'                    # House and Senate, every tag; "... and Final Passage (Hse concurred|CCR Adp|Hse Receded)"
       - '^(the )?bill (is )?on third reading for final passage\b'   # Senate: "Bill is on ...", "The bill is on ...", "Bill on ..."
       - '^([hs][bjr] \d+\s*)+$'                  # Senate consent calendar on third reading: the motion line is its list of bills
-      - '^shall the bill pass notwithstanding the objections\b'   # whole-bill veto override (2025S1, 2026S1)
+      - '^shall the bill pass notwithstanding the objections?\b'  # whole-bill veto override (2025S1, 2026S1); "objection" once (2025S1 Senate 0022, OPEN-718)
       - '^conference committee report - adoption\b'               # unlabelled by the scraper when a final passage roll call follows
       - '^question is on the adoption of the conference committee report\b'
     default: null                                # anything else (procedure, second reading) stays unclassified

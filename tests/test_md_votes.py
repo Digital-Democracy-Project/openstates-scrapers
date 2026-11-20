@@ -66,9 +66,11 @@ class _Bills(MDBillScraper):
 
 def scrape_vote(session, chamber, seq):
     url = f"https://mgaleg.maryland.gov/{session}/votes/{chamber}/{seq}.pdf"
-    v = _Votes().scrape_vote(url, "2026")
-    if v is None:
+    votes = _Votes().scrape_vote(url, "2026")
+    if not votes:
         return None
+    # the first bill of a consent calendar (test_md_votes_overrides.py checks the rest)
+    v = votes[0]
     d = v.as_dict()
     d["bill"] = v.bill_identifier
     return d
@@ -218,7 +220,11 @@ def scrape_chamber_labels(chamber, seqs):
                 url = (
                     f"https://mgaleg.maryland.gov/2026RS/votes/{chamber_name}/{seq}.pdf"
                 )
-                yield self.scrape_vote(url, session)
+                yield from self.scrape_vote(url, session)
+
+        def vote_urls(self, chamber, session_code):
+            # no special session (OPEN-718's override walk finds none)
+            return []
 
     chamber_name = "senate" if chamber == "upper" else "house"
     votes = Chamber().scrape(chamber=chamber, session="2026")
@@ -393,6 +399,11 @@ def test_bills_html_parser_uses_the_same_rules(monkeypatch):
         ),
         (
             "Shall the Bill pass notwithstanding the objections of the Chief Executive?",
+            ["passage"],
+        ),
+        # OPEN-718: 2025S1 Senate 0022 (HB 333) says "objection"
+        (
+            "Shall the Bill pass notwithstanding the objection of the Chief Executive?",
             ["passage"],
         ),
         ("Conference Committee Report - Adoption", ["passage"]),
