@@ -30,6 +30,20 @@ AMENDMENT_VOTE = re.compile(
 )
 
 
+# OPEN-698 (Ramon, comment 21956): accepting an "Ought to Pass" report ("ACC MAJ OTP AS AMENDED
+# REP", "ACCEPT REPORT 'A' OUGHT TO PASS", 'acc report "a" otp-am by ca "a"', a bare "OTP-AM") is
+# passage only on a bill with no enactment or final roll call (FINAL_ROLL_CALL): the final roll call
+# replaces it. Decided per bill in scrape_votes(), since one roll call's text cannot say.
+OUGHT_TO_PASS_REPORT = re.compile(
+    r"^((acc(ept(ance of the)?)? |report ).*\b(ought to pass|otp)\b|otp(-am)?$)", re.I
+)
+# A bill's (or resolve's, order's, resolution's) own final roll call: enactment, final passage, an
+# emergency measure's passage, an order's "PASSAGE", a resolution's "ADOPTION".
+FINAL_ROLL_CALL = re.compile(
+    r"^(enact|final passage\b|passage( of emergency measure)?$|adoption$)", re.I
+)
+
+
 def vote_classification(motion):
     """What a floor roll call decides: passage from the me block of
     config/motion_classification.yaml, else "amendment" for an amendment roll call,
@@ -409,6 +423,7 @@ class MEBillScraper(Scraper):
 
         path = "//div/a[contains(@href, 'rollcall.asp')]"
         seen_urls = set()
+        votes = []
         for link in page.xpath(path):
             # skip blank motions, nothing we can do with these
             # seen on /LawMakerWeb/rollcalls.asp?ID=280039835
@@ -422,7 +437,13 @@ class MEBillScraper(Scraper):
                     continue
                 seen_urls.add(url)
 
-                yield from self.scrape_vote(bill, motion, url)
+                votes.extend(self.scrape_vote(bill, motion, url))
+
+        has_final = any(FINAL_ROLL_CALL.search(v.motion_text) for v in votes)
+        for vote in votes:
+            if not has_final and OUGHT_TO_PASS_REPORT.search(vote.motion_text):
+                vote.motion_classification = ["passage"]
+            yield vote
 
     def scrape_vote(self, bill, motion, url):
         page = self.get(url, retry_on_404=True).text

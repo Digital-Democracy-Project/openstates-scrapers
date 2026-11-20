@@ -1,7 +1,7 @@
 """Tests for OPEN-698: Maine's roll calls are classified from the motion, not all labelled passage.
 
 The motion texts are real: the link text of every roll call on the Roll-calls tab of 485 session-132 papers
-(legislature.maine.gov/LawMakerWeb/rollcalls.asp?ID=<paper>, 1,057 roll calls, read 2026-11-20). The fixtures
+(legislature.maine.gov/LawMakerWeb/rollcalls.asp?ID=<paper>, 1,056 roll calls, read 2026-11-20). The fixtures
 are real rollcall.asp pages of those papers, run through the scraper's own scrape_votes() / scrape_vote().
 """
 import json
@@ -15,7 +15,12 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
 from openstates.scrape import Bill  # noqa: E402
 
 from classify_motion import classify_motion  # noqa: E402
-from me.bills import MEBillScraper, vote_classification  # noqa: E402
+from me.bills import (  # noqa: E402
+    FINAL_ROLL_CALL,
+    OUGHT_TO_PASS_REPORT,
+    MEBillScraper,
+    vote_classification,
+)
 
 FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures", "me_open698")
 
@@ -67,19 +72,47 @@ REAL_AMENDMENT = [
     "INDEFINITELY POSTPONE SENATE AMENDMENT (SAS-1)",
 ]
 
-# Left unlabelled: committee-report acceptance (Ramon decides; see the PR), indefinite postponement of the
-# bill, recede and concur, substitution, and procedure.
-REAL_UNLABELLED = [
+# Accepting an "Ought Not to Pass" report is passage (Ramon, OPEN-698 comment 21956), whatever else the bill has.
+# A YES on it is a vote against the bill.
+REAL_OUGHT_NOT_TO_PASS = [
+    "ACCEPT MAJORITY OUGHT NOT TO PASS REPORT",  # 130
+    "ACC MAJ OUGHT NOT TO PASS REP",  # 126 (LD 115, House RC 250: accepted, "(DEAD)")
+    "ACCEPT REPORT 'B' OUGHT NOT TO PASS",
+    "ACC MIN OUGHT NOT TO PASS REP",
+    "ACCEPT MINORITY OUGHT NOT TO PASS REPORT",
+    'ACC REPORT "B" ONTP',
+    "ACCEPT REPORT 'A' OUGHT NOT TO PASS",
+    "Acc Maj Ought Not to Pass Rep",
+    'acc report "b" ontp',
+    "ACC REPORT 'B' ONTP",
+    "ACC REPORT \"B' ONTP",
+    'REPORT "B" ONTP',
+    'REPORT "A" ONTP',
+]
+
+# Accepting an "Ought to Pass" report: unlabelled by its text alone; scrape_votes() makes it passage on a bill
+# with no enactment or final roll call.
+REAL_OUGHT_TO_PASS = [
     "ACC MAJ OTP AS AMENDED REP",  # 139
     "ACCEPT MAJORITY OUGHT TO PASS AS AMENDED REPORT",  # 135
-    "ACCEPT MAJORITY OUGHT NOT TO PASS REPORT",  # 130
-    "ACC MAJ OUGHT NOT TO PASS REP",  # 127 (LD 115, House RC 250: accepted, "(DEAD)")
+    "ACCEPT MAJORITY OUGHT TO PASS REPORT",
+    "ACC MAJ OUGHT TO PASS REP",
     "ACCEPT MINORITY OUGHT TO PASS AS AMENDED REPORT",
     "ACCEPT REPORT 'A' OUGHT TO PASS AS AMENDED",
-    "ACCEPT REPORT 'B' OUGHT NOT TO PASS",
-    'ACC REPORT "B" ONTP',
+    'ACC REPORT "A" OTP-AM',
+    "ACC OUGHT TO PASS AS AMEND REP",
     'acc report "a" otp-am by ca "a"',
-    "OTP-AM",
+    'acc otp-am by ca "a"',
+    "acceptance of the otp-am report",
+    "ACC MIN OTP-AM BY CA-B",
+    "REPORT A OTP-AM BY CA-A",
+    'report "a" ought to pass',
+    "OTP-AM",  # House RC 3: "The Committee Report was READ and ACCEPTED"
+]
+
+# Left unlabelled: indefinite postponement of the bill, recede and concur, a report whose text does not say
+# which, substitution, and procedure.
+REAL_UNLABELLED = [
     "ACCEPT REPORT",
     "ACCEPTANCE OF REPORT",
     "ACC MAJORITY REPORT",  # a "Refer to Committee" report
@@ -121,6 +154,37 @@ def test_real_amendment_motions(motion):
 @pytest.mark.parametrize("motion", REAL_UNLABELLED)
 def test_real_unlabelled_motions(motion):
     assert vote_classification(motion) == []
+    assert not OUGHT_TO_PASS_REPORT.search(motion)
+
+
+@pytest.mark.parametrize("motion", REAL_OUGHT_NOT_TO_PASS)
+def test_ought_not_to_pass_is_passage(motion):
+    assert vote_classification(motion) == ["passage"]
+    assert not OUGHT_TO_PASS_REPORT.search(motion)
+
+
+@pytest.mark.parametrize("motion", REAL_OUGHT_TO_PASS)
+def test_ought_to_pass_is_decided_per_bill(motion):
+    assert vote_classification(motion) == []
+    assert OUGHT_TO_PASS_REPORT.search(motion)
+    assert not FINAL_ROLL_CALL.search(motion)
+
+
+@pytest.mark.parametrize(
+    "motion,final",
+    [
+        (m, True)
+        for m in ("Enactment", "ENACT-EMER 2/3 ELECT", "Final Passage - Con Res")
+    ]
+    + [(m, True) for m in ("PASSAGE OF EMERGENCY MEASURE", "PASSAGE", "ADOPTION")]
+    + [(m, False) for m in ("PASSAGE TO BE ENGROSSED", "Reconsideration - Veto")]
+    + [
+        (m, False)
+        for m in ("ACCEPT MAJORITY OUGHT NOT TO PASS REPORT", "RECEDE AND CONCUR")
+    ],
+)
+def test_final_roll_call(motion, final):
+    assert bool(FINAL_ROLL_CALL.search(motion)) is final
 
 
 @pytest.mark.parametrize(
@@ -136,8 +200,8 @@ def test_unseen_text_stays_unlabelled(motion):
     assert vote_classification(motion) == []
 
 
-def test_shared_rules_never_give_passage_for_amendment_or_report():
-    for motion in REAL_AMENDMENT + REAL_UNLABELLED:
+def test_shared_rules_never_give_passage_for_amendment_or_unlabelled():
+    for motion in REAL_AMENDMENT + REAL_UNLABELLED + REAL_OUGHT_TO_PASS:
         assert classify_motion("me", motion) == []
 
 
@@ -176,8 +240,9 @@ def test_sp10_roll_calls_from_the_real_page():
     assert [
         (v.motion_text, v.motion_classification, v.result, v.identifier) for v in votes
     ] == [
-        ("ACCEPT MAJORITY OUGHT NOT TO PASS REPORT", [], "fail", "S-RC 218"),
+        ("ACCEPT MAJORITY OUGHT NOT TO PASS REPORT", ["passage"], "fail", "S-RC 218"),
         ("SUBSTITUTE JOINT RES FOR COMMITTEE RPT", [], "fail", "S-RC 219"),
+        # the joint resolution's own ADOPTION roll call replaces the Ought to Pass one
         ("ACCEPT MINORITY OUGHT TO PASS AS AMENDED REPORT", [], "pass", "S-RC 220"),
         ("ADOPTION", ["passage"], "fail", "S-RC 221"),
     ]
@@ -188,7 +253,7 @@ def test_sp10_roll_calls_from_the_real_page():
 REAL_PAGES = [
     # (fixture id, motion, classification, result)
     ("280095523_Senate_270", "PASSAGE TO BE ENGROSSED AS AMENDED", ["passage"], "fail"),
-    ("280095523_House_250", "ACC MAJ OUGHT NOT TO PASS REP", [], "pass"),
+    ("280095523_House_250", "ACC MAJ OUGHT NOT TO PASS REP", ["passage"], "pass"),
     ("280095524_House_114", "Enactment", ["passage"], "pass"),
     ("280095733_Senate_651", "ENACTMENT", ["passage"], "pass"),
     ("280095959_House_97", "Final Passage - Con Res", ["passage"], "fail"),
@@ -220,18 +285,63 @@ def test_real_roll_call_pages(fid, motion, classification, result):
     assert len(vote.votes) == counts["yes"] + counts["no"] + counts["other"]
 
 
-# Every distinct motion text of the 1,057 session-132 roll calls (166 texts), with how many roll calls carry
-# it and its label (empty = unlabelled), as listed in the OPEN-698 PR for review.
+# Every distinct motion text of the 1,056 session-132 roll calls (166 texts), with how many roll calls carry
+# it and its label from the text alone (empty = unlabelled), as listed in the OPEN-698 PR for review. An Ought
+# to Pass text also carries how many of its roll calls became passage (bills with no final roll call).
 with open(os.path.join(FIXTURES, "motion_texts_132.json"), encoding="utf-8") as _f:
     ALL_TEXTS_132 = json.load(_f)
 
 
 def test_inventory_is_the_whole_sample():
     assert len(ALL_TEXTS_132) == 166
-    assert sum(t["roll_calls"] for t in ALL_TEXTS_132) == 1057
+    assert sum(t["roll_calls"] for t in ALL_TEXTS_132) == 1056
 
 
 @pytest.mark.parametrize("text", ALL_TEXTS_132, ids=lambda t: t["motion"])
 def test_every_session_132_text(text):
+    if "passage_on_bills_without_final" in text:
+        assert OUGHT_TO_PASS_REPORT.search(text["motion"])
     expected = [text["label"]] if text["label"] else []
     assert vote_classification(text["motion"]) == expected
+
+
+def _scrape_bill_page(paper):
+    """Every roll call on a real Roll-calls page, through scrape_votes()."""
+    rollcalls = _page(f"rollcalls_{paper}.html")
+    pages = {BASE + f"rollcalls.asp?ID={paper}": rollcalls}
+    for name in os.listdir(FIXTURES):
+        if name.startswith(f"rollcall_{paper}_"):
+            _, _, chamber, rc = name[: -len(".html")].split("_")
+            url = BASE + f"rollcall.asp?ID={paper}&chamber={chamber}&serialnumber={rc}"
+            pages[url] = _page(name)
+    votes = _scraper(pages).scrape_votes(_bill(), BASE + f"rollcalls.asp?ID={paper}")
+    return [(v.identifier, v.motion_text, v.motion_classification) for v in votes]
+
+
+def test_ought_to_pass_counts_on_a_bill_with_no_final_roll_call():
+    # LD 5 (132): its only roll call is the House accepting the Ought to Pass report (RC 79); the bill was then
+    # engrossed by voice the same day
+    assert _scrape_bill_page("280095522") == [
+        ("H-RC 79", "ACC MAJ OUGHT TO PASS REP", ["passage"]),
+    ]
+
+
+def test_ought_to_pass_counts_next_to_engrossment_and_ought_not_to_pass():
+    # LD 115 (132): Senate accepts the Minority OTP-AM report (RC 232), fails engrossment (RC 270); the House
+    # accepts Ought Not to Pass (RC 250, "(DEAD)"). No enactment or final roll call, so the OTP vote counts.
+    assert _scrape_bill_page("280095523") == [
+        ("S-RC 232", "ACCEPT MINORITY OUGHT TO PASS AS AMENDED REPORT", ["passage"]),
+        ("S-RC 270", "PASSAGE TO BE ENGROSSED AS AMENDED", ["passage"]),
+        ("H-RC 250", "ACC MAJ OUGHT NOT TO PASS REP", ["passage"]),
+    ]
+
+
+def test_enactment_replaces_ought_to_pass_on_the_whole_bill():
+    # LD 100 (132): both chambers accept Ought to Pass (Senate RC 80, House RC 59), the House enacts by
+    # roll call (RC 64). Per bill (Ramon's rule), so the Senate's OTP vote is not counted either, although the
+    # Senate's own enactment was by voice.
+    assert _scrape_bill_page("280095665") == [
+        ("S-RC 80", "ACCEPT MAJORITY OUGHT TO PASS REPORT", []),
+        ("H-RC 59", "ACC MAJ OUGHT TO PASS REP", []),
+        ("H-RC 64", "Enactment", ["passage"]),
+    ]

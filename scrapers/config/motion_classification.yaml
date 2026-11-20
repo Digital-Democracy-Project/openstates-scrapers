@@ -142,10 +142,14 @@ jurisdictions:
   # PASSAGE TO BE ENACTED FAILED); a bare "PASSAGE" / "ADOPTION" (a joint or House order "READ and PASSED", a
   # resolution "READ and ADOPTED"); "Reconsideration - Veto" / "VETO OVERRIDE (2/3)" (all six seen are whole-bill:
   # "Shall this Bill become a law notwithstanding the objections of the Governor?", Ramon OPEN-677).
-  # Left unlabelled on purpose, for Ramon to decide (see the OPEN-698 PR): accepting a committee report ("ACC MAJ
-  # OUGHT NOT TO PASS REP", "ACCEPT REPORT 'A' OUGHT TO PASS AS AMENDED", ...; accepting Ought Not to Pass often
-  # kills the bill), "INDEFINITELY POSTPONE" (the bill, or once an amendment), "RECEDE AND CONCUR" (concurs in
-  # whatever the other chamber did: engrossment, a report, an enactment, a failure), "SUBSTITUTE JOINT RES FOR
+  # Accepting an "Ought Not to Pass" report (Majority, Minority or Report A/B/C, every spelling seen) is passage
+  # too: Ramon, OPEN-698 comment 21956, "count both". A YES on it is a vote AGAINST the bill (accepted, it often
+  # kills the bill on the spot: LD 115, House RC 250, "(DEAD)"); the broker does not yet read that direction (see
+  # the OPEN-698 PR). Accepting an "Ought to Pass" report is passage only on a bill with no enactment or final
+  # roll call, which this file cannot see: the me scraper decides it per bill (scrape_votes() in me/bills.py),
+  # so it is not listed here. Left unlabelled, as decided: "INDEFINITELY POSTPONE" (the bill, or once an
+  # amendment), "RECEDE AND CONCUR" (concurs in whatever the other chamber did), "ACCEPT REPORT" / "ACCEPTANCE OF
+  # REPORT" (the text does not say which report), "SUBSTITUTE JOINT RES FOR
   # COMMITTEE RPT". Not passage: "INSIST", "RECEDE", "RECONSIDER", "TABLE UNTIL LATER", "REFERENCE", "COMMIT",
   # "SUSPEND RULES", "CONFIRMATION BE OVERRIDDEN" (a nomination), "PLACE ON FILE", "FORTHWITH" and other
   # procedure. Amendment votes ("ADOPT HAH-126 to CAS-44", "INDEF PP HAH-2 TO CAH-1") are labelled amendment by
@@ -157,7 +161,8 @@ jurisdictions:
       - '^passage( to be engrossed( as amended)?| of emergency measure)?$'
       - '^adoption$'
       - '^(reconsideration ?- ?veto|veto override \(2/3\))$'   # whole-bill override; an unseen line-item text stays unlabelled
-    default: null                                # committee reports, postponement, recede and anything unseen stay unclassified
+      - '^(acc(ept)? |report ).*\b(ought not to pass|ontp)\b'  # "ACC MAJ OUGHT NOT TO PASS REP", "ACCEPT REPORT 'B' OUGHT NOT TO PASS", 'REPORT "A" ONTP': a YES is against the bill
+    default: null                                # postponement, recede and anything unseen stay unclassified
 
   mi:
     passage:
