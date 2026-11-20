@@ -71,6 +71,29 @@ def vote_classification(motion):
     return []
 
 
+# OPEN-684: a roll call's result was "yeas beat nays", but a line-item veto override needs two thirds of the
+# members elected (Wyoming Constitution art. 4, sec. 8-9): the House's "SF0001VT007: Did Not Override Line Item Veto
+# 41-19-1-1-0" (2026) failed although 41 is two thirds of those voting, short of 42 of 62. The API has no outcome
+# field, and a failure is in the action text ("H Failed Introduction 34-28-0-0-0" failed although yeas beat nays: a
+# budget-session introduction also needs two thirds), so the text decides where it says ("Failed", "Did Not
+# Override", "Passed", "Amendment adopted"). Otherwise an override ("Line Item Veto Override 23-6-2-0-0") needs two
+# thirds of the chamber's 31 or 62, and any other vote yeas over nays.
+FAILED_RE = re.compile(r"\b(failed|did not)\b", re.I)
+PASSED_RE = re.compile(r"\b(passed|adopted)\b", re.I)
+CHAMBER_SIZE = {"S": 31, "H": 62}
+
+
+def vote_result(chamber, motion, yes_count, no_count):
+    """'pass' or 'fail' for one roll call in chamber "S"/"H", from Wyoming's own outcome where the text gives one."""
+    if FAILED_RE.search(motion):
+        return "fail"
+    if PASSED_RE.search(motion):
+        return "pass"
+    if "veto-override" in vote_classification(motion):
+        return "pass" if 3 * yes_count >= 2 * CHAMBER_SIZE[chamber] else "fail"
+    return "pass" if yes_count > no_count else "fail"
+
+
 class WYBillScraper(Scraper, LXMLMixin):
     categorizer = Categorizer()
     chamber_abbrev_map = {"H": "lower", "S": "upper"}
@@ -330,12 +353,13 @@ class WYBillScraper(Scraper, LXMLMixin):
         else:
             motion = vote_json["action"]
 
-        result = (
-            "pass" if vote_json["yesVotesCount"] > vote_json["noVotesCount"] else "fail"
+        chamber = voting_chamber(vote_json)
+        result = vote_result(
+            chamber, motion, vote_json["yesVotesCount"], vote_json["noVotesCount"]
         )
 
         v = VoteEvent(
-            chamber=self.chamber_abbrev_map[voting_chamber(vote_json)],
+            chamber=self.chamber_abbrev_map[chamber],
             start_date=self.parse_local_date(vote_json["voteDate"]),
             motion_text=motion,
             result=result,
