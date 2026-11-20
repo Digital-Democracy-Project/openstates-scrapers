@@ -31,6 +31,20 @@ _COMMITTEE_NAME_MAPPING = {
     "Water": " Water Select",
 }
 
+# OPEN-675: a floor roll call's action names the chamber that voted ("S Introduced and Referred to S01 - Judiciary
+# 31-0-0-0-0", "H 3rd Reading:Passed 55-2-5-0-0"), but the API's roll-call `chamber` can name the other one: in 2026
+# the Senate's introduction votes on Senate files (SF 2, SF 10, ...) come back with chamber "H", so all 31 senators
+# were stored on a House vote and none of them resolved. Committee votes ("S01 - ...") and amendment votes ("Amendment
+# adopted ...") carry no "S "/"H " prefix and keep the API's chamber.
+VOTE_CHAMBER_PREFIX_RE = re.compile(r"^([SH]) ")
+
+
+def voting_chamber(vote_json):
+    """The chamber ("S"/"H") that cast a roll call: the action's "S "/"H " prefix where it has one, else the API's
+    own `chamber` field."""
+    match = VOTE_CHAMBER_PREFIX_RE.match(vote_json["action"] or "")
+    return match.group(1) if match else vote_json["chamber"]
+
 
 class WYBillScraper(Scraper, LXMLMixin):
     categorizer = Categorizer()
@@ -296,7 +310,7 @@ class WYBillScraper(Scraper, LXMLMixin):
         )
 
         v = VoteEvent(
-            chamber=self.chamber_abbrev_map[vote_json["chamber"]],
+            chamber=self.chamber_abbrev_map[voting_chamber(vote_json)],
             start_date=self.parse_local_date(vote_json["voteDate"]),
             motion_text=motion,
             result=result,
