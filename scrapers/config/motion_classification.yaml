@@ -452,11 +452,13 @@ jurisdictions:
   # OPEN-617, la OPEN-583); the Senate's final passage ("Bill is on Third Reading for Final Passage."); a
   # Senate third-reading consent calendar, whose motion line is its list of bills ("SB 72  SB 398  SB 399");
   # and a whole-bill veto override ("Shall the Bill pass notwithstanding the objections of the Chief
-  # Executive?", Ramon OPEN-677; no line-item override text was seen). Not passage (unlabelled): the
-  # Senate's "Conference Committee Report - Adoption", always followed by its own final passage roll call on
-  # the bill (SB 282, HB 1532 of 2026; SB 338 of 2025, "Question is on the adoption of the Conference
-  # Committee Report."; the Constitution, Art. III sec. 28, wants the yeas and nays on final passage): final
-  # vote only; second reading ("Favorable ... adp - ON 2ND RDG",
+  # Executive?", Ramon OPEN-677; no line-item override text was seen). The Senate's conference committee
+  # report adoption ("Conference Committee Report - Adoption"; 2025: "Question is on the adoption of the
+  # Conference Committee Report.") is passage here, and the md scrapers unlabel it when the same chamber holds
+  # its own final passage roll call on the bill after it (Ramon, OPEN-700: the Maine pattern), as it did for
+  # SB 282 and HB 1532 of 2026 and SB 338 of 2025; they also unlabel a third reading that is reconsidered and
+  # voted again (only the later vote counts; final_vote_only() in md/votes.py). Not passage (unlabelled):
+  # second reading ("Favorable ... adp - ON 2ND RDG",
   # "Question is on the adoption of the favorable report, as amended."); special order, recommit, previous
   # question, limit debate, postpone, rules suspension; introduction of a late bill. Amendment votes ("FLA
   # Del. ...", "Floor Amendment ...", "Committee Amendments") are labelled amendment by vote_classification()
@@ -467,7 +469,9 @@ jurisdictions:
       - '^(the )?bill (is )?on third reading for final passage\b'   # Senate: "Bill is on ...", "The bill is on ...", "Bill on ..."
       - '^([hs][bjr] \d+\s*)+$'                  # Senate consent calendar on third reading: the motion line is its list of bills
       - '^shall the bill pass notwithstanding the objections\b'   # whole-bill veto override (2025S1, 2026S1)
-    default: null                                # anything else (procedure, second reading, a CCR adoption) stays unclassified
+      - '^conference committee report - adoption\b'               # unlabelled by the scraper when a final passage roll call follows
+      - '^question is on the adoption of the conference committee report\b'
+    default: null                                # anything else (procedure, second reading) stays unclassified
 
   ne:
     not_passage:

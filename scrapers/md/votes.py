@@ -34,11 +34,55 @@ def vote_classification(motion):
     return []
 
 
+# OPEN-700, Ramon's two pairing rules, decided per bill and per chamber over all its roll calls:
+# - a conference committee report adoption ("Conference Committee Report - Adoption", 2025's "Question
+#   is on the adoption of the Conference Committee Report.") is passage unless the same chamber holds
+#   its own final passage roll call on the bill after it (the Maine pattern: final passage is sometimes
+#   by voice). Every one seen is followed by "Bill is on Third Reading for Final Passage.".
+# - when a third reading is reconsidered and voted again ("On Third Reading (Reconsidered)"), only the
+#   later vote is passage (SB 283, House, 2026).
+CCR_ADOPTION = re.compile(
+    r"conference committee report - adoption|adoption of the conference committee report",
+    re.I,
+)
+RECONSIDERED = re.compile(r"\(reconsidered\)", re.I)
+
+
+def _seq(vote):
+    # the roll call's sequence number in its chamber: ".../votes/senate/0740.pdf" (or .htm)
+    return int(re.search(r"/(\d+)\.(pdf|htm)", vote.dedupe_key).group(1))
+
+
+def final_vote_only(votes):
+    """Unlabel, in place, the passage votes a later roll call on the same bill in the same
+    chamber replaces: a conference report adoption followed by a final passage roll call,
+    and a third reading followed by its reconsidered revote."""
+    passage = sorted(
+        (v for v in votes if "passage" in v.motion_classification), key=_seq
+    )
+    replaced = []
+    for i, vote in enumerate(passage):
+        later = [
+            v
+            for v in passage[i + 1 :]
+            if (v.organization, v.bill) == (vote.organization, vote.bill)
+        ]
+        if CCR_ADOPTION.search(vote.motion_text):
+            if any(not CCR_ADOPTION.search(v.motion_text) for v in later):
+                replaced.append(vote)
+        elif later and RECONSIDERED.search(later[0].motion_text):
+            replaced.append(vote)
+    for vote in replaced:
+        vote.motion_classification = []
+    return votes
+
+
 class MDVoteScraper(Scraper, LXMLMixin):
     def scrape(self, chamber=None, session=None):
         chambers = [chamber] if chamber is not None else ["upper", "lower"]
         for chamber in chambers:
-            yield from self.scrape_chamber(chamber, session)
+            # a chamber's roll calls are labelled together (final_vote_only)
+            yield from final_vote_only(list(self.scrape_chamber(chamber, session)))
 
     def scrape_chamber(self, chamber, session):
         chamber_name = "senate" if chamber == "upper" else "house"
