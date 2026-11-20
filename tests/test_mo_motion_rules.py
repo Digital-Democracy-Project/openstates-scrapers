@@ -281,6 +281,7 @@ def test_passage_is_only_from_the_mo_block():
         ("014.003", []),  # motion to recommit
         ("014.004", []),  # previous question
         ("023.006", ["amendment"]),
+        # alone; with the final passage after it, the scraper relabels it (OPEN-714)
         ("033.002", ["passage"]),  # Senate substitute adopted (concurrence)
         ("033.003", ["passage"]),  # truly agreed to and finally passed
         ("060.002", ["passage"]),  # CCR adopted
@@ -368,12 +369,14 @@ def test_house_walk_labels_the_emergency_clause_vote(tmp_path):
         for v in votes
     ]
     assert got == [
-        ("mo-2026-H-001.001", ["passage"], False),
+        # OPEN-714: the CCR adoption is followed by the CCS's final passage
+        ("mo-2026-H-001.001", [], False),
         ("mo-2026-H-001.002", ["passage"], False),
         ("mo-2026-H-001.003", [], True),
         ("mo-2026-H-002.001", ["passage"], False),
         ("mo-2026-H-002.002", [], True),
-        ("mo-2026-H-003.001", ["passage"], False),
+        # OPEN-714: the concurrence is followed by the final passage
+        ("mo-2026-H-003.001", ["amendment"], False),
         ("mo-2026-H-003.002", ["passage"], False),
     ]
     for v in votes:

@@ -284,7 +284,9 @@ def test_house_result_ignores_words_in_the_bill_title(tmp_path):
     # a House header carries the bill's short title; "LOST" there is not the outcome
     rc = parse_house_rollcall(text("house_rollcall_049.010.pdf"))
     rc["motion"] = rc["motion"].replace("VESSEL REGISTRATION FEES", "LOST PROPERTY")
-    vote = make_scraper(tmp_path, {})._make_vote("2026", "lower", rc, "k", [])
+    vote = make_scraper(tmp_path, {})._make_vote(
+        "2026", "lower", rc, "k", [], ["passage"]
+    )
     assert vote.result == "pass"
 
 

@@ -249,8 +249,12 @@ jurisdictions:
   # line if the vote is on a motion ("PREVIOUS QUESTION", "THAT ... BE REFERRED ..."). The PDF never says what
   # was decided, so the calendar heading decides: third reading is the passage vote; under "HBs WITH SENATE
   # AMENDMENTS" the House adopts the Senate's version and then truly agrees to and finally passes it, and under
-  # "BILLS IN CONFERENCE" adopts the CCR and then passes the CCS (concurrence and conference report adoption are
-  # passage, pa OPEN-617, la OPEN-583). The emergency clause vote after a bill's passage has the same header;
+  # "BILLS IN CONFERENCE" adopts the CCR and then passes the CCS. OPEN-714 (Ramon 2026-11-20, "Final vote
+  # only"): these rules call both votes of such a pair passage, and the mo scraper (final_vote_only in
+  # mo/votes.py) relabels the first one, the concurrence "amendment" and the conference report unlabelled, when
+  # the bill's final passage roll call follows in that chamber; with none after it, it stays passage (pa
+  # OPEN-617, la OPEN-583). The same holds for the Senate's concurrence and CCR votes below. The emergency
+  # clause vote after a bill's passage has the same header;
   # the mo scraper adds " - EMERGENCY CLAUSE" to it (mark_emergency_clauses). Senate: the motion is the journal
   # paragraph ending "by the following vote:". Not passage: perfection, amendments (the mo scraper labels
   # them amendment), previous question, refer/commit, reconsider, emergency clause, refusing a CCR.
@@ -263,8 +267,8 @@ jurisdictions:
       - ' - \*?ha \d+'                           # House amendment line under a third-reading heading ("SBs FOR THIRD READING - HCS SB 835 - HA 3 - ...")
     passage:
       - '^(h|s|ha)(b|jr|cr)s (for third reading|3rd read(ing)?) - '   # "HBs FOR THIRD READING", "HBs 3rd READ - INFORMAL", "HBs 3rd READING - CONSENT", "HABs" (appropriations), "SCRs"
-      - '^hbs (with|w/) ?senate amendments - '   # adopting the Senate's version, then truly agreed to and finally passed
-      - '^bills in conference - cc[rs] '         # CCR adopted, then the CCS truly agreed to and finally passed
+      - '^hbs (with|w/) ?senate amendments - '   # adopting the Senate's version, then truly agreed to and finally passed (the first relabelled, OPEN-714)
+      - '^bills in conference - cc[rs] '         # CCR adopted, then the CCS truly agreed to and finally passed (the CCR relabelled, OPEN-714)
       - '^bills carrying request messages - '    # FOR RAMON: SB 1408, the House receded and the bill was truly agreed to and finally passed (one seen)
       - '^house resolutions - '                  # FOR RAMON: resolution adoption (HR 1, 2026 veto session, informs the Governor; one seen), as ok "Adopt Resolution"
       - '\bread the 3rd time and (finally )?(passed|failed)\b'   # Senate third reading, also "Was read the 3rd time and passed" after a CCR; "failed" unseen in 2026
