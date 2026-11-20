@@ -541,13 +541,14 @@ class MOBillScraper(Scraper, LXMLMixin):
             # Only a committee report's roll call becomes a vote here. Floor roll calls carry
             # totals only in the XML, and the Senate's votes on a House bill would be filed
             # under the House; the votes scraper makes every floor vote, with names, from the
-            # House roll-call PDFs and the Senate journals (OPEN-702).
+            # House roll-call PDFs and the Senate journals (OPEN-702). A committee report is
+            # committee-passage, never a floor passage (OPEN-706).
             if action.xpath("./RollCall") and is_committee_report(description):
                 vote = VoteEvent(
                     chamber=actor,
                     motion_text=action_title,
                     result="pass" if int(rc_yes or 0) > int(rc_no or 0) else "fail",
-                    classification="passage",
+                    classification="committee-passage",
                     start_date=TIMEZONE.localize(action_date),
                     bill=bill,
                 )
