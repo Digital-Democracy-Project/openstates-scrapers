@@ -6,6 +6,8 @@ import lxml.html
 from openstates.scrape import Scraper, Bill, VoteEvent
 from openstates.utils import convert_pdf
 
+from .votes import vote_classification
+
 # http://mgaleg.maryland.gov/mgawebsite/Legislation/Details/hb0060?ys=2019RS&search=True
 # # passed all
 
@@ -190,7 +192,7 @@ class MDBillScraper(Scraper):
             chamber=chamber,
             start_date=date.strftime("%Y-%m-%d"),
             motion_text=motion,
-            classification="passage",
+            classification=vote_classification(motion),
             result="pass" if passed else "fail",
         )
 
@@ -276,7 +278,7 @@ class MDBillScraper(Scraper):
             chamber=chamber,
             start_date=date.strftime("%Y-%m-%d"),
             motion_text=motion,
-            classification="passage",
+            classification=vote_classification(motion),
             result="pass" if passed else "fail",
         )
         vote.dedupe_key = vote_url  # contains sequence number

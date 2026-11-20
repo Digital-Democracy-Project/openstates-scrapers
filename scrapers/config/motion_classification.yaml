@@ -442,6 +442,33 @@ jurisdictions:
       - "^concurrence in (house|senate) amendments as amended$"
     default: null
 
+  # OPEN-700 (Maryland, gate E). The motion text is the last line above the tally of a roll-call PDF
+  # (mgaleg.maryland.gov/<session>/votes/house|senate/<seq>.pdf), as read by scrape_vote() in md/votes.py and
+  # by parse_vote_pdf() in md/bills.py. Rules written from every roll call of 2026RS (3,054 PDFs, 2,567
+  # emitted by the votes scraper: House 1,462, Senate 1,105) and of 2025S1 and 2026S1 (read 2026-11-20).
+  # Passage: third reading, lost ones too, with any tag ("(Amend)", "(Emerg)", "(Const)", "(Reconsidered)",
+  # "(Rules Suspended)"); the House's single roll call after it concurs, recedes or adopts a conference report
+  # ("On Third Reading and Final Passage (Hse concurred)", "(CCR Adp)", "(Hse Receded)": concurrence, pa
+  # OPEN-617, la OPEN-583); the Senate's final passage ("Bill is on Third Reading for Final Passage."); a
+  # Senate third-reading consent calendar, whose motion line is its list of bills ("SB 72  SB 398  SB 399");
+  # and a whole-bill veto override ("Shall the Bill pass notwithstanding the objections of the Chief
+  # Executive?", Ramon OPEN-677; no line-item override text was seen). Not passage (unlabelled): the
+  # Senate's "Conference Committee Report - Adoption", always followed by its own final passage roll call on
+  # the bill (SB 282, HB 1532 of 2026; SB 338 of 2025, "Question is on the adoption of the Conference
+  # Committee Report."; the Constitution, Art. III sec. 28, wants the yeas and nays on final passage): final
+  # vote only; second reading ("Favorable ... adp - ON 2ND RDG",
+  # "Question is on the adoption of the favorable report, as amended."); special order, recommit, previous
+  # question, limit debate, postpone, rules suspension; introduction of a late bill. Amendment votes ("FLA
+  # Del. ...", "Floor Amendment ...", "Committee Amendments") are labelled amendment by vote_classification()
+  # in md/votes.py after this returns []. No committee roll call reaches either scraper.
+  md:
+    passage:
+      - '^on third reading\b'                    # House and Senate, every tag; "... and Final Passage (Hse concurred|CCR Adp|Hse Receded)"
+      - '^(the )?bill (is )?on third reading for final passage\b'   # Senate: "Bill is on ...", "The bill is on ...", "Bill on ..."
+      - '^([hs][bjr] \d+\s*)+$'                  # Senate consent calendar on third reading: the motion line is its list of bills
+      - '^shall the bill pass notwithstanding the objections\b'   # whole-bill veto override (2025S1, 2026S1)
+    default: null                                # anything else (procedure, second reading, a CCR adoption) stays unclassified
+
   ne:
     not_passage:
       - "^advanced to enrollment"                # General File / Select File advancement, not final passage (Utah precedent)

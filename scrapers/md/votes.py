@@ -6,6 +6,33 @@ from utils.votes import check_counts
 from openstates.scrape import Scraper, VoteEvent
 from openstates.utils import convert_pdf
 
+from classify_motion import classify_motion
+
+# OPEN-700: an amendment roll call, labelled here because config/motion_classification.yaml only
+# decides passage: a House floor amendment ("FLA Del. Buckel /613520/1"), a Senate one ("Floor
+# Amendment Ready /123456/1"), and the floor vote on a committee's amendments ("Committee
+# Amendments", "committee amendment #2", "Favorable with 3 amendments /513122/1").
+AMENDMENT_VOTE = re.compile(
+    r"^(fla\b|floor amendment\b|committee amendments?\b|favorable with \d+ amendments? /)",
+    re.I,
+)
+# A vote on a ruling or a motion about an amendment is procedure, not the amendment itself:
+# "FLA Del. Miller /.../1 Ruled Out of Order Decision of the Chair", "... Motion to Lay Over".
+PROCEDURAL_VOTE = re.compile(r"decision of the chair|motion to lay over", re.I)
+
+
+def vote_classification(motion):
+    """What a roll call decides: passage from the md block of
+    config/motion_classification.yaml, else "amendment" for an amendment roll call, else
+    nothing. Used by both the votes scraper and the bills scraper's vote parsers."""
+    classification = classify_motion("md", motion)
+    if classification:
+        return classification
+    motion = (motion or "").strip()
+    if AMENDMENT_VOTE.search(motion) and not PROCEDURAL_VOTE.search(motion):
+        return ["amendment"]
+    return []
+
 
 class MDVoteScraper(Scraper, LXMLMixin):
     def scrape(self, chamber=None, session=None):
@@ -116,7 +143,7 @@ class MDVoteScraper(Scraper, LXMLMixin):
             chamber=chamber,
             start_date=date,
             result=result,
-            classification="passage",
+            classification=vote_classification(motion),
             motion_text=motion,
             legislative_session=session,
             bill=bill_id,
