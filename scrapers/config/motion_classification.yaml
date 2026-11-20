@@ -26,6 +26,33 @@ jurisdictions:
       - "^passage,"
     default: null
 
+  # OPEN-694 (Montana, gate E). A Montana roll call's motion says little on its own ("Do Pass" is both the
+  # second- and the third-reading vote), so the mt scraper puts the bill action the roll call belongs to in
+  # front of it: "<bill action>: <motion>" on the bills API (2025 on), e.g. "(H) 3rd Reading: Do Pass",
+  # "(S) Committee Executive Action: be_concurred_in" (committee motions are snake_case keys),
+  # and the bill action alone on the archive API (2023 and before), e.g. "(H) 3rd Reading Passed"
+  # (vote_classification() in mt/bills.py). Rules written from every roll call of 2025 (bills API: 5,570 floor
+  # and 5,470 committee records on 1,759 bills, read 2026-11-20) and every action with a tally of 2023 (archive
+  # API). Montana votes a bill on second reading (debate, amendments) and then on third reading, the final vote:
+  # only the third reading is passage (Utah precedent). Concurring in the other chamber's amendments and adopting
+  # a (free) conference committee report also take a second- and a third-reading vote; the third is passage
+  # (pa OPEN-617, la OPEN-583). A lost vote is a lost passage vote (pa, al, nc, or). Amendment votes are
+  # labelled "amendment" by the scraper after this returns [].
+  mt:
+    not_passage:
+      - "governor's (proposed )?amendments"      # governor's amendments (amendatory veto): rejecting them does not kill the bill
+    committee_passage:
+      - ': (do_pass|be_concurred_in|resolution_adopted)(_as_amended)?$'   # bills API; "to_table", "to_take_from_the_table" stay unlabelled
+      - '^\([hs]\) committee executive action--[^:]*$'                    # archive: "... Bill Passed (as Amended)", "... Bill Concurred", "... Resolution Adopted", "... Bill Not Passed"
+    passage:
+      - '^\([hs]\) 3rd reading\b'                # "(H) 3rd Reading: Do Pass", "(S) 3rd Reading: Do Concur", "... Senate Amendments: Do Concur",
+                                                 # "... Conference Committee Report: Do Adopt", "(S) 3rd Reading; 2nd Chamber Vote Required: Do Concur",
+                                                 # archive "(H) 3rd Reading Passed", "(S) 3rd Reading Failed", "(H) 3rd Reading Passed as Amended by Senate"
+      - '^\([hs]\) 2nd reading: do adopt$'       # a simple resolution (SR, HR) is adopted on second reading and has no third (111 of 2025)
+      - '^\([hs]\) resolution adopted$'          # archive: the same resolution adoption
+      - '^\([hs]\) veto overrid(den by|e failed in) legislature$'   # archive: whole-bill veto override (Ramon, OPEN-677)
+    default: null                                # second reading, motions, reconsiderations, cloture, re-referral: unlabelled
+
   # OPEN-625: these text rules apply only to Third and Final Reading roll calls. Every other floor
   # step (Committee of the Whole, its motions to amend, reconsiderations, ...) is not a vote on the
   # bill whatever its text: vote_classification() in az/bills.py, from the roll call's FloorHeader.
@@ -281,8 +308,12 @@ jurisdictions:
   # line if the vote is on a motion ("PREVIOUS QUESTION", "THAT ... BE REFERRED ..."). The PDF never says what
   # was decided, so the calendar heading decides: third reading is the passage vote; under "HBs WITH SENATE
   # AMENDMENTS" the House adopts the Senate's version and then truly agrees to and finally passes it, and under
-  # "BILLS IN CONFERENCE" adopts the CCR and then passes the CCS (concurrence and conference report adoption are
-  # passage, pa OPEN-617, la OPEN-583). The emergency clause vote after a bill's passage has the same header;
+  # "BILLS IN CONFERENCE" adopts the CCR and then passes the CCS. OPEN-714 (Ramon 2026-11-20, "Final vote
+  # only"): these rules call both votes of such a pair passage, and the mo scraper (final_vote_only in
+  # mo/votes.py) relabels the first one, the concurrence "amendment" and the conference report unlabelled, when
+  # the bill's final passage roll call follows in that chamber; with none after it, it stays passage (pa
+  # OPEN-617, la OPEN-583). The same holds for the Senate's concurrence and CCR votes below. The emergency
+  # clause vote after a bill's passage has the same header;
   # the mo scraper adds " - EMERGENCY CLAUSE" to it (mark_emergency_clauses). Senate: the motion is the journal
   # paragraph ending "by the following vote:". Not passage: perfection, amendments (the mo scraper labels
   # them amendment), previous question, refer/commit, reconsider, emergency clause, refusing a CCR.
@@ -295,8 +326,8 @@ jurisdictions:
       - ' - \*?ha \d+'                           # House amendment line under a third-reading heading ("SBs FOR THIRD READING - HCS SB 835 - HA 3 - ...")
     passage:
       - '^(h|s|ha)(b|jr|cr)s (for third reading|3rd read(ing)?) - '   # "HBs FOR THIRD READING", "HBs 3rd READ - INFORMAL", "HBs 3rd READING - CONSENT", "HABs" (appropriations), "SCRs"
-      - '^hbs (with|w/) ?senate amendments - '   # adopting the Senate's version, then truly agreed to and finally passed
-      - '^bills in conference - cc[rs] '         # CCR adopted, then the CCS truly agreed to and finally passed
+      - '^hbs (with|w/) ?senate amendments - '   # adopting the Senate's version, then truly agreed to and finally passed (the first relabelled, OPEN-714)
+      - '^bills in conference - cc[rs] '         # CCR adopted, then the CCS truly agreed to and finally passed (the CCR relabelled, OPEN-714)
       - '^bills carrying request messages - '    # FOR RAMON: SB 1408, the House receded and the bill was truly agreed to and finally passed (one seen)
       - '^house resolutions - '                  # FOR RAMON: resolution adoption (HR 1, 2026 veto session, informs the Governor; one seen), as ok "Adopt Resolution"
       - '\bread the 3rd time and (finally )?(passed|failed)\b'   # Senate third reading, also "Was read the 3rd time and passed" after a CCR; "failed" unseen in 2026

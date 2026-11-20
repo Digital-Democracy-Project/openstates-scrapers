@@ -410,8 +410,31 @@ class MSBillScraper(Scraper):
         text = convert_pdf(vote_pdf, "text")
         os.remove(vote_pdf)
 
-        # this way we get a key error on a missing vote type
-        motion, passed = self._vote_mapping[motion]
+        if motion in self._vote_mapping:
+            motion, passed = self._vote_mapping[motion]
+        else:
+            # OPEN-708: an action missing from the map (2026 HB 1653 "Veto Referred
+            # To Appropriations A") used to raise KeyError and stop the whole scrape.
+            # Keep the roll call with its own action text as the motion (unlabelled
+            # under the ms rules); the result comes from the PDF's own heading
+            # ("... failed to pass by the following vote", "it passed", "they were
+            # adopted"). A heading that says neither is skipped, not guessed.
+            head = " ".join(text.decode().split("Yeas--")[0].split())
+            if re.search(r"\b(fail|lost\b)", head, re.I):
+                passed = False
+            elif re.search(r"\b(passed|adopted|concurred|consent)\b", head, re.I):
+                passed = True
+            else:
+                self.warning(
+                    "Unknown vote action {!r} on {} ({}) and no result in the "
+                    "roll call's heading; skipping".format(motion, bill.identifier, url)
+                )
+                return
+            self.warning(
+                "Unknown vote action {!r} on {} ({}); keeping it unlabelled".format(
+                    motion, bill.identifier, url
+                )
+            )
 
         yes_votes = []
         no_votes = []
