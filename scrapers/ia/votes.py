@@ -8,6 +8,8 @@ from openstates.utils import convert_pdf
 from openstates.scrape import Scraper, VoteEvent
 from openstates.exceptions import EmptyScrape
 
+from classify_motion import classify_motion
+
 # https://www.legis.iowa.gov/legislation/findLegislation/allbills?ga=91
 SITE_IDS = {
     "2025-2026": "91",
@@ -19,6 +21,25 @@ SITE_IDS = {
     "2013-2014": "85",
     "2011-2012": "84",
 }
+
+# OPEN-699: a roll call on an amendment ("Shall amendment H-1011 be adopted?", "Shall the rules be
+# suspended to consider amendment H-8313?", "Shall the House concur in the Senate amendment H-8459?") or
+# on the Senate's motion to concur in the House's amendments ("Shall the motion to concur be adopted?"),
+# labelled here because config/motion_classification.yaml only decides passage. The bill as amended is
+# then voted on by its own "Shall the bill pass?" roll call.
+AMENDMENT_VOTE = re.compile(r"\bamendment\b|^shall the motion to concur\b", re.I)
+
+
+def vote_classification(motion):
+    """What a journal roll call decides: passage from the ia block of
+    config/motion_classification.yaml, else "amendment" for an amendment roll call, else
+    nothing."""
+    classification = classify_motion("ia", motion)
+    if classification:
+        return classification
+    if AMENDMENT_VOTE.search(motion):
+        return ["amendment"]
+    return []
 
 
 class IAVoteScraper(Scraper):
@@ -196,6 +217,7 @@ class IAVoteScraper(Scraper):
 
             # check for duplicate motions and number second and up if needed
             motion_text = re.sub(r"\xad", "-", motion)
+            classification = vote_classification(motion_text)
             motions_per_bill[bill_id][motion_text] += 1
             new_count = motions_per_bill[bill_id][motion_text]
             if new_count > 1:
@@ -206,7 +228,7 @@ class IAVoteScraper(Scraper):
                 start_date=date,
                 motion_text=motion_text,
                 result=result,
-                classification="passage",
+                classification=classification,
                 legislative_session=session,
                 bill=bill_id,
                 bill_chamber=bill_chamber,

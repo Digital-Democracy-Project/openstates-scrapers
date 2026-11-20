@@ -8,6 +8,8 @@ import re
 import pytz
 import scrapelib
 
+from classify_motion import classify_motion
+
 
 def _combine_lines(lines):
     newlines = []
@@ -19,6 +21,22 @@ def _combine_lines(lines):
         else:
             lastline = newlines[-1] = newlines[-1] + " " + line
     return newlines
+
+
+def vote_classification(motion, line_item_veto=False):
+    """What a roll call decides. Passage from the ms block of
+    config/motion_classification.yaml (OPEN-693); a veto override on a bill the
+    governor only partially vetoed is a line-item override, "veto-override", not
+    passage; a committee substitute adopted on the floor is labelled "amendment"
+    (the YAML only decides passage); anything else stays unlabelled."""
+    if line_item_veto and motion == "Override Veto":
+        return ["veto-override"]
+    classification = classify_motion("ms", motion)
+    if classification:
+        return classification
+    if motion == "Adopt Committee Substitute":
+        return ["amendment"]
+    return []
 
 
 class MSBillScraper(Scraper):
@@ -282,6 +300,9 @@ class MSBillScraper(Scraper):
 
             # avoid duplicate votes
             seen_votes = set()
+            # OPEN-693: True once the governor has partially vetoed the bill, so an
+            # override after it is a line-item override (2026 HB 1924)
+            line_item_veto = False
 
             # Actions
             for action in details_root.xpath("//HISTORY/ACTION"):
@@ -302,6 +323,9 @@ class MSBillScraper(Scraper):
                 else:
                     actor = "executive"
                     action = action_desc
+
+                if actor == "executive" and action.startswith("Partially Vetoed"):
+                    line_item_veto = True
 
                 if "Veto" in action and actor == "executive":
                     version_path = details_root.xpath("string(//VETO_OTHER)")
@@ -335,7 +359,7 @@ class MSBillScraper(Scraper):
                     if vote_url not in seen_votes:
                         seen_votes.add(vote_url)
                         yield from self.scrape_votes(
-                            vote_url, action, date, actor, bill
+                            vote_url, action, date, actor, bill, line_item_veto
                         )
 
             bill.add_source(bill_details_url)
@@ -368,13 +392,15 @@ class MSBillScraper(Scraper):
         "Decline to Concur/Invite Conf": ("Decline to Concur", True),
         "Decline Concur/Inv Conf Lost": ("Decline to Concur", False),
         "Failed to Suspend Rules": ("Motion to Suspend Rules", False),
-        "Motion to Recommit Lost": ("Motion to Recommit", True),
+        # OPEN-693: was True; the roll call (2025 SB 2515, Senate, 15-34) says "the
+        # motion to recommit ... failed"
+        "Motion to Recommit Lost": ("Motion to Recommit", False),
         "Reconsidered": ("Reconsideration", True),
         "Motion to Concur Failed": ("Motion to Concur", False),
         "Recommitted to Committee": ("Recommit to Committee", True),
     }
 
-    def scrape_votes(self, url, motion, date, chamber, bill):
+    def scrape_votes(self, url, motion, date, chamber, bill, line_item_veto=False):
         try:
             vote_pdf, resp = self.urlretrieve(url, verify=False)
         except scrapelib.HTTPError:
@@ -476,7 +502,7 @@ class MSBillScraper(Scraper):
             start_date=self._tz.localize(date),
             motion_text=motion,
             result="pass" if passed else "fail",
-            classification="passage",
+            classification=vote_classification(motion, line_item_veto),
             bill=bill,
         )
         vote.dedupe_key = url + "#" + bill.identifier

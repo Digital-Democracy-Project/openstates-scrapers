@@ -64,6 +64,27 @@ jurisdictions:
       - "^failed to pass$"
     default: null
 
+  # OPEN-693 (Mississippi, gate E). The motion text is the fixed text the ms scraper gives a roll call from its
+  # bill-history action (_vote_mapping in ms/bills.py: "(S) Passed As Amended" -> "Passage as Amended"). Rules
+  # written from every roll call linked from a bill history of 2024, 2025 and 2026 (billstatus.ls.state.ms.us,
+  # 4,116 + 3,811 + 3,882 histories, read 2026-11-20); the result comes from the action text, not the tally.
+  # Passage: the bill's own floor vote ("Passed", "Failed", "Passed As Amended"), a resolution's adoption
+  # ("Adopted", "Adopted As Amended"), the vote on the other chamber's amendments and a conference report's
+  # adoption (pa OPEN-617, la OPEN-583), and a whole-bill veto override (Ramon, OPEN-677). A lost vote is a lost
+  # passage vote. "Failed To Concur" and "Motion to Concur" (mapped, never seen 2024-2026) are the same
+  # concurrence vote lost: passage, FOR RAMON. Not passage (left unlabelled): appointment confirmations, filing a
+  # conference report, tabling, reconsidering, declining to concur, suspending rules and recommitting. The ms
+  # scraper labels a committee substitute "amendment" and an override of a partial veto "veto-override" (2026
+  # HB 1924, the only override roll call 2024-2026) after this (vote_classification() in ms/bills.py).
+  ms:
+    passage:
+      - '^passage( as amended)?$'
+      - '^adopt conference report$'
+      - '^concurrence in amendment from (house|senate)$'
+      - '^(failed to concur|motion to concur)$'
+      - '^override veto$'                        # whole bill; the ms scraper makes a partial-veto override "veto-override"
+    default: null                                # anything else stays unclassified, never passage
+
   ut:
     not_passage:
       - "passed 2nd reading$"                    # standalone 2nd-reading advancement vote (not final)
@@ -79,6 +100,34 @@ jurisdictions:
       - "concurs with"                            # chamber concurrence = passage
       - "conference committee - final passage"    # "House/Senate Conference Committee - Final Passage"
     default: null
+
+  # OPEN-691 (Hawaii, gate E). The motion text is the first sentence of a bill-status action that holds a tally
+  # (data.capitol.hawaii.gov/session/measure_indiv.aspx), cut by parse_vote() in hi/bills.py, with "Reconsider: " in
+  # front after a reconsideration. Rules written from every tally on the 2026 status pages of 69 measures (HB, SB,
+  # HCR, HR, SCR, SR; read 2026-11-20): 360 tallies, 244 of them roll calls the scraper keeps today, and 116 House
+  # floor and Senate final-reading tallies its vote patterns do not read yet. Committee votes ("The committee(s) on
+  # WAM recommend(s) that the measure be PASSED, WITH AMENDMENTS.") and the conference committee's own vote ("The
+  # Conference committee recommends ...") are committee-passage. Passage is the floor vote that passes or kills the
+  # whole measure: Third Reading (the Senate writes "Report adopted; Passed Third Reading"), Final Reading (the vote
+  # on a conference draft, or on the other chamber's amendments: concurrence, pa OPEN-617, la OPEN-583), and the
+  # adoption of a resolution ("Adopted ...", "Report and Resolution Adopted ...": only resolutions are adopted). Not
+  # passage, named so a wider rule cannot pick them up: Second Reading and "Report adopted; referred to the
+  # committee(s) on ..." (House floor votes that move the bill on). Agreeing or disagreeing with the other chamber's
+  # amendments is a voice action with no tally, so never a roll call here. A whole-bill veto override ("Veto
+  # overridden - 2/3's vote: ...", HB 862 of 2021) is passage; no line-item override text was found, so one stays
+  # unlabelled. No floor amendment roll call was seen (amendments are committee drafts, HD/SD/CD).
+  hi:
+    not_passage:
+      - '^(reconsider: )?(report adopted; )?passed second reading\b'
+      - '^(reconsider: )?report adopted; referred to\b'
+    committee_passage:
+      # 2021 House pages write "The committees on FIN recommend ..."
+      - '^(reconsider: )?the (conference )?committees?(\(s\))?\b.*\brecommends?(\(s\))? that the measure be passed\b'
+    passage:
+      - '^(reconsider: )?(report adopted; )?passed (third|final) reading\b'
+      - '^(reconsider: )?(report and resolution )?adopted\b'
+      - '^(reconsider: )?veto overridden\b'            # whole bill (HB 862 of 2021); no line-item override text seen
+    default: null                                # anything not seen stays unclassified, never passage
 
   fl:
     # floor-vote site only — committee-passage sites are already correctly hardcoded
@@ -194,6 +243,22 @@ jurisdictions:
       - "^(rules suspended|suspension of the rules|suspending the rules)"
       - "^(h\\. [0-9]+ )?(shall the |adopting |adoption of )?(the )?emergency preamble"  # "Emergency preamble adopted"
 
+  # OPEN-699 (Iowa, gate E). The motion text is the question of a roll call in the House or Senate journal
+  # (legis.iowa.gov/legislation/journals/house|senate, PDF), as the separate ia votes scraper reads it from
+  # 'On the question "Shall ...?"' (scrape_journal() in ia/votes.py). Rules written from every roll call the
+  # scraper reads from the 290 journals of 2025 and 2026 (1,411: House 822, Senate 589, read 2026-11-20).
+  # "Shall the bill pass?" is the vote on the bill itself, and is taken again on the bill as amended after a
+  # chamber concurs in the other's amendments or adopts a conference report (both by their own motion,
+  # before it); a lost one is a lost passage vote (pa, al, nc, or). A resolution's adoption is passage (ok,
+  # pa). Amendment votes, the motion to concur in amendments and the rules suspension to take up an amendment
+  # are labelled "amendment" by the ia scraper after this returns [] (vote_classification() in ia/votes.py).
+  ia:
+    passage:
+      - '^shall the bill pass\??$'               # 1,176 of 1,411: both chambers
+      - '^shall the resolution be adopted\??$'   # HR 3, SR 105, SCR 101 (both chambers); the Senate's own joint resolutions (SJR 9, 11, 2010)
+      - '^shall the joint resolution be adopted and agreed to\??$'   # the House on a Senate joint resolution (SJR 9, SJR 11)
+    default: null                                # anything else (a motion, a deferral, a calendar move) stays unclassified
+
   wa:
     preprocess: strip_sequence_number            # "Final Passage (#7)" → "final passage"
     passage:
@@ -204,6 +269,37 @@ jurisdictions:
     default: null
     # NOTE: "Motion to Place Measure on 3rd Reading & Final Passage" starts with "Motion"
     # and does NOT match these anchored patterns — confirmed by explicit test.
+
+  # OPEN-705 (Missouri). Two sources (mo/votes.py, OPEN-696), rules written from every 2026 roll call on a bill
+  # (463 House, 187 Senate; read 2026-11-20). House: the motion is the roll-call PDF's header joined with " - ":
+  # calendar heading, bill line, an amendment line if any ("*HA 1"), sponsor, title, LR number, then a motion
+  # line if the vote is on a motion ("PREVIOUS QUESTION", "THAT ... BE REFERRED ..."). The PDF never says what
+  # was decided, so the calendar heading decides: third reading is the passage vote; under "HBs WITH SENATE
+  # AMENDMENTS" the House adopts the Senate's version and then truly agrees to and finally passes it, and under
+  # "BILLS IN CONFERENCE" adopts the CCR and then passes the CCS (concurrence and conference report adoption are
+  # passage, pa OPEN-617, la OPEN-583). The emergency clause vote after a bill's passage has the same header;
+  # the mo scraper adds " - EMERGENCY CLAUSE" to it (mark_emergency_clauses). Senate: the motion is the journal
+  # paragraph ending "by the following vote:". Not passage: perfection, amendments (the mo scraper labels
+  # them amendment), previous question, refer/commit, reconsider, emergency clause, refusing a CCR.
+  mo:
+    not_passage:
+      - '\breconsider'                           # "THAT THE VOTE BY WHICH ... WAS THIRD READ AND PASSED BE RECONSIDERED", "moved that the vote by which ... be reconsidered"
+      - ' - emergency clause$'                   # House, added by the mo scraper (a title may say "EMERGENCY"); the Senate's "The emergency clause was adopted" matches no passage rule
+      - ' - previous question$'
+      - ' - \*?that '                            # House motion line: "THAT HCS HB 1667 BE RECOMMITTED ...", "*THAT THE HOUSE REFUSE TO ADOPT CCR ..."
+      - ' - \*?ha \d+'                           # House amendment line under a third-reading heading ("SBs FOR THIRD READING - HCS SB 835 - HA 3 - ...")
+    passage:
+      - '^(h|s|ha)(b|jr|cr)s (for third reading|3rd read(ing)?) - '   # "HBs FOR THIRD READING", "HBs 3rd READ - INFORMAL", "HBs 3rd READING - CONSENT", "HABs" (appropriations), "SCRs"
+      - '^hbs (with|w/) ?senate amendments - '   # adopting the Senate's version, then truly agreed to and finally passed
+      - '^bills in conference - cc[rs] '         # CCR adopted, then the CCS truly agreed to and finally passed
+      - '^bills carrying request messages - '    # FOR RAMON: SB 1408, the House receded and the bill was truly agreed to and finally passed (one seen)
+      - '^house resolutions - '                  # FOR RAMON: resolution adoption (HR 1, 2026 veto session, informs the Governor; one seen), as ok "Adopt Resolution"
+      - '\bread the 3rd time and (finally )?(passed|failed)\b'   # Senate third reading, also "Was read the 3rd time and passed" after a CCR; "failed" unseen in 2026
+      - 'conference committee report\b.* be adopted, which motion (prevailed|failed)'   # "moved that the above conference committee report be adopted"
+      - '\bconference committee report was adopted\b'   # "On motion of Senator Black, the above conference committee report was adopted by the following vote:" (day 62 journal)
+      - 'moved that (hcs|hs|ha \d+) (for|to) .* be adopted, which motion (prevailed|failed)'   # concurrence in the House's version or amendment
+      - ', (hcr|scr|hr|sr) \d+(, as amended[^,]*,)? was adopted\b'   # "On motion of Senator X, HCR 21 was adopted", "SCR 21, as amended by SCS, was adopted"
+    default: null                                # anything else (perfection, a Senate substitute adopted, an unseen text) stays unclassified
 
   va:
     bill_action:                                 # bill_action field is the reliable committee signal
