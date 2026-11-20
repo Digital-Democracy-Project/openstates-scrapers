@@ -6,6 +6,7 @@ import re
 from openstates.scrape import Scraper, Bill, VoteEvent
 from .actions import Categorizer
 
+from classify_motion import classify_motion
 from utils import url_xpath
 
 subjects = None
@@ -15,6 +16,48 @@ bill_subjects = None
 # server, not even helping with that. Sheesh.
 MAXQUERY = 250
 RI_URL_BASE = "https://webserver.rilegislature.gov"
+
+# OPEN-683: a roll call's header ends with the motion, one to three lines under the
+# bill's title: House "PASSAGE" / "AS AMENDED" / "PASSAGE OF AMENDMENT", Senate
+# "Approval of Amendment" / "Passage" ("In Concurrence / Passage" and "Approval of
+# Amendment / Passage" are both seen). These are the lines the motion is made of.
+MOTION_LINE = re.compile(
+    r"^(passage( as amended)?|as amended|in concurrence|(passage|approval) of amendment"
+    r"|reconsideration|ruling of the chair)$",
+    re.I,
+)
+# the line naming a budget article ("ARTICLE 2"), voted on one by one in the House
+ARTICLE_LINE = re.compile(r"^ARTICLE\s+\d+$", re.I)
+AMENDMENT_VOTE = re.compile(r"\b(passage|approval) of amendment\b", re.I)
+
+
+def vote_motion(headers):
+    """The motion of a roll call from its header lines: the motion lines at the end
+    joined with " / " ("PASSAGE / AS AMENDED"), else the last line as before (a
+    header with no motion line, such as a point of order, ends in the title). A
+    budget article's vote keeps its article ("ARTICLE 2 PASSAGE"): it cannot pass
+    or kill the whole bill."""
+    lines = [h.strip() for h in headers if h.strip()]
+    motion = []
+    while lines and MOTION_LINE.match(lines[-1]):
+        motion.insert(0, lines.pop())
+    motion = " / ".join(motion) if motion else (headers[-1].strip() if headers else "")
+    article = [h for h in lines if ARTICLE_LINE.match(h)]
+    if article:
+        motion = "%s %s" % (article[0], motion)
+    return motion
+
+
+def vote_classification(motion):
+    """What a roll call decides: passage from the ri block of
+    config/motion_classification.yaml, else "amendment" for an amendment roll
+    call (the YAML only decides passage), else nothing."""
+    classification = classify_motion("ri", motion)
+    if classification:
+        return classification
+    if AMENDMENT_VOTE.search(motion):
+        return ["amendment"]
+    return []
 
 
 def bill_start_numbers(session):
@@ -345,7 +388,9 @@ class RIBillScraper(Scraper):
                         start_date=self._tz.localize(vote["time"]),
                         motion_text=vote["meta"]["extra"]["motion"],
                         result="pass" if count["passage"] else "fail",
-                        classification="passage",
+                        classification=vote_classification(
+                            vote["meta"]["extra"]["motion"]
+                        ),
                         legislative_session=session,
                         bill=bill_id,
                         bill_chamber=chamber,
@@ -435,7 +480,7 @@ class RIBillScraper(Scraper):
             self.warning("No metainf for this bill. Aborting snag")
             return ret
 
-        motion = headers[-1].strip()
+        motion = vote_motion(headers)
         bill_metainf["extra"] = {"motion": motion}
 
         votes = []
