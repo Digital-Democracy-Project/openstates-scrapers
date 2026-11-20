@@ -143,7 +143,8 @@ def test_senate_page_break_inside_a_list_and_count_on_the_label_line():
 
 def test_senate_emergency_clause_and_excused_from_voting():
     rcs = senate("RDay5504231120-1141.pdf")
-    passage, clause = rcs[0], rcs[1]
+    # SB 982's two roll calls come first since OPEN-707 (their lead-in wraps)
+    passage, clause = [rc for rc in rcs if rc["bill"] == "HB 2637"]
     assert passage["bill"] == clause["bill"] == "HB 2637"
     assert clause["motion"] == "The emergency clause was adopted by the following vote:"
     assert ("not voting", "Luetkemeyer") in passage["votes"]
@@ -285,3 +286,82 @@ def test_house_result_ignores_words_in_the_bill_title(tmp_path):
     rc["motion"] = rc["motion"].replace("VESSEL REGISTRATION FEES", "LOST PROPERTY")
     vote = make_scraper(tmp_path, {})._make_vote("2026", "lower", rc, "k", [])
     assert vote.result == "pass"
+
+
+# ── OPEN-707: "by the following" / "vote:" wrapped over two lines ───────────
+
+
+def test_senate_lead_in_wrapped_over_two_lines():
+    # 27 roll calls in 2026 wrap the lead-in; these are four of them
+    day68 = senate("RDay6805151864-1889.pdf")
+    assert len(day68) == 20  # 18 before OPEN-707
+    passage = {
+        rc["bill"]: rc
+        for rc in day68
+        if "was read the 3rd time and passed by the following vote:" in rc["motion"]
+    }
+    sb1572, sb1019 = passage["SB 1572"], passage["SB 1019"]
+    assert sb1572["page"] == 1870 and sb1019["page"] == 1877
+    assert sb1572["motion"] == (
+        "On motion of Senator Henderson, HCS for SB 1572 was read the 3rd time and "
+        "passed by the following vote:"
+    )
+    assert by_option(sb1572["votes"])["absent"] == [
+        "Cierpiot",
+        "Coleman",
+        "Fitzwater",
+        "Schnelting",
+    ]
+    assert by_option(sb1019["votes"])["no"] == ["Moon"]
+
+    sb914 = [r for r in senate("RDay200212377-386.pdf") if r["bill"] == "SB 914"]
+    assert len(sb914) == 1 and sb914[0]["page"] == 382
+    assert by_option(sb914[0]["votes"])["no"] == ["Moon"]
+
+    # day 62: "the above conference committee report was adopted by the following" /
+    # "vote:" names no bill; it is HB 2002, named in the report above it
+    day62 = parse_senate_journal(
+        convert_pdf(
+            os.path.join(
+                os.path.dirname(__file__),
+                "fixtures",
+                "mo_open707",
+                "RDay6205061522-1559.pdf",
+            ),
+            type="text",
+        ).decode("utf-8")
+    )
+    assert len(day62) == 31  # 29 before OPEN-707
+    ccr = next(
+        rc
+        for rc in day62
+        if "conference committee report was" in rc["motion"] and rc["bill"] == "HB 2002"
+    )
+    assert ccr["page"] == 1531
+    assert len(by_option(ccr["votes"])["no"]) == 13
+    assert by_option(ccr["votes"])["absent"] == ["Brattin"]
+
+    # every one of them adds up to the totals the journal prints
+    for rc in (sb1572, sb1019, sb914[0], ccr):
+        counts = Counter(o for o, _ in rc["votes"])
+        assert rc["totals"] and {o: counts[o] for o in rc["totals"]} == rc["totals"]
+
+
+def test_senate_following_without_vote_on_the_next_line_is_not_a_roll_call():
+    journal = (
+        "SIXTY-SECOND DAY—WEDNESDAY, MAY 6, 2026\n"
+        "    Madam President: The Speaker has appointed the following\n"
+        "committee to act with a like committee from the Senate on HB 2002.\n"
+        "YEAS—Senators\n"
+        "Beck    Black—2\n"
+    )
+    assert parse_senate_journal(journal) == []
+    wrapped = journal.replace(
+        "has appointed the following\ncommittee to act with a like committee from the "
+        "Senate on HB 2002.",
+        "HB 2002 was read the 3rd time and passed by the following\nvote:",
+    )
+    rcs = parse_senate_journal(wrapped)
+    assert [(rc["bill"], rc["votes"], rc["totals"]) for rc in rcs] == [
+        ("HB 2002", [("yes", "Beck"), ("yes", "Black")], {"yes": 2})
+    ]

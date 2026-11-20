@@ -19,7 +19,7 @@ def test_yaml_loads_without_error():
 
 
 def test_all_expected_jurisdiction_keys_present():
-    expected = {"us", "az", "ut", "fl", "mi", "ma", "wa", "va", "pa", "ne", "la", "al", "nc", "nv", "ga", "or", "wy", "nd", "id", "ri", "ok", "ky", "hi"}
+    expected = {"us", "az", "ut", "fl", "mi", "ma", "wa", "va", "pa", "ne", "la", "al", "nc", "nv", "ga", "or", "wy", "nd", "id", "ri", "ok", "ky", "mo", "ms", "hi"}
     assert expected == KNOWN_JURISDICTIONS
 
 
