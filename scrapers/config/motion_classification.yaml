@@ -392,3 +392,16 @@ jurisdictions:
       - '^[sh] concur:(passed|failed)\b'         # concurrence in the other chamber's amendments = passage (pa OPEN-617, la OPEN-583)
       - '\b[sh] adopted [a-z]{2}\d+jc\d+\b'      # conference committee report adopted = passage (pa, la, ut, mi, nc, or)
     default: null                                # anything not seen ("Did Not Concur", a whole-bill veto override, ...) stays unclassified
+
+  # OPEN-679 (North Dakota, gate E). The motion text is the vote modal's title on the bill-actions page
+  # (ndlegis.gov/assembly/<n>-<year>/regular/bill-actions/ba<number>.html) wrapped by the scraper as
+  # "Motion for <title> on <bill>". Read 2026-11-20 on 20 bills of 2025 and 5 of 2023 (incl. conference
+  # reports, a veto, a reconsideration): only two titles exist. "Final Passage" is the "Second reading,
+  # passed/failed" roll call (North Dakota has no third reading), and is also the roll call taken again after
+  # concurring in amendments or adopting a conference report. "Consideration of Amendments" (a division or
+  # amendment roll call) is not passage: the nd scraper labels it "amendment" after this returns []
+  # (vote_classification() in nd/bills.py). Veto overrides are journal-only (no modal), so none reach here.
+  nd:
+    passage:
+      - '^motion for final passage on '         # passed or failed, as amended or not, after concurrence or a conference report
+    default: null                                # an unseen title stays unclassified, never passage

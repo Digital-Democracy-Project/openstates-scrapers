@@ -8,6 +8,25 @@ from .actions import NDCategorizer
 import lxml.html
 import requests
 
+from classify_motion import classify_motion
+
+# OPEN-679: a vote modal's title is "Final Passage" (passage, from the nd block of
+# config/motion_classification.yaml) or "Consideration of Amendments" (a division or amendment
+# roll call, labelled here because the YAML only decides passage). Any other title stays unlabelled.
+OTHER_VOTE_KINDS = (
+    (re.compile(r"^motion for consideration of amendments on ", re.I), "amendment"),
+)
+
+
+def vote_classification(motion):
+    classification = classify_motion("nd", motion)
+    if classification:
+        return classification
+    for pattern, kind in OTHER_VOTE_KINDS:
+        if pattern.search(motion):
+            return [kind]
+    return []
+
 
 class BillList(JsonPage):
     categorizer = NDCategorizer()
@@ -216,14 +235,14 @@ class BillList(JsonPage):
                 )
                 chamber = "lower" if "house" in status.lower() else "upper"
                 status = "pass" if "passed" in status.lower() else "fail"
+                motion = f"Motion for {motion_text} on {bill_id}"
                 vote = VoteEvent(
                     chamber=chamber,
                     start_date=start_date,
-                    motion_text=f"Motion for {motion_text} on {bill_id}",
+                    motion_text=motion,
                     result=status,
                     legislative_session=self.input.get("assembly_id"),
-                    # TODO: get all possible classification types, replace below
-                    classification="passage",
+                    classification=vote_classification(motion),
                     bill=bill_id,
                     bill_chamber="lower" if bill_id[0] == "H" else "upper",
                 )
