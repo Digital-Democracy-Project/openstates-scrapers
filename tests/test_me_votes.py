@@ -90,8 +90,8 @@ REAL_OUGHT_NOT_TO_PASS = [
     'REPORT "A" ONTP',
 ]
 
-# Accepting an "Ought to Pass" report: unlabelled by its text alone; scrape_votes() makes it passage on a bill
-# with no enactment or final roll call.
+# Accepting an "Ought to Pass" report: unlabelled by its text alone; scrape_votes() makes it passage when the
+# same chamber held no enactment or final roll call on the bill.
 REAL_OUGHT_TO_PASS = [
     "ACC MAJ OTP AS AMENDED REP",  # 139
     "ACCEPT MAJORITY OUGHT TO PASS AS AMENDED REPORT",  # 135
@@ -287,7 +287,7 @@ def test_real_roll_call_pages(fid, motion, classification, result):
 
 # Every distinct motion text of the 1,056 session-132 roll calls (166 texts), with how many roll calls carry
 # it and its label from the text alone (empty = unlabelled), as listed in the OPEN-698 PR for review. An Ought
-# to Pass text also carries how many of its roll calls became passage (bills with no final roll call).
+# to Pass text also carries how many of its roll calls became passage (no final roll call in its chamber).
 with open(os.path.join(FIXTURES, "motion_texts_132.json"), encoding="utf-8") as _f:
     ALL_TEXTS_132 = json.load(_f)
 
@@ -299,7 +299,7 @@ def test_inventory_is_the_whole_sample():
 
 @pytest.mark.parametrize("text", ALL_TEXTS_132, ids=lambda t: t["motion"])
 def test_every_session_132_text(text):
-    if "passage_on_bills_without_final" in text:
+    if "passage_where_chamber_has_no_final" in text:
         assert OUGHT_TO_PASS_REPORT.search(text["motion"])
     expected = [text["label"]] if text["label"] else []
     assert vote_classification(text["motion"]) == expected
@@ -336,12 +336,12 @@ def test_ought_to_pass_counts_next_to_engrossment_and_ought_not_to_pass():
     ]
 
 
-def test_enactment_replaces_ought_to_pass_on_the_whole_bill():
+def test_enactment_replaces_ought_to_pass_only_in_its_own_chamber():
     # LD 100 (132): both chambers accept Ought to Pass (Senate RC 80, House RC 59), the House enacts by
-    # roll call (RC 64). Per bill (Ramon's rule), so the Senate's OTP vote is not counted either, although the
-    # Senate's own enactment was by voice.
+    # roll call (RC 64). Per chamber (Ramon, OPEN-698): the House enactment replaces the House OTP vote, and
+    # the Senate's OTP vote counts, since the Senate's own enactment was by voice.
     assert _scrape_bill_page("280095665") == [
-        ("S-RC 80", "ACCEPT MAJORITY OUGHT TO PASS REPORT", []),
+        ("S-RC 80", "ACCEPT MAJORITY OUGHT TO PASS REPORT", ["passage"]),
         ("H-RC 59", "ACC MAJ OUGHT TO PASS REP", []),
         ("H-RC 64", "Enactment", ["passage"]),
     ]

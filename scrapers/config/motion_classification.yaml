@@ -173,8 +173,8 @@ jurisdictions:
   # Accepting an "Ought Not to Pass" report (Majority, Minority or Report A/B/C, every spelling seen) is passage
   # too: Ramon, OPEN-698 comment 21956, "count both". A YES on it is a vote AGAINST the bill (accepted, it often
   # kills the bill on the spot: LD 115, House RC 250, "(DEAD)"); the broker does not yet read that direction (see
-  # the OPEN-698 PR). Accepting an "Ought to Pass" report is passage only on a bill with no enactment or final
-  # roll call, which this file cannot see: the me scraper decides it per bill (scrape_votes() in me/bills.py),
+  # the OPEN-698 PR). Accepting an "Ought to Pass" report is passage unless the same chamber held the bill's
+  # enactment or final roll call, which this file cannot see: the me scraper decides it (scrape_votes() in me/bills.py),
   # so it is not listed here. Left unlabelled, as decided: "INDEFINITELY POSTPONE" (the bill, or once an
   # amendment), "RECEDE AND CONCUR" (concurs in whatever the other chamber did), "ACCEPT REPORT" / "ACCEPTANCE OF
   # REPORT" (the text does not say which report), "SUBSTITUTE JOINT RES FOR

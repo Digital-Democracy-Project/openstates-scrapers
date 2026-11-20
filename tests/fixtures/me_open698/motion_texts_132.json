@@ -3,13 +3,13 @@
   "motion": "ACC MAJ OTP AS AMENDED REP",
   "roll_calls": 139,
   "label": "",
-  "passage_on_bills_without_final": 113
+  "passage_where_chamber_has_no_final": 120
  },
  {
   "motion": "ACCEPT MAJORITY OUGHT TO PASS AS AMENDED REPORT",
   "roll_calls": 135,
   "label": "",
-  "passage_on_bills_without_final": 108
+  "passage_where_chamber_has_no_final": 125
  },
  {
   "motion": "ACCEPT MAJORITY OUGHT NOT TO PASS REPORT",
@@ -40,13 +40,13 @@
   "motion": "ACCEPT MAJORITY OUGHT TO PASS REPORT",
   "roll_calls": 21,
   "label": "",
-  "passage_on_bills_without_final": 17
+  "passage_where_chamber_has_no_final": 19
  },
  {
   "motion": "ACC MAJ OUGHT TO PASS REP",
   "roll_calls": 20,
   "label": "",
-  "passage_on_bills_without_final": 16
+  "passage_where_chamber_has_no_final": 17
  },
  {
   "motion": "ENACTMENT",
@@ -77,13 +77,13 @@
   "motion": "ACCEPT MINORITY OUGHT TO PASS AS AMENDED REPORT",
   "roll_calls": 12,
   "label": "",
-  "passage_on_bills_without_final": 10
+  "passage_where_chamber_has_no_final": 10
  },
  {
   "motion": "ACCEPT REPORT 'A' OUGHT TO PASS AS AMENDED",
   "roll_calls": 12,
   "label": "",
-  "passage_on_bills_without_final": 11
+  "passage_where_chamber_has_no_final": 11
  },
  {
   "motion": "INSIST",
@@ -129,7 +129,7 @@
   "motion": "ACC REPORT \"A\" OTP-AM",
   "roll_calls": 6,
   "label": "",
-  "passage_on_bills_without_final": 6
+  "passage_where_chamber_has_no_final": 6
  },
  {
   "motion": "COMMIT",
@@ -175,25 +175,25 @@
   "motion": "ACC MIN OTP AS AMENDED REP",
   "roll_calls": 3,
   "label": "",
-  "passage_on_bills_without_final": 3
+  "passage_where_chamber_has_no_final": 3
  },
  {
   "motion": "ACC OUGHT TO PASS AS AMEND REP",
   "roll_calls": 3,
   "label": "",
-  "passage_on_bills_without_final": 3
+  "passage_where_chamber_has_no_final": 3
  },
  {
   "motion": "ACCEPT MINORITY OUGHT TO PASS REPORT",
   "roll_calls": 3,
   "label": "",
-  "passage_on_bills_without_final": 3
+  "passage_where_chamber_has_no_final": 3
  },
  {
   "motion": "ACCEPT REPORT 'A' OUGHT TO PASS",
   "roll_calls": 3,
   "label": "",
-  "passage_on_bills_without_final": 2
+  "passage_where_chamber_has_no_final": 3
  },
  {
   "motion": "INSIST/ASK FOR COMMITTEE OF CONFERENCE",
@@ -229,25 +229,25 @@
   "motion": "OTP-AM",
   "roll_calls": 2,
   "label": "",
-  "passage_on_bills_without_final": 1
+  "passage_where_chamber_has_no_final": 1
  },
  {
   "motion": "acc maj otp-am by ca \"a\"",
   "roll_calls": 2,
   "label": "",
-  "passage_on_bills_without_final": 2
+  "passage_where_chamber_has_no_final": 2
  },
  {
   "motion": "acc otp-am by ca \"a\"",
   "roll_calls": 2,
   "label": "",
-  "passage_on_bills_without_final": 2
+  "passage_where_chamber_has_no_final": 2
  },
  {
   "motion": "acc report \"a\" otp-am by ca \"a\"",
   "roll_calls": 2,
   "label": "",
-  "passage_on_bills_without_final": 2
+  "passage_where_chamber_has_no_final": 2
  },
  {
   "motion": "1ST READING",
@@ -263,13 +263,13 @@
   "motion": "ACC MIN OTP-AM BY CA-B",
   "roll_calls": 1,
   "label": "",
-  "passage_on_bills_without_final": 1
+  "passage_where_chamber_has_no_final": 1
  },
  {
   "motion": "ACC REPORT \"A\" OTP",
   "roll_calls": 1,
   "label": "",
-  "passage_on_bills_without_final": 1
+  "passage_where_chamber_has_no_final": 1
  },
  {
   "motion": "ACC REPORT \"B' ONTP",
@@ -290,13 +290,13 @@
   "motion": "ACCEPT REPORT 'B' OUGHT TO PASS",
   "roll_calls": 1,
   "label": "",
-  "passage_on_bills_without_final": 0
+  "passage_where_chamber_has_no_final": 0
  },
  {
   "motion": "ACCEPT REPORT 'C' OUGHT TO PASS AS AMENDED",
   "roll_calls": 1,
   "label": "",
-  "passage_on_bills_without_final": 1
+  "passage_where_chamber_has_no_final": 1
  },
  {
   "motion": "ADOPT C A AS AM BY HRH-33",
@@ -447,7 +447,7 @@
   "motion": "Acc Maj OTP as Amended Rep",
   "roll_calls": 1,
   "label": "",
-  "passage_on_bills_without_final": 1
+  "passage_where_chamber_has_no_final": 1
  },
  {
   "motion": "DISPENSE THE READING OF H\"D\"",
@@ -738,7 +738,7 @@
   "motion": "REPORT A OTP-AM BY CA-A",
   "roll_calls": 1,
   "label": "",
-  "passage_on_bills_without_final": 1
+  "passage_where_chamber_has_no_final": 1
  },
  {
   "motion": "RULE COMM",
@@ -769,25 +769,25 @@
   "motion": "acc maj otp-am by ca-a",
   "roll_calls": 1,
   "label": "",
-  "passage_on_bills_without_final": 1
+  "passage_where_chamber_has_no_final": 1
  },
  {
   "motion": "acc report \"a\" otp-am",
   "roll_calls": 1,
   "label": "",
-  "passage_on_bills_without_final": 1
+  "passage_where_chamber_has_no_final": 1
  },
  {
   "motion": "acc report \"a\" otp-am by ca \"c\"",
   "roll_calls": 1,
   "label": "",
-  "passage_on_bills_without_final": 1
+  "passage_where_chamber_has_no_final": 1
  },
  {
   "motion": "acc report \"a\" ought to pass",
   "roll_calls": 1,
   "label": "",
-  "passage_on_bills_without_final": 1
+  "passage_where_chamber_has_no_final": 1
  },
  {
   "motion": "acc report \"b\" ontp",
@@ -798,25 +798,25 @@
   "motion": "acc report \"b\" otp",
   "roll_calls": 1,
   "label": "",
-  "passage_on_bills_without_final": 0
+  "passage_where_chamber_has_no_final": 0
  },
  {
   "motion": "acc report \"c\" otp-am by ca \"c\"",
   "roll_calls": 1,
   "label": "",
-  "passage_on_bills_without_final": 1
+  "passage_where_chamber_has_no_final": 1
  },
  {
   "motion": "acc report 'A' otp-am",
   "roll_calls": 1,
   "label": "",
-  "passage_on_bills_without_final": 1
+  "passage_where_chamber_has_no_final": 1
  },
  {
   "motion": "acceptance of the otp-am report",
   "roll_calls": 1,
   "label": "",
-  "passage_on_bills_without_final": 1
+  "passage_where_chamber_has_no_final": 1
  },
  {
   "motion": "final passage",
@@ -837,13 +837,13 @@
   "motion": "report \"a\" otp-am by ca \"a\"",
   "roll_calls": 1,
   "label": "",
-  "passage_on_bills_without_final": 0
+  "passage_where_chamber_has_no_final": 0
  },
  {
   "motion": "report \"a\" ought to pass",
   "roll_calls": 1,
   "label": "",
-  "passage_on_bills_without_final": 0
+  "passage_where_chamber_has_no_final": 0
  },
  {
   "motion": "suspend house rule 515",

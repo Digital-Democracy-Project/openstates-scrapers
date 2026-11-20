@@ -32,8 +32,9 @@ AMENDMENT_VOTE = re.compile(
 
 # OPEN-698 (Ramon, comment 21956): accepting an "Ought to Pass" report ("ACC MAJ OTP AS AMENDED
 # REP", "ACCEPT REPORT 'A' OUGHT TO PASS", 'acc report "a" otp-am by ca "a"', a bare "OTP-AM") is
-# passage only on a bill with no enactment or final roll call (FINAL_ROLL_CALL): the final roll call
-# replaces it. Decided per bill in scrape_votes(), since one roll call's text cannot say.
+# passage unless the same chamber also held the bill's enactment or final roll call (FINAL_ROLL_CALL):
+# that chamber's final roll call replaces it (Ramon, OPEN-698: per chamber, not per bill). Decided in
+# scrape_votes(), since one roll call's text cannot say.
 OUGHT_TO_PASS_REPORT = re.compile(
     r"^((acc(ept(ance of the)?)? |report ).*\b(ought to pass|otp)\b|otp(-am)?$)", re.I
 )
@@ -439,9 +440,17 @@ class MEBillScraper(Scraper):
 
                 votes.extend(self.scrape_vote(bill, motion, url))
 
-        has_final = any(FINAL_ROLL_CALL.search(v.motion_text) for v in votes)
+        # chambers with their own final roll call, by the identifier's "S-" / "H-" prefix
+        final_chambers = {
+            v.identifier.split("-")[0]
+            for v in votes
+            if FINAL_ROLL_CALL.search(v.motion_text)
+        }
         for vote in votes:
-            if not has_final and OUGHT_TO_PASS_REPORT.search(vote.motion_text):
+            chamber = vote.identifier.split("-")[0]
+            if chamber not in final_chambers and OUGHT_TO_PASS_REPORT.search(
+                vote.motion_text
+            ):
                 vote.motion_classification = ["passage"]
             yield vote
 
