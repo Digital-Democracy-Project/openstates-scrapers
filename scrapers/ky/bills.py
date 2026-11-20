@@ -22,6 +22,23 @@ def chamber_abbr(chamber):
         return "H"
 
 
+# OPEN-688: every page of a vote_history.pdf is one roll call, headed by the body that took it:
+# "COMMONWEALTH OF KENTUCKY SENATE" on one line, or "Commonwealth of Kentucky" over "House of Representatives".
+# A bill's history holds both chambers' votes, so the bill's own chamber is not the voting chamber.
+VOTING_CHAMBER_HEADERS = (
+    (re.compile(r"^\s*COMMONWEALTH OF KENTUCKY SENATE\s*$", re.I), "upper"),
+    (re.compile(r"^\s*House of Representatives\s*$", re.I), "lower"),
+)
+
+
+def voting_chamber(line):
+    """The chamber ("upper"/"lower") a vote PDF page header line names, else None."""
+    for pattern, chamber in VOTING_CHAMBER_HEADERS:
+        if pattern.match(line):
+            return chamber
+    return None
+
+
 def session_url(session):
     return "https://apps.legislature.ky.gov/record/%s/" % session[2:]
 
@@ -307,8 +324,10 @@ class KYBillScraper(Scraper, LXMLMixin):
 
         vote_date = 0
         voters = defaultdict(list)
+        vote_chamber = None
         for x in range(len(pdflines)):
             line = pdflines[x]
+            vote_chamber = voting_chamber(line) or vote_chamber
             if re.search(r"(\d+/\d+/\d+)", line):
                 initial_date = line.strip()
             if ("AM" in line) or ("PM" in line):
@@ -395,7 +414,8 @@ class KYBillScraper(Scraper, LXMLMixin):
                     passed = False
 
                 ve = VoteEvent(
-                    chamber=chamber,
+                    # the page header's chamber; the bill's only where the page names none
+                    chamber=vote_chamber or chamber,
                     start_date=vote_date,
                     motion_text=motion,
                     result="pass" if passed else "fail",
@@ -412,6 +432,7 @@ class KYBillScraper(Scraper, LXMLMixin):
                             ve.vote(how_voted, voter)
                 # Resets voters dictionary before going onto next page in pdf
                 voters = defaultdict(list)
+                vote_chamber = None
                 yield ve
 
     def parse_subjects(self, page, bill):
