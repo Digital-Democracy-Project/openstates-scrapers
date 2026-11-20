@@ -144,7 +144,7 @@ REAL_PAGES = {
         ("2025-04-09", "Energy Committee: Do Pass", ["committee-passage"], "pass"),
     ],
     "House_HB1003_VOTES.HTM": [
-        ("2025-05-15", "Emergency", [], "pass"),
+        ("2025-05-15", "Emergency", [], "fail"),  # 54-26, page says FAILED (OPEN-704)
         ("2025-05-15", "Fourth Reading", ["passage"], "pass"),
         ("2025-03-26", "Third Reading", ["passage"], "pass"),
         ("2025-03-26", "Third Reading", ["passage"], "pass"),

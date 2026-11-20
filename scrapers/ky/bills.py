@@ -9,6 +9,7 @@ from openstates.scrape import Scraper, Bill, VoteEvent
 from openstates.utils import convert_pdf
 from utils import LXMLMixin
 from utils.media import get_media_type
+from classify_motion import classify_motion
 
 import pytz
 
@@ -37,6 +38,45 @@ def voting_chamber(line):
         if pattern.match(line):
             return chamber
     return None
+
+
+# OPEN-689: a page's roll-call line names what was voted on, ahead of the roll-call number: the bill ("HB 1  AN ACT
+# relating to ...  RCS# 7") or one of its amendments ("HB 1 HFA 8  RCS# 6"; the Senate writes RSN#). On a House page the
+# motion line alone does not say which ("Adopt" is a floor amendment under "HB 1 HFA 8" and the resolution itself under
+# "HCR 20"), so the amendment is added to the motion text ("Adopt HFA 8"), and a bare "Adopt" gets the measure
+# ("Adopt HCR 20"); a page whose roll-call line is not read keeps a bare "Adopt", which stays unlabelled. Senate
+# motions already name both ("SFA 5", "ADOPT SCR 9").
+ROLL_CALL_ITEM = re.compile(
+    r"^\s*([A-Z]+ \d+)(?: ([A-Z]+ \d+))?(?:\s{2,}|\s*R(?:CS|SN)#)"
+)
+# A whole-bill override and an override of a budget bill's line-item vetoes have the same motion text ("Veto Override",
+# "OVERRIDE VETO FINAL PASSAGE HB 500"); only the bill's history tells them apart ("line items vetoed").
+VETO_OVERRIDE = re.compile(r"\b(override veto|veto override)\b", re.I)
+LINE_ITEM_VETO_ACTION = re.compile(r"\bline items? vetoed\b", re.I)
+# A roll call on one floor or committee amendment or substitute: "Adopt HFA 8", "Adopt HCS 1", an untitled "HFA 1",
+# the Senate's "SFA 5".
+AMENDMENT_VOTE = re.compile(r"^(adopt )?[hs](fa|ca|cs|fta|cta)\s*\d+$", re.I)
+
+
+def roll_call_item(line):
+    """The measure and the amendment a page's roll-call line names: ("HB 1", "HFA 8") for "HB 1 HFA 8  RCS# 6",
+    ("HCR 20", None) for "HCR 20  A CONCURRENT RESOLUTION ...  RCS# 40", (None, None) when it is not one."""
+    match = ROLL_CALL_ITEM.match(line)
+    return match.groups() if match else (None, None)
+
+
+def vote_classification(motion, line_item_veto=False):
+    """What a roll call decides: a line-item veto override is not passage ("veto-override"); passage from the ky block
+    of config/motion_classification.yaml; else "amendment" for an amendment roll call (the YAML only decides
+    passage); else nothing."""
+    if line_item_veto and VETO_OVERRIDE.search(motion):
+        return ["veto-override"]
+    classification = classify_motion("ky", motion)
+    if classification:
+        return classification
+    if AMENDMENT_VOTE.match(motion):
+        return ["amendment"]
+    return []
 
 
 def session_url(session):
@@ -322,12 +362,19 @@ class KYBillScraper(Scraper, LXMLMixin):
         ]
         os.remove(filename)
 
+        line_item_veto = any(
+            LINE_ITEM_VETO_ACTION.search(action["description"])
+            for action in bill.actions
+        )
         vote_date = 0
         voters = defaultdict(list)
         vote_chamber = None
+        measure = part = None
         for x in range(len(pdflines)):
             line = pdflines[x]
             vote_chamber = voting_chamber(line) or vote_chamber
+            if "RCS#" in line or "RSN#" in line:
+                measure, part = roll_call_item(line)
             if re.search(r"(\d+/\d+/\d+)", line):
                 initial_date = line.strip()
             if ("AM" in line) or ("PM" in line):
@@ -343,6 +390,11 @@ class KYBillScraper(Scraper, LXMLMixin):
                         dt = datetime.strptime(dt, "%m/%d/%Y %I:%M:%S%p")
                         vote_date = central.localize(dt)
                         vote_date = vote_date.isoformat()
+                        # what was voted on, where the motion does not name it ("Adopt" -> "Adopt HFA 8", "Adopt HCR 20")
+                        if part and part.lower() not in motion.lower():
+                            motion = (motion + " " + part).strip()
+                        elif measure and motion.lower() == "adopt":
+                            motion = "Adopt " + measure
                         # In rare case that no motion is provided
                         if len(motion) < 1:
                             motion = "No Motion Provided"
@@ -420,7 +472,7 @@ class KYBillScraper(Scraper, LXMLMixin):
                     motion_text=motion,
                     result="pass" if passed else "fail",
                     bill=bill,
-                    classification="passage",
+                    classification=vote_classification(motion, line_item_veto),
                 )
                 ve.set_count("yes", yeas)
                 ve.set_count("no", nays)
@@ -433,6 +485,7 @@ class KYBillScraper(Scraper, LXMLMixin):
                 # Resets voters dictionary before going onto next page in pdf
                 voters = defaultdict(list)
                 vote_chamber = None
+                measure = part = None
                 yield ve
 
     def parse_subjects(self, page, bill):
