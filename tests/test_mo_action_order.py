@@ -131,4 +131,6 @@ def test_house_xml_order_is_kept():
         "Taken Up for Third Reading (H)",
         "Third Read and Passed (H) - AY",
     ]
-    assert len(votes) == len(xml.xpath("//BillInformation/Action/RollCall")) == 5
+    # Five roll calls in the XML; only the three committee reports are votes here (OPEN-702).
+    assert len(xml.xpath("//BillInformation/Action/RollCall")) == 5
+    assert len(votes) == 3
