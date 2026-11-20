@@ -75,7 +75,44 @@ vote_re_list = [
     Noes,\s(?P<n_no>\d+)\s\((?P<no>.*?)\)\.
     (?:\s*Excused,\s(?P<n_excused>\d+)\s\((?P<excused>.*?)\)\.)?
 """,
+    # OPEN-710: veto overrides (2021 HB 862), read by no pattern above. Senate: "Veto overridden -
+    # 2/3's vote: Ayes, 17; Aye(s) with reservations: Senator(s) Moriwaki . Noes, 8 (Senator(s)
+    # Acasio, ...). Excused, 0 (none)." The aye count includes those with reservations.
+    r"""
+    Veto\soverridden.*?Ayes,\s(?P<n_yes>\d+);\s*
+    Aye\(s\)\swith\sreservations:\s*(?P<yes_resv>.*?)\s*\.\s+
+    Noes,\s(?P<n_no>\d+)\s\((?P<no>.*?)\)\.\s+
+    Excused,\s(?P<n_excused>\d+)\s\((?P<excused>.*?)\)\.
+""",
+    # House: "Veto overridden by 2/3's vote with 38 Ayes; 8 Noes Representative(s) Har, ...; and
+    # 4 Excused Representative(s) Ilagan, ... ." (no reservations list)
+    r"""
+    Veto\soverridden.*?(?P<n_yes>\d+)\sAyes;(?P<yes_resv>)\s*
+    (?P<n_no>\d+)\sNoes\s*(?P<no>.*?);\s*and\s+
+    (?P<n_excused>\d+)\sExcused\s*(?P<excused>.*?)\.?\s*$
+""",
 ]
+
+# OPEN-710: a roll call's result is the outcome its text states, else the threshold the vote needs.
+FAILED_RE = re.compile(r"\b(failed|sustained)\b", re.IGNORECASE)
+PASSED_RE = re.compile(r"\b(passed|adopted|overridden)\b", re.IGNORECASE)
+OVERRIDE_RE = re.compile(r"\boverrid", re.IGNORECASE)
+# Hawaii Constitution Art. III sec. 17: an override needs two-thirds of all the members to which
+# each house is entitled (House 51, Senate 25), not of those voting.
+CHAMBER_SIZE = {"lower": 51, "upper": 25}
+
+
+def vote_result(chamber, text, yes_count, no_count):
+    """'pass' or 'fail' for one roll call in chamber "upper"/"lower": the outcome the text states
+    (passed, adopted, overridden; failed, sustained), else two-thirds of the house's seats for a
+    veto override, else more yeas than nays."""
+    if FAILED_RE.search(text):
+        return "fail"
+    if PASSED_RE.search(text):
+        return "pass"
+    if OVERRIDE_RE.search(text):
+        return "pass" if 3 * yes_count >= 2 * CHAMBER_SIZE[chamber] else "fail"
+    return "pass" if yes_count > no_count else "fail"
 
 
 def create_bill_report_url(chamber, year, bill_type):
@@ -238,6 +275,13 @@ class HIBillScraper(Scraper):
                     if actor in reconsiderations and not derived
                     else motion
                 )
+                yays = v.get("n_yes")
+                nays = v["n_no"]
+                v_yes = v.get("yes", "")
+                v_no = v.get("no", "")
+                if yays is None:
+                    yays = len(seated_ayes) + len(split_specific_votes(v["yes_resv"]))
+                yays, nays = int(yays or 0), int(nays or 0)
                 vote = VoteEvent(
                     start_date=date,
                     chamber=actor,
@@ -245,7 +289,8 @@ class HIBillScraper(Scraper):
                     bill_chamber=bill_chamber,
                     legislative_session=session,
                     motion_text=motion_text,
-                    result="pass" if "passed" in string.lower() else "fail",
+                    # OPEN-710: the stated outcome, else the vote's threshold
+                    result=vote_result(actor, string, yays, nays),
                     # OPEN-691: what the roll call decides, from the hi block of
                     # config/motion_classification.yaml (committee reports are
                     # committee-passage; texts no rule names stay unlabelled)
@@ -254,14 +299,8 @@ class HIBillScraper(Scraper):
                 if not derived:
                     reconsiderations.discard(actor)
                 vote.add_source(url)
-                yays = v.get("n_yes")
-                nays = v["n_no"]
-                v_yes = v.get("yes", "")
-                v_no = v.get("no", "")
-                if yays is None:
-                    yays = len(seated_ayes) + len(split_specific_votes(v["yes_resv"]))
-                vote.set_count("yes", int(yays or 0))
-                vote.set_count("no", int(nays or 0))
+                vote.set_count("yes", yays)
+                vote.set_count("no", nays)
                 vote.set_count("not voting", int(v.get("n_excused") or 0))
                 vote.dedupe_key = f"{index}#{bill_id}#{date}#{string[:300]}"
                 for voter in split_specific_votes(v_yes):

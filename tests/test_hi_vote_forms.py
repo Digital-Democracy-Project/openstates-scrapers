@@ -4,8 +4,8 @@ Every text is real, from the status pages on data.capitol.hawaii.gov (session/me
 read 2026-11-20): Senate Final Reading in the "0 No(es): none" form (HB 1642 of 2026, seven 2026
 measures in all) and the same form with names (HB 862 of 2021). Not read here: the House floor form
 ("... voting no (3) ...", no aye count) and the Senate resolution adoption, whose ayes need the
-roster on the vote's date, and the veto overrides, held until OPEN-710 stores their result (see the
-ticket).
+roster on the vote's date (test_hi_seated_ayes.py), and the veto overrides (OPEN-710,
+test_hi_vote_result.py).
 """
 import json
 import os
@@ -129,8 +129,6 @@ def test_hb862_2021_final_reading_with_names():
             {"yes": ["Chang", "Ihara", "Taniguchi"], "no": ["Acasio", "Fevella"]},
         )
     ]
-    # the veto overrides on this page are not read yet (OPEN-710 first)
-    assert not [v for v in floor if v[2].startswith("Veto overridden")]
 
 
 def test_named_voters_match_their_counts():
