@@ -216,6 +216,22 @@ jurisdictions:
       - "^(rules suspended|suspension of the rules|suspending the rules)"
       - "^(h\\. [0-9]+ )?(shall the |adopting |adoption of )?(the )?emergency preamble"  # "Emergency preamble adopted"
 
+  # OPEN-699 (Iowa, gate E). The motion text is the question of a roll call in the House or Senate journal
+  # (legis.iowa.gov/legislation/journals/house|senate, PDF), as the separate ia votes scraper reads it from
+  # 'On the question "Shall ...?"' (scrape_journal() in ia/votes.py). Rules written from every roll call the
+  # scraper reads from the 290 journals of 2025 and 2026 (1,411: House 822, Senate 589, read 2026-11-20).
+  # "Shall the bill pass?" is the vote on the bill itself, and is taken again on the bill as amended after a
+  # chamber concurs in the other's amendments or adopts a conference report (both by their own motion,
+  # before it); a lost one is a lost passage vote (pa, al, nc, or). A resolution's adoption is passage (ok,
+  # pa). Amendment votes, the motion to concur in amendments and the rules suspension to take up an amendment
+  # are labelled "amendment" by the ia scraper after this returns [] (vote_classification() in ia/votes.py).
+  ia:
+    passage:
+      - '^shall the bill pass\??$'               # 1,176 of 1,411: both chambers
+      - '^shall the resolution be adopted\??$'   # HR 3, SR 105, SCR 101 (both chambers); the Senate's own joint resolutions (SJR 9, 11, 2010)
+      - '^shall the joint resolution be adopted and agreed to\??$'   # the House on a Senate joint resolution (SJR 9, SJR 11)
+    default: null                                # anything else (a motion, a deferral, a calendar move) stays unclassified
+
   wa:
     preprocess: strip_sequence_number            # "Final Passage (#7)" → "final passage"
     passage:
