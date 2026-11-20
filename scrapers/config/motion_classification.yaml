@@ -345,6 +345,24 @@ jurisdictions:
       - '^(assembly|senate) \((as introduced|\d+(st|nd|rd|th) reprint)\)( \(\d+\))?$'
     default: null
 
+  # OPEN-683 (Rhode Island, gate E). The motion text is the motion lines at the end of a roll call's header on the
+  # chamber's vote report (webserver.rilegislature.gov/SVotes|HVotes/votereport.asp), joined with " / " by the ri
+  # scraper (vote_motion() in ri/bills.py). Rules written from every roll-call header of 2025 and 2026 (2,948 on the
+  # vote-date lists, 2,473 tied to a bill, read 2026-11-20). Passage is a motion made only of the lines below, in
+  # any order: House "PASSAGE", "PASSAGE / AS AMENDED", "PASSAGE / IN CONCURRENCE (/ AS AMENDED)"; Senate "Passage",
+  # "Passage as Amended (/ Passage)", "In Concurrence (/ Passage)". "In Concurrence" is the second chamber passing
+  # the other chamber's bill (or the first agreeing to its amendments): passage either way (pa OPEN-617, la
+  # OPEN-583). A lost vote is a lost passage vote. Any other line makes it not passage: an amendment vote
+  # ("PASSAGE / PASSAGE OF AMENDMENT", "Approval of Amendment / Passage": the Senate keeps "/ Passage" on the
+  # amendment vote and then votes "Passage as Amended / Passage"; labelled "amendment" by vote_classification()),
+  # "RECONSIDERATION", "RULING OF THE CHAIR", a header with no motion line (a point of order, an
+  # immediate-consideration vote: its text is then a title fragment or the item number), and the House budget's
+  # article-by-article votes, written "ARTICLE 2 PASSAGE / AS AMENDED" by the scraper.
+  ri:
+    passage:
+      - '^(passage( as amended)?|as amended|in concurrence)( / (passage( as amended)?|as amended|in concurrence))*$'
+    default: null                                # anything else (an unseen line, a title fragment) stays unclassified
+
   # OPEN-597 (Oregon, gate E). The motion text is the ActionText of a MeasureHistoryActions row that carries
   # a roll call (floor votes only). Committee votes come from CommitteeAgendaItems and are labelled
   # committee-passage by the or scraper from where they come from, without this block. Rules written from
