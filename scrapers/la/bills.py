@@ -276,6 +276,15 @@ class LABillScraper(Scraper, LXMLMixin):
         for key, values in d.items():
             for item in values:
                 vote.vote(key, item)
+        # OPEN-685: Louisiana gives a vote its day only. The link text ends with the roll call's
+        # number, "FINAL PASSAGE (#1400)", which rises in the order the votes were taken (SB 487's
+        # House: #1393 at 3:37 PM, then #1400 at 4:01 PM, the same day). The broker reads this key
+        # into Motion.rollcall_num to order two same-day votes in one chamber (as OPEN-628 did).
+        number = re.search(r"\(#(\d+)\)\s*$", motion)
+        if number:
+            vote.extras[
+                "senate-rollcall-num" if chamber == "upper" else "house-rollcall-num"
+            ] = number.group(1)
         vote.add_source(url)
         yield vote
 

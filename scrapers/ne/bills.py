@@ -351,6 +351,11 @@ class NEBillScraper(Scraper, LXMLMixin):
 
             query_params = urllib.parse.parse_qs(urllib.parse.urlparse(vote_url).query)
             vote.dedupe_key = query_params["KeyID"][0]
+            # OPEN-685: Nebraska gives a vote its day only, so two roll calls on a bill the same day
+            # (LB 48, 2025-05-30: failed with the emergency clause, then passed with it stricken)
+            # tie. The KeyID rises in the order the votes were taken (12956, then 12957); the broker
+            # reads this key into Motion.rollcall_num to order them (as OPEN-628 did for MI and WA).
+            vote.extras["legislature-rollcall-num"] = vote.dedupe_key
             vote.add_source(vote_url)
 
             for name in yes_voters:

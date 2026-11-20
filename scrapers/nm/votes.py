@@ -14,6 +14,15 @@ s_vote_header = re.compile(r"(YES)|(NO)|(ABS)|(EXC)|(REC)")
 # House vote header
 h_vote_header = re.compile(r"(YEA(?!S))|(NAY(?!S))|(EXCUSED(?!:))|(ABSENT(?!:))")
 
+# The roll call's number: "RCS# 128" on House PDFs, "RCS#" then the number on its own line on Senate PDFs.
+rcs_regex = re.compile(r"RCS#\s*(\d+)")
+
+
+def rollcall_number(pdf_text_content):
+    found = rcs_regex.search(pdf_text_content or "")
+    return found.group(1) if found else None
+
+
 # Date regex for senate and house parser
 date_regex = re.compile(r"([0-1][0-9]/[0-3][0-9]/\d+)")
 
@@ -117,6 +126,14 @@ class NMVoteScraper(Scraper):
         motion_text = "senate passage" if chamber == "upper" else "house passage"
 
         vote = self.build_vote(session, bill_id, url, vote_record, chamber, motion_text)
+        # OPEN-685: New Mexico gives a vote its day only. The roll call's number (RCS#) on the PDF
+        # rises in the order the votes were taken (HB 253's Senate, 2026-02-18: RCS 158, then 173);
+        # the broker reads this key into Motion.rollcall_num to order two same-day votes in one chamber.
+        rcs = rollcall_number(pdf_text_content)
+        if rcs:
+            vote.extras[
+                "senate-rollcall-num" if chamber == "upper" else "house-rollcall-num"
+            ] = rcs
         self.validate_vote(headers, total_votes, vote_record)
         return vote
 
