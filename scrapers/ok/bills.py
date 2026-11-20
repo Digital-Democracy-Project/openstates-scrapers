@@ -39,6 +39,32 @@ def vote_classification(motion, committee):
     return []
 
 
+# OPEN-704: the House page states each roll call's outcome on its own line above the
+# counts ("THIRD PASSED", "FAILED" for an emergency clause); the Senate page does not.
+STATED_RESULT = re.compile(r"\b(PASSED|FAILED)$")
+
+# Members elected to each chamber, which the constitution's supermajorities count from.
+CHAMBER_SIZE = {"lower": 101, "upper": 48}
+
+
+def vote_result(chamber, motion, committee, stated, yes_count, no_count):
+    """'pass' or 'fail' for one roll call: the outcome the page states, else the vote's
+    own threshold. Oklahoma Constitution Art. V sec. 58: an emergency clause needs
+    two-thirds of all members elected to each House, and a vetoed emergency measure
+    three-fourths of each House; Art. VI sec. 11: a veto override needs two-thirds of
+    the members elected. Everything else (committee votes included) passes on more yeas
+    than nays."""
+    if stated:
+        return "pass" if stated == "PASSED" else "fail"
+    if not committee:
+        size = CHAMBER_SIZE[chamber]
+        if re.match(r"veto override with emer", motion, re.I):
+            return "pass" if 4 * yes_count >= 3 * size else "fail"
+        if re.match(r"veto override", motion, re.I) or motion.lower() == "emergency":
+            return "pass" if 3 * yes_count >= 2 * size else "fail"
+    return "pass" if yes_count > no_count else "fail"
+
+
 def extract_names(line, limit):
     """Extract up to `limit` legislator names from a vote-roll line.
 
@@ -460,7 +486,7 @@ class OKBillScraper(Scraper):
                 self.warning("Motion text not found")
                 continue
 
-            passed = None
+            stated = None
 
             date_line = rcs_p.getnext().xpath("string()")
             date = re.search(r"\d+/\d+/\d+", date_line)
@@ -483,6 +509,10 @@ class OKBillScraper(Scraper):
                     r"(YEAS|AYES|NAYS|EXCUSED|VACANT|VACANCY|CONSTITUTIONAL "
                     r"PRIVILEGE|NOT VOTING|N/V)\s*:\s*(\d+)(.*)"
                 )
+                if not seen_yes and not stated:
+                    stated_match = STATED_RESULT.search(line)
+                    if stated_match:
+                        stated = stated_match.group(1)
                 match = re.match(regex, line)
                 if match:
                     if (match.group(1) in ["YEAS", "AYES"]) and "RCS#" not in line:
@@ -510,14 +540,13 @@ class OKBillScraper(Scraper):
             if bad_vote:
                 continue
 
-            if passed is None:
-                passed = counts["yes"] > counts["no"]
-
             vote = Vote(
                 chamber=chamber,
                 start_date=date.strftime("%Y-%m-%d"),
                 motion_text=motion,
-                result="pass" if passed else "fail",
+                result=vote_result(
+                    chamber, motion, committee, stated, counts["yes"], counts["no"]
+                ),
                 bill=bill,
                 classification=vote_classification(motion, committee),
             )
