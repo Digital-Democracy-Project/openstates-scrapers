@@ -6,6 +6,8 @@ import lxml.html
 from openstates.scrape import Scraper, Bill, VoteEvent
 from openstates.utils import convert_pdf
 
+from .votes import final_vote_only, vote_classification
+
 # http://mgaleg.maryland.gov/mgawebsite/Legislation/Details/hb0060?ys=2019RS&search=True
 # # passed all
 
@@ -66,6 +68,7 @@ class MDBillScraper(Scraper):
 
         # MD has a habit of listing votes twice
         seen_votes = set()
+        votes = []
 
         for elem in elems:
             href = elem.get("href")
@@ -78,12 +81,14 @@ class MDBillScraper(Scraper):
                 seen_votes.add(href)
                 vote = self.parse_vote_page(href, bill)
                 vote.add_source(href)
-                yield vote
+                votes.append(vote)
+        yield from final_vote_only(votes)
 
     def parse_bill_votes_new(self, doc, bill):
         elems = doc.xpath("//table[@class='billdocs']//a")
         # MD has a habit of listing votes twice
         seen_votes = set()
+        votes = []
 
         for elem in elems:
             href = elem.get("href")
@@ -97,7 +102,8 @@ class MDBillScraper(Scraper):
                 seen_votes.add(href)
                 vote = self.parse_vote_pdf(href, bill)
                 vote.add_source(href)
-                yield vote
+                votes.append(vote)
+        yield from final_vote_only(votes)
 
     def parse_vote_pdf(self, vote_url, bill):
 
@@ -190,7 +196,7 @@ class MDBillScraper(Scraper):
             chamber=chamber,
             start_date=date.strftime("%Y-%m-%d"),
             motion_text=motion,
-            classification="passage",
+            classification=vote_classification(motion),
             result="pass" if passed else "fail",
         )
 
@@ -276,7 +282,7 @@ class MDBillScraper(Scraper):
             chamber=chamber,
             start_date=date.strftime("%Y-%m-%d"),
             motion_text=motion,
-            classification="passage",
+            classification=vote_classification(motion),
             result="pass" if passed else "fail",
         )
         vote.dedupe_key = vote_url  # contains sequence number
