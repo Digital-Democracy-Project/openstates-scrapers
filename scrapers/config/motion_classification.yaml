@@ -377,3 +377,18 @@ jurisdictions:
       - "adopted conference committee report"    # conference report adoption = passage (ut, mi, va, al, nc)
       - "notwithstanding governor['’]s veto"      # FOR RAMON: veto override counted as passage, as nc (Ramon, 2026-11-16); ma and ne do not
     default: null
+
+  # OPEN-677 (Wyoming, gate E). The motion text is the roll call's action from Wyoming's bill API
+  # (lsoservice.wyoleg.gov/api/BillInformation), with the tally on the end ("S 3rd Reading:Passed 31-0-0-0-0")
+  # and, for an amendment, conference report or veto, its number in front ("SF0001JC001: H Adopted
+  # SF0001JC001: 59-1-2-0-0"). Rules written from every roll call of the 2026 probe sample (107, 2026-11-20).
+  # Amendment, line-item veto and introduction votes are not passage: the wy scraper labels them
+  # ("amendment", "veto-override", "reading-1") after this returns [] (vote_classification() in wy/bills.py).
+  wy:
+    committee_passage:
+      - ':recommend (amend and )?do pass\b'      # "S01 - Judiciary:Recommend Do Pass 4-0-1-0-0", "... Amend and Do Pass ..."
+    passage:
+      - '^[sh] 3rd reading:(passed|failed)\b'    # a lost third reading is a lost passage vote (pa, al, nc, or)
+      - '^[sh] concur:(passed|failed)\b'         # concurrence in the other chamber's amendments = passage (pa OPEN-617, la OPEN-583)
+      - '\b[sh] adopted [a-z]{2}\d+jc\d+\b'      # conference committee report adopted = passage (pa, la, ut, mi, nc, or)
+    default: null                                # anything not seen ("Did Not Concur", a whole-bill veto override, ...) stays unclassified

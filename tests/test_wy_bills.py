@@ -129,3 +129,37 @@ def test_house_prefix_wins_over_a_senate_api_chamber():
     """Synthetic (no real case seen in 2026): the rule is the prefix in both directions, not a Senate-only patch."""
     rc = roll_call("S", "H Introduced and Referred to H01 - Judiciary 46-16-0-0-0")
     assert voting_chamber(rc) == "H"
+
+
+# OPEN-677: every kind of roll call in the 2026 probe sample (107 roll calls), one real text each, with the label the
+# scraper stores. Only third readings, concurrences and conference reports are passage.
+REAL_KINDS = [
+    ("S 3rd Reading:Passed 31-0-0-0-0", None, ["passage"]),  # SF 2
+    ("H 3rd Reading:Passed 34-23-5-0-0", None, ["passage"]),  # SF 4
+    ("S Concur:Passed 28-1-2-0-0", None, ["passage"]),  # SF 4
+    ("H Adopted SF0001JC001: 59-1-2-0-0", "SF0001JC001", ["passage"]),  # SF 1
+    ("S Adopted SF0001JC001: 28-3-0-0-0", "SF0001JC001", ["passage"]),  # SF 1
+    ("S02 - Appropriations:Recommend Do Pass 5-0-0-0-0", None, ["committee-passage"]),
+    ("H10 - Labor:Recommend Amend and Do Pass 9-0-0-0-0", None, ["committee-passage"]),
+    ("Amendment adopted 28-3-0-0-0", "SF0001S2010", ["amendment"]),
+    ("Amendment failed 12-19-0-0-0", "SF0001S2014", ["amendment"]),
+    # SF 7
+    ("S Introduced and Referred to S01 - Judiciary 31-0-0-0-0", None, ["reading-1"]),
+    # HB 10
+    ("H Introduced and Referred to H01 - Judiciary 46-16-0-0-0", None, ["reading-1"]),
+    ("S Failed Introduction 0-31-0-0-0", None, ["reading-1"]),  # SF 3
+    ("Line Item Veto Override 23-6-2-0-0", "SF0001VT001", ["veto-override"]),
+    ("Did Not Override Line Item Veto 34-26-1-1-0", "SF0001VT002", ["veto-override"]),
+    # HB 10
+    ("S Motion to Suspend Rules to Resolve into COW & Place at the Top of GF", None, []),
+]
+
+
+@pytest.mark.parametrize("action,amendment,expected", REAL_KINDS)
+def test_scrape_vote_labels_each_kind_of_roll_call(action, amendment, expected):
+    scraper = WYBillScraper(Wyoming(), "/tmp/")
+    bill = Bill("SF 1", legislative_session="2026", chamber="upper", title="t")
+    (vote,) = scraper.scrape_vote(
+        bill, roll_call("S", action, amendment=amendment), "2026"
+    )
+    assert vote.motion_classification == expected
