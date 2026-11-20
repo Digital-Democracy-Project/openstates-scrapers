@@ -1,0 +1,59 @@
+id: ocd-person/d76e8f2c-2e55-4d2a-94e4-c13cc0a9e5e2
+name: Lynn DeCoite
+given_name: Lynn
+family_name: DeCoite
+birth_date: 1964-05-09
+gender: Female
+email: sendecoite@capitol.hawaii.gov
+image: http://www.capitol.hawaii.gov/MemberFiles/RepSenPhotos/decoite.jpg
+party:
+- name: Democratic
+roles:
+- start_date: 2021-06-17
+  type: upper
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '7'
+- start_date: 2015-02-20
+  end_date: 2021-06-16
+  type: upper
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '7'
+- end_date: 2021-06-17
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '13'
+offices:
+- classification: capitol
+  address: State Capitol Room 230, 415 S. Beretania St., Honolulu, HI 96813
+  voice: 808-587-7225
+links:
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=decoite&year=2019
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=161
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=161&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=161&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=decoite&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=sendecoite&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=sendecoite&year=2022
+other_names:
+- name: DeCoite, L.
+- name: L. DeCoite
+- name: L.P. DeCoite
+other_identifiers:
+- scheme: legacy_openstates
+  identifier: HIL000215
+sources:
+- url: https://ballotpedia.org/Lynn_DeCoite
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=decoite&year=2019
+- url: https://capitol.hawaii.gov/members/legislators.aspx?chamber=H
+- url: https://en.wikipedia.org/wiki/Lynn_DeCoite
+- url: https://justfacts.votesmart.org/candidate/biography/156191/lynn-decoite
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=161
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=161&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=161&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=decoite&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=sendecoite&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=sendecoite&year=2022
+- url: https://www.capitol.hawaii.gov/members/legislators.aspx
+- url: https://www.linkedin.com/in/lynn-decoite-475ab12a
+extras:
+  title: Assistant Majority Floor Leader

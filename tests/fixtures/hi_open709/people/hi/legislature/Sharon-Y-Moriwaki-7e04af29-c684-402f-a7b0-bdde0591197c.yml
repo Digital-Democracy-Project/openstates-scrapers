@@ -1,0 +1,47 @@
+id: ocd-person/7e04af29-c684-402f-a7b0-bdde0591197c
+name: Sharon Moriwaki
+given_name: Sharon
+family_name: Moriwaki
+birth_date: 1945-12-29
+gender: Female
+email: senmoriwaki@capitol.hawaii.gov
+image: http://www.capitol.hawaii.gov/MemberFiles/RepSenPhotos/moriwaki.jpg
+party:
+- name: Democratic
+roles:
+- start_date: 2018-11-06
+  type: upper
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '12'
+offices:
+- classification: capitol
+  address: State Capitol Room 215, 415 S. Beretania St., Honolulu, HI 96813
+  voice: 808-586-6740
+links:
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=moriwaki&year=2019
+- url: https://senatormoriwaki.com/
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=198&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=198&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=moriwaki&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=moriwaki&year=2022
+other_names:
+- name: Moriwaki, S.
+- name: S. Moriwaki
+- name: S.Y. Moriwaki
+- name: Sharon Y. Moriwaki
+ids:
+  facebook: senatormoriwaki
+sources:
+- url: https://ballotpedia.org/Sharon_Moriwaki
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=moriwaki&year=2019
+- url: https://capitol.hawaii.gov/members/legislators.aspx?chamber=S
+- url: https://en.wikipedia.org/wiki/Sharon_Moriwaki
+- url: https://justfacts.votesmart.org/candidate/biography/183622/sharon-moriwaki
+- url: https://senatormoriwaki.com
+- url: https://senatormoriwaki.com/
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=198&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=198&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=moriwaki&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=moriwaki&year=2022
+- url: https://www.capitol.hawaii.gov/members/legislators.aspx
+- url: https://www.senatormoriwaki.com/about

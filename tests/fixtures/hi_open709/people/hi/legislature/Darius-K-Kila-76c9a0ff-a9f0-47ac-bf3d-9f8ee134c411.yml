@@ -1,0 +1,37 @@
+id: ocd-person/76c9a0ff-a9f0-47ac-bf3d-9f8ee134c411
+name: Darius Kila
+given_name: Darius
+family_name: Kila
+gender: Male
+email: repkila@capitol.hawaii.gov
+image: http://www.capitol.hawaii.gov/MemberFiles/RepSenPhotos/Kila.jpg
+party:
+- name: Democratic
+roles:
+- start_date: 2022-11-08
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '44'
+offices:
+- classification: capitol
+  address: State Capitol Room 403, 415 S. Beretania St., Honolulu, HI 96813
+  voice: 808-586-9480
+  fax: 808-586-9485
+links:
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=266
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=266&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=266&year=2024
+other_names:
+- name: D. Kila
+- name: D.K. Kila
+- name: Darius K. Kila
+- name: Kila, D.
+sources:
+- url: https://ballotpedia.org/Darius_Kila
+- url: https://en.wikipedia.org/wiki/Darius_Kila
+- url: https://justfacts.votesmart.org/candidate/biography/208501/darius-kila
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=266
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=266&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=266&year=2024
+- url: https://www.capitol.hawaii.gov/members/legislators.aspx
+- url: https://www.linkedin.com/in/darius-kila-629848b8

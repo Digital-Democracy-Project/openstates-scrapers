@@ -1,0 +1,43 @@
+id: ocd-person/21e33d30-ecf0-431b-ad89-429f026efc24
+name: David Alcos
+given_name: David
+family_name: Alcos
+gender: Male
+email: repalcos@capitol.hawaii.gov
+image: http://www.capitol.hawaii.gov/MemberFiles/RepSenPhotos/Alcos.jpg
+party:
+- name: Republican
+roles:
+- start_date: 2022-11-08
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '41'
+offices:
+- classification: capitol
+  address: State Capitol Room 324, 415 S. Beretania St., Honolulu, HI 96813
+  voice: 808-586-6080
+links:
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=249
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=249&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=249&year=2024
+other_names:
+- name: Alcos, D.
+- name: D. Alcos
+- name: D.A. Alcos
+- name: David Alcos III
+ids:
+  twitter: repalcos
+  instagram: repalcos
+  facebook: votealcos
+sources:
+- url: https://ballotpedia.org/David_Alcos
+- url: https://en.wikipedia.org/wiki/David_Alcos
+- url: https://justfacts.votesmart.org/candidate/biography/193674/david-alcos-iii
+- url: https://representativedavidalcos.com/about-me
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=249
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=249&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=249&year=2024
+- url: https://www.capitol.hawaii.gov/members/legislators.aspx
+- url: https://www.linkedin.com/in/david-alcos-48908643
+extras:
+  title: Asst. Minority Leader

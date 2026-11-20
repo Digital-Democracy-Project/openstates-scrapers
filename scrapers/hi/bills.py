@@ -4,6 +4,7 @@ import lxml.html
 import re
 from openstates.scrape import Scraper, Bill, VoteEvent
 from .actions import Categorizer, find_committee
+from .members import load_members
 from .utils import get_short_codes, make_data_url
 from classify_motion import classify_motion
 from urllib import parse as urlparse
@@ -57,6 +58,22 @@ vote_re_list = [
     Aye\(s\)\swith\sreservations:\s*(?P<yes_resv>.*?)\s*\.\s+
     (?P<n_no>\d+)\sNo\(es\):\s*(?P<no>.*?)\.\s+
     (?P<n_excused>\d+)\sExcused:\s*(?P<excused>.*?)\.?\s*$
+""",
+    # OPEN-709: the forms below print no aye count (no n_yes group). Their ayes are worked out
+    # from the members seated that day (hi/members.py). House floor: "... with Representative(s)
+    # Kila voting aye with reservations; Representative(s) Alcos, Garcia voting no (2) and
+    # none excused (0)."
+    r"""
+    with\s(?P<yes_resv>none|Representative\(s\)\s[^;]*?)\svoting\saye\swith\sreservations;\s*
+    (?P<no>none|Representative\(s\)\s[^;]*?)\svoting\sno\s\((?P<n_no>\d+)\)\s+and\s+
+    (?P<excused>none|Representative\(s\)\s[^;]*?)\sexcused\s\((?P<n_excused>\d+)\)
+""",
+    # Senate resolution adoption: "Report and Resolution Adopted as amended (SD 1).  Aye(s) with
+    # reservations: none. Noes, 2 (Senator(s) DeCorte, Fevella)." (an excused list is optional)
+    r"""
+    Resolution\sAdopted.*?Aye\(s\)\swith\sreservations:\s*(?P<yes_resv>.*?)\s*\.\s+
+    Noes,\s(?P<n_no>\d+)\s\((?P<no>.*?)\)\.
+    (?:\s*Excused,\s(?P<n_excused>\d+)\s\((?P<excused>.*?)\)\.)?
 """,
 ]
 
@@ -204,11 +221,22 @@ class HIBillScraper(Scraper):
             for committee in real_committees:
                 act.add_related_entity(name=committee, entity_type="organization")
             vote = self.parse_vote(string)
+            seated_ayes = []
+            derived = bool(vote) and vote[0].get("n_yes") is None
+            if derived:
+                # OPEN-709: no aye count printed; None when the ayes cannot be worked out
+                seated_ayes = self.seated_ayes(vote[0], actor, date, bill_id)
+                if seated_ayes is None:
+                    vote = None
 
             if vote:
                 v, motion = vote
+                # OPEN-709: a tally whose ayes are worked out neither takes nor clears a pending
+                # "Reconsider: " prefix, so the roll calls kept before read exactly as they did
                 motion_text = (
-                    ("Reconsider: " + motion) if actor in reconsiderations else motion
+                    ("Reconsider: " + motion)
+                    if actor in reconsiderations and not derived
+                    else motion
                 )
                 vote = VoteEvent(
                     start_date=date,
@@ -223,15 +251,18 @@ class HIBillScraper(Scraper):
                     # committee-passage; texts no rule names stay unlabelled)
                     classification=classify_motion("hi", motion_text),
                 )
-                reconsiderations.discard(actor)
+                if not derived:
+                    reconsiderations.discard(actor)
                 vote.add_source(url)
-                yays = v["n_yes"]
+                yays = v.get("n_yes")
                 nays = v["n_no"]
                 v_yes = v.get("yes", "")
                 v_no = v.get("no", "")
+                if yays is None:
+                    yays = len(seated_ayes) + len(split_specific_votes(v["yes_resv"]))
                 vote.set_count("yes", int(yays or 0))
                 vote.set_count("no", int(nays or 0))
-                vote.set_count("not voting", int(v["n_excused"] or 0))
+                vote.set_count("not voting", int(v.get("n_excused") or 0))
                 vote.dedupe_key = f"{index}#{bill_id}#{date}#{string[:300]}"
                 for voter in split_specific_votes(v_yes):
                     voter = self.clean_voter_name(voter)
@@ -242,14 +273,62 @@ class HIBillScraper(Scraper):
                 for voter in split_specific_votes(v_no):
                     voter = self.clean_voter_name(voter)
                     vote.no(voter)
-                for voter in split_specific_votes(v["excused"]):
+                for voter in split_specific_votes(v.get("excused")):
                     voter = self.clean_voter_name(voter)
                     vote.vote("not voting", voter)
+                for voter in seated_ayes:
+                    vote.yes(voter)
 
                 yield vote
 
             elif re.search("reconsider", string, re.IGNORECASE):
                 reconsiderations.add(actor)
+
+    def seated_ayes(self, v, chamber, date, bill_id):
+        """OPEN-709: the plain ayes of a tally that prints no aye count: the members seated in
+        the chamber that day, minus those the text names (no, excused, aye with reservations).
+        None, with a warning, when that cannot be done without guessing: no people data or no
+        clear list of who sat, a named list whose length is not its printed count, or a name
+        that is not exactly one seated member or names someone already listed."""
+        members = getattr(self, "members", None)
+        if members is None:
+            logger.warning(
+                f"OPEN-709: {bill_id} {date} {chamber} tally skipped: no people data"
+            )
+            return None
+        seated = members.seated(chamber, date)
+        if seated is None:
+            logger.warning(
+                f"OPEN-709: {bill_id} {date} {chamber} tally skipped: the people data gives no "
+                "clear list of who sat that day"
+            )
+            return None
+        named = []
+        for group, count in (
+            ("yes_resv", None),
+            ("no", "n_no"),
+            ("excused", "n_excused"),
+        ):
+            names = [
+                self.clean_voter_name(n) for n in split_specific_votes(v.get(group))
+            ]
+            if count and len(names) != int(v.get(count) or 0):
+                logger.warning(
+                    f"OPEN-709: {bill_id} {date} {chamber} tally skipped: {group} lists "
+                    f"{len(names)} names for a count of {v.get(count)}"
+                )
+                return None
+            for name in names:
+                person = members.find(seated, name)
+                if person is None or any(person["id"] == n["id"] for n in named):
+                    logger.warning(
+                        f"OPEN-709: {bill_id} {date} {chamber} tally skipped: {name!r} is not "
+                        "exactly one member seated that day, or is listed twice"
+                    )
+                    return None
+                named.append(person)
+        named_ids = {n["id"] for n in named}
+        return sorted(p["name"] for p in seated if p["id"] not in named_ids)
 
     def clean_voter_name(self, name):
         if name[-1] == ".":
@@ -523,6 +602,8 @@ class HIBillScraper(Scraper):
 
     def scrape(self, chamber=None, session=None, scrape_since=None):
         get_short_codes(self)
+        # OPEN-709: seated members, for the tallies that print no aye count
+        self.members = load_members(self)
 
         if scrape_since is None:
             bill_types = ["bill", "cr", "r"]

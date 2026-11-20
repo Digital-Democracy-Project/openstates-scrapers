@@ -1,0 +1,57 @@
+id: ocd-person/d31a4d99-d6f1-42f8-b902-b6bff3c667e8
+name: Angus McKelvey
+given_name: Angus
+family_name: McKelvey
+birth_date: 1968-03-09
+gender: Male
+email: senmckelvey@capitol.hawaii.gov
+image: http://www.capitol.hawaii.gov/MemberFiles/RepSenPhotos/mckelvey.jpg
+party:
+- name: Democratic
+roles:
+- start_date: 2022-11-08
+  type: upper
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '6'
+- start_date: 2006-11-07
+  end_date: 2022-11-07
+  type: upper
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '6'
+- end_date: 2022-11-07
+  type: lower
+  jurisdiction: ocd-jurisdiction/country:us/state:hi/government
+  district: '10'
+offices:
+- classification: capitol
+  address: State Capitol Room 221, 415 S. Beretania St., Honolulu, HI 96813
+  voice: 808-586-6070
+links:
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=mckelvey&year=2019
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=241
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=241&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=241&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=mckelvey&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=mckelvey&year=2022
+other_names:
+- name: A. McKelvey
+- name: A.L. McKelvey
+- name: Angus L.K. McKelvey
+- name: McKelvey, A.
+other_identifiers:
+- scheme: legacy_openstates
+  identifier: HIL000055
+sources:
+- url: https://ballotpedia.org/Angus_McKelvey
+- url: https://capitol.hawaii.gov/memberpage.aspx?member=mckelvey&year=2019
+- url: https://capitol.hawaii.gov/members/legislators.aspx?chamber=H
+- url: https://en.wikipedia.org/wiki/Angus_McKelvey
+- url: https://justfacts.votesmart.org/candidate/biography/67875/angus-mckelvey
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=241
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=241&year=2023
+- url: https://www.capitol.hawaii.gov/legislature/memberpage.aspx?member=241&year=2024
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=mckelvey&year=2021
+- url: https://www.capitol.hawaii.gov/memberpage.aspx?member=mckelvey&year=2022
+- url: https://www.capitol.hawaii.gov/members/legislators.aspx
+- url: https://www.linkedin.com/in/angus-mckelvey-5573b318
+- url: https://www.linkedin.com/in/angus-mckelvey-ba906023
