@@ -53,6 +53,30 @@ jurisdictions:
       - "conference committee - final passage"    # "House/Senate Conference Committee - Final Passage"
     default: null
 
+  # OPEN-691 (Hawaii, gate E). The motion text is the first sentence of a bill-status action that holds a tally
+  # (data.capitol.hawaii.gov/session/measure_indiv.aspx), cut by parse_vote() in hi/bills.py, with "Reconsider: " in
+  # front after a reconsideration. Rules written from every tally on the 2026 status pages of 69 measures (HB, SB,
+  # HCR, HR, SCR, SR; read 2026-11-20): 360 tallies, 244 of them roll calls the scraper keeps today, and 116 House
+  # floor and Senate final-reading tallies its vote patterns do not read yet. Committee votes ("The committee(s) on
+  # WAM recommend(s) that the measure be PASSED, WITH AMENDMENTS.") and the conference committee's own vote ("The
+  # Conference committee recommends ...") are committee-passage. Passage is the floor vote that passes or kills the
+  # whole measure: Third Reading (the Senate writes "Report adopted; Passed Third Reading"), Final Reading (the vote
+  # on a conference draft, or on the other chamber's amendments: concurrence, pa OPEN-617, la OPEN-583), and the
+  # adoption of a resolution ("Adopted ...", "Report and Resolution Adopted ..."). Not passage, named so a wider rule
+  # cannot pick them up: Second Reading and "Report adopted; referred to the committee(s) on ..." (House floor votes
+  # that move the bill on). Agreeing or disagreeing with the other chamber's amendments is a voice action with no
+  # tally, so never a roll call here. No floor amendment or veto-override roll call was seen.
+  hi:
+    not_passage:
+      - '^(reconsider: )?(report adopted; )?passed second reading\b'
+      - '^(reconsider: )?report adopted; referred to\b'
+    committee_passage:
+      - '^(reconsider: )?the (conference )?committee(\(s\))?\b.*\brecommends?(\(s\))? that the measure be passed\b'
+    passage:
+      - '^(reconsider: )?(report adopted; )?passed (third|final) reading\b'
+      - '^(reconsider: )?(report and resolution )?adopted\b'
+    default: null                                # anything not seen stays unclassified, never passage
+
   fl:
     # floor-vote site only — committee-passage sites are already correctly hardcoded
     # the complete audit of this site found fewer than 12 non-passage texts
