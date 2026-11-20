@@ -1,3 +1,5 @@
+import re
+
 from openstates.scrape import Scraper, Bill, VoteEvent
 
 from .actions import categorize_actions
@@ -5,6 +7,32 @@ import requests
 import scrapelib
 import dateutil
 import pytz
+
+from classify_motion import classify_motion
+
+# OPEN-694: an amendment roll call, labelled here because config/motion_classification.yaml only
+# decides passage. Floor: the "2nd Reading Motion to Amend" action, or a motion naming the amendment
+# ("AMD-HB0015.001.003 Romano DO PASS"); committee: the bills API's amendment motions.
+AMENDMENT_VOTE = re.compile(
+    r"motion to amend|(^|: )\s*amd-|: (be_amended|bill_is_amended_as_follows|further_amend_\w+)$",
+    re.I,
+)
+
+
+def vote_classification(bill_action, motion=None):
+    """What a roll call decides. The text is "<bill action>: <motion>" on the bills API and the
+    bill action alone on the archive API, since the motion ("Do Pass") does not say whether it is
+    the second or the third reading. Passage and committee-passage come from the mt block of
+    config/motion_classification.yaml, else "amendment" for an amendment roll call, else nothing."""
+    text = bill_action or ""
+    if motion is not None:
+        text = f"{text}: {motion}"
+    classification = classify_motion("mt", text)
+    if classification:
+        return classification
+    if AMENDMENT_VOTE.search(text):
+        return ["amendment"]
+    return []
 
 
 class MTBillScraper(Scraper):
@@ -387,7 +415,7 @@ class MTBillScraper(Scraper):
                     result="pass" if passed else "fail",
                     chamber=chamber,
                     bill=bill,
-                    classification=[],
+                    classification=vote_classification(name),
                 )
 
                 vote.set_count("yes", int(action["yesVotes"]))
@@ -620,7 +648,7 @@ class MTBillScraper(Scraper):
                 result="pass" if passed else "fail",
                 chamber=chamber,
                 bill=bill,
-                classification=[],
+                classification=vote_classification(bill_action, motion),
             )
 
             for count_key in counts.keys():
