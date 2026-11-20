@@ -130,8 +130,8 @@ jurisdictions:
   # concurring in the other chamber's changes or adopting a (free) conference report: passage, pa OPEN-617,
   # la OPEN-583); "Veto Override" / "OVERRIDE VETO FINAL PASSAGE HB 2" (a whole-bill override counts, Ramon OPEN-677;
   # a budget bill's line-item override has the same text and is labelled veto-override by the scraper first, from
-  # the bill's "line items vetoed" action, so a backfill that sees only this text cannot tell them apart); a bare
-  # "Adopt" / Senate "ADOPT SCR 9" (a resolution's own adoption: an amendment's adoption carries its HFA/HCS). Not
+  # the bill's "line items vetoed" action, so a backfill that sees only this text cannot tell them apart); "ADOPT
+  # SCR 9" / House "Adopt HCR 20" (a resolution's own adoption; a bare "Adopt" is left unlabelled). Not
   # passage: amendment votes ("Adopt HFA 8", "SFA 5", labelled amendment by vote_classification()), "Suspend the Rules
   # HFA 13", "Previous Question", "Reconsider", "Table", "Co-Sponsor" (2026 HR 21) and the House's "Misc" (2026 HB 500
   # and SB 30, each next to a separate "Final Passage" or "Pass" roll call).
@@ -141,8 +141,7 @@ jurisdictions:
       - '^consent passage of '
       - '^final passage\b'                        # "Final Passage", "Final Passage SB 100 W/ hcs1", "FINAL PASSAGE OF SB 1 w/ HFA 2"
       - '^(override veto final passage\b|veto override$)'  # whole-bill override (a line-item one never reaches here from the scraper)
-      - '^adopt$'                                 # House: a resolution adopted on its own roll call (item "HCR 20", "HJR 5", "HR 7")
-      - '^adopt [hs][cj]?r \d+\b'                # Senate: "ADOPT SCR 9", "ADOPT SJR 23 w/ SCS 1"
+      - '^adopt [hs][cj]?r \d+\b'                # a resolution's adoption: Senate "ADOPT SCR 9", "ADOPT SJR 23 w/ SCS 1"; House "Adopt HCR 20", "Adopt HR 7"
     default: null                                # anything not seen stays unclassified, never passage
 
   ma:

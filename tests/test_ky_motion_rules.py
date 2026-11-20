@@ -2,7 +2,7 @@
 
 Every motion below is a real roll call from apps.legislature.ky.gov vote_history.pdf files (2025RS and 2026RS, read
 2026-11-20), as the scraper builds it: the page's motion line, plus on a House page the amendment its roll-call line
-names ("HB 1 HFA 8  RCS# 6" + "Adopt" -> "Adopt HFA 8"). The fixtures in fixtures/ky_open689 are four of those PDFs:
+names ("HB 1 HFA 8  RCS# 6" + "Adopt" -> "Adopt HFA 8"), or for a bare "Adopt" the measure ("Adopt HCR 20"). The fixtures in fixtures/ky_open689 are four of those PDFs:
 2026RS HB 500 (budget bill, line-item vetoes overridden), 2025RS HB 4 (whole-bill veto overridden, House and Senate
 amendment votes), 2025RS HJR 15 and 2026RS SJR 23 (joint resolutions adopted in one chamber, passed in the other).
 """
@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
 
 from openstates.scrape import Bill  # noqa: E402
 from classify_motion import classify_motion  # noqa: E402
-from ky.bills import KYBillScraper, roll_call_part, vote_classification  # noqa: E402
+from ky.bills import KYBillScraper, roll_call_item, vote_classification  # noqa: E402
 
 HERE = os.path.dirname(__file__)
 FIXTURES = os.path.join(HERE, "fixtures", "ky_open689")
@@ -25,7 +25,7 @@ FIXTURES = os.path.join(HERE, "fixtures", "ky_open689")
 PASSAGE, AMENDMENT, NONE = ["passage"], ["amendment"], []
 
 REAL_ROLL_CALLS = [
-    # third reading, House and Senate (passed or lost: 2025 HR 7 "Adopt" failed 20-75 and is still the vote on it)
+    # third reading, House and Senate (passed or lost: a lost vote is still the vote on the bill)
     ("Pass", PASSAGE),  # 2025 HB 1, House RCS# 7, 90-7
     ("PASS HB 1", PASSAGE),  # 2025 HB 1, Senate, 34-3
     ("PASS HB 15 W/ scs1", PASSAGE),  # 2025 HB 15, Senate
@@ -59,7 +59,12 @@ REAL_ROLL_CALLS = [
     ("OVERRIDE VETO FINAL PASSAGE SB 1", PASSAGE),  # 2026 SB 1, Senate
     ("Veto Override", PASSAGE),  # 2026 SB 1, House
     # a resolution adopted on its own roll call
-    ("Adopt", PASSAGE),  # 2025 HCR 20 (90-0), HJR 5, HJR 15 (79-13), House
+    ("Adopt HCR 20", PASSAGE),  # 2025 HCR 20, House, 90-0
+    ("Adopt HJR 15", PASSAGE),  # 2025 HJR 15, House, 79-13
+    (
+        "Adopt HR 7",
+        PASSAGE,
+    ),  # 2025 HR 7, House, failed 20-75 (a lost vote on the resolution)
     ("ADOPT SCR 9", PASSAGE),  # 2026 SCR 9, Senate
     ("ADOPT SJR 23 w/ SCS 1", PASSAGE),  # 2026 SJR 23, Senate
     # amendment votes
@@ -106,6 +111,11 @@ def test_line_item_veto_override_is_not_passage(motion):
     assert vote_classification(motion, line_item_veto=False) == PASSAGE
 
 
+def test_bare_adopt_is_not_passage():
+    # an "Adopt" whose roll-call line was not read could be an amendment's: it stays unlabelled
+    assert vote_classification("Adopt") == []
+
+
 def test_amendment_votes_are_not_passage_in_the_shared_rules():
     for motion in ("Adopt HFA 8", "Adopt HCS 1", "SFA 5", "HFA 1"):
         assert classify_motion("ky", motion) == []
@@ -127,32 +137,36 @@ def test_near_misses_are_not_passage(motion):
 
 
 @pytest.mark.parametrize(
-    "line,part",
-    [  # real roll-call lines: 2025 HB 1, SB 19, HB 1, HB 4 (Senate), HCR 20
+    "line,item",
+    [  # real roll-call lines: 2025 HB 1, SB 19, HB 1, HB 4 (Senate), HCR 20; and a page's session line
         (
             "HB 1 HFA 8                                                                     RCS# 6",
-            "HFA 8",
+            ("HB 1", "HFA 8"),
         ),
         (
             "SB 19 HCS 1                                                                                             RCS# 257",
-            "HCS 1",
+            ("SB 19", "HCS 1"),
         ),
         (
             "HB 1                          AN ACT relating to the individual income tax rate.     RCS# 7",
-            None,
+            ("HB 1", None),
         ),
         (
             "HB 4                      AN ACT relating to postsecondary institutions.              RSN# 3501",
-            None,
+            ("HB 4", None),
         ),
         (
             "HCR 20                       A CONCURRENT RESOLUTION directing the LRC to                            RCS# 40",
-            None,
+            ("HCR 20", None),
+        ),
+        (
+            "                                                    2025 Regular Session",
+            (None, None),
         ),
     ],
 )
-def test_roll_call_part(line, part):
-    assert roll_call_part(line) == part
+def test_roll_call_item(line, item):
+    assert roll_call_item(line) == item
 
 
 def scraped(pdf, bill_chamber, tmp_path, actions=()):
@@ -223,7 +237,7 @@ def test_joint_resolutions(tmp_path):
         os.path.join(FIXTURES, "25RS_hjr15_vote_history.pdf"), "lower", tmp_path
     ) == [
         ("lower", "HFA 1", ["amendment"]),
-        ("lower", "Adopt", ["passage"]),
+        ("lower", "Adopt HJR 15", ["passage"]),
         ("upper", "PASS HJR 15", ["passage"]),
     ]
     assert scraped(
@@ -231,7 +245,7 @@ def test_joint_resolutions(tmp_path):
     ) == [
         ("upper", "ADOPT SJR 23 w/ SCS 1", ["passage"]),
         ("lower", "Suspend the Rules HFA 1", []),
-        ("lower", "Adopt", ["passage"]),
+        ("lower", "Adopt SJR 23", ["passage"]),
         ("upper", "FINAL PASSAGE OF SJR 23 w/ HFA 1", ["passage"]),
     ]
 
