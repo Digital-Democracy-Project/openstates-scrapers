@@ -24,6 +24,11 @@ bill_types = {
 TIMEZONE = pytz.timezone("America/Chicago")
 
 
+def is_committee_report(action):
+    # "Reported Do Pass (H)", "HCS Reported Do Pass (H)", "Reported Do Not Pass (H)", ...
+    return "Reported Do" in action
+
+
 class UnrecognizedSessionType(BaseException):
     def __init__(self, session):
         super().__init__(f"Session {session} has the unrecognized session types.")
@@ -95,24 +100,6 @@ class MOBillScraper(Scraper, LXMLMixin):
             return f"{session[2:4]}4"
         else:
             raise UnrecognizedSessionType(session)
-
-    def _get_votes(self, date, actor, action, bill, url):
-        vre = r"(?P<leader>.*)(AYES|YEAS):\s+(?P<yeas>\d+)\s+(NOES|NAYS):\s+(?P<nays>\d+).*"
-        if "YEAS" in action.upper() or "AYES" in action.upper():
-            match = re.match(vre, action)
-            if match:
-                v = match.groupdict()
-                yes, no = int(v["yeas"]), int(v["nays"])
-                vote = VoteEvent(
-                    chamber=actor,
-                    motion_text=v["leader"],
-                    result="pass" if yes > no else "fail",
-                    classification="passage",
-                    start_date=TIMEZONE.localize(date),
-                    bill=bill,
-                )
-                vote.add_source(url)
-                yield vote
 
     def _parse_cosponsors_from_bill(self, bill, url):
         bill_page = self.get(url).text
@@ -523,7 +510,8 @@ class MOBillScraper(Scraper, LXMLMixin):
             # the correct action description in the website is the combination of
             # Description, Comments, and RollCall
             # = Description - Comments - RollCall
-            action_title = action.xpath("./Description/text()")[0]
+            description = action.xpath("./Description/text()")[0]
+            action_title = description
             # if there is comments
             if action.xpath("./Comments"):
                 action_comment = action.xpath("./Comments/text()")[0]
@@ -550,6 +538,11 @@ class MOBillScraper(Scraper, LXMLMixin):
                     rc_present = ""
                 action_title = f"{action_title} - AYES: {rc_yes} NOES: {rc_no} PRESENT: {rc_present}"
 
+            # Only a committee report's roll call becomes a vote here. Floor roll calls carry
+            # totals only in the XML, and the Senate's votes on a House bill would be filed
+            # under the House; the votes scraper makes every floor vote, with names, from the
+            # House roll-call PDFs and the Senate journals (OPEN-702).
+            if action.xpath("./RollCall") and is_committee_report(description):
                 vote = VoteEvent(
                     chamber=actor,
                     motion_text=action_title,
