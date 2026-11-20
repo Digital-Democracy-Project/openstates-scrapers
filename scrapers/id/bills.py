@@ -6,6 +6,7 @@ import dateutil
 from collections import defaultdict
 import lxml.html
 from .actions import Categorizer
+from .voter_names import add_voter
 from scrapelib import HTTPError
 
 
@@ -335,13 +336,12 @@ class IDBillScraper(Scraper):
         vote.set_count("yes", int(yes_count))
         vote.set_count("no", int(no_count))
         vote.set_count("absent", int(other_count))
-        for name in yes_votes:
-            if name and name != "None":
-                vote.yes(name)
-        for name in no_votes:
-            if name and name != "None":
-                vote.no(name)
-        for name in other_votes:
-            if name and name != "None":
-                vote.vote("absent", name)
+        for option, names in (
+            ("yes", yes_votes),
+            ("no", no_votes),
+            ("absent", other_votes),
+        ):
+            for name in names:
+                if name and name != "None":
+                    add_voter(vote, option, name, actor, session)
         yield vote
