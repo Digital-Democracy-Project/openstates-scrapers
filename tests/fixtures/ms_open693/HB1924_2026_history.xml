@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="../../dtds_xslts/history.xslt"?>
+ 
+<!DOCTYPE HISTORY SYSTEM "../../dtds_xslts/history.dtd">
+ 
+<HISTORY>
+	<YEAR>2026</YEAR>
+	<SESSION>Regular Session</SESSION>
+	<SHORTTITLE>Appropriation; Attorney General.</SHORTTITLE>
+	<LONGTITLE>AN ACT MAKING AN APPROPRIATION FOR THE PURPOSE OF DEFRAYING THE EXPENSES OF THE OFFICE OF THE ATTORNEY GENERAL FOR FISCAL YEAR 2027.</LONGTITLE>
+	<DATETIMELASTCHG>06/05/26 at 09:27</DATETIMELASTCHG>
+ 
+	<MEASURE>
+		<MSR_HS>H</MSR_HS>
+		<MSR_TYPE>B</MSR_TYPE>
+		<MSR_NUM>1924</MSR_NUM>
+		<FORMAT_MSRID>House Bill 1924</FORMAT_MSRID>
+		<SHORT_MSRID>HB 1924</SHORT_MSRID>
+		<OWNER>H</OWNER>
+	</MEASURE>
+ 
+	<BACKGROUND>
+		<DISPOSITION>Law</DISPOSITION>
+		<DEADLINE>Appropriation</DEADLINE>
+		<REVENUE>No</REVENUE>
+		<VOTETYPE>Majority</VOTETYPE>
+		<EFFECTIVEDATE>July 1, 2026</EFFECTIVEDATE>
+		<CHAPNUM>  80</CHAPNUM>
+	</BACKGROUND>
+	<COMMITTEES>
+		<HOUSE>
+			<H_NAME>Appropriations D</H_NAME>
+			<H_INCMTE>F</H_INCMTE>
+			<H_LINK>../../House_cmtes/A3.xml</H_LINK>
+		</HOUSE>
+		<HOUSE>
+			<H_NAME>Appropriations A</H_NAME>
+			<H_INCMTE>F</H_INCMTE>
+			<H_LINK>../../House_cmtes/AP.xml</H_LINK>
+		</HOUSE>
+		<SENATE>
+			<S_NAME>Appropriations</S_NAME>
+			<S_INCMTE>F</S_INCMTE>
+			<S_LINK>../../Senate_cmtes/AP.xml</S_LINK>
+		</SENATE>
+	</COMMITTEES>
+	<AUTHORS>
+		<PRINCIPAL>
+			<P_NAME>Mims</P_NAME>
+			<P_LINK>../../House_authors/Mims.xml</P_LINK>
+		</PRINCIPAL>
+		<ADDITIONAL>
+			<CO_NAME>Read</CO_NAME>
+			<CO_LINK>../../House_authors/Read.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Barton</CO_NAME>
+			<CO_LINK>../../House_authors/Barton.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Cockerham</CO_NAME>
+			<CO_LINK>../../House_authors/Cockerham.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Faulkner</CO_NAME>
+			<CO_LINK>../../House_authors/Faulkner.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Hood</CO_NAME>
+			<CO_LINK>../../House_authors/Hood.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>McKnight</CO_NAME>
+			<CO_LINK>../../House_authors/McKnight.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Rushing</CO_NAME>
+			<CO_LINK>../../House_authors/Rushing.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Watson</CO_NAME>
+			<CO_LINK>../../House_authors/Watson.xml</CO_LINK>
+	</ADDITIONAL>
+	</AUTHORS>
+	<ACTION>
+		<ACT_NUMBER> 1</ACT_NUMBER>
+		<ACT_DESC>02/16 (H) Referred To Appropriations D;Appropriations A</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 2</ACT_NUMBER>
+		<ACT_DESC>02/17 (H) DR - TSDP: A3 To AP</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 3</ACT_NUMBER>
+		<ACT_DESC>02/18 (H) DR - TSDP: AP To A3</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 4</ACT_NUMBER>
+		<ACT_DESC>02/18 (H) Title Suff Do Pass</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 5</ACT_NUMBER>
+		<ACT_DESC>02/19 (H) Passed</ACT_DESC>
+		<ACT_VOTE>../../../../2026/pdf/votes/house/0450037.pdf</ACT_VOTE>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 6</ACT_NUMBER>
+		<ACT_DESC>02/20 (H) Transmitted To Senate</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 7</ACT_NUMBER>
+		<ACT_DESC>02/27 (S) Referred To Appropriations</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 8</ACT_NUMBER>
+		<ACT_DESC>03/12 (S) Title Suff Do Pass As Amended</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 9</ACT_NUMBER>
+		<ACT_DESC>03/12 (S) Amended</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>10</ACT_NUMBER>
+		<ACT_DESC>03/12 (S) Passed As Amended</ACT_DESC>
+		<ACT_VOTE>../../../../2026/pdf/votes/senate/0660007.pdf</ACT_VOTE>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>11</ACT_NUMBER>
+		<ACT_DESC>03/13 (S) Returned For Concurrence</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>12</ACT_NUMBER>
+		<ACT_DESC>03/18 (H) Decline to Concur/Invite Conf</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>13</ACT_NUMBER>
+		<ACT_DESC>03/19 (H) Conferees Named Mims,Oliver,Cockerham</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>14</ACT_NUMBER>
+		<ACT_DESC>03/19 (S) Conferees Named Hopson,Wiggins,Hickman</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>15</ACT_NUMBER>
+		<ACT_DESC>03/27 (H) Conference Report Filed</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>16</ACT_NUMBER>
+		<ACT_DESC>03/27 (S) Conference Report Filed</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>17</ACT_NUMBER>
+		<ACT_DESC>03/29 (H) Conference Report Adopted</ACT_DESC>
+		<ACT_VOTE>../../../../2026/pdf/votes/house/0830028.pdf</ACT_VOTE>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>18</ACT_NUMBER>
+		<ACT_DESC>03/29 (S) Conference Report Adopted</ACT_DESC>
+		<ACT_VOTE>../../../../2026/pdf/votes/senate/0830020.pdf</ACT_VOTE>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>19</ACT_NUMBER>
+		<ACT_DESC>04/01 (H) Enrolled Bill Signed</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>20</ACT_NUMBER>
+		<ACT_DESC>04/01 (S) Enrolled Bill Signed</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>21</ACT_NUMBER>
+		<ACT_DESC>04/08 Partially Vetoed By Governor</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>22</ACT_NUMBER>
+		<ACT_DESC>04/15 Suspend from Deadlines by HC  65</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>23</ACT_NUMBER>
+		<ACT_DESC>04/15 (H) Veto Referred To Appropriations D</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>24</ACT_NUMBER>
+		<ACT_DESC>04/15 (H) Override Governor's Veto</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>25</ACT_NUMBER>
+		<ACT_DESC>04/15 (H) Veto Overridden</ACT_DESC>
+		<ACT_VOTE>../../../../2026/pdf/votes/house/1000005.pdf</ACT_VOTE>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>26</ACT_NUMBER>
+		<ACT_DESC>04/15 (S) Veto Sustained</ACT_DESC>
+	</ACTION>
+	<DOCUMENTS>
+		<CURRENT>
+			<CURRENT_PDF>../../../../documents/2026/pdf/HB/1900-1999/HB1924SG.pdf</CURRENT_PDF>
+			<CURRENT_OTHER>../../../../documents/2026/html/HB/1900-1999/HB1924SG.htm</CURRENT_OTHER>
+		</CURRENT>
+		<INTRO>
+			<INTRO_PDF>../../../../documents/2026/pdf/HB/1900-1999/HB1924IN.pdf</INTRO_PDF>
+			<INTRO_OTHER>../../../../documents/2026/html/HB/1900-1999/HB1924IN.htm</INTRO_OTHER>
+		</INTRO>
+		<PASSED>
+			<PASSED_PDF>../../../../documents/2026/pdf/HB/1900-1999/HB1924PS.pdf</PASSED_PDF>
+			<PASSED_OTHER>../../../../documents/2026/html/HB/1900-1999/HB1924PS.htm</PASSED_OTHER>
+		</PASSED>
+		<ASG>
+			<ASG_PDF>../../../../documents/2026/pdf/HB/1900-1999/HB1924SG.pdf</ASG_PDF>
+			<ASG_OTHER>../../../../documents/2026/html/HB/1900-1999/HB1924SG.htm</ASG_OTHER>
+		</ASG>
+		<CONFRPTS>
+			<CR_PDF>../../../../documents/2026/pdf/cr/HB1924CR.pdf</CR_PDF>
+			<CR_OTHER>../../../../documents/2026/html/cr/HB1924CR.htm</CR_OTHER>
+			<CR_DESC>Conference Report</CR_DESC>
+		</CONFRPTS>
+		<AMENDMENTS>
+			<AMRPT>
+				<AMRPT_DESC>Amendment Report for House Bill No. 1924</AMRPT_DESC>
+				<AMRPT_PDF>../../../../documents/2026/pdf/sam/Amendment_Report_for_HB1924.pdf</AMRPT_PDF>
+				<AMRPT_OTHER>../../../../../documents/2026/html/sam/Amendment_Report_for_HB1924.htm</AMRPT_OTHER>
+			</AMRPT>
+			<SAM>
+				<SAM_DESC>Committee Amendment No 1</SAM_DESC>
+				<SAM_DISP>Adopted</SAM_DISP>
+				<SAM_PDF>../../../../documents/2026/pdf/sam/HB1924_S_Cmte_Amend_01.pdf</SAM_PDF>
+				<SAM_OTHER>../../../../../documents/2026/html/sam/HB1924_S_Cmte_Amend_01.htm</SAM_OTHER>
+				<SAM_VDESC>Voice Vote</SAM_VDESC>
+			</SAM>
+			<SAM>
+				<SAM_DESC>Amendment No 1 to Committee Amendment No 1</SAM_DESC>
+				<SAM_DISP>Adopted</SAM_DISP>
+				<SAM_PDF>../../../../documents/2026/pdf/sam/HB1924_S_Amend_01_to_Cmte_Amend_01.pdf</SAM_PDF>
+				<SAM_OTHER>../../../../../documents/2026/html/sam/HB1924_S_Amend_01_to_Cmte_Amend_01.htm</SAM_OTHER>
+				<SAM_VDESC>Voice Vote</SAM_VDESC>
+			</SAM>
+		</AMENDMENTS>
+		<VETOMSG>
+			<VETO_PDF>../../../../documents/2026/pdf/veto/HB1924.pdf</VETO_PDF>
+			<VETO_OTHER>../../../../documents/2026/html/veto/HB1924.htm</VETO_OTHER>
+		</VETOMSG>
+		<FISCALNOTE>
+			<FISCALNOTEFLAG>N</FISCALNOTEFLAG>
+			<FISCALNOTEPATH>../../../../documents/2026/pdf/fiscalnotes/HB1924.pdf</FISCALNOTEPATH>
+		</FISCALNOTE>
+	</DOCUMENTS>
+</HISTORY>
