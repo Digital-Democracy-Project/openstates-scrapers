@@ -29,6 +29,14 @@ MOTION_LINE = re.compile(
 # the line naming a budget article ("ARTICLE 2"), voted on one by one in the House
 ARTICLE_LINE = re.compile(r"^ARTICLE\s+\d+$", re.I)
 AMENDMENT_VOTE = re.compile(r"\b(passage|approval) of amendment\b", re.I)
+# OPEN-701: a calendar item whose bill number is printed without its year
+# ("ITEM 31    3225 SUB A as amended", "ITEM 24   S 122 SUB A", "ITEM 34   -S 70").
+# A bill number of 0 ("ITEM 8                        0") is a nomination, not a
+# bill, and is not read. With no chamber letter, the number is looked up
+# in both chambers: a session's House and Senate numbers do not overlap.
+YEARLESS_ITEM = re.compile(
+    r"^ITEM\s+\d+\s+-?(?:(?P<chamber>[SH])\s*)?(?P<bill>[1-9][0-9]*)\b"
+)
 
 
 def vote_motion(headers):
@@ -357,8 +365,11 @@ class RIBillScraper(Scraper):
         # subjects = self.get_subject_bill_dict(session)
         subjects = {}
 
+        # OPEN-701: every chamber's bills before any votes, so a Senate roll call on a
+        # House bill (and the reverse) finds its bill
         for chamber in chambers:
             yield from self.scrape_bills(chamber, session, subjects)
+        for chamber in chambers:
             yield from self.scrape_chamber_votes(chamber, session)
 
     def scrape_chamber_votes(self, chamber, session):
@@ -373,16 +384,22 @@ class RIBillScraper(Scraper):
             for vote_dict in votes:
                 for vote in vote_dict.values():
                     count = vote["count"]
-                    chamber = {"H": "lower", "S": "upper"}[vote["meta"]["chamber"]]
-
-                    try:
-                        bill_id = self._bill_id_by_type[(chamber, vote["meta"]["bill"])]
-                    except KeyError:
+                    letters = vote["meta"]["chamber"] or "SH"
+                    found = [
+                        ({"H": "lower", "S": "upper"}[c], vote["meta"]["bill"])
+                        for c in letters
+                    ]
+                    found = [k for k in found if k in self._bill_id_by_type]
+                    if len(found) != 1:
                         self.warning(
-                            "no such bill_id %s %s", chamber, vote["meta"]["bill"]
+                            "no such bill_id %s %s", letters, vote["meta"]["bill"]
                         )
                         continue
+                    bill_chamber = found[0][0]
+                    bill_id = self._bill_id_by_type[found[0]]
 
+                    # OPEN-701: the vote's chamber is the page's (SVotes / HVotes), not the
+                    # bill's: the House also votes on Senate bills and the reverse
                     v = VoteEvent(
                         chamber=chamber,
                         start_date=self._tz.localize(vote["time"]),
@@ -393,7 +410,7 @@ class RIBillScraper(Scraper):
                         ),
                         legislative_session=session,
                         bill=bill_id,
-                        bill_chamber=chamber,
+                        bill_chamber=bill_chamber,
                     )
                     v.set_count("yes", int(count["YEAS"]))
                     v.set_count("no", int(count["NAYS"]))
@@ -477,6 +494,13 @@ class RIBillScraper(Scraper):
                     return ret
 
         if bill_metainf is None:
+            for h in headers:
+                inf = YEARLESS_ITEM.match(h.strip())
+                if inf is not None:
+                    bill_metainf = inf.groupdict()
+                    break
+
+        if bill_metainf is None:
             self.warning("No metainf for this bill. Aborting snag")
             return ret
 
@@ -493,7 +517,7 @@ class RIBillScraper(Scraper):
                     name = node.tail.strip()
                     votes.append({"name": name, "vote": vote})
             if len(votes) > 0:
-                bid = bill_metainf["chamber"] + bill_metainf["bill"]
+                bid = (bill_metainf["chamber"] or "") + bill_metainf["bill"]
                 ret[bid] = {
                     "votes": votes,
                     "meta": bill_metainf,
