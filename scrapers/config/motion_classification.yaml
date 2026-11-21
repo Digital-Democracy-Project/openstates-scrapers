@@ -591,9 +591,13 @@ jurisdictions:
   # "RECONSIDERATION", "RULING OF THE CHAIR", a header with no motion line (a point of order, an
   # immediate-consideration vote: its text is then a title fragment or the item number), and the House budget's
   # article-by-article votes, written "ARTICLE 2 PASSAGE / AS AMENDED" by the scraper.
+  # OPEN-711: the Senate passes its consent calendar in one roll call ("the following measures on Today's Consent
+  # Calendar ... are read and passed, upon a roll call vote", Senate Journal); the scraper ties it to each bill on
+  # that day's calendar with the motion "Consent Calendar" ("Consent Calendar #2" for the day's second).
   ri:
     passage:
       - '^(passage( as amended)?|as amended|in concurrence)( / (passage( as amended)?|as amended|in concurrence))*$'
+      - '^consent calendar( #\d+)?$'
     default: null                                # anything else (an unseen line, a title fragment) stays unclassified
 
   # OPEN-597 (Oregon, gate E). The motion text is the ActionText of a MeasureHistoryActions row that carries

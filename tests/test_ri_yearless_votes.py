@@ -43,9 +43,11 @@ def _scraper(bills=BILLS):
     return scraper
 
 
-def _scrape_votes(names, chamber, session, bills=BILLS):
+def _scrape_votes(names, chamber, session, bills=BILLS, setup=None):
     """scrape_chamber_votes over a date list naming these real reports."""
     scraper = _scraper(bills)
+    if setup:
+        setup(scraper)
     by_id = {n.split("_")[1].split(".")[0]: n for n in names}
     listing = "<html><body><center>%s</center></body></html>" % "".join(
         '<div class="vote"><a href="votereport.asp?id=%s">Details</a></div>' % i
@@ -161,8 +163,12 @@ def test_yearless_number_with_chamber_letter_looks_only_in_that_chamber():
 @pytest.mark.parametrize("name", ["S_17915.html", "S_18007.html"])
 def test_senate_consent_calendar_names_no_bill(name):
     # Senate 6/11/2026 "CONSENT CALENDAR" (id 17915) and "Consent #2" (id 18007): the report
-    # page carries no item and no bill number, so the roll call is not tied to a bill.
-    votes, _ = _scrape_votes([name], "upper", "2026")
+    # page carries no item and no bill number. OPEN-711 reads the bills from that day's Senate
+    # Journal (tests/test_ri_consent_calendar.py); with no journal it is not tied to a bill.
+    def no_journal(scraper):
+        scraper.senate_journal_consent_calendars = lambda date: (None, [])
+
+    votes, _ = _scrape_votes([name], "upper", "2026", setup=no_journal)
     assert votes == []
 
 
