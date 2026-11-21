@@ -48,18 +48,45 @@ EXPECTED = {
 }
 
 
+# OPEN-643: fixture -> the label kept (congress.gov's own types, each once, "Identical bill" first, at most 100
+# characters). Written out by hand from each fixture's <relationshipDetails>, not produced by the scraper.
+EXPECTED_LABEL = {
+    "identical-bill": "Identical bill",
+    "identical-bill-related-bill": "Identical bill; Related bill",
+    "identical-bill-public-law-contains-the-text": "Identical bill; Public law contains the text",
+    # 108 characters in full: the last type does not fit.
+    "identical-bill-primarycompanionbillbecamelaw-public-law-contains-the-text-secondarycompanionbillbecamelaw": (
+        "Identical bill; PrimaryCompanionBillBecameLaw; SecondaryCompanionBillBecameLaw"
+    ),
+    "related-bill": "Related bill",
+    "procedurally-related": "Procedurally related",
+    "procedurally-related-related-bill": "Related bill; Procedurally related",
+    "procedurally_hyphen_related": "Procedurally-related",
+    "procedurally_hyphen_related-related-bill": "Related bill; Procedurally-related",
+    "cross-congress-related-bill": "Cross-Congress related bill",
+    "public-law-contains-the-text": "Public law contains the text",
+    "public-law-contains-the-text-related-bill": "Related bill; Public law contains the text",
+    # 106 characters in full: the last type does not fit.
+    "primarycompanionbillbecamelaw-public-law-contains-the-text-related-bill-secondarycompanionbillbecamelaw": (
+        "Related bill; PrimaryCompanionBillBecameLaw; SecondaryCompanionBillBecameLaw"
+    ),
+    "contained-in-public-law-related-bill": "Related bill; Contained in public law",
+    "text-similarities": "Text similarities",
+}
+
+
 def _links(related_bills):
-    """OPEN-725: the fork's core (data.0052) also writes each link's `ddp_relation_label`, None while this
-    scraper passes no label; upstream core writes no such key. Pin it to None, compare the rest exactly."""
+    """OPEN-725's helper, OPEN-643: the label (core data.0052's `ddp_relation_label`) is compared on its own (see
+    test_label_is_congress_gov_s_own_types); the rest is compared exactly here."""
     links = []
     for link in related_bills:
         link = dict(link)
-        assert link.pop("ddp_relation_label", None) is None
+        link.pop("ddp_relation_label", None)
         links.append(link)
     return links
 
 
-def scrape(name):
+def scrape_raw(name):
     root = ET.parse(os.path.join(FIXTURES, f"{name}.xml")).getroot()
     bill = Bill(
         f"{root.findtext('bill/type')} {root.findtext('bill/number')}",
@@ -68,12 +95,16 @@ def scrape(name):
         chamber="lower",
     )
     USBillScraper(jurisdiction="usa", datadir="/tmp").scrape_related_bills(bill, root)
-    return _links(bill.related_bills)
+    return bill.related_bills
+
+
+def scrape(name):
+    return _links(scrape_raw(name))
 
 
 def test_every_fixture_is_covered():
     on_disk = {f[:-4] for f in os.listdir(FIXTURES) if f.endswith(".xml")}
-    assert on_disk == set(EXPECTED)
+    assert on_disk == set(EXPECTED) == set(EXPECTED_LABEL)
 
 
 @pytest.mark.parametrize("name", sorted(EXPECTED))
@@ -93,3 +124,29 @@ def test_a_rules_resolution_is_never_a_companion():
     for name in EXPECTED:
         if "procedurally" in name:
             assert scrape(name)[0]["relation_type"] == "related", name
+
+
+@pytest.mark.parametrize("name", sorted(EXPECTED_LABEL))
+def test_label_is_congress_gov_s_own_types(name):
+    """OPEN-643: every link keeps congress.gov's own types as its label; the companion/related mapping above is
+    unchanged by it."""
+    (link,) = scrape_raw(name)
+    assert link["ddp_relation_label"] == EXPECTED_LABEL[name]
+    assert len(link["ddp_relation_label"]) <= 100
+
+
+def test_a_link_with_no_type_has_no_label():
+    root = ET.fromstring(
+        "<root><bill><relatedBills><item><type>HR</type><number>1</number><congress>119</congress>"
+        "</item></relatedBills></bill></root>"
+    )
+    bill = Bill("HR 2", "119", "A bill", chamber="lower")
+    USBillScraper(jurisdiction="usa", datadir="/tmp").scrape_related_bills(bill, root)
+    assert bill.related_bills == [
+        {
+            "identifier": "HR 1",
+            "legislative_session": "119",
+            "relation_type": "related",
+            "ddp_relation_label": None,
+        }
+    ]

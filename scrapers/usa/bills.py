@@ -695,23 +695,42 @@ class USBillScraper(Scraper):
     # related", a House rules resolution, "Cross-Congress related bill", "Public law contains the text", ...) is stored
     # as "related": still listed, never a scorecard stand-in. Every link used to be "companion".
     COMPANION_TYPES = {"Identical bill"}
+    # OPEN-643 (PLAN-companion-lineage phase 2, §5.1): the link also keeps congress.gov's own types as its label
+    # (OPEN-640), each once, in congress.gov's order, joined by "; ". A label holds at most 100 characters (core's
+    # ddp_relation_label), and four types can run longer (108 on a real 119th-Congress link), so "Identical bill",
+    # the type that makes a companion, goes first, and the others follow while they fit.
+    LABEL_MAX = 100
+
+    def relation_label(self, kinds):
+        kinds = sorted(
+            dict.fromkeys(kinds), key=lambda k: k not in self.COMPANION_TYPES
+        )
+        label = ""
+        for kind in kinds:
+            joined = f"{label}; {kind}" if label else kind
+            if len(joined) > self.LABEL_MAX:
+                break
+            label = joined
+        return label or None
 
     def scrape_related_bills(self, bill, xml):
         for row in xml.findall("bill/relatedBills/item"):
             identifier = (
                 f"{self.get_xpath(row, 'type')} {self.get_xpath(row, 'number')}"
             )
-            kinds = {
+            kinds = [
                 (t.text or "").strip()
                 for t in row.findall("relationshipDetails/item/type")
-            }
+                if (t.text or "").strip()
+            ]
 
             bill.add_related_bill(
                 identifier=identifier,
                 legislative_session=self.get_xpath(row, "congress"),
                 relation_type=(
-                    "companion" if kinds & self.COMPANION_TYPES else "related"
+                    "companion" if set(kinds) & self.COMPANION_TYPES else "related"
                 ),
+                label=self.relation_label(kinds),
             )
 
     def scrape_sponsors(self, bill, xml):
