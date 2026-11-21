@@ -498,3 +498,41 @@ def test_scraped_vote_takes_the_adopted_text_over_the_count():
     (vote,) = scraper.scrape_votes(make_bill("HB365"), [row])
     assert vote.result == "pass"
     assert counts(vote) == {"yes": 13, "no": 0, "abstain": 89, "not voting": 3}
+
+
+# ---------------------------------------------------------------------------
+# OPEN-644 (PLAN-companion-lineage §5.3): Alabama's own companion field keeps the legislature's word as its
+# label. ALISON lists these links on its "Companion Bills" page, and its action lines call each one "a Companion
+# Bill" (2026RS HB 243: "Wilcox Motion to Substitute SB169 for HB243 a Companion Bill - Adopted Voice Vote").
+# The list reply is HB2's real one (above), with its companionInstrumentNbr set as ALISON sets it for HB 243
+# ("SB169"; HB2 itself has none).
+# ---------------------------------------------------------------------------
+
+
+def scrape_list_row(companion):
+    scraper = make_scraper()
+    page = json.loads(load("list_page0_B_HB2_only.json"))
+    page["data"]["instruments"]["data"][0]["companionInstrumentNbr"] = companion
+    pages = [
+        mock.Mock(content=json.dumps(page).encode()),
+        mock.Mock(content=b'{"data": {"instruments": {"count": 0, "data": []}}}'),
+    ]
+    with mock.patch.object(al_bills.requests, "post", side_effect=pages):
+        out = list(scraper.scrape_bill_type("2026rs", "B", 0, 50))
+    return out[-1]
+
+
+def test_companion_keeps_the_legislatures_word():
+    bill = scrape_list_row("SB169")
+    assert bill.related_bills == [
+        {
+            "identifier": "SB 169",
+            "legislative_session": "2026rs",
+            "relation_type": "companion",
+            "ddp_relation_label": "Companion Bill",
+        }
+    ]
+
+
+def test_no_companion_no_link():
+    assert scrape_list_row(None).related_bills == []

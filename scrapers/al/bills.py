@@ -90,6 +90,9 @@ def version_dates(bill_row: dict, histories: list) -> dict:
     return {"Introduced": introduced, "Engrossed": engrossed, "Enrolled": enrolled}
 
 
+AL_COMPANION_LABEL = "Companion Bill"
+
+
 class ALBillScraper(Scraper):
     categorizer = Categorizer()
     chamber_map = {"Senate": "upper", "House": "lower"}
@@ -256,9 +259,15 @@ class ALBillScraper(Scraper):
                 first_sub = re.split(",|;", full_subject)
                 bill.add_subject(first_sub[0])
 
+            # OPEN-644 (PLAN-companion-lineage §5.3): the legislature's own companion field, labelled with its own
+            # word: ALISON lists these on its "Companion Bills" page, and its action lines call each one "a Companion
+            # Bill" ("Motion to Substitute SB169 for HB243 a Companion Bill").
             if row["companionInstrumentNbr"]:
                 bill.add_related_bill(
-                    row["companionInstrumentNbr"], session, "companion"
+                    row["companionInstrumentNbr"],
+                    session,
+                    "companion",
+                    label=AL_COMPANION_LABEL,
                 )
 
             bill.extras["AL_BILL_ID"] = row["id"]
