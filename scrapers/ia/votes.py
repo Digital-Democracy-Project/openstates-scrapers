@@ -12,6 +12,7 @@ from classify_motion import classify_motion
 
 # https://www.legis.iowa.gov/legislation/findLegislation/allbills?ga=91
 SITE_IDS = {
+    "2027-2028": "92",
     "2025-2026": "91",
     "2023-2024": "90",
     "2021-2022": "89",
