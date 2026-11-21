@@ -82,8 +82,10 @@ class Missouri(State):
             "identifier": "2022S1",
             "name": "2022 1st Extraordinary Session",
             "start_date": "2022-09-15",
-            # TODO: real end date when session is over
-            "end_date": "2021-09-23",
+            # both chambers adjourned sine die October 4, 2022 (OPEN-737): Senate journal,
+            # eighth day (senate.mo.gov/22info/Journals/T1Day08100454-58.pdf); House journal,
+            # ninth day (documents.house.mo.gov/billtracking/bills223/jrnpdf/jrn009.pdf)
+            "end_date": "2022-10-04",
             "active": False,
         },
         {
