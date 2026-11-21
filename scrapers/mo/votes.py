@@ -13,6 +13,8 @@ Roll calls not tied to a bill (approving the journal, appointments) are skipped.
 What each roll call decides comes from the mo block of config/motion_classification.yaml
 (OPEN-705, vote_classification() below); a concurrence or conference report vote followed by
 the bill's final passage roll call is not passage (OPEN-714, final_vote_only() below).
+"MR SPEAKER" on a House roll call is the session's Speaker from the manifest (OPEN-738,
+voter_names.py).
 """
 
 import datetime as dt
@@ -27,6 +29,7 @@ from openstates.utils import convert_pdf
 from classify_motion import classify_motion
 
 from .bills import MOBillScraper
+from .voter_names import add_voter
 
 HOUSE_ROLLCALL_URL = "https://documents.house.mo.gov/billtracking/bills{code}/rollcalls/{day:03}.{rc:03}.pdf"
 SENATE_JOURNAL_LIST_URL = "https://www.senate.mo.gov/journallist/?SelectedYear={year}"
@@ -388,7 +391,8 @@ class MOVoteScraper(Scraper):
         for option, count in counts.items():
             vote.set_count(option, count)
         for option, name in rc["votes"]:
-            vote.vote(option, name)
+            # "MR SPEAKER" on a House roll call is the session's Speaker (OPEN-738)
+            add_voter(vote, option, name, chamber, session)
         for url in sources:
             vote.add_source(url)
         return vote
