@@ -45,7 +45,7 @@ class Iowa(State):
             "identifier": "2017-2018",
             "name": "2017-2018 Regular Session",
             "start_date": "2017-01-09",
-            "end_date": "2017-04-29",
+            "end_date": "2018-05-05",
         },
         {
             "_scraped_name": "General Assembly: 88",
@@ -53,7 +53,7 @@ class Iowa(State):
             "identifier": "2019-2020",
             "name": "2019-2020 Regular Session",
             "start_date": "2019-01-14",
-            "end_date": "2020-04-27",
+            "end_date": "2020-06-14",
         },
         {
             "_scraped_name": "General Assembly: 89",
@@ -61,7 +61,7 @@ class Iowa(State):
             "identifier": "2021-2022",
             "name": "2021-2022 Regular Session",
             "start_date": "2021-01-11",
-            "end_date": "2021-06-19",
+            "end_date": "2022-05-24",
             "active": False,
         },
         {
@@ -70,7 +70,7 @@ class Iowa(State):
             "identifier": "2023-2024",
             "name": "2023-2024 Regular Session",
             "start_date": "2023-01-09",
-            "end_date": "2024-04-16",
+            "end_date": "2024-04-19",
             "active": False,
         },
         {
@@ -79,7 +79,7 @@ class Iowa(State):
             "identifier": "2025-2026",
             "name": "2025-2026 Regular Session",
             "start_date": "2025-01-13",
-            "end_date": "2025-04-22",
+            "end_date": "2026-05-03",
             "active": True,
             "extras": {"ordinal": 91},
         },
