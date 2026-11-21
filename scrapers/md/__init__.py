@@ -217,6 +217,31 @@ class Maryland(State):
             "end_date": "2026-04-13",
             "active": True,
         },
+        {
+            # OPEN-742: the House and Senate floor-action indexes for 2026s1 on
+            # mgaleg.maryland.gov list sittings on August 3 and 4, 2026 only (the Governor
+            # signed its bills on August 5, after it ended)
+            "_scraped_name": "2026 Special Session",
+            "classification": "special",
+            "identifier": "2026s1",
+            "name": "2026, 1st Special Session",
+            "start_date": "2026-08-03",
+            "end_date": "2026-08-04",
+            "active": True,
+        },
+        {
+            # OPEN-742: on the site's session menu since November 2026, no bills yet. Dates
+            # from Md. Constitution Art. III, Sec. 14: from the second Wednesday of January,
+            # for 90 days (the rule gives the dates above from 2012 on, except 2020's, which
+            # ended early)
+            "_scraped_name": "2027 Regular Session",
+            "classification": "primary",
+            "identifier": "2027",
+            "name": "2027 Regular Session",
+            "start_date": "2027-01-13",
+            "end_date": "2027-04-12",
+            "active": False,
+        },
     ]
     ignored_scraped_sessions = [
         "1996 Regular Session",
@@ -232,6 +257,10 @@ class Maryland(State):
         "2005 Regular Session",
         "2006 Regular Session",
         "2006 Special Session 1",
+        # OPEN-742: no bills of its own (both chambers' bill lists are empty). Its roll calls
+        # (December 16, 2025) are veto overrides of 2025 bills, which the 2025 run records
+        # (votes.py, scrape_special_session_overrides), and calls on no bill: a 2025s1 run
+        # would record nothing (OPEN-718 census)
         "2025 Special Session",
     ]
 

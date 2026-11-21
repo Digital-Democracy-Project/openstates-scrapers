@@ -23,6 +23,11 @@ read on 2026-11-17:
   Legislature (121st to 131st, plus "2001-2002"; the current 132nd is not on it yet) and lists no
   special sessions, which Maine keeps inside their Legislature's bill numbering, so every session
   is regular.
+* Maryland (OPEN-742, read 2026-11-21): the session menu on mgaleg.maryland.gov
+  (mgawebsite/Search/Legislation, the page get_session_list reads) names each session a
+  "Regular Session" or a "Special Session"; the six special ones in the scraper's list are
+  below (its 2004, 2006 and 2025 special sessions are in ignored_scraped_sessions), every other
+  is regular.
 * Mississippi (OPEN-730, read 2026-11-21): billstatus.ls.state.ms.us/sessions.htm (the page
   get_session_list reads) names each session a "Regular Session" or an "... Extraordinary
   Session"; the nineteen extraordinary ones below are special, every other is regular (its 2008
@@ -63,6 +68,7 @@ SPECIAL = {
     "hi": set(),
     "id": {"2015spcl", "2020spcl", "2022spcl"},
     "ky": {"2011SS", "2012SS", "2013SS", "2018SS", "2019SS", "2021SS", "2022SS"},
+    "md": {"2007s1", "2011s1", "2012s1", "2012s2", "2021s1", "2026s1"},
     "me": set(),
     "ms": {
         "20091E",
