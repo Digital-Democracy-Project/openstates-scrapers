@@ -66,3 +66,69 @@ def test_scraper_no_longer_hard_codes_passage():
     ).read()
     assert 'classification="passage"' not in src
     assert "classification=vote_classification(motion)" in src
+
+
+# OPEN-722: a voter's name comes from their ndlegis.gov biography page <h1>, which carries the title
+# ("Representative Bert Anderson"). The scraper must give the bare name on the first lookup in a run
+# (cache miss), not only on later ones (cache hit). The page is stubbed; nothing touches the network.
+class _StubResponse:
+    def __init__(self, html):
+        self.content = html.encode()
+
+
+def _name_lookup(monkeypatch, pages):
+    import nd.bills as nd_bills
+
+    calls = []
+
+    def fake_get(url):
+        calls.append(url)
+        return _StubResponse(pages[url])
+
+    monkeypatch.setattr(nd_bills.requests, "get", fake_get)
+    bill_list = nd_bills.BillList({"assembly_id": "69", "session_year": "2025"})
+    bill_list.members_cache = {}  # the class-level cache would leak between tests
+    return bill_list, calls
+
+
+@pytest.mark.parametrize(
+    "h1,expected",
+    [
+        ("Representative Bert Anderson", "Bert Anderson"),
+        ("Senator Judy Lee", "Judy Lee"),
+    ],
+)
+def test_first_and_second_lookup_both_return_the_bare_name(monkeypatch, h1, expected):
+    url = "https://ndlegis.gov/biography/member"
+    bill_list, calls = _name_lookup(
+        monkeypatch, {url: f"<html><body><h1> {h1} </h1></body></html>"}
+    )
+    assert bill_list.get_voter_name_from_url_request(url) == expected  # cache miss
+    assert bill_list.get_voter_name_from_url_request(url) == expected  # cache hit
+    assert calls == [url]  # the second call really came from the cache
+
+
+@pytest.mark.parametrize(
+    "h1,expected",
+    [
+        ("Representative Pat Senatore", "Pat Senatore"),
+        (
+            "Pat Senator Smith",
+            "Pat Senator Smith",
+        ),  # a title word later in the name stays
+        ("Bert Representative Anderson", "Bert Representative Anderson"),
+    ],
+)
+def test_only_a_leading_title_word_is_removed(monkeypatch, h1, expected):
+    url = "https://ndlegis.gov/biography/member"
+    bill_list, _ = _name_lookup(
+        monkeypatch, {url: f"<html><body><h1>{h1}</h1></body></html>"}
+    )
+    assert bill_list.get_voter_name_from_url_request(url) == expected
+
+
+def test_missing_biography_falls_back_to_the_name_in_the_url(monkeypatch):
+    url = "https://ndlegis.gov/biography/randy-a-schobinger"
+    bill_list, _ = _name_lookup(monkeypatch, {url: "<html><body></body></html>"})
+    assert bill_list.get_voter_name_from_url_request(url) == "Randy A Schobinger"
+    assert bill_list.get_voter_name_from_url_request(url) == "Randy A Schobinger"
