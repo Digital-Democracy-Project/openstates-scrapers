@@ -18,6 +18,11 @@ read on 2026-11-17:
 * Kentucky (OPEN-728, read 2026-11-21): apps.legislature.ky.gov/record/pastses.html (the page
   get_session_list reads) names a "Special Session" in 2011, 2012, 2013, 2018, 2019, 2021 and
   2022 and every other entry a "Regular Session"; 2024 to 2026 are current and not on that page.
+* Maine (OPEN-739, read 2026-11-21): the LegSession menu on mainelegislature.org
+  (LawMakerWeb/advancedsearch.asp, the page get_session_list reads) offers one entry per two-year
+  Legislature (121st to 131st, plus "2001-2002"; the current 132nd is not on it yet) and lists no
+  special sessions, which Maine keeps inside their Legislature's bill numbering, so every session
+  is regular.
 * Mississippi (OPEN-730, read 2026-11-21): billstatus.ls.state.ms.us/sessions.htm (the page
   get_session_list reads) names each session a "Regular Session" or an "... Extraordinary
   Session"; the nineteen extraordinary ones below are special, every other is regular (its 2008
@@ -58,6 +63,7 @@ SPECIAL = {
     "hi": set(),
     "id": {"2015spcl", "2020spcl", "2022spcl"},
     "ky": {"2011SS", "2012SS", "2013SS", "2018SS", "2019SS", "2021SS", "2022SS"},
+    "me": set(),
     "ms": {
         "20091E",
         "20092E",

@@ -12,6 +12,7 @@ class Maine(State):
     legislative_sessions = [
         {
             "_scraped_name": "121st Legislature",
+            "classification": "primary",
             "identifier": "121",
             "name": "121st Legislature (2003-2004)",
             "start_date": "2002-12-04",
@@ -19,6 +20,7 @@ class Maine(State):
         },
         {
             "_scraped_name": "122nd Legislature",
+            "classification": "primary",
             "identifier": "122",
             "name": "122nd Legislature (2005-2006)",
             "start_date": "2004-12-01",
@@ -26,6 +28,7 @@ class Maine(State):
         },
         {
             "_scraped_name": "123rd Legislature",
+            "classification": "primary",
             "identifier": "123",
             "name": "123rd Legislature (2007-2008)",
             "start_date": "2006-12-06",
@@ -33,6 +36,7 @@ class Maine(State):
         },
         {
             "_scraped_name": "124th Legislature",
+            "classification": "primary",
             "identifier": "124",
             "name": "124th Legislature (2009-2010)",
             "start_date": "2008-12-03",
@@ -40,6 +44,7 @@ class Maine(State):
         },
         {
             "_scraped_name": "125th Legislature",
+            "classification": "primary",
             "identifier": "125",
             "name": "125th Legislature (2011-2012)",
             "start_date": "2010-12-01",
@@ -47,6 +52,7 @@ class Maine(State):
         },
         {
             "_scraped_name": "126th Legislature",
+            "classification": "primary",
             "identifier": "126",
             "name": "126th Legislature (2013-2014)",
             "start_date": "2012-12-05",
@@ -54,6 +60,7 @@ class Maine(State):
         },
         {
             "_scraped_name": "127th Legislature",
+            "classification": "primary",
             "identifier": "127",
             "name": "127th Legislature (2015-2016)",
             "start_date": "2014-12-03",
@@ -61,6 +68,7 @@ class Maine(State):
         },
         {
             "_scraped_name": "128th Legislature",
+            "classification": "primary",
             "identifier": "128",
             "name": "128th Legislature (2017-2018)",
             "start_date": "2016-12-07",
@@ -68,6 +76,7 @@ class Maine(State):
         },
         {
             "_scraped_name": "129th Legislature",
+            "classification": "primary",
             "identifier": "129",
             "name": "129th Legislature (2019-2020)",
             "start_date": "2018-12-05",
@@ -75,6 +84,7 @@ class Maine(State):
         },
         {
             "_scraped_name": "130th Legislature",
+            "classification": "primary",
             "identifier": "130",
             "name": "130th Legislature (2021-2022)",
             "start_date": "2020-12-02",
@@ -83,6 +93,7 @@ class Maine(State):
         },
         {
             "_scraped_name": "131st Legislature",
+            "classification": "primary",
             "identifier": "131",
             "name": "131st Legislature (2023-2024)",
             "start_date": "2022-12-07",
@@ -91,6 +102,7 @@ class Maine(State):
         },
         {
             "_scraped_name": "132nd Legislature",
+            "classification": "primary",
             "identifier": "132",
             "name": "132nd Legislature (2025-2026)",
             "start_date": "2024-12-04",
