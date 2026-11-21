@@ -486,3 +486,122 @@ def test_senate_vote_dedupe_key_differs_for_the_same_bill_on_different_rollcall_
     )
 
     assert key_1 != key_2
+
+
+# ── OPEN-645: the "Similar Bills" tab ─────────────────────────────────────────
+# tests/fixtures/ma_open645/H4361_SimilarBills.html is malegislature.gov's own list for H.4361 (194th), read
+# 2026-11-21: H.2932, H.2630 (193rd), H.2757, S.1874, S.1889. Expected links written out from that page by hand.
+
+SIMILAR_FIXTURE = os.path.join(
+    os.path.dirname(__file__), "fixtures", "ma_open645", "H4361_SimilarBills.html"
+)
+
+
+def _similar_scraper(content=None, error=None):
+    scraper = make_scraper()
+    scraper.requested = []
+
+    def get(url, **kwargs):
+        scraper.requested.append(url)
+        if error:
+            raise error
+        return mock.Mock(content=content)
+
+    scraper.get = get
+    return scraper
+
+
+def _similar_html():
+    with open(SIMILAR_FIXTURE, "rb") as f:
+        return f.read()
+
+
+def test_similar_bills_are_related_with_the_legislatures_word():
+    scraper = _similar_scraper(_similar_html())
+    bill = _bill("H4361")
+
+    scraper.add_similar_bills(bill, "https://malegislature.gov/Bills/194/H4361")
+
+    assert scraper.requested == [
+        "https://malegislature.gov/Bills/194/H4361/SimilarBills"
+    ]
+    assert bill.related_bills == [
+        {
+            "identifier": ident,
+            "legislative_session": sess,
+            "relation_type": "related",
+            "ddp_relation_label": "Similar Bills",
+        }
+        for ident, sess in [
+            ("H 2932", "194th"),
+            ("H 2630", "193rd"),
+            ("H 2757", "194th"),
+            ("S 1874", "194th"),
+            ("S 1889", "194th"),
+        ]
+    ]
+
+
+def test_a_bill_already_linked_from_its_actions_gets_the_label_not_a_second_link():
+    scraper = _similar_scraper(_similar_html())
+    bill = _bill("H4361")
+    bill.add_related_bill(
+        "H 2932", legislative_session="194th", relation_type="related"
+    )
+
+    scraper.add_similar_bills(bill, "https://malegislature.gov/Bills/194/H4361")
+
+    h2932 = [rb for rb in bill.related_bills if rb["identifier"] == "H 2932"]
+    assert h2932 == [
+        {
+            "identifier": "H 2932",
+            "legislative_session": "194th",
+            "relation_type": "related",
+            "ddp_relation_label": "Similar Bills",
+        }
+    ]
+    assert len(bill.related_bills) == 5
+
+
+def test_a_tab_that_cannot_be_read_adds_nothing_and_does_not_fail(caplog):
+    scraper = _similar_scraper(error=requests.exceptions.ConnectionError("boom"))
+    bill = _bill("H4361")
+
+    with caplog.at_level("WARNING"):
+        scraper.add_similar_bills(bill, "https://malegislature.gov/Bills/194/H4361")
+
+    assert bill.related_bills == []
+    assert any("Similar Bills not read" in r.message for r in caplog.records)
+    # the import replaces the stored list, so the bill is read again next run (as a partly read history is)
+    assert "https://malegislature.gov/Bills/194/H4361" in scraper.failed_histories
+
+
+def test_a_session_the_jurisdiction_does_not_know_is_skipped():
+    page = b'<ul class="relatedBills"><li><a href="/Bills/150/H1">H.1</a></li></ul>'
+    bill = _bill("H4361")
+
+    _similar_scraper(page).add_similar_bills(
+        bill, "https://malegislature.gov/Bills/194/H4361"
+    )
+
+    assert bill.related_bills == []
+
+
+def test_an_earlier_sessions_similar_bill_does_not_hide_an_action_link_of_the_same_number():
+    """H.2630 of the 193rd (a similar bill) and an H2630 named in this bill's own 194th history are two bills."""
+    scraper = _similar_scraper(_similar_html())
+    bill = _bill("H4361")
+    scraper.add_similar_bills(bill, "https://malegislature.gov/Bills/194/H4361")
+    page = lxml.html.fromstring(
+        "<table><tbody><tr><td>3/1/2025</td><td>House</td>"
+        '<td>Accompanied <a href="/Bills/194/H2630">H2630</a></td></tr></tbody></table>'
+    )
+
+    list(scraper.scrape_action_page(bill, page))
+
+    h2630 = sorted(
+        (rb["legislative_session"], rb["ddp_relation_label"])
+        for rb in bill.related_bills
+        if rb["identifier"] == "H 2630"
+    )
+    assert h2630 == [("193rd", "Similar Bills"), ("194th", None)]

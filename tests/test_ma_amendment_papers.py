@@ -15,6 +15,7 @@ import sys
 from unittest import mock
 
 import lxml.html
+import requests
 import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
@@ -96,6 +97,7 @@ def make_scraper():
     s.fetch_bill_page = fetch_bill_page
     s.get_action_page = get_action_page
     s.scrape_cosponsors = mock.Mock()
+    s.add_similar_bills = mock.Mock()  # OPEN-645: the Similar Bills tab is tested in test_ma_bills
     return s
 
 
@@ -314,3 +316,21 @@ def test_the_version_note_ranks_between_the_bill_text_and_the_enacted_law():
         "Substituted text (S3178)",
         "An Act relative to economic development in the commonwealth",
     )
+
+
+def test_every_bill_read_reads_its_similar_bills_tab():
+    """OPEN-645 (Ramon: "Read it on every run"): scrape_bill asks for the bill's Similar Bills with its own page."""
+    s = make_scraper()
+    bill = scrape(s, "H5576", "lower")
+    s.add_similar_bills.assert_called_once_with(bill, URL.format("H5576"))
+
+
+def test_a_bill_whose_similar_bills_tab_fails_is_read_again_next_run():
+    """OPEN-645: the bill is saved without its Similar Bills, so scrape_bill leaves it marked to be read again (the
+    import replaces the stored list); the history's own reset must not clear that mark."""
+    s = make_scraper()
+    del s.add_similar_bills  # the real reader, with the site failing
+    s.get = mock.Mock(side_effect=requests.exceptions.ConnectionError("boom"))
+    bill = scrape(s, "H5576", "lower")
+    assert bill.identifier == "H5576"
+    assert URL.format("H5576") in s.failed_histories
