@@ -1,10 +1,19 @@
 import datetime as dt
 import lxml.html
+import os
 import pytz
 import re
+import scrapelib
 
 from openstates.scrape import Scraper, Bill, VoteEvent
+from openstates.utils import convert_pdf
 from .actions import Categorizer
+from .consent import (
+    CONSENT_HEADER,
+    consent_calendars,
+    journal_urls,
+    match_consent_votes,
+)
 
 from classify_motion import classify_motion
 from utils import url_xpath
@@ -381,9 +390,16 @@ class RIBillScraper(Scraper):
         dates = self.get_vote_dates(url, session)
         for date in dates:
             votes = self.parse_vote_page(self.post_to(action, date), url, session)
+            consent = []
             for vote_dict in votes:
                 for vote in vote_dict.values():
-                    count = vote["count"]
+                    if vote["meta"].get("consent"):
+                        # OPEN-711: a Senate consent roll call names no bill; its bills
+                        # come from that day's Senate Journal below. The House votes
+                        # each consent item on its own, so its opening vote stays out.
+                        if chamber == "upper":
+                            consent.append(vote)
+                        continue
                     letters = vote["meta"]["chamber"] or "SH"
                     found = [
                         ({"H": "lower", "S": "upper"}[c], vote["meta"]["bill"])
@@ -395,37 +411,116 @@ class RIBillScraper(Scraper):
                             "no such bill_id %s %s", letters, vote["meta"]["bill"]
                         )
                         continue
-                    bill_chamber = found[0][0]
-                    bill_id = self._bill_id_by_type[found[0]]
-
-                    # OPEN-701: the vote's chamber is the page's (SVotes / HVotes), not the
-                    # bill's: the House also votes on Senate bills and the reverse
-                    v = VoteEvent(
-                        chamber=chamber,
-                        start_date=self._tz.localize(vote["time"]),
-                        motion_text=vote["meta"]["extra"]["motion"],
-                        result="pass" if count["passage"] else "fail",
-                        classification=vote_classification(
-                            vote["meta"]["extra"]["motion"]
-                        ),
-                        legislative_session=session,
-                        bill=bill_id,
-                        bill_chamber=bill_chamber,
+                    yield self.vote_event(
+                        chamber,
+                        session,
+                        vote,
+                        vote["meta"]["extra"]["motion"],
+                        self._bill_id_by_type[found[0]],
+                        found[0][0],
+                        vote["source"],
                     )
-                    v.set_count("yes", int(count["YEAS"]))
-                    v.set_count("no", int(count["NAYS"]))
-                    # recused members are itemized as "other" too
-                    v.set_count(
-                        "other",
-                        int(count["NOT VOTING"]) + int(count.get("RECUSED", 0)),
-                    )
-                    v.add_source(vote["source"])
-                    v.dedupe_key = vote["source"]
+            if consent:
+                yield from self.consent_vote_events(date, session, consent)
 
-                    for vt in vote["votes"]:
-                        key = {"Y": "yes", "N": "no"}.get(vt["vote"], "other")
-                        v.vote(key, vt["name"])
-                    yield v
+    def vote_event(
+        self, chamber, session, vote, motion, bill_id, bill_chamber, dedupe_key
+    ):
+        count = vote["count"]
+        # OPEN-701: the vote's chamber is the page's (SVotes / HVotes), not the
+        # bill's: the House also votes on Senate bills and the reverse
+        v = VoteEvent(
+            chamber=chamber,
+            start_date=self._tz.localize(vote["time"]),
+            motion_text=motion,
+            result="pass" if count["passage"] else "fail",
+            classification=vote_classification(motion),
+            legislative_session=session,
+            bill=bill_id,
+            bill_chamber=bill_chamber,
+        )
+        v.set_count("yes", int(count["YEAS"]))
+        v.set_count("no", int(count["NAYS"]))
+        # recused members are itemized as "other" too
+        v.set_count(
+            "other",
+            int(count["NOT VOTING"]) + int(count.get("RECUSED", 0)),
+        )
+        v.add_source(vote["source"])
+        v.dedupe_key = dedupe_key
+
+        for vt in vote["votes"]:
+            key = {"Y": "yes", "N": "no"}.get(vt["vote"], "other")
+            v.vote(key, vt["name"])
+        return v
+
+    def consent_vote_events(self, date, session, roll_calls):
+        """OPEN-711: one vote event per bill on each Senate consent calendar of `date`,
+        the bills read from that day's Senate Journal (consent.py). The key is the roll
+        call's report URL plus the bill, so the one roll call gives each bill its own
+        vote (OPEN-252, OPEN-397). A day whose journal is missing, or whose calendars
+        cannot be matched to its roll calls, gives none."""
+        roll_calls = sorted(
+            roll_calls, key=lambda v: int(v["source"].rsplit("=", 1)[1])
+        )
+        journal, calendars = self.senate_journal_consent_calendars(date)
+        pairs = match_consent_votes(
+            [
+                {"yeas": int(v["count"]["YEAS"]), "nays": int(v["count"]["NAYS"])}
+                for v in roll_calls
+            ],
+            calendars,
+        )
+        if not pairs:
+            self.warning(
+                "consent calendar %s: %d roll calls, %d journal calendars (%s); not tied",
+                date,
+                len(roll_calls),
+                len(calendars),
+                journal,
+            )
+            return
+        for n, (vote, (_, calendar)) in enumerate(zip(roll_calls, pairs), 1):
+            motion = "Consent Calendar" if n == 1 else "Consent Calendar #%d" % n
+            for line in calendar["unread"]:
+                # neither a bill nor a nomination: a layout the parser does not know
+                self.warning("consent calendar %s: item not read: %s", date, line)
+            for year, letter, number in calendar["bills"]:
+                key = ({"H": "lower", "S": "upper"}[letter], number)
+                if year != session[:4] or key not in self._bill_id_by_type:
+                    self.warning("no such bill_id %s-%s %s", year, letter, number)
+                    continue
+                bill_id = self._bill_id_by_type[key]
+                v = self.vote_event(
+                    "upper",
+                    session,
+                    vote,
+                    motion,
+                    bill_id,
+                    key[0],
+                    "%s#%s" % (vote["source"], bill_id),
+                )
+                v.add_source(journal)
+                yield v
+
+    def senate_journal_consent_calendars(self, date):
+        """The Senate Journal of `date` ("6/11/2026") and the consent calendars it says
+        were voted that day, or (None, []) when the journal is not published."""
+        day = dt.datetime.strptime(date, "%m/%d/%Y").date()
+        for url in journal_urls(date):
+            try:
+                path, _ = self.urlretrieve(url)
+            except scrapelib.HTTPError:
+                continue
+            try:
+                with open(path, "rb") as f:
+                    if f.read(4) != b"%PDF":
+                        continue
+                text = convert_pdf(path, "text").decode("utf-8", "replace")
+            finally:
+                os.remove(path)
+            return url, consent_calendars(text, day)
+        return None, []
 
     def post_to(self, url, vote):
         headers = {"votedate": vote}
@@ -499,6 +594,13 @@ class RIBillScraper(Scraper):
                 if inf is not None:
                     bill_metainf = inf.groupdict()
                     break
+
+        if bill_metainf is None:
+            # OPEN-711: a Senate consent roll call's whole header is "CONSENT
+            # CALENDAR", "Consent #2" or "#2"
+            lines = [h.strip() for h in headers if h.strip()]
+            if len(lines) == 1 and CONSENT_HEADER.match(lines[0]):
+                bill_metainf = {"chamber": None, "bill": "", "consent": lines[0]}
 
         if bill_metainf is None:
             self.warning("No metainf for this bill. Aborting snag")
