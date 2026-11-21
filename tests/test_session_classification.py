@@ -20,7 +20,8 @@ read on 2026-11-17:
   2022 and every other entry a "Regular Session"; 2024 to 2026 are current and not on that page.
 * Mississippi (OPEN-730, read 2026-11-21): billstatus.ls.state.ms.us/sessions.htm (the page
   get_session_list reads) names each session a "Regular Session" or an "... Extraordinary
-  Session"; the nineteen extraordinary ones are special, every other is regular.
+  Session"; the nineteen extraordinary ones below are special, every other is regular (its 2008
+  First Extraordinary Session is not in the scraper's list).
 * North Dakota (OPEN-721, read 2026-11-20): ndlegis.gov/assembly/ lists only two-year Legislative
   Assemblies, which are regular sessions; it keeps later special sessions inside their assembly,
   so only 67S1 (November 2021) is special.
