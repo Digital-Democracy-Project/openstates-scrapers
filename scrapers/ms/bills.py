@@ -479,7 +479,9 @@ class MSBillScraper(Scraper):
                 if "None." in name:
                     cur_array = None
 
-                match = re.match(r"(.+?)\. Total--.*", name)
+                # OPEN-733: some roll calls print one dash ("Younger. Total-51.", 2026
+                # SB 2096 Senate); "Total--" alone dropped the name before the total
+                match = re.match(r"(.+?)\. Total-+.*", name)
                 if match and cur_array is not None:
                     cur_array.append(match.groups()[0])
                     cur_array = None
