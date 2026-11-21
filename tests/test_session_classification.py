@@ -22,6 +22,11 @@ read on 2026-11-17:
   get_session_list reads) names each session a "Regular Session" or an "... Extraordinary
   Session"; the nineteen extraordinary ones below are special, every other is regular (its 2008
   First Extraordinary Session is not in the scraper's list).
+* Missouri (OPEN-736, read 2026-11-21): the Senate's journal list (senate.mo.gov/journallist/,
+  one page per year) names a "First Extraordinary Session" in 2019, 2020, 2021, 2022 and 2025 and
+  a "Second Extraordinary Session" in 2020 and 2025, beside each year's Regular and Veto sessions
+  (veto sessions are not separate sessions in the scraper's list); the scraper's own
+  "_scraped_name"s, from house.mo.gov's bill list, say the same. Every other session is regular.
 * Montana (OPEN-734, read 2026-11-21): the two session endpoints get_session_list reads,
   api.legmt.gov/archive/v1/sessions (sessionTypeDesc "Regular" for 2011 to 2023) and
   api.legmt.gov/legislators/v1/sessions (type REGULAR for 2025 and 2027); its one special session
@@ -74,6 +79,7 @@ SPECIAL = {
         "20251E",
         "20261E",
     },
+    "mo": {"2019S1", "2020S1", "2020S2", "2021S1", "2022S1", "2025S1", "2025S2"},
     "mt": set(),
     "nd": {"67S1"},
     "ok": {
