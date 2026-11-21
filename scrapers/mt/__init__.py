@@ -12,6 +12,7 @@ class Montana(State):
     legislative_sessions = [
         {
             "_scraped_name": "20111",
+            "classification": "primary",
             "identifier": "2011",
             "name": "2011 Regular Session",
             "start_date": "2011-01-03",
@@ -19,6 +20,7 @@ class Montana(State):
         },
         {
             "_scraped_name": "20131",
+            "classification": "primary",
             "identifier": "2013",
             "name": "2013 Regular Session",
             "start_date": "2013-01-07",
@@ -26,6 +28,7 @@ class Montana(State):
         },
         {
             "_scraped_name": "20151",
+            "classification": "primary",
             "identifier": "2015",
             "name": "2015 Regular Session",
             "start_date": "2015-01-05",
@@ -33,6 +36,7 @@ class Montana(State):
         },
         {
             "_scraped_name": "20171",
+            "classification": "primary",
             "identifier": "2017",
             "name": "2017 Regular Session",
             "start_date": "2017-01-02",
@@ -40,6 +44,7 @@ class Montana(State):
         },
         {
             "_scraped_name": "20191",
+            "classification": "primary",
             "identifier": "2019",
             "name": "2019 Regular Session",
             "start_date": "2019-01-07",
@@ -47,6 +52,7 @@ class Montana(State):
         },
         {
             "_scraped_name": "20211",
+            "classification": "primary",
             "identifier": "2021",
             "name": "2021 Regular Session",
             "start_date": "2021-01-04",
@@ -55,6 +61,7 @@ class Montana(State):
         },
         {
             "_scraped_name": "20231",
+            "classification": "primary",
             "identifier": "2023",
             "name": "2023 Regular Session",
             # TODO: update dates
@@ -65,6 +72,7 @@ class Montana(State):
         },
         {
             "_scraped_name": "20251",
+            "classification": "primary",
             "identifier": "2025",
             "name": "2025 Regular Session",
             "start_date": "2025-01-06",
@@ -74,6 +82,7 @@ class Montana(State):
         },
         {
             "_scraped_name": "20271",
+            "classification": "primary",
             "identifier": "2027",
             "name": "2027 Regular Session",
             "start_date": "2027-01-04",
