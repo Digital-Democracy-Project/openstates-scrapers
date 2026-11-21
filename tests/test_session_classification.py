@@ -14,6 +14,9 @@ read on 2026-11-17:
 * North Dakota (OPEN-721, read 2026-11-20): ndlegis.gov/assembly/ lists only two-year Legislative
   Assemblies, which are regular sessions; it keeps later special sessions inside their assembly,
   so only 67S1 (November 2021) is special.
+* Oklahoma (OPEN-727, read 2026-11-21): the session menu on webapps.oklegislature.gov
+  (WebApplication3/WebForm1.aspx, the page get_session_list reads) names each session "Regular
+  Session" or "... Special Session"; the twelve special ones are below, every other is regular.
 * Oregon: OLIS (api.oregonlegislature.gov LegislativeSessions), the "S" session keys.
 * Rhode Island (OPEN-726, read 2026-11-21): the year menu on status.rilegislature.gov (bill
   history, previous sessions) offers one regular session a year and names no special or
@@ -33,6 +36,20 @@ SPECIAL = {
     "ga": {"2011_ss", "2018_ss", "2020_ss", "2021_ss", "2023_ss", "2026_ss"},
     "id": {"2015spcl", "2020spcl", "2022spcl"},
     "nd": {"67S1"},
+    "ok": {
+        "2012SS1",
+        "2013SS1",
+        "2017SS1",
+        "2017SS2",
+        "2020SS1",
+        "2021SS1",
+        "2022SS2",
+        "2022SS3",
+        "2023S1",
+        "2023S2",
+        "2024S3",
+        "2024S4",
+    },
     "or": {
         "2008 Special Session",
         "2010 Special Session",
