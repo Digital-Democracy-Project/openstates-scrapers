@@ -19,6 +19,7 @@ class Oklahoma(State):
     legislative_sessions = [
         {
             "_scraped_name": "2012 Regular Session",
+            "classification": "primary",
             "identifier": "2011-2012",
             "name": "2011-2012 Regular Session",
             "start_date": "2011-02-07",
@@ -26,6 +27,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2012 Special Session",
+            "classification": "special",
             "identifier": "2012SS1",
             "name": "2012 Special Session",
             "start_date": "2012-06-01",
@@ -33,6 +35,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2014 Regular Session",
+            "classification": "primary",
             "identifier": "2013-2014",
             "name": "2013-2014 Regular Session",
             "start_date": "2013-02-04",
@@ -40,6 +43,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2013 Special Session",
+            "classification": "special",
             "identifier": "2013SS1",
             "name": "2013 Special Session",
             "start_date": "2013-09-02",
@@ -47,6 +51,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2016 Regular Session",
+            "classification": "primary",
             "identifier": "2015-2016",
             "name": "2015-2016 Regular Session",
             "start_date": "2015-02-02",
@@ -54,6 +59,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2017 First Special Session",
+            "classification": "special",
             "identifier": "2017SS1",
             "name": "2017 First Special Session",
             "start_date": "2017-09-25",
@@ -61,6 +67,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2017 Second Special Session",
+            "classification": "special",
             "identifier": "2017SS2",
             "name": "2017 Second Special Session",
             "start_date": "2017-12-18",
@@ -68,6 +75,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2018 Regular Session",
+            "classification": "primary",
             "identifier": "2017-2018",
             "name": "2017-2018 Regular Session",
             "start_date": "2017-02-06",
@@ -75,6 +83,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2019 Regular Session",
+            "classification": "primary",
             "identifier": "2019-2020",
             "name": "2019-2020 Regular Session",
             "start_date": "2019-01-08",
@@ -82,6 +91,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2020 First Special Session",
+            "classification": "special",
             "identifier": "2020SS1",
             "name": "2020 First Special Session",
             "start_date": "2020-04-06",
@@ -89,6 +99,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2020 Regular Session",
+            "classification": "primary",
             "identifier": "2020",
             "name": "2020 Regular Session",
             "start_date": "2019-02-03",
@@ -96,6 +107,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2021 Regular Session",
+            "classification": "primary",
             "identifier": "2021",
             "name": "2021 Regular Session",
             "start_date": "2021-02-01",
@@ -103,6 +115,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2022 Regular Session",
+            "classification": "primary",
             "identifier": "2022",
             "name": "2022 Regular Session",
             "start_date": "2022-02-07",
@@ -111,6 +124,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2021 First Special Session",
+            "classification": "special",
             "identifier": "2021SS1",
             "name": "2021 First Special Session",
             "start_date": "2021-11-15",
@@ -119,6 +133,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2022 Second Special Session",
+            "classification": "special",
             "identifier": "2022SS2",
             "name": "2022 Second Special Session",
             "start_date": "2022-05-18",
@@ -127,6 +142,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2022 Third Special Session",
+            "classification": "special",
             "identifier": "2022SS3",
             "name": "2022 Third Special Session",
             "start_date": "2022-06-13",
@@ -135,6 +151,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2023 Regular Session",
+            "classification": "primary",
             "identifier": "2023",
             "name": "2023 Regular Session",
             "start_date": "2023-02-06",
@@ -143,6 +160,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2023 First Special Session",
+            "classification": "special",
             "identifier": "2023S1",
             "name": "2023 First Special Session",
             "start_date": "2023-05-17",
@@ -151,6 +169,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2023 Second Special Session",
+            "classification": "special",
             "identifier": "2023S2",
             "name": "2023 Second Special Session",
             "start_date": "2023-10-03",
@@ -159,6 +178,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2024 Regular Session",
+            "classification": "primary",
             "identifier": "2024",
             "name": "2024 Regular Session",
             "start_date": "2024-02-05",
@@ -167,6 +187,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2024 Third Special Session",
+            "classification": "special",
             "identifier": "2024S3",
             "name": "2024 Third Special Session",
             "start_date": "2024-01-29",
@@ -175,6 +196,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2024 Fourth Special Session",
+            "classification": "special",
             "identifier": "2024S4",
             "name": "2024 Fourth Special Session",
             "start_date": "2024-06-12",
@@ -184,6 +206,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2025 Regular Session",
+            "classification": "primary",
             "identifier": "2025",
             "name": "2025 Regular Session",
             "start_date": "2025-02-03",
@@ -192,6 +215,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2026 Regular Session",
+            "classification": "primary",
             "identifier": "2026",
             "name": "2026 Regular Session",
             "start_date": "2026-02-02",
@@ -200,6 +224,7 @@ class Oklahoma(State):
         },
         {
             "_scraped_name": "2027 Regular Session",
+            "classification": "primary",
             "identifier": "2027",
             "name": "2027 Regular Session",
             # TODO real dates
