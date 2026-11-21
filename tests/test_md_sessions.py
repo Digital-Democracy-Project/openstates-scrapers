@@ -10,15 +10,22 @@ The fixtures are the site's own pages saved 2026-11-21, trimmed to the part the 
 * legislation_<chamber>_2026s1.html: Legislation/Index/<chamber>?ys=2026s1, three bills each
   (HB2100-HB2102, SB2100-SB2102).
 * legislation_<chamber>_2025s1.html: the same for 2025s1, which lists no bills.
+* proceedings_house-72-A_2026s1.html, proceedings_senate-68-A_2026s1.html: each chamber's last
+  2026s1 proceedings (FloorActions/Media/...?year=2026S1), both "Adjourned Sine Die" on
+  August 4, 2026.
+
+2026s1's first sitting day comes from OPEN-717's saved floor-action indexes (md_open717/).
 
 The votes scraper's handling of 2026s1 (?ys=2026s1, its own session days) is tested in
 test_md_votes_session.py (OPEN-717) on the site's saved floor-action pages.
 """
 import datetime
 import os
+import re
 import sys
 from urllib.parse import parse_qs, urlparse
 
+import lxml.html
 import pytest
 import requests
 
@@ -29,6 +36,7 @@ from md.bills import MDBillScraper  # noqa: E402
 from openstates.cli.update import check_session_list  # noqa: E402
 
 FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures", "md_open742")
+FIXTURES_717 = os.path.join(os.path.dirname(__file__), "fixtures", "md_open717")
 LIST_PATH = "/mgawebsite/Legislation/Index/"
 
 
@@ -68,12 +76,41 @@ def test_session_check_accepts_the_sites_current_menu(monkeypatch):
     assert check_session_list(jurisdiction) == {"2026", "2026s1"}
 
 
-def test_2026s1_is_the_sites_special_session_on_its_sitting_days():
+def sitting_days(chamber):
+    # the legislative dates of the chamber's 2026s1 floor-action index (OPEN-717's saved copy)
+    path = os.path.join(FIXTURES_717, "index_{}_2026s1.html".format(chamber))
+    doc = lxml.html.parse(path).getroot()
+    return {
+        datetime.datetime.strptime(
+            row.xpath("td[2]")[0].text_content().strip(), "%B %d, %Y"
+        )
+        .date()
+        .isoformat()
+        for row in doc.xpath("//table[1]/tbody/tr")
+        if row.xpath("td[3]/a")
+    }
+
+
+def sine_die_day(page):
+    # the last proceedings of a chamber: "Reconvened 6:16 PM, August 4, 2026 ... Adjourned Sine Die"
+    text = " ".join(read(page).split())
+    assert "Adjourned Sine Die" in text
+    (day,) = re.findall(r"Reconvened [^,]+, (\w+ \d+, \d{4})", text)
+    return datetime.datetime.strptime(day, "%B %d, %Y").date().isoformat()
+
+
+def test_2026s1_dates_are_the_legislatures_own():
     s = session("2026s1")
     assert s["_scraped_name"] == "2026 Special Session"
     assert s["classification"] == "special"
-    # the floor-action indexes list sittings on August 3 and 4, 2026 (both chambers)
-    assert (s["start_date"], s["end_date"]) == ("2026-08-03", "2026-08-04")
+    days = sitting_days("house") | sitting_days("senate")
+    assert s["start_date"] == min(days)
+    # both chambers adjourned sine die on the same day, the last sitting day
+    assert {
+        sine_die_day("proceedings_house-72-A_2026s1.html"),
+        sine_die_day("proceedings_senate-68-A_2026s1.html"),
+    } == {s["end_date"]}
+    assert s["end_date"] == max(days)
     assert s["active"] is True
 
 

@@ -218,9 +218,9 @@ class Maryland(State):
             "active": True,
         },
         {
-            # OPEN-742: the House and Senate floor-action indexes for 2026s1 on
-            # mgaleg.maryland.gov list sittings on August 3 and 4, 2026 only (the Governor
-            # signed its bills on August 5, after it ended)
+            # OPEN-742: mgaleg.maryland.gov's 2026s1 floor actions: both chambers sat on
+            # August 3 and 4, 2026 and adjourned sine die on August 4 (House Proceedings 72-A,
+            # Senate 68-A); the Governor signed its bills on August 5, after it ended
             "_scraped_name": "2026 Special Session",
             "classification": "special",
             "identifier": "2026s1",
