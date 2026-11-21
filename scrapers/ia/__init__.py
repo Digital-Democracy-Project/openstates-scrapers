@@ -17,6 +17,7 @@ class Iowa(State):
     legislative_sessions = [
         {
             "_scraped_name": "General Assembly: 84",
+            "classification": "primary",
             "identifier": "2011-2012",
             "name": "2011-2012 Regular Session",
             "start_date": "2011-01-10",
@@ -24,6 +25,7 @@ class Iowa(State):
         },
         {
             "_scraped_name": "General Assembly: 85",
+            "classification": "primary",
             "identifier": "2013-2014",
             "name": "2013-2014 Regular Session",
             "start_date": "2013-01-14",
@@ -31,6 +33,7 @@ class Iowa(State):
         },
         {
             "_scraped_name": "General Assembly: 86",
+            "classification": "primary",
             "identifier": "2015-2016",
             "name": "2015-2016 Regular Session",
             "start_date": "2015-01-12",
@@ -38,6 +41,7 @@ class Iowa(State):
         },
         {
             "_scraped_name": "General Assembly: 87",
+            "classification": "primary",
             "identifier": "2017-2018",
             "name": "2017-2018 Regular Session",
             "start_date": "2017-01-09",
@@ -45,6 +49,7 @@ class Iowa(State):
         },
         {
             "_scraped_name": "General Assembly: 88",
+            "classification": "primary",
             "identifier": "2019-2020",
             "name": "2019-2020 Regular Session",
             "start_date": "2019-01-14",
