@@ -48,6 +48,17 @@ EXPECTED = {
 }
 
 
+def _links(related_bills):
+    """OPEN-725: the fork's core (data.0052) also writes each link's `ddp_relation_label`, None while this
+    scraper passes no label; upstream core writes no such key. Pin it to None, compare the rest exactly."""
+    links = []
+    for link in related_bills:
+        link = dict(link)
+        assert link.pop("ddp_relation_label", None) is None
+        links.append(link)
+    return links
+
+
 def scrape(name):
     root = ET.parse(os.path.join(FIXTURES, f"{name}.xml")).getroot()
     bill = Bill(
@@ -57,7 +68,7 @@ def scrape(name):
         chamber="lower",
     )
     USBillScraper(jurisdiction="usa", datadir="/tmp").scrape_related_bills(bill, root)
-    return bill.related_bills
+    return _links(bill.related_bills)
 
 
 def test_every_fixture_is_covered():
