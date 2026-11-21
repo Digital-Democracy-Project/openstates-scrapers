@@ -15,6 +15,9 @@ read on 2026-11-17:
   Assemblies, which are regular sessions; it keeps later special sessions inside their assembly,
   so only 67S1 (November 2021) is special.
 * Oregon: OLIS (api.oregonlegislature.gov LegislativeSessions), the "S" session keys.
+* Rhode Island (OPEN-726, read 2026-11-21): the year menu on status.rilegislature.gov (bill
+  history, previous sessions) offers one regular session a year and names no special or
+  extraordinary sessions, so every session is regular.
 * Virginia: LIS (lis.virginia.gov GetSessionListAsync), SessionType "Special".
 * Washington: leg.wa.gov lists only two-year bienniums, which are regular sessions; its special
   sessions are not separate sessions there.
@@ -60,6 +63,7 @@ SPECIAL = {
         "2024S1",
         "2026S1",
     },
+    "ri": set(),
     "wa": set(),
 }
 
