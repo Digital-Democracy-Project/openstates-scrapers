@@ -15,6 +15,7 @@ class Hawaii(State):
     legislative_sessions = [
         {
             "_scraped_name": "2012",
+            "classification": "primary",
             "identifier": "2011 Regular Session",
             "name": "2011-2012 Regular Session",
             "start_date": "2011-01-19",
@@ -22,6 +23,7 @@ class Hawaii(State):
         },
         {
             "_scraped_name": "2013",
+            "classification": "primary",
             "identifier": "2013 Regular Session",
             "name": "2013 Regular Session",
             "start_date": "2013-01-16",
@@ -29,6 +31,7 @@ class Hawaii(State):
         },
         {
             "_scraped_name": "2014",
+            "classification": "primary",
             "identifier": "2014 Regular Session",
             "name": "2014 Regular Session",
             "start_date": "2014-01-15",
@@ -36,6 +39,7 @@ class Hawaii(State):
         },
         {
             "_scraped_name": "2015",
+            "classification": "primary",
             "identifier": "2015 Regular Session",
             "name": "2015 Regular Session",
             "start_date": "2015-01-21",
@@ -43,6 +47,7 @@ class Hawaii(State):
         },
         {
             "_scraped_name": "2016",
+            "classification": "primary",
             "identifier": "2016 Regular Session",
             "name": "2016 Regular Session",
             "start_date": "2016-01-20",
@@ -50,6 +55,7 @@ class Hawaii(State):
         },
         {
             "_scraped_name": "2017",
+            "classification": "primary",
             "identifier": "2017 Regular Session",
             "name": "2017 Regular Session",
             "start_date": "2017-01-18",
@@ -57,6 +63,7 @@ class Hawaii(State):
         },
         {
             "_scraped_name": "2018",
+            "classification": "primary",
             "identifier": "2018 Regular Session",
             "name": "2018 Regular Session",
             "start_date": "2018-01-18",
@@ -64,6 +71,7 @@ class Hawaii(State):
         },
         {
             "_scraped_name": "2019",
+            "classification": "primary",
             "identifier": "2019 Regular Session",
             "name": "2019 Regular Session",
             "start_date": "2019-01-16",
@@ -71,6 +79,7 @@ class Hawaii(State):
         },
         {
             "_scraped_name": "2020",
+            "classification": "primary",
             "identifier": "2020 Regular Session",
             "name": "2020 Regular Session",
             "start_date": "2020-01-15",
@@ -78,6 +87,7 @@ class Hawaii(State):
         },
         {
             "_scraped_name": "2021",
+            "classification": "primary",
             "identifier": "2021 Regular Session",
             "name": "2021 Regular Session",
             "start_date": "2021-01-20",
@@ -86,6 +96,7 @@ class Hawaii(State):
         },
         {
             "_scraped_name": "2022",
+            "classification": "primary",
             "identifier": "2022 Regular Session",
             "name": "2022 Regular Session",
             "start_date": "2022-01-19",
@@ -94,6 +105,7 @@ class Hawaii(State):
         },
         {
             "_scraped_name": "2023",
+            "classification": "primary",
             "identifier": "2023 Regular Session",
             "name": "2023 Regular Session",
             "start_date": "2023-01-18",
@@ -102,6 +114,7 @@ class Hawaii(State):
         },
         {
             "_scraped_name": "2024",
+            "classification": "primary",
             "identifier": "2024",
             "name": "2024 Regular Session",
             "start_date": "2024-01-17",
@@ -110,6 +123,7 @@ class Hawaii(State):
         },
         {
             "_scraped_name": "2025",
+            "classification": "primary",
             "identifier": "2025",
             "name": "2025 Regular Session",
             "start_date": "2025-01-17",
@@ -118,6 +132,7 @@ class Hawaii(State):
         },
         {
             "_scraped_name": "2026",
+            "classification": "primary",
             "identifier": "2026",
             "name": "2026 Regular Session",
             "start_date": "2026-01-21",
