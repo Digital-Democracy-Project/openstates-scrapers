@@ -107,6 +107,28 @@ def patched_get_response(self, scraper):
 URL.get_response = patched_get_response
 
 
+# OPEN-642 (PLAN-companion-lineage §5.2): Florida's own links between bills. The "Related Bills" table names each
+# link's relationship; only "Identical" is a companion (Ramon, D1 2026-11-19: "Identical only"). "Similar", "Compare",
+# "Linked" and any word not seen before are `related`. The word itself is always kept as the link's label (OPEN-640).
+FL_COMPANION_RELATIONSHIPS = {"Identical"}
+# The history line "companion bill(s) passed, see CS/HB 1145 (Ch. 2025-144)" names the bill that passed in this
+# one's place: a companion (D3), labelled with the legislature's phrase. Seen as "bill(s)" and "bills", any case.
+FL_COMPANION_PASSED_RE = re.compile(
+    r"companion\s+bill(?:\(s\)|s)?\s+passed,?\s+see\s+(.*)$", re.I
+)
+FL_COMPANION_PASSED_LABEL = "companion bill(s) passed"
+# A bill named in that line: committee-substitute prefixes ("CS/CS/") are dropped; a special session's number is
+# written "4-F" or "5001E" there but stored as "SB 4F".
+FL_NAMED_BILL_RE = re.compile(r"\b([HS](?:PB|JR|CR|B|R|M))\s*(\d+)(?:-?([A-Z]))?\b")
+
+
+def _fl_bill_key(identifier):
+    """("H", "1105") for "HB 1105", "HJR 1105" or "H 1105": Florida numbers each chamber's measures in one series
+    per session, whatever their type, so chamber and number name one bill."""
+    match = re.match(r"([HS])[A-Z]*\s*(\d+)", identifier.strip())
+    return (match.group(1), match.group(2)) if match else None
+
+
 class PaginationError(Exception):
     pass
 
@@ -238,6 +260,7 @@ class BillList(HtmlListPage):
             classification=bill_type,
         )
         bill._fl_house_session_number = self.input["house_session_number"]
+        bill._fl_bill_ids = self.input.get("bill_ids") or {}
         bill.add_source(bill_url)
 
         # normalize id from HB 0004 to H4
@@ -245,6 +268,15 @@ class BillList(HtmlListPage):
         bill.subject = list(self.input["subjects"][subj_bill_id])
 
         return BillDetail(bill)
+
+
+class BillIdList(BillList):
+    """OPEN-642: every bill identifier of the session, from the same list pages BillList walks. The Related Bills
+    table writes a bill as "S 318" without its type (it is SJR 318), so the full identifiers are read once, before
+    the bills, as the subjects PDF is."""
+
+    def process_item(self, item):
+        return item.text.strip()
 
 
 class BillDetail(HtmlPage):
@@ -263,6 +295,7 @@ class BillDetail(HtmlPage):
         if self.root.xpath("//div[@id = 'tabBodyBillHistory']//table"):
             self.process_sponsors()
             self.process_history()
+            self.process_related_bills()
             self.process_versions()
             self.process_analysis()
             self.process_amendments()
@@ -473,6 +506,7 @@ class BillDetail(HtmlPage):
                     continue
 
                 action = re.sub(r"-(H|S)J\s+(\d+)$", "", action)
+                self.add_companions_named_in(action)
 
                 action_attr = self.categorizer.categorize(action)
                 atype = action_attr["classification"]
@@ -484,6 +518,67 @@ class BillDetail(HtmlPage):
                     chamber=chamber,
                     classification=atype,
                 )
+
+    def add_companions_named_in(self, action):
+        """OPEN-642: a companion link for each bill named after "companion bill(s) passed, see", once per bill."""
+        passed = FL_COMPANION_PASSED_RE.search(action)
+        if not passed:
+            return
+        named = getattr(self, "_companions_named", None)
+        if named is None:
+            named = self._companions_named = set()
+        for prefix, number, suffix in FL_NAMED_BILL_RE.findall(passed.group(1)):
+            identifier = f"{prefix} {number}{suffix}"
+            if identifier == self.input.identifier or identifier in named:
+                continue
+            named.add(identifier)
+            self.input.add_related_bill(
+                identifier,
+                self.input.legislative_session,
+                "companion",
+                label=FL_COMPANION_PASSED_LABEL,
+            )
+
+    def process_related_bills(self):
+        """OPEN-642: the Related Bills table. "Identical" is a companion, every other relationship is related; the
+        legislature's word is the label. A row whose bill is not in this session's list is skipped, never guessed."""
+        bill_ids = getattr(self.input, "_fl_bill_ids", {})
+        session = self.input.legislative_session
+        for tr in self.root.xpath("//div[@id = 'tabBodyRelatedBills']//table/tbody/tr"):
+            link = tr.xpath("td[1]/a")
+            relationship = tr.xpath("string(td[4])").strip()
+            if not link or not relationship:
+                continue
+            href = link[0].get("href", "")
+            href_parts = href.rstrip("/").split("/")
+            key = _fl_bill_key(link[0].text_content())
+            # The row's own text names the bill ("S 318", "H 1C" in a special session); its link must point at
+            # the same number in this session, or the row is skipped.
+            href_number = (
+                re.match(r"\d+", href_parts[-1]) if len(href_parts) >= 2 else None
+            )
+            identifier = None
+            if (
+                key
+                and href_number
+                and href_parts[-2] == session
+                and href_number.group(0) == key[1]
+            ):
+                identifier = bill_ids.get(key)
+            if not identifier:
+                self.logger.warning(
+                    f"{self.input.identifier}: related bill {link[0].text_content().strip()} ({href}) "
+                    f"not found in session {session}'s bill list; link skipped"
+                )
+                continue
+            self.input.add_related_bill(
+                identifier,
+                session,
+                "companion"
+                if relationship in FL_COMPANION_RELATIONSHIPS
+                else "related",
+                label=relationship,
+            )
 
     def process_votes(self):
         vote_tables = self.root.xpath("//div[@id='tabBodyVoteHistory']//table")
@@ -1324,9 +1419,17 @@ class FlBillScraper(Scraper):
                 "bills without them"
             )
 
+        # OPEN-642: ("S", "318") -> "SJR 318" for the whole session, for the Related Bills table.
+        bill_ids = {}
+        for identifier in BillIdList({"session": session}).do_scrape():
+            key = _fl_bill_key(identifier)
+            if key:
+                bill_ids[key] = identifier
+
         bill_list = BillList(
             {
                 "session": session,
+                "bill_ids": bill_ids,
                 "house_session_number": house_session_number,
                 "start": start_dt,
                 "bill_nos": bill_nos,

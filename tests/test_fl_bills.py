@@ -507,6 +507,16 @@ class _FakeSubjectPDF:
         return iter([self.subjects])
 
 
+class _FakeBillIdList:
+    identifiers = ["SB 2", "SJR 318", "HB 11A"]
+
+    def __init__(self, page_input):
+        self.page_input = page_input
+
+    def do_scrape(self):
+        return iter(self.identifiers)
+
+
 def _make_scraper_for_scrape(monkeypatch, walk):
     """FlBillScraper.scrape() with everything before/around the list walk stubbed.
 
@@ -519,6 +529,8 @@ def _make_scraper_for_scrape(monkeypatch, walk):
     monkeypatch.setattr(scraper, "_process_bill_list", walk)
     # scrape() fetches the subjects PDF up front; never touch the network in a unit test
     monkeypatch.setattr("fl.bills.SubjectPDF", _FakeSubjectPDF)
+    # OPEN-642: and the session's bill identifiers (BillIdList walks the same list pages)
+    monkeypatch.setattr("fl.bills.BillIdList", _FakeBillIdList)
 
     warnings = []
     monkeypatch.setattr(scraper, "warning", lambda msg: warnings.append(msg))
@@ -990,3 +1002,19 @@ def test_g4_a_second_block_is_raised_not_retried_again(tmp_path, monkeypatch):
         source.get_response(scraper)
 
     assert len(sent) == 2 and len(warms) == 2
+
+
+def test_scrape_hands_the_sessions_bill_identifiers_to_the_list(monkeypatch):
+    # OPEN-642: the Related Bills table writes "S 318"; scrape() reads every identifier first, so the bill pages
+    # can name it SJR 318.
+    seen = {}
+
+    def walk(bill_list):
+        seen.update(bill_list.input["bill_ids"])
+        return iter(())
+
+    scraper, _ = _make_scraper_for_scrape(monkeypatch, walk)
+
+    list(scraper.scrape(session="2026"))
+
+    assert seen == {("S", "2"): "SB 2", ("S", "318"): "SJR 318", ("H", "11"): "HB 11A"}
