@@ -16,7 +16,10 @@ def _combine_lines(lines):
     newlines = []
     lastline = "."
     for line in lines:
-        if lastline and lastline[-1] in ".,:" and not line.startswith("("):
+        # OPEN-735: a count printed without a closing period ("Total--110", "Nays-0",
+        # 2026 HB 1924 House override) also ends its line
+        ended = lastline and (lastline[-1] in ".,:" or re.search(r"-+ ?\d+$", lastline))
+        if ended and not line.startswith("("):
             newlines.append(line)
             lastline = line
         else:
@@ -484,6 +487,8 @@ class MSBillScraper(Scraper):
                 match = re.match(r"(.+?)\. Total-+.*", name)
                 if match and cur_array is not None:
                     cur_array.append(match.groups()[0])
+                # OPEN-735: a total on its own line ("Total--110") ends the list too
+                if "Total-" in name:
                     cur_array = None
 
                 # append name if it looks ok
