@@ -21,7 +21,7 @@ class Missouri(State):
         },
         {
             "_scraped_name": "2019 1st Extraordinary Session",
-            "classification": "primary",
+            "classification": "special",
             "identifier": "2019S1",
             "name": "2019 First Extraordinary Session",
             "start_date": "2019-09-09",
@@ -37,7 +37,7 @@ class Missouri(State):
         },
         {
             "_scraped_name": "2020 1st Extraordinary Session",
-            "classification": "primary",
+            "classification": "special",
             "identifier": "2020S1",
             "name": "2020 First Extraordinary Session",
             "start_date": "2020-07-27",
@@ -45,7 +45,7 @@ class Missouri(State):
         },
         {
             "_scraped_name": "2020 2nd Extraordinary Session",
-            "classification": "primary",
+            "classification": "special",
             "identifier": "2020S2",
             "name": "2020 Second Extraordinary Session",
             "start_date": "2020-11-05",
@@ -61,7 +61,7 @@ class Missouri(State):
         },
         {
             "_scraped_name": "2021 1st Extraordinary Session",
-            "classification": "primary",
+            "classification": "special",
             "identifier": "2021S1",
             "name": "2021 1st Extraordinary Session",
             "start_date": "2021-06-23",
@@ -78,7 +78,7 @@ class Missouri(State):
         },
         {
             "_scraped_name": "2022 1st Extraordinary Session",
-            "classification": "primary",
+            "classification": "special",
             "identifier": "2022S1",
             "name": "2022 1st Extraordinary Session",
             "start_date": "2022-09-15",
@@ -115,7 +115,7 @@ class Missouri(State):
         },
         {
             "_scraped_name": "2025 1st Extraordinary Session",
-            "classification": "primary",
+            "classification": "special",
             "identifier": "2025S1",
             "name": "2025 1st Extraordinary Session",
             "start_date": "2025-06-02",
@@ -125,7 +125,7 @@ class Missouri(State):
         },
         {
             "_scraped_name": "2025 2nd Extraordinary Session",
-            "classification": "primary",
+            "classification": "special",
             "identifier": "2025S2",
             "name": "2025 2nd Extraordinary Session",
             "start_date": "2025-09-03",
