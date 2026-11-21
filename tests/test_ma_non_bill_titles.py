@@ -161,6 +161,7 @@ def fetch_page(s, h2, n="1", actions=()):
 
     s.scrape_actions = scrape_actions
     s.scrape_cosponsors = mock.Mock()
+    s.add_similar_bills = mock.Mock()  # OPEN-645: the Similar Bills tab is tested in test_ma_bills
     return s
 
 

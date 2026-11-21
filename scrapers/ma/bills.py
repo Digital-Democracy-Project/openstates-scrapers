@@ -142,6 +142,11 @@ _QUORUM_RE = re.compile(r"Quorum\s+Roll\s+Call", re.I)
 
 # A bill-history link to another bill's page, e.g. /Bills/194/S2957.
 _BILL_HREF_RE = re.compile(r"^/Bills/\d+/([A-Za-z]+\d+)/?$")
+# OPEN-645 (PLAN-companion-lineage §5.3): a bill page's "Similar Bills" tab lists bills of this and earlier sessions as
+# links "/Bills/<session number>/<bill>". The legislature calls them similar, not companions, so they are `related`
+# (Ramon's D1 counts only "Identical"), labelled with its own words.
+_SIMILAR_HREF_RE = re.compile(r"^/Bills/(\d+)/([A-Za-z]+\d+)/?$")
+MA_SIMILAR_LABEL = "Similar Bills"
 
 # OPEN-512: the action by which a chamber adopted a draft as the bill's text, read from the draft's own history:
 # "Substituted, as amended for H4010", "Substituted as a new text for H4282", "Substituted for S2726".
@@ -1098,6 +1103,11 @@ class MABillScraper(Scraper):
             )
             if bill_url not in self.failed_histories:
                 self.group_read_whole.add(member)
+        # OPEN-645 (Ramon, 2026-11-21: "Read it on every run"): every bill read reads its Similar Bills tab, a full
+        # walk included, because each import replaces the bill's related list and a run without the tab would wipe it.
+        # The cost: one more page per bill, about 1.5 s (roughly +5 h on a full walk of 11,932 bills). Read after the
+        # history, so a failed tab's "read again next run" is not cleared by the history's own reset above.
+        self.add_similar_bills(bill, bill_url)
         self.label_non_bill(bill, page_title)
         yield bill
 
@@ -1200,6 +1210,54 @@ class MABillScraper(Scraper):
             return None
         return lxml.html.fromstring(response.text)
 
+    def add_similar_bills(self, bill, bill_url):
+        """OPEN-645: the bill page's "Similar Bills" tab, each listed bill a `related` link labelled "Similar Bills",
+        in its own session. A link the action text already made to the same bill gets the label instead of a second
+        row. A tab that cannot be read is skipped with a warning: the bill is still saved, and is read again next run."""
+        try:
+            page = lxml.html.fromstring(
+                self.get(bill_url + "/SimilarBills", verify=False).content
+            )
+        except Exception as e:
+            self.warning(
+                "OPEN-645: Similar Bills not read for {} ({})".format(bill_url, e)
+            )
+            # saved without them, so read again next run (the import replaces the stored list)
+            self.failed_histories.add(bill_url)
+            return
+        sessions = {
+            self.replace_non_digits(s["identifier"]): s["identifier"]
+            for s in self.jurisdiction.legislative_sessions
+        }
+        own = fix_bill_id(bill.identifier)
+        for href in page.xpath('//ul[contains(@class, "relatedBills")]//a/@href'):
+            match = _SIMILAR_HREF_RE.match(href)
+            session = sessions.get(match.group(1)) if match else None
+            if not session:
+                continue
+            identifier = fix_bill_id(match.group(2))
+            if identifier == own and session == bill.legislative_session:
+                continue
+            existing = [
+                rb
+                for rb in bill.related_bills
+                if rb["identifier"] == identifier
+                and rb["legislative_session"] == session
+                and rb["relation_type"] == "related"
+            ]
+            if existing:
+                for rb in existing:
+                    rb["ddp_relation_label"] = (
+                        rb.get("ddp_relation_label") or MA_SIMILAR_LABEL
+                    )
+                continue
+            bill.add_related_bill(
+                identifier,
+                legislative_session=session,
+                relation_type="related",
+                label=MA_SIMILAR_LABEL,
+            )
+
     def scrape_action_page(self, bill, page):
         action_rows = page.xpath("//tbody/tr")
         for row in action_rows:
@@ -1250,6 +1308,8 @@ class MABillScraper(Scraper):
                     already_related = any(
                         rb["identifier"] == ref_bill_id
                         and rb["relation_type"] == "related"
+                        # OPEN-645: same session too; the Similar Bills tab also links earlier sessions' bills
+                        and rb["legislative_session"] == bill.legislative_session
                         for rb in bill.related_bills
                     )
                     if not already_related:
