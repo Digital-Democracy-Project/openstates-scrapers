@@ -5,6 +5,7 @@ import requests
 import time
 from openstates.scrape import Scraper, Bill
 from .actions import Categorizer
+from .sessions import newest_active_regular, ordinal, session_for_bill
 
 _IA_ORGANIZATION_ENTITY_NAME_KEYWORDS = ["COMMITTEE", "RULES AND ADMINISTRATION"]
 _VERSION_HTML_URL_TEMPLATE = (
@@ -23,6 +24,18 @@ def version_folder_code(version_abbrev):
     return version_abbrev[0].upper()
 
 
+def first_action_date(page):
+    """The earliest date in a billHistory page's action table, or None (OPEN-745)."""
+    dates = []
+    for tr in page.xpath("//table[contains(@class, 'billActionTable')][1]/tbody/tr"):
+        text = tr.xpath("string(td[contains(text(), ', 20')])").strip()
+        try:
+            dates.append(datetime.datetime.strptime(text, "%B %d, %Y").date())
+        except ValueError:
+            continue
+    return min(dates, default=None)
+
+
 # FYI: as of 2025 this should be run with --http-resilience
 class IABillScraper(Scraper):
     categorizer = Categorizer()
@@ -33,7 +46,10 @@ class IABillScraper(Scraper):
         req_session.headers.update({"X-Requested-With": "XMLHttpRequest"})
         # openstates/issues#252 - IA continues to prefile after session starts
         # so we'll continue scraping both
-        yield from self.scrape_prefiles(session)
+        # (filed under the newest regular session switched on, not under an extraordinary
+        # session or an earlier year: OPEN-745)
+        if session == newest_active_regular(self.jurisdiction.legislative_sessions):
+            yield from self.scrape_prefiles(session)
 
         if prefiles == "True":
             return
@@ -47,11 +63,19 @@ class IABillScraper(Scraper):
             title = option.xpath("td[3]/text()")[0].split("(")[0]
             chamber = "lower" if bill_id[0] == "H" else "upper"
             sponsors = option.xpath("td[6]/text()")[0]
+            companion = re.findall(r"[A-Z]+ \d+", option.xpath("string(td[4])"))
 
             bill_url = f"https://www.legis.iowa.gov/legislation/BillBook?ga={session_id}&ba={bill_id.replace(' ', '')}"
 
             yield self.scrape_bill(
-                chamber, session, session_id, bill_id, bill_url, title, sponsors
+                chamber,
+                session,
+                session_id,
+                bill_id,
+                bill_url,
+                title,
+                sponsors,
+                companion=companion[0] if companion else None,
             )
 
         # scrapes dropdown options on 'Bill Book' page
@@ -167,8 +191,23 @@ class IABillScraper(Scraper):
         for subject in subjects:
             bill.add_subject(subject.strip())
 
+    def bill_history(self, bill_id, session_id):
+        hist_url = (
+            f"https://www.legis.iowa.gov/legislation/billTracking/"
+            f"billHistory?billName={bill_id}&ga={session_id}"
+        )
+        return hist_url, self.get(hist_url)
+
     def scrape_bill(
-        self, chamber, session, session_id, bill_id, url, title=None, sponsors=None
+        self,
+        chamber,
+        session,
+        session_id,
+        bill_id,
+        url,
+        title=None,
+        sponsors=None,
+        companion=None,
     ):
         # In HTTP resilience mode, we will have cookies (--http-resilience)
         # check if self has attribute session
@@ -176,24 +215,43 @@ class IABillScraper(Scraper):
             cookies = self.session.cookies
         else:
             cookies = None
-        try:
-            sidebar = lxml.html.fromstring(self.get(url, cookies=cookies).text)
-            sidebar.make_links_absolute("https://www.legis.iowa.gov")
-        except requests.exceptions.ConnectionError:
-            self.warning("Connection closed without response, skipping")
-            return
-
-        hist_url = (
-            f"https://www.legis.iowa.gov/legislation/billTracking/"
-            f"billHistory?billName={bill_id}&ga={session_id}"
-        )
-        req = self.get(hist_url)
+        hist_url, req = self.bill_history(bill_id, session_id)
         if req.status_code == 500:
             self.warning("500 error on {}, skipping".format(hist_url))
             return
 
         page = lxml.html.fromstring(req.text)
         page.make_links_absolute("https://www.legis.iowa.gov")
+
+        # OPEN-745: every session of a General Assembly reads its one bill list; a bill belongs
+        # to one session only, decided by its first dated action (sessions.py), or by its
+        # companion's when it has none (SCR 8 of 2023, whose actions are on HCR 10)
+        first_action = first_action_date(page)
+        if first_action is None and companion:
+            _, companion_req = self.bill_history(companion, session_id)
+            if companion_req.status_code != 500:
+                first_action = first_action_date(
+                    lxml.html.fromstring(companion_req.text)
+                )
+        owner = session_for_bill(
+            self.jurisdiction.legislative_sessions, session_id, first_action
+        )
+        if owner is None:
+            self.warning(
+                f"Skipping {bill_id}: no session of General Assembly {session_id} holds its "
+                f"first dated action ({first_action}, companion {companion})"
+            )
+            return
+        if owner != session:
+            self.info(f"Skipping {bill_id}: it belongs to {owner}")
+            return
+
+        try:
+            sidebar = lxml.html.fromstring(self.get(url, cookies=cookies).text)
+            sidebar.make_links_absolute("https://www.legis.iowa.gov")
+        except requests.exceptions.ConnectionError:
+            self.warning("Connection closed without response, skipping")
+            return
 
         # bills that had neither title nor sponsors passed in
         if not title and not sponsors:
@@ -388,18 +446,5 @@ class IABillScraper(Scraper):
 
     def get_session_id(self, session):
         # https://www.legis.iowa.gov/legislation/BillBook
-        # select[@name="gaList"]
-        for i in self.jurisdiction.legislative_sessions:
-            if i["identifier"] == session:
-                if "extras" in i and "ordinal" in i["extras"]:
-                    return i["extras"]["ordinal"]
-
-        return {
-            "2011-2012": "84",
-            "2013-2014": "85",
-            "2015-2016": "86",
-            "2017-2018": "87",
-            "2019-2020": "88",
-            "2021-2022": "89",
-            "2023-2024": "90",
-        }[session]
+        # select[@name="gaList"]: the General Assembly every Iowa session is filed under
+        return ordinal(self.jurisdiction.legislative_sessions, session)
