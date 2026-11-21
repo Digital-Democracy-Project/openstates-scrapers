@@ -8,6 +8,10 @@ read on 2026-11-17:
 
 * Georgia: the legislature's Session service (webservices.legis.ga.gov GetSessions), the "...EX"
   library sessions named "Special Session".
+* Hawaii (OPEN-729, read 2026-11-21): the year menu on data.capitol.hawaii.gov
+  (session/archives/main.aspx, the page get_session_list reads) offers one entry a year and lists
+  no special sessions, and the scraper names each session a "Regular Session", so every session
+  is regular.
 * Idaho (OPEN-724, read 2026-11-20): legislature.idaho.gov/sessioninfo/ names a "First
   Extraordinary Session" in 2015, 2020 and 2022 (and 2000 and 2006, before the scraper's list
   starts); every other session is regular.
@@ -37,6 +41,7 @@ SCRAPERS = os.path.join(os.path.dirname(__file__), "..", "scrapers")
 
 SPECIAL = {
     "ga": {"2011_ss", "2018_ss", "2020_ss", "2021_ss", "2023_ss", "2026_ss"},
+    "hi": set(),
     "id": {"2015spcl", "2020spcl", "2022spcl"},
     "ky": {"2011SS", "2012SS", "2013SS", "2018SS", "2019SS", "2021SS", "2022SS"},
     "nd": {"67S1"},
