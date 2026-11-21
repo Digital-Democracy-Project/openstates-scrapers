@@ -34,6 +34,7 @@ class BillList(JsonPage):
     comm_name_re = re.compile(r"^(House|Senate)\s*(.+)")
     version_name_re = re.compile(r"introduced|engrossment|enrollment")
     members_cache = {}
+    title_re = re.compile(r"^(Representative|Senator)\s+")
 
     _tz = pytz.timezone("US/Central")
 
@@ -81,11 +82,13 @@ class BillList(JsonPage):
             name_with_spaces = url_name.replace("-", " ")
             fullname = name_with_spaces.title()
 
-        self.members_cache[url] = (
-            fullname.replace("Representative", "").replace("Senator", "").strip()
-        )
+        # OPEN-722: return the same title-stripped name that is cached; returning the raw <h1> text
+        # gave each member's first roll call of a run "Representative X" / "Senator X", matching no one.
+        # Only a leading title word is removed, never one inside the name.
+        name = self.title_re.sub("", fullname).strip()
+        self.members_cache[url] = name
 
-        return fullname
+        return name
 
     def process_page(self):
         json_response = self.response.json()
