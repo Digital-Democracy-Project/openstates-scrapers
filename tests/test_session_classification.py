@@ -8,6 +8,9 @@ read on 2026-11-17:
 
 * Georgia: the legislature's Session service (webservices.legis.ga.gov GetSessions), the "...EX"
   library sessions named "Special Session".
+* North Dakota (OPEN-721, read 2026-11-20): ndlegis.gov/assembly/ lists only two-year Legislative
+  Assemblies, which are regular sessions; it keeps later special sessions inside their assembly,
+  so only 67S1 (November 2021) is special.
 * Oregon: OLIS (api.oregonlegislature.gov LegislativeSessions), the "S" session keys.
 * Virginia: LIS (lis.virginia.gov GetSessionListAsync), SessionType "Special".
 * Washington: leg.wa.gov lists only two-year bienniums, which are regular sessions; its special
@@ -22,6 +25,7 @@ SCRAPERS = os.path.join(os.path.dirname(__file__), "..", "scrapers")
 
 SPECIAL = {
     "ga": {"2011_ss", "2018_ss", "2020_ss", "2021_ss", "2023_ss", "2026_ss"},
+    "nd": {"67S1"},
     "or": {
         "2008 Special Session",
         "2010 Special Session",

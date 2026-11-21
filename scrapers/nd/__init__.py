@@ -24,6 +24,7 @@ class NorthDakota(State):
             "name": "62nd Legislative Assembly (2011-2012)",
             "start_date": "2011-01-04",
             "end_date": "2011-04-28",
+            "classification": "primary",
         },
         {
             "_scraped_name": "63rd Legislative Assembly (2013-14)",
@@ -31,6 +32,7 @@ class NorthDakota(State):
             "name": "63rd Legislative Assembly (2013-2014)",
             "start_date": "2013-01-08",
             "end_date": "2013-05-04",
+            "classification": "primary",
         },
         {
             "_scraped_name": "64th Legislative Assembly (2015-16)",
@@ -38,6 +40,7 @@ class NorthDakota(State):
             "name": "64th Legislative Assembly (2015-2016)",
             "start_date": "2015-01-08",
             "end_date": "2015-04-29",
+            "classification": "primary",
         },
         {
             "_scraped_name": "65th Legislative Assembly (2017-18)",
@@ -45,6 +48,7 @@ class NorthDakota(State):
             "name": "65th Legislative Assembly (2017-2018)",
             "start_date": "2017-01-03",
             "end_date": "2017-04-27",
+            "classification": "primary",
         },
         {
             "_scraped_name": "66th Legislative Assembly (2019-20)",
@@ -52,6 +56,7 @@ class NorthDakota(State):
             "name": "66th Legislative Assembly (2019-2020)",
             "start_date": "2019-01-03",
             "end_date": "2019-04-26",
+            "classification": "primary",
         },
         {
             "_scraped_name": "67th Legislative Assembly (2021-22)",
@@ -59,6 +64,7 @@ class NorthDakota(State):
             "name": "67th Legislative Assembly (2021-2022)",
             "start_date": "2021-01-05",
             "end_date": "2021-04-29",
+            "classification": "primary",
             "active": False,
         },
         {
@@ -76,6 +82,7 @@ class NorthDakota(State):
             "name": "68th Legislative Assembly (2023-24)",
             "start_date": "2023-01-03",
             "end_date": "2023-05-10",
+            "classification": "primary",
             "active": False,
         },
         {
@@ -84,6 +91,7 @@ class NorthDakota(State):
             "name": "69th Legislative Assembly (2025-26)",
             "start_date": "2025-01-07",
             "end_date": "2025-05-02",
+            "classification": "primary",
             "active": True,
         },
         {
@@ -92,6 +100,7 @@ class NorthDakota(State):
             "name": "70th Legislative Assembly (2027-28)",
             "start_date": "2027-01-07",  # TODO approximate; get real date when closer
             "end_date": "2028-05-02",  # TODO approximate; get real date when closer
+            "classification": "primary",
             "active": False,
         },
     ]
