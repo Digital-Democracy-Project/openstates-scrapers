@@ -25,8 +25,9 @@ chambers' days differ, the later one is the General Assembly's last adjournment:
   October 2, 2026 also says the 2026 regular session adjourned sine die on May 3, 2026.
 
 2027-2028 (General Assembly 92, OPEN-744) has not met: it starts on the second Monday of January
-2027 (Iowa Constitution Art. III, Sec. 2) and its end date is the scheduled one, the 100th
-calendar day of its second session (Iowa Code Sec. 2.10(1)), until the journals record its sine die.
+2027 (Iowa Constitution Art. III, Sec. 2). No law fixes when it ends, so its end date is a
+placeholder until the journals record its sine die: the 100th calendar day of its second session,
+the last day Iowa Code Sec. 2.10(1) pays members a per diem for.
 
 The session list is read from the package's source, as test_mo_session_dates.py does: importing
 the ia package needs DDP's openstates-core.
@@ -114,8 +115,8 @@ def test_a_general_assembly_not_yet_met_follows_the_rules(identifier):
     # Iowa Constitution Art. III, Sec. 2: the general assembly meets on the second Monday of
     # January of each year
     assert session["start_date"] == _second_monday_of_january(first).isoformat()
-    # Iowa Code Sec. 2.10(1): the second regular session's scheduled length is 100 calendar
-    # days, counted from its first day
+    # placeholder end: the 100th calendar day of the second session, the last day Iowa Code
+    # Sec. 2.10(1) pays a per diem for (no law fixes the end)
     second_session = _second_monday_of_january(second)
     assert session["end_date"] == (second_session + timedelta(days=99)).isoformat()
     # not scraped until its bills appear on the site

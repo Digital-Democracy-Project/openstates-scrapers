@@ -86,9 +86,10 @@ class Iowa(State):
         {
             # OPEN-744: meets on the second Monday of January (Iowa Constitution Art. III,
             # Sec. 2), so 2027-01-11, the day after General Assembly 91 ends on the site's
-            # list. The end date is the scheduled one, the 100th calendar day of the second
-            # session (Iowa Code Sec. 2.10(1)) from 2028-01-10; replace it with the sine die in
-            # the journals once the session adjourns. Switched on when its bills appear.
+            # list. The end date is a placeholder, not a legal end: the 100th calendar day of the
+            # second session from 2028-01-10, the last day Iowa Code Sec. 2.10(1) pays members a
+            # per diem for. Replace it with the sine die in the journals once the session
+            # adjourns. Switched on when its bills appear.
             "_scraped_name": "General Assembly: 92",
             "classification": "primary",
             "identifier": "2027-2028",
