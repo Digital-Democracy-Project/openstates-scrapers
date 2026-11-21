@@ -270,6 +270,17 @@ def test_scrape_action_page_skips_version_link_for_ordinary_action_row():
     assert bill.versions == []
 
 
+def _links(related_bills):
+    """OPEN-725: the fork's core (data.0052) also writes each link's `ddp_relation_label`, None while this
+    scraper passes no label; upstream core writes no such key. Pin it to None, compare the rest exactly."""
+    links = []
+    for link in related_bills:
+        link = dict(link)
+        assert link.pop("ddp_relation_label", None) is None
+        links.append(link)
+    return links
+
+
 def test_scrape_action_page_adds_related_bill_for_stage_cross_reference():
     scraper = make_scraper()
     bill = _bill("S2584", "192nd")
@@ -281,7 +292,7 @@ def test_scrape_action_page_adds_related_bill_for_stage_cross_reference():
 
     list(scraper.scrape_action_page(bill, page))
 
-    assert bill.related_bills == [
+    assert _links(bill.related_bills) == [
         {
             "identifier": "H 4891",
             "legislative_session": "192nd",
@@ -305,7 +316,7 @@ def test_scrape_action_page_dedupes_repeated_stage_cross_reference():
 
     list(scraper.scrape_action_page(bill, page))
 
-    assert bill.related_bills == [
+    assert _links(bill.related_bills) == [
         {
             "identifier": "H 4879",
             "legislative_session": "192nd",
@@ -325,7 +336,7 @@ def test_scrape_action_page_skips_self_reference_for_stage_cross_reference():
 
     list(scraper.scrape_action_page(bill, page))
 
-    assert bill.related_bills == []
+    assert _links(bill.related_bills) == []
 
 
 def test_scrape_action_page_ignores_rollcall_and_committee_links():
@@ -346,7 +357,7 @@ def test_scrape_action_page_ignores_rollcall_and_committee_links():
 
     list(scraper.scrape_action_page(bill, page))
 
-    assert bill.related_bills == []
+    assert _links(bill.related_bills) == []
 
 
 def test_scrape_action_page_adds_related_bill_for_conference_report_backreference():
@@ -361,7 +372,7 @@ def test_scrape_action_page_adds_related_bill_for_conference_report_backreferenc
 
     list(scraper.scrape_action_page(bill, page))
 
-    assert bill.related_bills == [
+    assert _links(bill.related_bills) == [
         {
             "identifier": "S 2584",
             "legislative_session": "192nd",
