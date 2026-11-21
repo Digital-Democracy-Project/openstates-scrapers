@@ -12,6 +12,7 @@ class Mississippi(State):
     legislative_sessions = [
         {
             "_scraped_name": "2008 Regular Session",
+            "classification": "primary",
             "identifier": "2008",
             "name": "2008 Regular Session",
             "start_date": "2008-01-08",
@@ -19,6 +20,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2009 Regular Session",
+            "classification": "primary",
             "identifier": "2009",
             "name": "2009 Regular Session",
             "start_date": "2009-01-06",
@@ -26,6 +28,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2009 First Extraordinary Session",
+            "classification": "special",
             "identifier": "20091E",
             "name": "2009, 1st Extraordinary Session",
             "start_date": "2009-05-07",
@@ -33,6 +36,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2009 Second Extraordinary Session",
+            "classification": "special",
             "identifier": "20092E",
             "name": "2009, 2nd Extraordinary Session",
             "start_date": "2009-06-28",
@@ -40,6 +44,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2009 Third Extraordinary Session",
+            "classification": "special",
             "identifier": "20093E",
             "name": "2009, 3rd Extraordinary Session",
             "start_date": "2009-07-10",
@@ -47,6 +52,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2010 Regular Session",
+            "classification": "primary",
             "identifier": "2010",
             "name": "2010 Regular Session",
             "start_date": "2010-01-05",
@@ -54,6 +60,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2010 First Extraordinary Session",
+            "classification": "special",
             "identifier": "20101E",
             "name": "2010, 1st Extraordinary Session",
             "start_date": "2010-04-22",
@@ -61,6 +68,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2010 Second Extraordinary Session",
+            "classification": "special",
             "identifier": "20102E",
             "name": "2010, 2nd Extraordinary Session",
             "start_date": "2010-08-27",
@@ -68,6 +76,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2011 Regular Session",
+            "classification": "primary",
             "identifier": "2011",
             "name": "2011 Regular Session",
             "start_date": "2011-01-04",
@@ -75,6 +84,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2011 First Extraordinary Session",
+            "classification": "special",
             "identifier": "20111E",
             "name": "2011, 1st Extraordinary Session",
             "start_date": "2011-09-02",
@@ -82,6 +92,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2012 Regular Session",
+            "classification": "primary",
             "identifier": "2012",
             "name": "2012 Regular Session",
             "start_date": "2012-01-03",
@@ -89,6 +100,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2013 Regular Session",
+            "classification": "primary",
             "identifier": "2013",
             "name": "2013 Regular Session",
             "start_date": "2013-01-08",
@@ -96,6 +108,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2013 First Extraordinary Session",
+            "classification": "special",
             "identifier": "20131E",
             "name": "2013 First Extraordinary Session",
             "start_date": "2013-04-26",
@@ -103,6 +116,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2013 Second Extraordinary Session",
+            "classification": "special",
             "identifier": "20132E",
             "name": "2013 Second Extraordinary Session",
             "start_date": "2013-06-27",
@@ -110,6 +124,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2014 Regular Session",
+            "classification": "primary",
             "identifier": "2014",
             "name": "2014 Regular Session",
             "start_date": "2014-01-07",
@@ -117,6 +132,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2014 First Extraordinary Session",
+            "classification": "special",
             "identifier": "20141E",
             "name": "2014 First Extraordinary Session",
             "start_date": "2014-04-02",
@@ -124,6 +140,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2014 Second Extraordinary Session",
+            "classification": "special",
             "identifier": "20142E",
             "name": "2014 Second Extraordinary Session",
             "start_date": "2014-05-08",
@@ -131,6 +148,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2015 Regular Session",
+            "classification": "primary",
             "identifier": "2015",
             "name": "2015 Regular Session",
             "start_date": "2015-01-06",
@@ -146,6 +164,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2016 First Extraordinary Session",
+            "classification": "special",
             "identifier": "20161E",
             "name": "2016 First Extraordinary Session",
             "start_date": "2016-02-04",
@@ -153,6 +172,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2016 Second Extraordinary Session",
+            "classification": "special",
             "identifier": "20162E",
             "name": "2016 Second Extraordinary Session",
             "start_date": "2016-06-28",
@@ -301,7 +321,7 @@ class Mississippi(State):
         },
         {
             "_scraped_name": "2026 1st Extraordinary Session",
-            "classification": "primary",
+            "classification": "special",
             "identifier": "20261E",
             "name": "2026 1st Extraordinary Session",
             "start_date": "2026-07-14",
