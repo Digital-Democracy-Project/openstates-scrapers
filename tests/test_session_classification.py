@@ -18,7 +18,10 @@ read on 2026-11-17:
 * Iowa (OPEN-741, read 2026-11-21): legis.iowa.gov/legislation/findLegislation (the page
   get_session_list reads) names only two-year General Assemblies (76 to 91) and lists no special
   or extraordinary sessions, which Iowa keeps inside their General Assembly, so every session is
-  regular.
+  regular. OPEN-744 found the four extraordinary sessions in the scraper's span in the journals
+  (2021-10-05 and 2021-10-28 in General Assembly 89, 2023-07-11 in 90, 2026-10-02 in 91) and
+  showed in test_ia_sessions.py that the bills and votes scrapers read them as part of their
+  General Assembly, so none is a session of its own.
 * Kentucky (OPEN-728, read 2026-11-21): apps.legislature.ky.gov/record/pastses.html (the page
   get_session_list reads) names a "Special Session" in 2011, 2012, 2013, 2018, 2019, 2021 and
   2022 and every other entry a "Regular Session"; 2024 to 2026 are current and not on that page.

@@ -83,7 +83,28 @@ class Iowa(State):
             "active": True,
             "extras": {"ordinal": 91},
         },
+        {
+            # OPEN-744: meets on the second Monday of January (Iowa Constitution Art. III,
+            # Sec. 2), so 2027-01-11, the day after General Assembly 91 ends on the site's
+            # list. The end date is a placeholder, not a legal end: the 100th calendar day of the
+            # second session from 2028-01-10, the last day Iowa Code Sec. 2.10(1) pays members a
+            # per diem for. Replace it with the sine die in the journals once the session
+            # adjourns. Switched on when its bills appear.
+            "_scraped_name": "General Assembly: 92",
+            "classification": "primary",
+            "identifier": "2027-2028",
+            "name": "2027-2028 Regular Session",
+            "start_date": "2027-01-11",
+            "end_date": "2028-04-18",
+            "active": False,
+            "extras": {"ordinal": 92},
+        },
     ]
+    # OPEN-744: Iowa's extraordinary sessions (2021-10-05 and 2021-10-28 in General Assembly 89,
+    # 2023-07-11 in 90, 2026-10-02 in 91) are not sessions of their own here. legis.iowa.gov
+    # numbers their bills in the General Assembly's sequence (HF 2801 in 91), lists them on the
+    # General Assembly's own bill list and files their journals in its journal list, the pages
+    # the bills and votes scrapers read; so they are scraped as part of their General Assembly.
     ignored_scraped_sessions = [
         "Legislative Assembly: 86",
         "General Assembly: 83",
