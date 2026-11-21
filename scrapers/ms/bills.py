@@ -2,6 +2,7 @@ from openstates.scrape import Scraper, Bill, VoteEvent
 from openstates.utils import convert_pdf
 from datetime import datetime
 from .utils import append_parens
+from .voter_names import add_voter
 import lxml.etree
 import os
 import re
@@ -536,16 +537,17 @@ class MSBillScraper(Scraper):
         vote.set_count("not voting", not_voting_count)
         vote.set_count("other", other_count)
         vote.add_source(url)
-        for yes_vote in yes_votes:
-            vote.vote("yes", self.clean_voter_name(yes_vote))
-        for no_vote in no_votes:
-            vote.vote("no", self.clean_voter_name(no_vote))
-        for absent_vote in absent_votes:
-            vote.vote("absent", self.clean_voter_name(absent_vote))
-        for not_voting_vote in not_voting_votes:
-            vote.vote("not voting", self.clean_voter_name(not_voting_vote))
-        for other_vote in other_votes:
-            vote.vote("other", self.clean_voter_name(other_vote))
+        # OPEN-731: "Mr. Speaker" on a House roll call is the session's Speaker (manifest)
+        session = bill.legislative_session
+        for option, names in (
+            ("yes", yes_votes),
+            ("no", no_votes),
+            ("absent", absent_votes),
+            ("not voting", not_voting_votes),
+            ("other", other_votes),
+        ):
+            for name in names:
+                add_voter(vote, option, self.clean_voter_name(name), chamber, session)
         yield vote
 
     def clean_voter_name(self, name):
