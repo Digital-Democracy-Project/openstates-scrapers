@@ -11,6 +11,9 @@ read on 2026-11-17:
 * Idaho (OPEN-724, read 2026-11-20): legislature.idaho.gov/sessioninfo/ names a "First
   Extraordinary Session" in 2015, 2020 and 2022 (and 2000 and 2006, before the scraper's list
   starts); every other session is regular.
+* Kentucky (OPEN-728, read 2026-11-21): apps.legislature.ky.gov/record/pastses.html (the page
+  get_session_list reads) names a "Special Session" in 2011, 2012, 2013, 2018, 2019, 2021 and
+  2022 and every other entry a "Regular Session"; 2024 to 2026 are current and not on that page.
 * North Dakota (OPEN-721, read 2026-11-20): ndlegis.gov/assembly/ lists only two-year Legislative
   Assemblies, which are regular sessions; it keeps later special sessions inside their assembly,
   so only 67S1 (November 2021) is special.
@@ -35,6 +38,7 @@ SCRAPERS = os.path.join(os.path.dirname(__file__), "..", "scrapers")
 SPECIAL = {
     "ga": {"2011_ss", "2018_ss", "2020_ss", "2021_ss", "2023_ss", "2026_ss"},
     "id": {"2015spcl", "2020spcl", "2022spcl"},
+    "ky": {"2011SS", "2012SS", "2013SS", "2018SS", "2019SS", "2021SS", "2022SS"},
     "nd": {"67S1"},
     "ok": {
         "2012SS1",
