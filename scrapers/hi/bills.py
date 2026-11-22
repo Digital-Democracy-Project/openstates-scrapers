@@ -2,9 +2,17 @@ import datetime as dt
 import logging
 import lxml.html
 import re
+from openstates.exceptions import EmptyScrape
 from openstates.scrape import Scraper, Bill, VoteEvent
 from .actions import Categorizer, find_committee
 from .members import load_members
+from .sessions import (
+    CARRIED_INTO,
+    belongs_to_earlier_year,
+    is_special,
+    scraped_name,
+    special_session_on,
+)
 from .utils import get_short_codes, make_data_url
 from classify_motion import classify_motion
 from urllib import parse as urlparse
@@ -135,6 +143,29 @@ def create_bill_report_url(chamber, year, bill_type):
 
 logger = logging.getLogger(__name__)
 
+
+def first_action_date(action_table):
+    """The earliest date in a measure page's status table, or None (OPEN-748)."""
+    dates = []
+    for row in action_table.cssselect("tr")[1:]:
+        cells = row.cssselect("td")
+        try:
+            dates.append(
+                dt.datetime.strptime(cells[0].text_content().strip(), "%m/%d/%Y").date()
+            )
+        except (IndexError, ValueError):
+            continue
+    return min(dates, default=None)
+
+
+def with_year(url, year):
+    """A measure page URL asking for the site's year `year` instead."""
+    parts = urlparse.urlparse(url)
+    qs = dict(urlparse.parse_qsl(parts.query))
+    qs["year"] = year
+    return urlparse.urlunparse(parts._replace(query=urlparse.urlencode(qs)))
+
+
 # A voter-name token that's really just a middle initial (e.g. "C." in
 # "Lee, C.") stranded by the blind ", ".split() below.
 MIDDLE_INITIAL_RE = re.compile(r"^[A-Z]\.?$")
@@ -191,12 +222,12 @@ class HIBillScraper(Scraper):
 
         ret = {}
         for tr in metainf_table.cssselect("tr"):
-            key_el = tr.xpath("th")
-            val_el = tr.xpath("td")
-            if not key_el or not val_el:
+            # a th and a td, or (the 2011-2012 archive pages, OPEN-748) two tds
+            cells = tr.xpath("th|td")
+            if len(cells) < 2:
                 continue  # skip malformed rows
-            key = key_el[0].text_content().strip()
-            value = val_el[0].text_content().strip()
+            key = cells[0].text_content().strip()
+            value = cells[1].text_content().strip()
             if key[-1:] == ":":
                 key = key[:-1]
             if key in interceptors:
@@ -495,6 +526,18 @@ class HIBillScraper(Scraper):
 
         meta = self.parse_bill_metainf_table(metainf_table)
 
+        # OPEN-748: a carried-over 2011 bill on the 2012 list is filed under 2011 (sessions.py)
+        year = scraped_name(self.jurisdiction.legislative_sessions, session)
+        if year in CARRIED_INTO.values():
+            first_action = first_action_date(action_table)
+            if first_action is None:
+                first_action = self.companion_first_action(bill_page)
+            if belongs_to_earlier_year(year, first_action):
+                self.info(
+                    f"Skipping {bill_id}: first acted on {first_action}, before {year}"
+                )
+                return
+
         subs = [s.strip() for s in re.split(r";|,", meta["Report Title"])]
         if "" in subs:
             subs.remove("")
@@ -516,13 +559,19 @@ class HIBillScraper(Scraper):
         companion = meta["Companion"].strip()
         if companion:
             companion_url_elems = bill_page.xpath(
-                "//span[@id='MainContent_ListView1_companionLabel_0']/a/@href"
+                "//span[contains(@id, 'ListView1_companionLabel_0')]/a/@href"
             )
             if len(companion_url_elems) > 0:
                 companion_url = companion_url_elems[0]
                 # a companion's session year is the last 4 chars of the link
                 # this will match the _scraped_name of a session in __init__.py
                 companion_year = companion_url[-4:]
+                # OPEN-748: the 2012 pages link 2011 bills carried over as 2012; such a
+                # companion is filed under the year of its first dated action
+                if companion_year in CARRIED_INTO.values():
+                    first = self.companion_first_action(bill_page)
+                    if belongs_to_earlier_year(companion_year, first):
+                        companion_year = str(first.year)
                 companion_session = self.session_from_scraped_name(companion_year)
                 b.add_related_bill(
                     identifier=companion.replace("\xa0", " "),
@@ -579,15 +628,36 @@ class HIBillScraper(Scraper):
         if current_referral:
             b.extras["current_referral"] = current_referral
 
-        if meta["Act"]:
+        if meta.get("Act"):
             act_num = meta["Act"]
             act_url = bill_page.xpath(f"//a[text()={act_num}]/@href")[0]
             b.add_citation(f"Hawaii {session} Acts", act_num, "chapter", url=act_url)
 
-        yield from self.parse_bill_actions_table(
+        for vote in self.parse_bill_actions_table(
             b, action_table, bill_id, session, url, chamber
-        )
+        ):
+            # OPEN-748: a roll call taken while a special session sat is that session's; its
+            # bill link (made above, under `session`) stays on the regular bill
+            special = special_session_on(
+                self.jurisdiction.legislative_sessions, vote.start_date
+            )
+            if special:
+                vote.legislative_session = special
+            yield vote
         yield b
+
+    def companion_first_action(self, bill_page):
+        """The first dated action of the companion the measure page lists, or None."""
+        hrefs = bill_page.xpath(
+            "//span[contains(@id, 'ListView1_companionLabel_0')]/a/@href"
+        )
+        if not hrefs:
+            return None
+        page = lxml.html.fromstring(
+            self.get(make_data_url(hrefs[0]), verify=False).text
+        )
+        tables = page.xpath('//div[contains(@id, "UpdatePanel1")]//table[1]')
+        return first_action_date(tables[0]) if tables else None
 
     # sometimes they link to a version that's only in the header,
     # and works via a form submit, so hardcode it here
@@ -627,19 +697,46 @@ class HIBillScraper(Scraper):
             "gm": "proclamation",
         }[billtype]
 
-        list_html = self.get(make_data_url(report_page_url), verify=False).text
-        list_page = lxml.html.fromstring(list_html)
-        for bill_url in list_page.xpath("//a[@class='report']"):
+        # OPEN-748: a 2011 bill also on the 2012 list was carried over; its 2012 page holds its
+        # whole history, 2012 actions included (sessions.py)
+        later = CARRIED_INTO.get(session_urlslug)
+        carried = set()
+        if later:
+            carried = {
+                self.measure_key(a.attrib["href"])
+                for a in self.report_links(
+                    create_bill_report_url(chamber, later, billtype)
+                )
+            }
+
+        for bill_url in self.report_links(report_page_url):
             bill_url = bill_url.attrib["href"].replace("www.", "")
             if not bill_url.startswith("http"):
                 bill_url = f"{HI_URL_BASE}{bill_url}"
+            if self.measure_key(bill_url) in carried:
+                bill_url = with_year(bill_url, later)
             if (
                 TEST_SINGLE_BILL is False
                 or f"billnumber={TEST_SINGLE_BILL_NUMBER}" in bill_url
             ):
                 yield from self.scrape_bill(session, chamber, billtype_map, bill_url)
 
+    def report_links(self, report_page_url):
+        list_html = self.get(make_data_url(report_page_url), verify=False).text
+        return lxml.html.fromstring(list_html).xpath("//a[@class='report']")
+
+    @staticmethod
+    def measure_key(url):
+        qs = dict(urlparse.parse_qsl(urlparse.urlparse(url).query))
+        return qs.get("billtype"), qs.get("billnumber")
+
     def scrape(self, chamber=None, session=None, scrape_since=None):
+        if is_special(self.jurisdiction.legislative_sessions, session):
+            # OPEN-748: the site lists no special-session measures (OPEN-751 reads them from the
+            # journal PDFs); this session's roll calls on regular bills come with those bills
+            raise EmptyScrape(
+                f"{session}: special-session measures are not on the site's measure pages"
+            )
         get_short_codes(self)
         # OPEN-709: seated members, for the tallies that print no aye count
         self.members = load_members(self)
@@ -696,7 +793,8 @@ class HIBillScraper(Scraper):
         details = next(
             each
             for each in self.jurisdiction.legislative_sessions
-            if each["_scraped_name"] == scraped_name
+            # special sessions (OPEN-748) have no site year
+            if each.get("_scraped_name") == scraped_name
         )
         return details["name"]
 

@@ -11,7 +11,10 @@ read on 2026-11-17:
 * Hawaii (OPEN-729, read 2026-11-21): the year menu on data.capitol.hawaii.gov
   (session/archives/main.aspx, the page get_session_list reads) offers one entry a year and lists
   no special sessions, and the scraper names each session a "Regular Session", so every session
-  is regular.
+  is regular. OPEN-748 found the 27 special sessions since 2011 in the legislature's journals
+  (data.capitol.hawaii.gov/sessions/journal/Senate/<year>/, each titled "Special Session of
+  <year>", "Second Special Session of <year>", ...); since then (Ramon 2026-11-21: "All 28", 27
+  on the journals' count) each is a special session of its own, named as its journal names it.
 * Idaho (OPEN-724, read 2026-11-20): legislature.idaho.gov/sessioninfo/ names a "First
   Extraordinary Session" in 2015, 2020 and 2022 (and 2000 and 2006, before the scraper's list
   starts); every other session is regular.
@@ -78,7 +81,35 @@ SCRAPERS = os.path.join(os.path.dirname(__file__), "..", "scrapers")
 
 SPECIAL = {
     "ga": {"2011_ss", "2018_ss", "2020_ss", "2021_ss", "2023_ss", "2026_ss"},
-    "hi": set(),
+    "hi": {
+        "2011 Special Session",
+        "2012 Special Session",
+        "2013 Special Session",
+        "2013 Second Special Session",
+        "2014 Special Session",
+        "2015 Special Session",
+        "2016 Special Session",
+        "2016 Second Special Session",
+        "2016 Third Special Session",
+        "2017 Special Session",
+        "2017 Second Special Session",
+        "2017 Third Special Session",
+        "2018 Special Session",
+        "2018 Second Special Session",
+        "2019 Special Session",
+        "2019 Second Special Session",
+        "2020 Special Session",
+        "2020 Second Special Session",
+        "2021 Special Session",
+        "2021 Second Special Session",
+        "2021 Third Special Session",
+        "2022 Special Session",
+        "2022 Second Special Session",
+        "2022 Third Special Session",
+        "2023 Special Session",
+        "2023 Second Special Session",
+        "2024 Special Session",
+    },
     "ia": {"2021s1", "2021s2", "2023s1", "2026s1"},
     "id": {"2015spcl", "2020spcl", "2022spcl"},
     "ky": {"2011SS", "2012SS", "2013SS", "2018SS", "2019SS", "2021SS", "2022SS"},
