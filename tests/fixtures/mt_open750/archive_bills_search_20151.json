@@ -1,0 +1,2075 @@
+{
+ "bills": {
+  "content": [
+   {
+    "billActions": [
+     {
+      "actionType": {
+       "code": 658,
+       "description": "Chapter Number Assigned",
+       "progressCategory": {
+        "code": "190",
+        "description": "Became Law"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 658,
+      "committee": null,
+      "date": "2015-03-31T13:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 656,
+       "description": "(H) Signed by Governor",
+       "progressCategory": {
+        "code": "190",
+        "description": "Became Law"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 656,
+      "committee": null,
+      "date": "2015-03-31T12:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 655,
+       "description": "(H) Transmitted to Governor",
+       "progressCategory": {
+        "code": "180",
+        "description": "Transmitted to Governor"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 655,
+      "committee": null,
+      "date": "2015-03-24T08:15:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 254,
+       "description": "(S) Signed by President",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 254,
+      "committee": null,
+      "date": "2015-03-23T15:20:28",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 654,
+       "description": "(H) Signed by Speaker",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 654,
+      "committee": null,
+      "date": "2015-03-20T10:30:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 653,
+       "description": "(H) Returned from Enrolling",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 653,
+      "committee": null,
+      "date": "2015-03-18T14:14:11",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 43,
+       "description": "(C) Printed - Enrolled Version Available",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 43,
+      "committee": null,
+      "date": "2015-03-18T11:48:07",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 652,
+       "description": "(H) Sent to Enrolling",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 652,
+      "committee": null,
+      "date": "2015-03-17T14:49:13",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 206,
+       "description": "(S) Returned to House",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 206,
+      "committee": null,
+      "date": "2015-03-16T15:46:46",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 197,
+       "description": "(S) 3rd Reading Concurred",
+       "progressCategory": {
+        "code": "110",
+        "description": "In Second House--Through 3rd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 197,
+      "committee": null,
+      "date": "2015-03-16T14:04:35",
+      "noVotes": "0",
+      "voteSeq": "S977",
+      "yesVotes": "50"
+     },
+     {
+      "actionType": {
+       "code": 194,
+       "description": "(S) Scheduled for 3rd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 194,
+      "committee": null,
+      "date": "2015-03-16T13:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 157,
+       "description": "(S) 2nd Reading Concurred",
+       "progressCategory": {
+        "code": "100",
+        "description": "In Second House--Through 2nd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 157,
+      "committee": null,
+      "date": "2015-03-13T13:49:59",
+      "noVotes": "0",
+      "voteSeq": "S947",
+      "yesVotes": "49"
+     },
+     {
+      "actionType": {
+       "code": 153,
+       "description": "(S) Scheduled for 2nd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 153,
+      "committee": null,
+      "date": "2015-03-13T13:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 39,
+       "description": "(C) Printed - New Version Available",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 39,
+      "committee": null,
+      "date": "2015-03-11T13:23:31",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 131,
+       "description": "(S) Committee Report--Bill Concurred",
+       "progressCategory": {
+        "code": "090",
+        "description": "In Second House--Out of Committee"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 131,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(S) Fish and Game",
+       "committeeTypeName": "ST",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "FIS"
+       },
+       "meetingDays": "TTH",
+       "meetingRoom": "422",
+       "meetingTime": "3:00 PM",
+       "zoomEmail": null
+      },
+      "date": "2015-03-11T13:07:20",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 45,
+       "description": "(C) Sponsors Engrossed",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 45,
+      "committee": null,
+      "date": "2015-03-11T09:44:52",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 117,
+       "description": "(S) Committee Executive Action--Bill Concurred",
+       "progressCategory": {
+        "code": "080",
+        "description": "In Second House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 117,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(S) Fish and Game",
+       "committeeTypeName": "ST",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "FIS"
+       },
+       "meetingDays": "TTH",
+       "meetingRoom": "422",
+       "meetingTime": "3:00 PM",
+       "zoomEmail": null
+      },
+      "date": "2015-03-10T17:00:00",
+      "noVotes": "0",
+      "voteSeq": null,
+      "yesVotes": "10"
+     },
+     {
+      "actionType": {
+       "code": 113,
+       "description": "(S) Hearing",
+       "progressCategory": {
+        "code": "080",
+        "description": "In Second House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 113,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(S) Fish and Game",
+       "committeeTypeName": "ST",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "FIS"
+       },
+       "meetingDays": "TTH",
+       "meetingRoom": "422",
+       "meetingTime": "3:00 PM",
+       "zoomEmail": null
+      },
+      "date": "2015-03-10T15:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 103,
+       "description": "(S) Referred to Committee",
+       "progressCategory": {
+        "code": "080",
+        "description": "In Second House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 103,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(S) Fish and Game",
+       "committeeTypeName": "ST",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "FIS"
+       },
+       "meetingDays": "TTH",
+       "meetingRoom": "422",
+       "meetingTime": "3:00 PM",
+       "zoomEmail": null
+      },
+      "date": "2015-02-19T13:33:48",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 287,
+       "description": "(S) First Reading",
+       "progressCategory": {
+        "code": "070",
+        "description": "Transmitted to Second House"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 287,
+      "committee": null,
+      "date": "2015-02-19T13:33:43",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 605,
+       "description": "(H) Transmitted to Senate",
+       "progressCategory": {
+        "code": "070",
+        "description": "Transmitted to Second House"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 605,
+      "committee": null,
+      "date": "2015-02-18T14:27:59",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 596,
+       "description": "(H) 3rd Reading Passed",
+       "progressCategory": {
+        "code": "060",
+        "description": "In First House--Through 3rd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 596,
+      "committee": null,
+      "date": "2015-02-17T15:07:48",
+      "noVotes": "0",
+      "voteSeq": "H591",
+      "yesVotes": "100"
+     },
+     {
+      "actionType": {
+       "code": 594,
+       "description": "(H) Scheduled for 3rd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 594,
+      "committee": null,
+      "date": "2015-02-17T13:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 556,
+       "description": "(H) 2nd Reading Passed",
+       "progressCategory": {
+        "code": "050",
+        "description": "In First House--Through 2nd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 556,
+      "committee": null,
+      "date": "2015-02-16T13:34:00",
+      "noVotes": "0",
+      "voteSeq": "H548",
+      "yesVotes": "100"
+     },
+     {
+      "actionType": {
+       "code": 553,
+       "description": "(H) Scheduled for 2nd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 553,
+      "committee": null,
+      "date": "2015-02-16T13:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 530,
+       "description": "(H) Committee Report--Bill Passed",
+       "progressCategory": {
+        "code": "040",
+        "description": "In First House--Out of Committee"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 530,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(H) Fish, Wildlife and Parks",
+       "committeeTypeName": "ST",
+       "houseCode": "H",
+       "id": {
+        "committeeCode": "FIH"
+       },
+       "meetingDays": "TTH",
+       "meetingRoom": "152",
+       "meetingTime": "3:00 PM",
+       "zoomEmail": null
+      },
+      "date": "2015-02-13T13:18:23",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 516,
+       "description": "(H) Committee Executive Action--Bill Passed",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 516,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(H) Fish, Wildlife and Parks",
+       "committeeTypeName": "ST",
+       "houseCode": "H",
+       "id": {
+        "committeeCode": "FIH"
+       },
+       "meetingDays": "TTH",
+       "meetingRoom": "152",
+       "meetingTime": "3:00 PM",
+       "zoomEmail": null
+      },
+      "date": "2015-02-12T16:58:32",
+      "noVotes": "0",
+      "voteSeq": null,
+      "yesVotes": "19"
+     },
+     {
+      "actionType": {
+       "code": 512,
+       "description": "(H) Hearing",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 512,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(H) Fish, Wildlife and Parks",
+       "committeeTypeName": "ST",
+       "houseCode": "H",
+       "id": {
+        "committeeCode": "FIH"
+       },
+       "meetingDays": "TTH",
+       "meetingRoom": "152",
+       "meetingTime": "3:00 PM",
+       "zoomEmail": null
+      },
+      "date": "2015-02-03T15:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 29,
+       "description": "(C) Introduced Bill Text Available Electronically",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 29,
+      "committee": null,
+      "date": "2015-01-22T16:05:14",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 501,
+       "description": "(H) First Reading",
+       "progressCategory": {
+        "code": "020",
+        "description": "In First House--Introduced"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 501,
+      "committee": null,
+      "date": "2015-01-21T14:01:58",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 502,
+       "description": "(H) Referred to Committee",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 502,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(H) Fish, Wildlife and Parks",
+       "committeeTypeName": "ST",
+       "houseCode": "H",
+       "id": {
+        "committeeCode": "FIH"
+       },
+       "meetingDays": "TTH",
+       "meetingRoom": "152",
+       "meetingTime": "3:00 PM",
+       "zoomEmail": null
+      },
+      "date": "2015-01-21T12:37:38",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 500,
+       "description": "(H) Introduced",
+       "progressCategory": {
+        "code": "020",
+        "description": "In First House--Introduced"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 500,
+      "committee": null,
+      "date": "2015-01-21T07:57:41",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 23,
+       "description": "(C) Draft Delivered to Requester",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 23,
+      "committee": null,
+      "date": "2015-01-20T14:05:34",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 22,
+       "description": "(C) Draft Ready for Delivery",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 22,
+      "committee": null,
+      "date": "2015-01-20T13:25:38",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 19,
+       "description": "(C) Draft in Assembly/Executive Director Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 19,
+      "committee": null,
+      "date": "2015-01-20T10:37:48",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 18,
+       "description": "(C) Draft in Final Drafter Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 18,
+      "committee": null,
+      "date": "2015-01-19T15:13:36",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 17,
+       "description": "(C) Draft in Input/Proofing",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 17,
+      "committee": null,
+      "date": "2015-01-19T10:22:49",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 14,
+       "description": "(C) Draft to Drafter - Edit Review [JLN]",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 14,
+      "committee": null,
+      "date": "2015-01-16T13:49:21",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 12,
+       "description": "(C) Draft in Legal Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 12,
+      "committee": null,
+      "date": "2015-01-16T13:27:07",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 4,
+       "description": "(C) Draft Taken Off Hold",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 4,
+      "committee": null,
+      "date": "2015-01-16T13:26:56",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 8,
+       "description": "(C) Draft On Hold",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 8,
+      "committee": null,
+      "date": "2015-01-16T09:37:46",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 2,
+       "description": "(C) Draft to Requester for Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 2,
+      "committee": null,
+      "date": "2015-01-16T09:36:09",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 6,
+       "description": "(C) Draft Back for Redo",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 6,
+      "committee": null,
+      "date": "2015-01-16T09:35:50",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 7,
+       "description": "(C) Draft Taken by Drafter",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 7,
+      "committee": null,
+      "date": "2015-01-09T16:37:56",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 19,
+       "description": "(C) Draft in Assembly/Executive Director Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 19,
+      "committee": null,
+      "date": "2015-01-07T14:28:05",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 18,
+       "description": "(C) Draft in Final Drafter Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 18,
+      "committee": null,
+      "date": "2015-01-07T10:18:27",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 28,
+       "description": "(C) Bill Draft Text Available Electronically",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 28,
+      "committee": null,
+      "date": "2015-01-06T09:13:14",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 17,
+       "description": "(C) Draft in Input/Proofing",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 17,
+      "committee": null,
+      "date": "2015-01-06T09:09:44",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 14,
+       "description": "(C) Draft to Drafter - Edit Review [JLN]",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 14,
+      "committee": null,
+      "date": "2015-01-06T08:01:32",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 12,
+       "description": "(C) Draft in Legal Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 12,
+      "committee": null,
+      "date": "2015-01-05T16:27:21",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 3,
+       "description": "(C) Draft Back for Requester Changes",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 3,
+      "committee": null,
+      "date": "2015-01-05T15:45:52",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 2,
+       "description": "(C) Draft to Requester for Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 2,
+      "committee": null,
+      "date": "2015-01-05T13:21:01",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 3,
+       "description": "(C) Draft Back for Requester Changes",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 3,
+      "committee": null,
+      "date": "2015-01-05T13:20:52",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 2,
+       "description": "(C) Draft to Requester for Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 2,
+      "committee": null,
+      "date": "2014-12-30T11:25:21",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 1,
+       "description": "(C) Draft Request Received",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 1,
+      "committee": null,
+      "date": "2014-12-23T15:02:31",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     }
+    ],
+    "billNumber": 279,
+    "billSortNumber": "HB0279",
+    "billType": "HB",
+    "coSponsor": null,
+    "deadlineCategory": {
+     "id": {
+      "code": "GE",
+      "sessionId": 20151
+     },
+     "name": "General Bills",
+     "returnDate": "2015-04-11T00:00:00",
+     "transmittalDate": "2015-02-27T00:00:00"
+    },
+    "drafters": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 12786,
+       "firstName": "Hope",
+       "lastName": "Stockwell"
+      },
+      "legislator": null
+     }
+    ],
+    "hasFiscalNote": false,
+    "id": {
+     "billDraftNumber": "LC2034",
+     "sessionId": 20151
+    },
+    "latestVersion": "ENR",
+    "preintroductionRequired": "N",
+    "primarySponsorBillRoles": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 12836,
+       "firstName": "Jeff",
+       "lastName": "Essmann"
+      },
+      "legislator": {
+       "chamber": {
+        "houseCode": "H",
+        "houseName": "House"
+       },
+       "committeeAssignments": [
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(H) Rules",
+          "committeeTypeName": "ST",
+          "houseCode": "H",
+          "id": {
+           "committeeCode": "RUH"
+          },
+          "meetingDays": "ON CALL",
+          "meetingRoom": "TBD",
+          "meetingTime": "TBD",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "CH",
+          "assignmentName": "Chair"
+         },
+         "id": {
+          "applicationSeq": 1,
+          "committeeCode": "RUH",
+          "sessionId": 20151
+         }
+        },
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(H) State Administration",
+          "committeeTypeName": "ST",
+          "houseCode": "H",
+          "id": {
+           "committeeCode": "STH"
+          },
+          "meetingDays": "M-F",
+          "meetingRoom": "455",
+          "meetingTime": "8:00 AM",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "CH",
+          "assignmentName": "Chair"
+         },
+         "id": {
+          "applicationSeq": 1,
+          "committeeCode": "STH",
+          "sessionId": 20151
+         }
+        },
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(H) Education",
+          "committeeTypeName": "ST",
+          "houseCode": "H",
+          "id": {
+           "committeeCode": "EDH"
+          },
+          "meetingDays": "MWF",
+          "meetingRoom": "137",
+          "meetingTime": "3:00 PM",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "ME",
+          "assignmentName": "Member"
+         },
+         "id": {
+          "applicationSeq": 5,
+          "committeeCode": "EDH",
+          "sessionId": 20151
+         }
+        }
+       ],
+       "districtNumber": 54,
+       "lawEntity": {
+        "entityIdSequence": 12836,
+        "firstName": "Jeff",
+        "lastName": "Essmann"
+       },
+       "politicalParty": {
+        "partyCode": "R",
+        "partyName": "Republican"
+       },
+       "position": null
+      }
+     }
+    ],
+    "requestOf": [],
+    "requesters": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 12836,
+       "firstName": "Jeff",
+       "lastName": "Essmann"
+      },
+      "legislator": {
+       "chamber": {
+        "houseCode": "H",
+        "houseName": "House"
+       },
+       "committeeAssignments": [
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(H) Rules",
+          "committeeTypeName": "ST",
+          "houseCode": "H",
+          "id": {
+           "committeeCode": "RUH"
+          },
+          "meetingDays": "ON CALL",
+          "meetingRoom": "TBD",
+          "meetingTime": "TBD",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "CH",
+          "assignmentName": "Chair"
+         },
+         "id": {
+          "applicationSeq": 1,
+          "committeeCode": "RUH",
+          "sessionId": 20151
+         }
+        },
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(H) State Administration",
+          "committeeTypeName": "ST",
+          "houseCode": "H",
+          "id": {
+           "committeeCode": "STH"
+          },
+          "meetingDays": "M-F",
+          "meetingRoom": "455",
+          "meetingTime": "8:00 AM",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "CH",
+          "assignmentName": "Chair"
+         },
+         "id": {
+          "applicationSeq": 1,
+          "committeeCode": "STH",
+          "sessionId": 20151
+         }
+        },
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(H) Education",
+          "committeeTypeName": "ST",
+          "houseCode": "H",
+          "id": {
+           "committeeCode": "EDH"
+          },
+          "meetingDays": "MWF",
+          "meetingRoom": "137",
+          "meetingTime": "3:00 PM",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "ME",
+          "assignmentName": "Member"
+         },
+         "id": {
+          "applicationSeq": 5,
+          "committeeCode": "EDH",
+          "sessionId": 20151
+         }
+        }
+       ],
+       "districtNumber": 54,
+       "lawEntity": {
+        "entityIdSequence": 12836,
+        "firstName": "Jeff",
+        "lastName": "Essmann"
+       },
+       "politicalParty": {
+        "partyCode": "R",
+        "partyName": "Republican"
+       },
+       "position": null
+      }
+     }
+    ],
+    "sessionLawChapterNumber": "149",
+    "shortTitle": "Clarify laws related to when and how to legally tag game animals",
+    "subjects": [
+     {
+      "billDraftNumber": "LC2034",
+      "code": "FISH",
+      "sessionId": 20151,
+      "subject": {
+       "code": "FISH",
+       "description": "Fish and Wildlife"
+      }
+     }
+    ]
+   }
+  ],
+  "empty": false,
+  "first": false,
+  "last": false,
+  "number": 50,
+  "numberOfElements": 1,
+  "pageable": {
+   "offset": 500,
+   "pageNumber": 50,
+   "pageSize": 10,
+   "paged": true,
+   "sort": {
+    "empty": true,
+    "sorted": false,
+    "unsorted": true
+   },
+   "unpaged": false
+  },
+  "size": 10,
+  "sort": {
+   "empty": true,
+   "sorted": false,
+   "unsorted": true
+  },
+  "totalElements": 2471,
+  "totalPages": 248
+ },
+ "counts": {
+  "billTypes": {
+   "HB": 642,
+   "HJ": 32,
+   "HR": 3,
+   "NoBillType": 1284,
+   "SB": 420,
+   "SJ": 31,
+   "SR": 59
+  },
+  "chambers": {
+   "H": 677,
+   "S": 510
+  },
+  "deadlineCategories": {
+   "AD": 62,
+   "AP": 138,
+   "GE": 1836,
+   "IS": 57,
+   "RE": 340,
+   "RP": 37,
+   "RR": 1
+  },
+  "drafters": {
+   "12462": 124,
+   "12482": 101,
+   "12483": 119,
+   "12535": 109,
+   "12692": 141,
+   "12786": 107,
+   "13200": 121,
+   "13201": 109,
+   "13202": 126,
+   "13463": 140,
+   "14184": 153,
+   "14261": 141,
+   "14262": 159,
+   "14263": 88,
+   "14310": 89,
+   "14312": 34,
+   "14313": 33,
+   "14315": 111,
+   "15187": 101,
+   "15188": 102,
+   "15194": 123,
+   "16433": 140
+  },
+  "legislator": {
+   "12453": 9,
+   "12456": 4,
+   "12457": 24,
+   "12493": 5,
+   "12545": 27,
+   "12550": 14,
+   "12552": 4,
+   "12553": 17,
+   "12554": 13,
+   "12557": 4,
+   "12558": 8,
+   "12559": 4,
+   "12562": 5,
+   "12595": 12,
+   "12596": 3,
+   "12598": 7,
+   "12599": 3,
+   "12600": 5,
+   "12601": 2,
+   "12602": 7,
+   "12606": 12,
+   "12607": 4,
+   "12609": 7,
+   "12611": 4,
+   "12612": 7,
+   "12613": 5,
+   "12618": 9,
+   "12619": 6,
+   "12766": 5,
+   "12767": 2,
+   "12784": 8,
+   "12836": 18,
+   "12893": 8,
+   "12924": 12,
+   "12925": 18,
+   "12926": 10,
+   "12928": 5,
+   "12929": 13,
+   "12984": 6,
+   "13026": 10,
+   "13032": 13,
+   "13543": 3,
+   "13544": 12,
+   "13601": 3,
+   "13615": 10,
+   "13618": 2,
+   "13619": 13,
+   "13678": 4,
+   "13679": 2,
+   "13680": 4,
+   "13681": 4,
+   "13682": 12,
+   "13683": 5,
+   "13684": 2,
+   "13686": 12,
+   "13688": 5,
+   "13689": 11,
+   "13693": 11,
+   "13694": 3,
+   "13695": 18,
+   "13696": 4,
+   "13700": 5,
+   "13708": 7,
+   "13750": 16,
+   "13751": 17,
+   "13754": 21,
+   "13758": 7,
+   "13790": 11,
+   "13799": 12,
+   "13804": 11,
+   "13858": 4,
+   "13859": 11,
+   "13870": 8,
+   "13941": 8,
+   "14366": 16,
+   "14415": 12,
+   "14470": 12,
+   "14632": 4,
+   "14716": 22,
+   "15139": 4,
+   "15141": 6,
+   "15142": 5,
+   "15143": 6,
+   "15144": 1,
+   "15235": 15,
+   "15236": 38,
+   "15237": 7,
+   "15238": 3,
+   "15239": 15,
+   "15240": 13,
+   "15241": 4,
+   "15243": 8,
+   "15244": 17,
+   "15245": 6,
+   "15246": 1,
+   "15247": 4,
+   "15248": 11,
+   "15250": 5,
+   "15251": 1,
+   "15252": 1,
+   "15254": 7,
+   "15255": 9,
+   "15256": 17,
+   "15257": 14,
+   "15259": 4,
+   "15260": 8,
+   "15261": 4,
+   "15262": 16,
+   "15264": 4,
+   "15265": 5,
+   "15267": 9,
+   "16396": 6,
+   "16397": 6,
+   "16398": 4,
+   "16493": 3,
+   "16494": 3,
+   "16495": 8,
+   "16496": 10,
+   "16497": 9,
+   "16498": 14,
+   "16499": 3,
+   "16500": 6,
+   "16501": 9,
+   "16502": 4,
+   "16503": 1,
+   "16504": 3,
+   "16505": 4,
+   "16506": 6,
+   "16507": 4,
+   "16508": 8,
+   "16509": 7,
+   "16510": 4,
+   "16511": 3,
+   "16512": 2,
+   "16513": 14,
+   "16514": 6,
+   "16515": 3,
+   "16516": 8,
+   "16517": 5,
+   "16518": 7,
+   "16519": 7,
+   "16520": 3,
+   "16521": 3,
+   "16522": 5,
+   "16523": 5,
+   "16524": 6,
+   "16525": 4,
+   "16526": 2,
+   "16528": 3,
+   "16663": 8
+  },
+  "party": {
+   "D": 467,
+   "R": 720
+  },
+  "sessionLawChapterNumbers": {
+   "1": 1,
+   "10": 1,
+   "100": 1,
+   "101": 1,
+   "102": 1,
+   "103": 1,
+   "104": 1,
+   "105": 1,
+   "106": 1,
+   "107": 1,
+   "108": 1,
+   "109": 1,
+   "11": 1,
+   "110": 1,
+   "111": 1,
+   "112": 1,
+   "113": 1,
+   "114": 1,
+   "115": 1,
+   "116": 1,
+   "117": 1,
+   "118": 1,
+   "119": 1,
+   "12": 1,
+   "120": 1,
+   "121": 1,
+   "122": 1,
+   "123": 1,
+   "124": 1,
+   "125": 1,
+   "126": 1,
+   "127": 1,
+   "128": 1,
+   "129": 1,
+   "13": 1,
+   "130": 1,
+   "131": 1,
+   "132": 1,
+   "133": 1,
+   "134": 1,
+   "135": 1,
+   "136": 1,
+   "137": 1,
+   "138": 1,
+   "139": 1,
+   "14": 1,
+   "140": 1,
+   "141": 1,
+   "142": 1,
+   "143": 1,
+   "144": 1,
+   "145": 1,
+   "146": 1,
+   "147": 1,
+   "148": 1,
+   "149": 1,
+   "15": 1,
+   "150": 1,
+   "151": 1,
+   "152": 1,
+   "153": 1,
+   "154": 1,
+   "155": 1,
+   "156": 1,
+   "157": 1,
+   "158": 1,
+   "159": 1,
+   "16": 1,
+   "160": 1,
+   "161": 1,
+   "162": 1,
+   "163": 1,
+   "164": 1,
+   "165": 1,
+   "166": 1,
+   "167": 1,
+   "168": 1,
+   "169": 1,
+   "17": 1,
+   "170": 1,
+   "171": 1,
+   "172": 1,
+   "173": 1,
+   "174": 1,
+   "175": 1,
+   "176": 1,
+   "177": 1,
+   "178": 1,
+   "179": 1,
+   "18": 1,
+   "180": 1,
+   "181": 1,
+   "182": 1,
+   "183": 1,
+   "184": 1,
+   "185": 1,
+   "186": 1,
+   "187": 1,
+   "188": 1,
+   "189": 1,
+   "19": 1,
+   "190": 1,
+   "191": 1,
+   "192": 1,
+   "193": 1,
+   "194": 1,
+   "195": 1,
+   "196": 1,
+   "197": 1,
+   "198": 1,
+   "199": 1,
+   "2": 1,
+   "20": 1,
+   "200": 1,
+   "201": 1,
+   "202": 1,
+   "203": 1,
+   "204": 1,
+   "205": 1,
+   "206": 1,
+   "207": 1,
+   "208": 1,
+   "209": 1,
+   "21": 1,
+   "210": 1,
+   "211": 1,
+   "212": 1,
+   "213": 1,
+   "214": 1,
+   "215": 1,
+   "216": 1,
+   "217": 1,
+   "218": 1,
+   "219": 1,
+   "22": 1,
+   "220": 1,
+   "221": 1,
+   "222": 1,
+   "223": 1,
+   "224": 1,
+   "225": 1,
+   "226": 1,
+   "227": 1,
+   "228": 1,
+   "229": 1,
+   "23": 1,
+   "230": 1,
+   "231": 1,
+   "232": 1,
+   "233": 1,
+   "234": 1,
+   "235": 1,
+   "236": 1,
+   "237": 1,
+   "238": 1,
+   "239": 1,
+   "24": 1,
+   "240": 1,
+   "241": 1,
+   "242": 1,
+   "243": 1,
+   "244": 1,
+   "245": 1,
+   "246": 1,
+   "247": 1,
+   "248": 1,
+   "249": 1,
+   "25": 1,
+   "250": 1,
+   "251": 1,
+   "252": 1,
+   "253": 1,
+   "254": 1,
+   "255": 1,
+   "256": 1,
+   "257": 1,
+   "258": 1,
+   "259": 1,
+   "26": 1,
+   "260": 1,
+   "261": 1,
+   "262": 1,
+   "263": 1,
+   "264": 1,
+   "265": 1,
+   "266": 1,
+   "267": 1,
+   "268": 1,
+   "269": 1,
+   "27": 1,
+   "270": 1,
+   "271": 1,
+   "272": 1,
+   "273": 1,
+   "274": 1,
+   "275": 1,
+   "276": 1,
+   "277": 1,
+   "278": 1,
+   "279": 1,
+   "28": 1,
+   "280": 1,
+   "281": 1,
+   "282": 1,
+   "283": 1,
+   "284": 1,
+   "285": 1,
+   "286": 1,
+   "287": 1,
+   "288": 1,
+   "289": 1,
+   "29": 1,
+   "290": 1,
+   "291": 1,
+   "292": 1,
+   "293": 1,
+   "294": 1,
+   "295": 1,
+   "296": 1,
+   "297": 1,
+   "298": 1,
+   "299": 1,
+   "3": 1,
+   "30": 1,
+   "300": 1,
+   "301": 1,
+   "302": 1,
+   "303": 1,
+   "304": 1,
+   "305": 1,
+   "306": 1,
+   "307": 1,
+   "308": 1,
+   "309": 1,
+   "31": 1,
+   "310": 1,
+   "311": 1,
+   "312": 1,
+   "313": 1,
+   "314": 1,
+   "315": 1,
+   "316": 1,
+   "317": 1,
+   "318": 1,
+   "319": 1,
+   "32": 1,
+   "320": 1,
+   "321": 1,
+   "322": 1,
+   "323": 1,
+   "324": 1,
+   "325": 1,
+   "326": 1,
+   "327": 1,
+   "328": 1,
+   "329": 1,
+   "33": 1,
+   "330": 1,
+   "331": 1,
+   "332": 1,
+   "333": 1,
+   "334": 1,
+   "335": 1,
+   "336": 1,
+   "337": 1,
+   "338": 1,
+   "339": 1,
+   "34": 1,
+   "340": 1,
+   "341": 1,
+   "342": 1,
+   "343": 1,
+   "344": 1,
+   "345": 1,
+   "346": 1,
+   "347": 1,
+   "348": 1,
+   "349": 1,
+   "35": 1,
+   "350": 1,
+   "351": 1,
+   "352": 1,
+   "353": 1,
+   "354": 1,
+   "355": 1,
+   "356": 1,
+   "357": 1,
+   "358": 1,
+   "359": 1,
+   "36": 1,
+   "360": 1,
+   "361": 1,
+   "362": 1,
+   "363": 1,
+   "364": 1,
+   "365": 1,
+   "366": 1,
+   "367": 1,
+   "368": 1,
+   "369": 1,
+   "37": 1,
+   "370": 1,
+   "371": 1,
+   "372": 1,
+   "373": 1,
+   "374": 1,
+   "375": 1,
+   "376": 1,
+   "377": 1,
+   "378": 1,
+   "379": 1,
+   "38": 1,
+   "380": 1,
+   "381": 1,
+   "382": 1,
+   "383": 1,
+   "384": 1,
+   "385": 1,
+   "386": 1,
+   "387": 1,
+   "388": 1,
+   "389": 1,
+   "39": 1,
+   "390": 1,
+   "391": 1,
+   "392": 1,
+   "393": 1,
+   "394": 1,
+   "395": 1,
+   "396": 1,
+   "397": 1,
+   "398": 1,
+   "399": 1,
+   "4": 1,
+   "40": 1,
+   "400": 1,
+   "401": 1,
+   "402": 1,
+   "403": 1,
+   "404": 1,
+   "405": 1,
+   "406": 1,
+   "407": 1,
+   "408": 1,
+   "409": 1,
+   "41": 1,
+   "410": 1,
+   "411": 1,
+   "412": 1,
+   "413": 1,
+   "414": 1,
+   "415": 1,
+   "416": 1,
+   "417": 1,
+   "418": 1,
+   "419": 1,
+   "42": 1,
+   "420": 1,
+   "421": 1,
+   "422": 1,
+   "423": 1,
+   "424": 1,
+   "425": 1,
+   "426": 1,
+   "427": 1,
+   "428": 1,
+   "429": 1,
+   "43": 1,
+   "430": 1,
+   "431": 1,
+   "432": 1,
+   "433": 1,
+   "434": 1,
+   "435": 1,
+   "436": 1,
+   "437": 1,
+   "438": 1,
+   "439": 1,
+   "44": 1,
+   "440": 1,
+   "441": 1,
+   "442": 1,
+   "443": 1,
+   "444": 1,
+   "445": 1,
+   "446": 1,
+   "447": 1,
+   "448": 1,
+   "449": 1,
+   "45": 1,
+   "450": 1,
+   "451": 1,
+   "452": 1,
+   "453": 1,
+   "454": 1,
+   "455": 1,
+   "456": 1,
+   "457": 1,
+   "46": 1,
+   "47": 1,
+   "48": 1,
+   "49": 1,
+   "5": 1,
+   "50": 1,
+   "51": 1,
+   "52": 1,
+   "53": 1,
+   "54": 1,
+   "55": 1,
+   "56": 1,
+   "57": 1,
+   "58": 1,
+   "59": 1,
+   "6": 1,
+   "60": 1,
+   "61": 1,
+   "62": 1,
+   "63": 1,
+   "64": 1,
+   "65": 1,
+   "66": 1,
+   "67": 1,
+   "68": 1,
+   "69": 1,
+   "7": 1,
+   "70": 1,
+   "71": 1,
+   "72": 1,
+   "73": 1,
+   "74": 1,
+   "75": 1,
+   "76": 1,
+   "77": 1,
+   "78": 1,
+   "79": 1,
+   "8": 1,
+   "80": 1,
+   "81": 1,
+   "82": 1,
+   "83": 1,
+   "84": 1,
+   "85": 1,
+   "86": 1,
+   "87": 1,
+   "88": 1,
+   "89": 1,
+   "9": 1,
+   "90": 1,
+   "91": 1,
+   "92": 1,
+   "93": 1,
+   "94": 1,
+   "95": 1,
+   "96": 1,
+   "97": 1,
+   "98": 1,
+   "99": 1,
+   "NoSessionLawChapterNumber": 2014
+  },
+  "subjects": {
+   "ABOR": 3,
+   "AGR": 45,
+   "ALC": 55,
+   "APCT": 3,
+   "APP": 117,
+   "APRO": 2,
+   "AR": 1,
+   "ART": 3,
+   "BAL": 5,
+   "BON": 9,
+   "BUI": 5,
+   "CAP": 19,
+   "CIG": 8,
+   "CIT": 6,
+   "CITF": 3,
+   "CIV": 10,
+   "COL": 8,
+   "COM": 2,
+   "CONS": 8,
+   "CONT": 11,
+   "CORP": 16,
+   "CORR": 37,
+   "CORT": 44,
+   "CR": 97,
+   "CRED": 3,
+   "CRP": 25,
+   "CTY": 14,
+   "CTYF": 3,
+   "CTYO": 1,
+   "DEBT": 8,
+   "DEV": 13,
+   "DISC": 12,
+   "DOC": 1,
+   "ECO": 38,
+   "ELEC": 130,
+   "EMER": 19,
+   "ENER": 61,
+   "ENVP": 51,
+   "EST": 7,
+   "EVID": 5,
+   "FAM": 34,
+   "FED": 75,
+   "FIN": 25,
+   "FIRE": 18,
+   "FISH": 137,
+   "FOR": 2,
+   "GAMB": 22,
+   "GUN": 12,
+   "HLTC": 98,
+   "HLTH": 86,
+   "HOUS": 4,
+   "HWY": 21,
+   "INAT": 1,
+   "IND": 39,
+   "INS": 110,
+   "INST": 7,
+   "IT": 14,
+   "JUD": 20,
+   "JUR": 1,
+   "LAB": 48,
+   "LEG": 153,
+   "LEN": 61,
+   "LG": 126,
+   "LGF": 6,
+   "LIA": 12,
+   "LIS": 65,
+   "LT": 16,
+   "LVTK": 32,
+   "MENT": 31,
+   "MIL": 32,
+   "MIN": 30,
+   "MINE": 10,
+   "MON": 1,
+   "MTRV": 80,
+   "OIL": 47,
+   "PCON": 6,
+   "PLDV": 23,
+   "POFF": 93,
+   "PRIV": 28,
+   "PRO": 62,
+   "PROA": 8,
+   "PROE": 8,
+   "PROO": 19,
+   "PROP": 37,
+   "REC": 30,
+   "REF": 23,
+   "REL": 3,
+   "REM": 4,
+   "RETR": 39,
+   "REVE": 1,
+   "REVL": 49,
+   "REVS": 308,
+   "RUL": 301,
+   "SAF": 26,
+   "SCH": 128,
+   "SCHF": 45,
+   "SEC": 3,
+   "SECT": 1,
+   "SGIS": 4,
+   "SIS": 13,
+   "SOC": 67,
+   "SRC": 8,
+   "STF": 110,
+   "STGO": 124,
+   "STLA": 38,
+   "TEA": 1,
+   "TORT": 7,
+   "TRAD": 3,
+   "TRAF": 24,
+   "TRAN": 49,
+   "TX": 220,
+   "TXAG": 3,
+   "TXCO": 10,
+   "TXCR": 19,
+   "TXFU": 5,
+   "TXIN": 58,
+   "TXOG": 12,
+   "TXPR": 57,
+   "TXSA": 9,
+   "UNEM": 9,
+   "UNIV": 36,
+   "UT": 31,
+   "VOED": 4,
+   "WAGE": 7,
+   "WAT": 96,
+   "WORK": 49
+  }
+ }
+}

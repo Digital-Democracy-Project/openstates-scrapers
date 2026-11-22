@@ -1,0 +1,1004 @@
+{
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=62&sessionOrdinal=20111&billType=SB&billNumber=307": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=838a8dc2-6190-4a7d-8c94-03a2ea0c4e16"
+     }
+    ],
+    "creation": "2024-07-30 13:32:00 -0600",
+    "date": "2024-07-30 13:32:00 -0600",
+    "fileName": "SB0307GovAmd.pdf",
+    "folderId": 65061,
+    "id": 77096,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=63&sessionOrdinal=20131&billType=SB&billNumber=102": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=64&sessionOrdinal=20151&billType=HB&billNumber=279": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=65&sessionOrdinal=20171&billType=HB&billNumber=217": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=65&sessionOrdinal=20171&billType=HB&billNumber=226": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=65&sessionOrdinal=20171&billType=HB&billNumber=230": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=65&sessionOrdinal=20171&billType=HB&billNumber=507": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=65&sessionOrdinal=20171&billType=HB&billNumber=90": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=65&sessionOrdinal=20171&billType=SB&billNumber=40": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=65&sessionOrdinal=20171&billType=SJ&billNumber=27": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=66&sessionOrdinal=20191&billType=HB&billNumber=282": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=67&sessionOrdinal=20211&billType=HB&billNumber=313": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=0e9d8fb5-ddfe-4dfd-b9a4-83f771561333"
+     }
+    ],
+    "creation": "2024-05-23 19:07:51 -0600",
+    "date": "2024-05-23 19:07:51 -0600",
+    "fileName": "HB0313.001.001.pdf",
+    "folderId": 13929,
+    "id": 41035,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=50b9d3b0-0943-4eda-b4e7-a4ab49f25362"
+     }
+    ],
+    "creation": "2024-05-23 19:07:51 -0600",
+    "date": "2024-05-23 19:07:51 -0600",
+    "fileName": "HB0313.001.001_instructions.pdf",
+    "folderId": 13929,
+    "id": 41036,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=58559979-0c46-4f34-bc4c-a7afb83dba55"
+     }
+    ],
+    "creation": "2024-05-23 13:25:47 -0600",
+    "date": "2024-05-23 13:25:47 -0600",
+    "fileName": "HB0313001SCS13689.slc.pdf",
+    "folderId": 13929,
+    "id": 40203,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=None&sessionOrdinal=20171&billType=HB&billNumber=217": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/House/HB217/Amendments"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=None&sessionOrdinal=20171&billType=HB&billNumber=226": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/House/HB226/Amendments"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=None&sessionOrdinal=20171&billType=HB&billNumber=230": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/House/HB230/Amendments"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=None&sessionOrdinal=20171&billType=HB&billNumber=507": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/House/HB507/Amendments"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=None&sessionOrdinal=20171&billType=HB&billNumber=90": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/House/HB90/Amendments"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=None&sessionOrdinal=20171&billType=SB&billNumber=40": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/Senate/SB40/Amendments"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=None&sessionOrdinal=20171&billType=SJ&billNumber=27": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/Senate/SJ27/Amendments"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillFiscalNotes?legislatureOrdinal=62&sessionOrdinal=20111&billType=SB&billNumber=307": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=8e8de714-de94-4923-85d5-3ee1485ae174"
+     }
+    ],
+    "creation": "2024-07-30 13:50:09 -0600",
+    "date": "2024-07-30 13:50:09 -0600",
+    "fileName": "SB0307.pdf",
+    "folderId": 65062,
+    "id": 77129,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillFiscalNotes?legislatureOrdinal=63&sessionOrdinal=20131&billType=SB&billNumber=102": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=c2b746da-5fee-428c-8a45-f934039804d1"
+     }
+    ],
+    "creation": "2024-07-30 10:01:27 -0600",
+    "date": "2024-07-30 10:01:27 -0600",
+    "fileName": "SB0102.pdf",
+    "folderId": 55293,
+    "id": 76581,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillFiscalNotes?legislatureOrdinal=65&sessionOrdinal=20171&billType=HB&billNumber=217": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=34fc2f98-008f-4d6b-b232-03998ea1a7e0"
+     }
+    ],
+    "creation": "2024-06-24 14:19:43 -0600",
+    "date": "2024-06-24 14:19:43 -0600",
+    "fileName": "HB0217_1.pdf",
+    "folderId": 37172,
+    "id": 54847,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillFiscalNotes?legislatureOrdinal=65&sessionOrdinal=20171&billType=HB&billNumber=226": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=0fba218b-3bcc-43e8-b381-20345cfaac97"
+     }
+    ],
+    "creation": "2024-06-25 08:55:18 -0600",
+    "date": "2024-06-25 08:55:18 -0600",
+    "fileName": "HB0226_1.pdf",
+    "folderId": 37235,
+    "id": 55662,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillFiscalNotes?legislatureOrdinal=65&sessionOrdinal=20171&billType=HB&billNumber=230": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=3ee8436d-3387-4b41-92d0-c8c779b207d1"
+     }
+    ],
+    "creation": "2024-06-25 09:07:22 -0600",
+    "date": "2024-06-25 09:07:22 -0600",
+    "fileName": "HB0230_1.pdf",
+    "folderId": 37263,
+    "id": 55762,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillFiscalNotes?legislatureOrdinal=67&sessionOrdinal=20211&billType=HB&billNumber=313": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=1318e53c-a45c-4ac0-b905-8dbad9c24230"
+     }
+    ],
+    "creation": "2024-05-20 10:58:18 -0600",
+    "date": "2024-05-20 10:58:18 -0600",
+    "fileName": "HB0313_1.pdf",
+    "folderId": 13930,
+    "id": 37738,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillFiscalNotes?legislatureOrdinal=None&sessionOrdinal=20171&billType=HB&billNumber=217": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/House/HB217/FiscalNotes"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillFiscalNotes?legislatureOrdinal=None&sessionOrdinal=20171&billType=HB&billNumber=226": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/House/HB226/FiscalNotes"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillFiscalNotes?legislatureOrdinal=None&sessionOrdinal=20171&billType=HB&billNumber=230": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/House/HB230/FiscalNotes"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=62&sessionOrdinal=20111&billType=SB&billNumber=307": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=5ad567c1-af5a-45a9-9f6b-e6d61a685f17"
+     }
+    ],
+    "creation": "2024-07-30 13:32:10 -0600",
+    "date": "2024-07-30 13:32:10 -0600",
+    "fileName": "SB0307GovVeto.pdf",
+    "folderId": 65063,
+    "id": 77098,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=d13c34da-a083-4804-b0e9-7d93264342dd"
+     }
+    ],
+    "creation": "2024-07-30 13:32:10 -0600",
+    "date": "2024-07-30 13:32:10 -0600",
+    "fileName": "SB0307VetoPoll.pdf",
+    "folderId": 65063,
+    "id": 77097,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=63&sessionOrdinal=20131&billType=SB&billNumber=102": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=64&sessionOrdinal=20151&billType=HB&billNumber=279": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=65&sessionOrdinal=20171&billType=HB&billNumber=217": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=75559693-cfb9-46f9-9322-db9e1f2de74a"
+     }
+    ],
+    "creation": "2024-06-24 14:19:18 -0600",
+    "date": "2024-06-24 14:19:18 -0600",
+    "fileName": "HB0217GovVeto.pdf",
+    "folderId": 37173,
+    "id": 54840,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=3c50be11-0684-4824-b9e6-2a8cf1baa109"
+     }
+    ],
+    "creation": "2024-06-24 14:19:18 -0600",
+    "date": "2024-06-24 14:19:18 -0600",
+    "fileName": "HB0217VetoPoll.pdf",
+    "folderId": 37173,
+    "id": 54839,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=fb22d1df-3bd1-4085-b3b8-171affe29ba6"
+     }
+    ],
+    "creation": "2024-06-24 14:19:18 -0600",
+    "date": "2024-06-24 14:19:18 -0600",
+    "fileName": "HB0217VetoPollLetter.pdf",
+    "folderId": 37173,
+    "id": 54838,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=65&sessionOrdinal=20171&billType=HB&billNumber=226": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=65&sessionOrdinal=20171&billType=HB&billNumber=230": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=65&sessionOrdinal=20171&billType=HB&billNumber=507": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=65&sessionOrdinal=20171&billType=HB&billNumber=90": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=65&sessionOrdinal=20171&billType=SB&billNumber=40": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=65&sessionOrdinal=20171&billType=SJ&billNumber=27": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=66&sessionOrdinal=20191&billType=HB&billNumber=282": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=67&sessionOrdinal=20211&billType=HB&billNumber=313": {
+  "body": [],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=None&sessionOrdinal=20171&billType=HB&billNumber=217": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/House/HB217/Other"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=None&sessionOrdinal=20171&billType=HB&billNumber=226": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/House/HB226/Other"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=None&sessionOrdinal=20171&billType=HB&billNumber=230": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/House/HB230/Other"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=None&sessionOrdinal=20171&billType=HB&billNumber=507": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/House/HB507/Other"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=None&sessionOrdinal=20171&billType=HB&billNumber=90": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/House/HB90/Other"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=None&sessionOrdinal=20171&billType=SB&billNumber=40": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/Senate/SB40/Other"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=None&sessionOrdinal=20171&billType=SJ&billNumber=27": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/Senate/SJ27/Other"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=62&sessionOrdinal=20111&billType=SB&billNumber=307": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=46b149ae-dfa7-48c1-bd29-da732af3e785"
+     }
+    ],
+    "creation": "2024-07-30 14:18:08 -0600",
+    "date": "2024-07-30 14:18:08 -0600",
+    "fileName": "SB0307_1.pdf",
+    "folderId": 65064,
+    "id": 77215,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=4d96d97f-6a1e-45fe-a5f4-fcc8bfa0afcb"
+     }
+    ],
+    "creation": "2024-07-30 14:18:08 -0600",
+    "date": "2024-07-30 14:18:08 -0600",
+    "fileName": "SB0307_2.pdf",
+    "folderId": 65064,
+    "id": 77216,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=013bb957-cfdb-44fa-ac96-c5305aaee97f"
+     }
+    ],
+    "creation": "2024-07-30 14:18:08 -0600",
+    "date": "2024-07-30 14:18:08 -0600",
+    "fileName": "SB0307_x.pdf",
+    "folderId": 65064,
+    "id": 77214,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=63&sessionOrdinal=20131&billType=SB&billNumber=102": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=5ee73a73-d902-4a92-84c1-38df2a2e7d86"
+     }
+    ],
+    "creation": "2024-07-24 15:00:58 -0600",
+    "date": "2024-07-24 15:00:58 -0600",
+    "fileName": "SB0102_1.pdf",
+    "folderId": 55295,
+    "id": 74078,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=64&sessionOrdinal=20151&billType=HB&billNumber=279": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=e10c2684-4b80-4320-bf9a-9e309e33dddf"
+     }
+    ],
+    "creation": "2024-06-30 20:14:27 -0600",
+    "date": "2024-06-30 20:14:27 -0600",
+    "fileName": "HB0279_1.pdf",
+    "folderId": 43537,
+    "id": 60554,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=08c4a151-7d3c-4c83-b989-f75cb57bc7f5"
+     }
+    ],
+    "creation": "2024-06-30 20:14:27 -0600",
+    "date": "2024-06-30 20:14:27 -0600",
+    "fileName": "HB0279_2.pdf",
+    "folderId": 43537,
+    "id": 60552,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=bf344d5d-e737-463e-ab82-0461022134e3"
+     }
+    ],
+    "creation": "2024-06-30 20:14:27 -0600",
+    "date": "2024-06-30 20:14:27 -0600",
+    "fileName": "HB0279_x.pdf",
+    "folderId": 43537,
+    "id": 60553,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=65&sessionOrdinal=20171&billType=HB&billNumber=217": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=b13734e6-349e-4c92-8393-1134994084c7"
+     }
+    ],
+    "creation": "2024-06-24 14:20:07 -0600",
+    "date": "2024-06-24 14:20:07 -0600",
+    "fileName": "HB0217_1.pdf",
+    "folderId": 37174,
+    "id": 54855,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=3380941e-94d9-400f-923c-d4a1cc27a0b9"
+     }
+    ],
+    "creation": "2024-06-24 14:20:07 -0600",
+    "date": "2024-06-24 14:20:07 -0600",
+    "fileName": "HB0217_2.pdf",
+    "folderId": 37174,
+    "id": 54854,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=9b72eecf-a5c4-4980-b804-e0b3fc2756cc"
+     }
+    ],
+    "creation": "2024-06-24 14:20:07 -0600",
+    "date": "2024-06-24 14:20:07 -0600",
+    "fileName": "HB0217_x.pdf",
+    "folderId": 37174,
+    "id": 54853,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=65&sessionOrdinal=20171&billType=HB&billNumber=226": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=e37657dd-b58d-49c7-a3d7-50a31065210a"
+     }
+    ],
+    "creation": "2024-06-25 08:54:48 -0600",
+    "date": "2024-06-25 08:54:48 -0600",
+    "fileName": "HB0226_1.pdf",
+    "folderId": 37237,
+    "id": 55657,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=b1d12168-5ce2-45d8-be10-55edbc773f24"
+     }
+    ],
+    "creation": "2024-06-25 08:54:48 -0600",
+    "date": "2024-06-25 08:54:48 -0600",
+    "fileName": "HB0226_2.pdf",
+    "folderId": 37237,
+    "id": 55658,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=77b1c1f8-1b27-4055-a1e0-d22284873590"
+     }
+    ],
+    "creation": "2024-06-25 08:54:47 -0600",
+    "date": "2024-06-25 08:54:47 -0600",
+    "fileName": "HB0226_x.pdf",
+    "folderId": 37237,
+    "id": 55656,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=65&sessionOrdinal=20171&billType=HB&billNumber=230": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=652436b9-96be-40a6-a19e-fab00978966e"
+     }
+    ],
+    "creation": "2024-06-25 09:07:00 -0600",
+    "date": "2024-06-25 09:07:00 -0600",
+    "fileName": "HB0230_1.pdf",
+    "folderId": 37265,
+    "id": 55760,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=9345c465-657e-4a48-bbbd-8369db68dd65"
+     }
+    ],
+    "creation": "2024-06-25 09:07:00 -0600",
+    "date": "2024-06-25 09:07:00 -0600",
+    "fileName": "HB0230_2.pdf",
+    "folderId": 37265,
+    "id": 55761,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=65&sessionOrdinal=20171&billType=HB&billNumber=507": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=5fbbec18-080c-496a-be90-e84325c9ec98"
+     }
+    ],
+    "creation": "2024-06-27 08:47:04 -0600",
+    "date": "2024-06-27 08:47:04 -0600",
+    "fileName": "HB0507_1.pdf",
+    "folderId": 39204,
+    "id": 57659,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=7a92a07b-0296-4643-921c-18857aa8a519"
+     }
+    ],
+    "creation": "2024-06-27 08:47:04 -0600",
+    "date": "2024-06-27 08:47:04 -0600",
+    "fileName": "HB0507_2.pdf",
+    "folderId": 39204,
+    "id": 57656,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=c3a6f738-1c52-4c07-b41a-4c356918c0a8"
+     }
+    ],
+    "creation": "2024-06-27 08:47:04 -0600",
+    "date": "2024-06-27 08:47:04 -0600",
+    "fileName": "HB0507_3.pdf",
+    "folderId": 39204,
+    "id": 57657,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=450e7ff6-1b14-4900-8614-b3f924a4e252"
+     }
+    ],
+    "creation": "2024-06-27 08:47:04 -0600",
+    "date": "2024-06-27 08:47:04 -0600",
+    "fileName": "HB0507_x.pdf",
+    "folderId": 39204,
+    "id": 57658,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=65&sessionOrdinal=20171&billType=HB&billNumber=90": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=5d15852d-aff6-414a-a7c3-41444fddc99e"
+     }
+    ],
+    "creation": "2024-06-19 14:21:05 -0600",
+    "date": "2024-06-19 14:21:05 -0600",
+    "fileName": "HB0090_1.pdf",
+    "folderId": 36285,
+    "id": 52172,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=65&sessionOrdinal=20171&billType=SB&billNumber=40": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=67c3932f-7d79-482b-a113-87dc356cf2f7"
+     }
+    ],
+    "creation": "2024-06-25 08:57:32 -0600",
+    "date": "2024-06-25 08:57:32 -0600",
+    "fileName": "SB0040_1.pdf",
+    "folderId": 33296,
+    "id": 55674,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=584271be-ef86-40d3-af10-b2c423a80563"
+     }
+    ],
+    "creation": "2024-06-25 08:57:32 -0600",
+    "date": "2024-06-25 08:57:32 -0600",
+    "fileName": "SB0040_2.pdf",
+    "folderId": 33296,
+    "id": 55672,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=d646f49f-5ffb-46f4-a2a2-9c04f300c817"
+     }
+    ],
+    "creation": "2024-06-25 08:57:32 -0600",
+    "date": "2024-06-25 08:57:32 -0600",
+    "fileName": "SB0040_x.pdf",
+    "folderId": 33296,
+    "id": 55673,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=65&sessionOrdinal=20171&billType=SJ&billNumber=27": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=11cce8e5-ba58-49d7-bf0a-5561b6620061"
+     }
+    ],
+    "creation": "2024-06-21 13:09:18 -0600",
+    "date": "2024-06-21 13:09:18 -0600",
+    "fileName": "SJ0027_1.pdf",
+    "folderId": 32505,
+    "id": 53404,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=fc5a2869-e737-49cd-8e21-95ab6bce65fb"
+     }
+    ],
+    "creation": "2024-06-21 13:09:18 -0600",
+    "date": "2024-06-21 13:09:18 -0600",
+    "fileName": "SJ0027_x.pdf",
+    "folderId": 32505,
+    "id": 53403,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=66&sessionOrdinal=20191&billType=HB&billNumber=282": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=8e83a074-e71c-448a-bd64-4158d00992ba"
+     }
+    ],
+    "creation": "2024-06-12 12:42:05 -0600",
+    "date": "2024-06-12 12:42:05 -0600",
+    "fileName": "HB0282_1.pdf",
+    "folderId": 20089,
+    "id": 49440,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=eb3ed66a-44b3-48c7-82ae-7f53f8a989eb"
+     }
+    ],
+    "creation": "2024-06-12 12:42:05 -0600",
+    "date": "2024-06-12 12:42:05 -0600",
+    "fileName": "HB0282_2.pdf",
+    "folderId": 20089,
+    "id": 49439,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=addb0ace-3137-4c5b-83ea-02673e7b1725"
+     }
+    ],
+    "creation": "2024-06-12 12:42:05 -0600",
+    "date": "2024-06-12 12:42:05 -0600",
+    "fileName": "HB0282_x.pdf",
+    "folderId": 20089,
+    "id": 49441,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=67&sessionOrdinal=20211&billType=HB&billNumber=313": {
+  "body": [
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=2699e019-cc54-4b88-855b-cac7a9e33cbf"
+     }
+    ],
+    "creation": "2024-05-21 10:28:38 -0600",
+    "date": "2024-05-21 10:28:38 -0600",
+    "fileName": "HB0313_1.pdf",
+    "folderId": 13932,
+    "id": 39138,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=be893313-d2dc-455f-9f61-87e37079f51e"
+     }
+    ],
+    "creation": "2024-05-21 10:28:38 -0600",
+    "date": "2024-05-21 10:28:38 -0600",
+    "fileName": "HB0313_2.pdf",
+    "folderId": 13932,
+    "id": 39139,
+    "templateId": 107
+   },
+   {
+    "attributes": [
+     {
+      "name": "DocumentLink",
+      "stringValue": "https://docs.legmt.gov/download-ticket?ticketId=41200024-9c87-4946-896d-efb05c005670"
+     }
+    ],
+    "creation": "2024-05-21 10:28:38 -0600",
+    "date": "2024-05-21 10:28:38 -0600",
+    "fileName": "HB0313_X.pdf",
+    "folderId": 13932,
+    "id": 39140,
+    "templateId": 107
+   }
+  ],
+  "status": 200
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=None&sessionOrdinal=20171&billType=HB&billNumber=217": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/House/HB217/Versions"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=None&sessionOrdinal=20171&billType=HB&billNumber=226": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/House/HB226/Versions"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=None&sessionOrdinal=20171&billType=HB&billNumber=230": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/House/HB230/Versions"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=None&sessionOrdinal=20171&billType=HB&billNumber=507": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/House/HB507/Versions"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=None&sessionOrdinal=20171&billType=HB&billNumber=90": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/House/HB90/Versions"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=None&sessionOrdinal=20171&billType=SB&billNumber=40": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/Senate/SB40/Versions"
+  },
+  "status": 404
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=None&sessionOrdinal=20171&billType=SJ&billNumber=27": {
+  "body": {
+   "className": "gov.legmt.logicaldoc.exception.FolderNotFoundException",
+   "message": "No Folder found with the given path: None/20171/Bills/Senate/SJ27/Versions"
+  },
+  "status": 404
+ }
+}

@@ -10,6 +10,10 @@ class Montana(State):
         "events": MTEventScraper,
     }
     legislative_sessions = [
+        # OPEN-750: the document endpoints (bill versions, fiscal notes) answer 404 without the
+        # Legislature's ordinal. Each session's legislatureOrdinal is the `ordinal` field
+        # api.legmt.gov/archive/v1/sessions gives for its sessionId (20111: 62, 20131: 63,
+        # 20151: 64, 20171: 65, 20191: 66, 20211: 67).
         {
             "_scraped_name": "20111",
             "classification": "primary",
@@ -17,6 +21,7 @@ class Montana(State):
             "name": "2011 Regular Session",
             "start_date": "2011-01-03",
             "end_date": "2011-04-28",
+            "extras": {"legislatureOrdinal": 62, "newAPIIdentifier": None},
         },
         {
             "_scraped_name": "20131",
@@ -25,6 +30,7 @@ class Montana(State):
             "name": "2013 Regular Session",
             "start_date": "2013-01-07",
             "end_date": "2013-04-27",
+            "extras": {"legislatureOrdinal": 63, "newAPIIdentifier": None},
         },
         {
             "_scraped_name": "20151",
@@ -33,6 +39,7 @@ class Montana(State):
             "name": "2015 Regular Session",
             "start_date": "2015-01-05",
             "end_date": "2015-04-28",
+            "extras": {"legislatureOrdinal": 64, "newAPIIdentifier": None},
         },
         {
             "_scraped_name": "20171",
@@ -41,6 +48,7 @@ class Montana(State):
             "name": "2017 Regular Session",
             "start_date": "2017-01-02",
             "end_date": "2017-04-29",
+            "extras": {"legislatureOrdinal": 65, "newAPIIdentifier": None},
         },
         # OPEN-749: the archive API lists 20172 "November Special Session" (sessionTypeDesc
         # "Special", ordinal 65), a session of its own. Its dates are the journals': both
@@ -65,6 +73,7 @@ class Montana(State):
             "name": "2019 Regular Session",
             "start_date": "2019-01-07",
             "end_date": "2019-04-29",
+            "extras": {"legislatureOrdinal": 66, "newAPIIdentifier": None},
         },
         {
             "_scraped_name": "20211",
@@ -74,6 +83,7 @@ class Montana(State):
             "start_date": "2021-01-04",
             "end_date": "2021-05-13",
             "active": False,
+            "extras": {"legislatureOrdinal": 67, "newAPIIdentifier": None},
         },
         {
             "_scraped_name": "20231",
