@@ -806,23 +806,20 @@ class HIBillScraper(Scraper):
         bill_chamber, classification, _ = special_measures.TYPES[key[0]]
         bill_id = f"{key[0]}{key[1]}"
         other = "lower" if bill_chamber == "upper" else "upper"
-        # the title its own chamber's journal gives it, else the other chamber's
+        # the title its own chamber's journal gives it, else the other chamber's; a measure that
+        # cannot be titled cannot be read reliably, so it stops the scrape (OPEN-751)
         title = None
         for side in (bill_chamber, other):
             titles = {t for _, t in events[side][key]["titles"]}
             if len(titles) > 1:
-                self.warning(
+                raise ValueError(
                     f"{session} {bill_id}: the {side} journal gives two titles {titles}"
                 )
-                return
             if titles:
                 title = titles.pop()
                 break
         if title is None:
-            self.warning(
-                f"{session} {bill_id}: no journal gives its title; not scraped"
-            )
-            return
+            raise ValueError(f"{session} {bill_id}: no journal gives its title")
         bill = Bill(
             bill_id,
             session,
@@ -836,6 +833,8 @@ class HIBillScraper(Scraper):
         # Carroll, Evans and Kawakami"; "jointly offered by"), so each is a primary sponsor
         for name in dict.fromkeys(events[bill_chamber][key]["sponsors"]):
             bill.add_sponsorship(name, "primary", "person", True)
+        if not bill.sponsorships:
+            self.warning(f"{session} {bill_id}: no introducer read from the journal")
         for name, url in measure["versions"]:
             version = name if name == bill_id else f"{bill_id}_{name}"
             bill.add_version_link(version, url, media_type="application/pdf")

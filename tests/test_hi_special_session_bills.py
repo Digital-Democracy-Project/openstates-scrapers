@@ -327,15 +327,29 @@ def test_a_roll_call_whose_names_do_not_match_its_counts_is_left_out():
     assert "2013-10-30" not in {v.start_date for v in votes if chamber(v) == "upper"}
 
 
-def test_a_measure_its_journal_titles_two_ways_is_not_scraped():
+def test_a_measure_that_cannot_be_titled_stops_the_scrape():
+    # the ticket: "If a whole bill cannot be read reliably, stop and ask"
     events = {side: dict(EVENTS[side]) for side in EVENTS}
     sb1 = dict(events["upper"][("SB", "1")])
     sb1["titles"] = sb1["titles"] + [("upper", "RELATING TO SOMETHING ELSE.")]
     events["upper"][("SB", "1")] = sb1
-    s = scraper()
-    bills, votes = special(("SB", "1"), events, s)
-    assert bills == [] and votes == []
-    assert any("two titles" in w for w in s.warnings)
+    with pytest.raises(ValueError, match="two titles"):
+        special(("SB", "1"), events)
+    for side in events:
+        untitled = dict(events[side][("SB", "1")])
+        untitled["titles"] = []
+        events[side][("SB", "1")] = untitled
+    with pytest.raises(ValueError, match="no journal gives its title"):
+        special(("SB", "1"), events)
+
+
+def test_a_measure_without_its_introduced_text_stops_the_scrape():
+    listing = read("splsession2013b.html")
+    assert listing.count('/sessions/splsession2013b/SB1_.pdf"') == 1
+    with pytest.raises(
+        ValueError, match="SB1: files in the folder but no introduced text"
+    ):
+        sm.folder_measures(listing.replace('/sessions/splsession2013b/SB1_.pdf"', '"'))
 
 
 def test_the_houses_counted_votes():
@@ -415,7 +429,7 @@ def test_a_special_session_scrape_reads_its_folder_and_journals(monkeypatch):
         JOURNALS["upper"][0]: pages[JOURNALS["upper"][0]][:2]
     }  # the cover pages only
     monkeypatch.setattr(sm, "xml_pages", lambda url: other.get(url, pages[url]))
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="not within 2013 Second Special Session"):
         list(s.scrape(session=SESSION))
     monkeypatch.setattr(sm, "xml_pages", lambda url: pages[url])
     # a chamber's scrape takes only its own measures

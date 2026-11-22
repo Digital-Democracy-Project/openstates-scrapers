@@ -33,8 +33,11 @@ What is read, and from where (all from the journals' own wording, never guessed)
   the measure's own vote and are not read.
 
 Left out because the journals do not print them in a form that can be read without guessing: the
-House's committee referrals (printed as a referral sheet table that does not read in order) and the
-governor's action (printed in later journals). See the OPEN-751 PR for the per-session results.
+House's committee referrals (printed as a referral sheet table that does not read in order), the
+governor's action and Act numbers (printed in later journals and the history tables), and voice
+votes (no counts). A measure whose title cannot be read, or that the journals title two ways, stops
+the scrape (OPEN-751: if a whole bill cannot be read reliably, stop and ask). See the OPEN-751 PR
+for the per-session results.
 """
 import datetime as dt
 import re
@@ -107,8 +110,8 @@ AMENDMENT_RE = re.compile(r"(?:^|_)FA(?P<num>\d+)_$", re.IGNORECASE)
 
 def folder_measures(listing_html):
     """{("SB", "1"): {"introduced": url, "versions": [(name, url)], "documents": [(name, url)]}}
-    from a document folder's listing. Only measures whose introduced text is in the folder are
-    returned: a draft or report without it is not a measure of this session."""
+    from a document folder's listing. A measure with drafts or reports but no introduced text
+    cannot be read reliably (OPEN-751: stop and ask), so it stops the scrape."""
     hrefs = re.findall(r'href="([^"]+)"', listing_html, flags=re.IGNORECASE)
     files = {}
     for href in hrefs:
@@ -142,9 +145,10 @@ def folder_measures(listing_html):
                 found["documents"].append(
                     (f"Floor Amendment {AMENDMENT_RE.search(rest).group('num')}", url)
                 )
-        if found["introduced"]:
-            found["versions"].insert(0, (prefix, found["introduced"]))
-            measures[key] = found
+        if not found["introduced"]:
+            raise ValueError(f"{prefix}: files in the folder but no introduced text")
+        found["versions"].insert(0, (prefix, found["introduced"]))
+        measures[key] = found
     return measures
 
 
