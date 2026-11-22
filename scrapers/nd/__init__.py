@@ -17,6 +17,19 @@ class NorthDakota(State):
         "events_web": NDEventScraper,
         "events": NDEventsCSVScraper,
     }
+    # OPEN-746: each special session is a session of its own, with its own dates (Ramon 2026-11-21:
+    # "regular session and special session are two different things. don't ever mix their dates
+    # together"). The legislature names them "<n>th Legislative Assembly - Special Session (<Mon
+    # yyyy>)" (its pages ndlegis.gov/assembly/<assembly>/special and .../special-2, which give the
+    # convened and adjourned days used below) and its journals list each one apart ("2016 Special
+    # Session House and Senate Journals", research-and-archives/journals). The site's API keeps
+    # one bill list per Legislative Assembly (api/assembly/<assembly>/data/bills.json) and tags
+    # every bill with its own session (`session_id`: 201501 for the 2015 Regular Session, 201502
+    # for the special session of August 2016), so each session reads its assembly's list and keeps
+    # only the bills tagged with its `site_session_id` (bills.py). A regular session's assembly is
+    # "<identifier>-<start year>" and its tag "<start year>01"; a special session names both in
+    # `extras`. Both 2026 special sessions are switched on (Ramon 2026-11-21, OPEN-746), so a
+    # nightly run scrapes 69, 69S1 and 69S2, each keeping only its own bills.
     legislative_sessions = [
         {
             "_scraped_name": "62nd Legislative Assembly (2011-12)",
@@ -25,6 +38,17 @@ class NorthDakota(State):
             "start_date": "2011-01-04",
             "end_date": "2011-04-28",
             "classification": "primary",
+        },
+        {
+            # ndlegis.gov/assembly/62-2011/special: convened Monday, November 7, 2011,
+            # adjourned Friday, November 11, 2011
+            "identifier": "62S1",
+            "name": "62nd Legislative Assembly - Special Session (Nov 2011)",
+            "start_date": "2011-11-07",
+            "end_date": "2011-11-11",
+            "classification": "special",
+            "active": False,
+            "extras": {"assembly": "62-2011", "site_session_id": "201102"},
         },
         {
             "_scraped_name": "63rd Legislative Assembly (2013-14)",
@@ -41,6 +65,17 @@ class NorthDakota(State):
             "start_date": "2015-01-08",
             "end_date": "2015-04-29",
             "classification": "primary",
+        },
+        {
+            # ndlegis.gov/assembly/64-2015/special: convened Tuesday, August 2, 2016,
+            # adjourned Thursday, August 4, 2016
+            "identifier": "64S1",
+            "name": "64th Legislative Assembly - Special Session (Aug 2016)",
+            "start_date": "2016-08-02",
+            "end_date": "2016-08-04",
+            "classification": "special",
+            "active": False,
+            "extras": {"assembly": "64-2015", "site_session_id": "201502"},
         },
         {
             "_scraped_name": "65th Legislative Assembly (2017-18)",
@@ -69,12 +104,15 @@ class NorthDakota(State):
         },
         {
             "_scraped_name": "67th (2021) Legislative Assembly Special 2021 Session",
+            # ndlegis.gov/assembly/67-2021/special: convened Monday, November 8, 2021, adjourned
+            # Friday, November 12, 2021
             "identifier": "67S1",
-            "name": "67th (2021) Legislative Assembly Special 2021 Session",
+            "name": "67th Legislative Assembly - Special Session (Nov 2021)",
             "start_date": "2021-11-08",
             "end_date": "2021-11-12",
             "classification": "special",
             "active": False,
+            "extras": {"assembly": "67-2021", "site_session_id": "202102"},
         },
         {
             "_scraped_name": "68th Legislative Assembly (2023-24)",
@@ -86,6 +124,17 @@ class NorthDakota(State):
             "active": False,
         },
         {
+            # ndlegis.gov/assembly/68-2023/special: convened Monday, October 23, 2023,
+            # adjourned Wednesday, October 25, 2023
+            "identifier": "68S1",
+            "name": "68th Legislative Assembly - Special Session (Oct 2023)",
+            "start_date": "2023-10-23",
+            "end_date": "2023-10-25",
+            "classification": "special",
+            "active": False,
+            "extras": {"assembly": "68-2023", "site_session_id": "202302"},
+        },
+        {
             "_scraped_name": "69th Legislative Assembly (2025-26)",
             "identifier": "69",
             "name": "69th Legislative Assembly (2025-26)",
@@ -93,6 +142,28 @@ class NorthDakota(State):
             "end_date": "2025-05-02",
             "classification": "primary",
             "active": True,
+        },
+        {
+            # ndlegis.gov/assembly/69-2025/special: convened Wednesday, January 21, 2026,
+            # adjourned Friday, January 23, 2026
+            "identifier": "69S1",
+            "name": "69th Legislative Assembly - Special Session (Jan 2026)",
+            "start_date": "2026-01-21",
+            "end_date": "2026-01-23",
+            "classification": "special",
+            "active": True,
+            "extras": {"assembly": "69-2025", "site_session_id": "202502"},
+        },
+        {
+            # ndlegis.gov/assembly/69-2025/special-2: convened Wednesday, September 2, 2026,
+            # adjourned Friday, September 4, 2026
+            "identifier": "69S2",
+            "name": "69th Legislative Assembly - Special Session (Sep 2026)",
+            "start_date": "2026-09-02",
+            "end_date": "2026-09-04",
+            "classification": "special",
+            "active": True,
+            "extras": {"assembly": "69-2025", "site_session_id": "202503"},
         },
         {
             "_scraped_name": "70th Legislative Assembly (2027-28)",

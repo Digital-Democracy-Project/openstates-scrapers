@@ -86,7 +86,9 @@ def _name_lookup(monkeypatch, pages):
         return _StubResponse(pages[url])
 
     monkeypatch.setattr(nd_bills.requests, "get", fake_get)
-    bill_list = nd_bills.BillList({"assembly_id": "69", "session_year": "2025"})
+    bill_list = nd_bills.BillList(
+        {"session": "69", "assembly": "69-2025", "site_session_id": "202501"}
+    )
     bill_list.members_cache = {}  # the class-level cache would leak between tests
     return bill_list, calls
 
