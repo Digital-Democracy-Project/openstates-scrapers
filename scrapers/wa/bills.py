@@ -59,6 +59,11 @@ class WABillScraper(Scraper, LXMLMixin):
     # bulk list; see scrape_bill()'s start= filter
     _latest_status_date = None
     _status_changes = None
+    # OPEN-647: bill number -> {companion bill id: its biennium} over ALL of the bill's records in
+    # the bulk list; see _companions()
+    _companions_by_num = None
+    # the legislature's own wording on the bill page ("Companion bill: SB 5167")
+    COMPANION_LABEL = "Companion bill"
 
     _TZ = pytz.timezone("US/Eastern")
 
@@ -393,6 +398,21 @@ class WABillScraper(Scraper, LXMLMixin):
             xpath(leg, "string(wa:ShortLegislationType/wa:LongLegislationType)"),
         ]
 
+    def _companions(self, records):
+        """OPEN-647: the companion bills the legislature lists (wa:Companions), over every record
+        of one bill. Only the original version's record lists the companion (HB 1024 names SB
+        5300; its SHB and 2SHB records list none), so all records are read, not just one."""
+        found = {}
+        for leg in records:
+            for comp in xpath(leg, "wa:Companions/wa:Companion"):
+                # a companion is named by its version ("EHB 1052"); the bill is "HB 1052"
+                comp_id = self.norm_bill_id_re.search(xpath(comp, "string(wa:BillId)"))
+                if comp_id:
+                    found.setdefault(
+                        comp_id.group(0), xpath(comp, "string(wa:Biennium)").strip()
+                    )
+        return found
+
     def scrape_bill(self, chamber, session, bill_id, year):
         bill_num = bill_id.split()[1]
         prefile_year = year - 1
@@ -403,6 +423,7 @@ class WABillScraper(Scraper, LXMLMixin):
             # so only use the bulk record when all versions agree
             self._legislation = {}
             self._latest_status_date = {}
+            self._companions_by_num = {}
             mixed = set()
             url = "%s/GetLegislationIntroducedSince?sinceDate=%s-11-01" % (
                 self._base_url,
@@ -421,6 +442,10 @@ class WABillScraper(Scraper, LXMLMixin):
                 status_date = xpath(leg, "string(wa:CurrentStatus/wa:ActionDate)")
                 if status_date > self._latest_status_date.get(num, ""):
                     self._latest_status_date[num] = status_date
+                for comp_id, biennium in self._companions([leg]).items():
+                    self._companions_by_num.setdefault(num, {}).setdefault(
+                        comp_id, biennium
+                    )
                 first = self._legislation.setdefault(num, leg)
                 if self._legislation_fields(first) != self._legislation_fields(leg):
                     mixed.add(num)
@@ -428,6 +453,7 @@ class WABillScraper(Scraper, LXMLMixin):
                 del self._legislation[num]
 
         page = self._legislation.get(bill_num)
+        companions = self._companions_by_num.get(bill_num, {})
         if page is None:
             # resolutions are not in the bulk list
             url = "%s/GetLegislation?biennium=%s&billNumber" "=%s" % (
@@ -438,7 +464,9 @@ class WABillScraper(Scraper, LXMLMixin):
 
             page = self.get(url)
             page = lxml.etree.fromstring(page.content)
-            page = xpath(page, "//wa:Legislation")[0]
+            records = xpath(page, "//wa:Legislation")
+            companions = self._companions(records)
+            page = records[0]
 
         if self._start_dt:
             action_date_str = xpath(page, "string(wa:CurrentStatus/wa:ActionDate)")
@@ -489,6 +517,16 @@ class WABillScraper(Scraper, LXMLMixin):
         )
 
         bill.add_source(fake_source)
+
+        for comp_id, biennium in companions.items():
+            # a biennium "2025-26" is the session "2025-2026"
+            start = int((biennium or self.biennium)[0:4])
+            bill.add_related_bill(
+                comp_id,
+                f"{start}-{start + 1}",
+                "companion",
+                label=self.COMPANION_LABEL,
+            )
 
         try:
             for version in self.versions[bill_id]:

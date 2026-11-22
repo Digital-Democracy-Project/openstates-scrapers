@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfLegislation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://WSLWebServices.leg.wa.gov/">
+  <Legislation>
+    <Biennium>2025-26</Biennium>
+    <BillId>HB 1003</BillId>
+    <BillNumber>1003</BillNumber>
+    <SubstituteVersion>0</SubstituteVersion>
+    <EngrossedVersion>0</EngrossedVersion>
+    <ShortLegislationType>
+      <ShortLegislationType>B</ShortLegislationType>
+      <LongLegislationType>Bill</LongLegislationType>
+    </ShortLegislationType>
+    <OriginalAgency>House</OriginalAgency>
+    <Active>true</Active>
+    <StateFiscalNote>false</StateFiscalNote>
+    <LocalFiscalNote>false</LocalFiscalNote>
+    <Appropriations>false</Appropriations>
+    <RequestedByGovernor>false</RequestedByGovernor>
+    <RequestedByBudgetCommittee>false</RequestedByBudgetCommittee>
+    <RequestedByDepartment>false</RequestedByDepartment>
+    <RequestedByOther>false</RequestedByOther>
+    <ShortDescription>Service of notice/tenants</ShortDescription>
+    <Request>H-0107.1</Request>
+    <IntroducedDate>2025-01-13T00:00:00</IntroducedDate>
+    <CurrentStatus>
+      <BillId>HB 1003</BillId>
+      <HistoryLine>Effective date 7/27/2025.</HistoryLine>
+      <ActionDate>2025-04-11T00:00:00</ActionDate>
+      <AmendedByOppositeBody>false</AmendedByOppositeBody>
+      <PartialVeto>false</PartialVeto>
+      <Veto>false</Veto>
+      <AmendmentsExist>true</AmendmentsExist>
+      <Status>C 44 L 25</Status>
+    </CurrentStatus>
+    <Sponsor>(Abbarno)</Sponsor>
+    <PrimeSponsorID>31526</PrimeSponsorID>
+    <LongDescription>Addressing service of notice by mail in cases involving forcible entry and forcible and unlawful detainer.</LongDescription>
+    <LegalTitle>AN ACT Relating to service of notice by mail in cases involving forcible entry and forcible and unlawful detainer;</LegalTitle>
+    <Companions />
+  </Legislation>
+    <Legislation>
+    <Biennium>2025-26</Biennium>
+    <BillId>HB 1024</BillId>
+    <BillNumber>1024</BillNumber>
+    <SubstituteVersion>0</SubstituteVersion>
+    <EngrossedVersion>0</EngrossedVersion>
+    <ShortLegislationType>
+      <ShortLegislationType>B</ShortLegislationType>
+      <LongLegislationType>Bill</LongLegislationType>
+    </ShortLegislationType>
+    <OriginalAgency>House</OriginalAgency>
+    <Active>false</Active>
+    <StateFiscalNote>true</StateFiscalNote>
+    <LocalFiscalNote>false</LocalFiscalNote>
+    <Appropriations>false</Appropriations>
+    <RequestedByGovernor>false</RequestedByGovernor>
+    <RequestedByBudgetCommittee>false</RequestedByBudgetCommittee>
+    <RequestedByDepartment>false</RequestedByDepartment>
+    <RequestedByOther>true</RequestedByOther>
+    <ShortDescription>St. Edward state park</ShortDescription>
+    <Request>Z-0054.2</Request>
+    <IntroducedDate>2025-01-13T00:00:00</IntroducedDate>
+    <CurrentStatus>
+      <BillId>HB 1024</BillId>
+      <HistoryLine>2nd substitute bill substituted.</HistoryLine>
+      <ActionDate>2025-03-03T00:00:00</ActionDate>
+      <AmendedByOppositeBody>false</AmendedByOppositeBody>
+      <PartialVeto>false</PartialVeto>
+      <Veto>false</Veto>
+      <AmendmentsExist>false</AmendmentsExist>
+      <Status>H subst for</Status>
+    </CurrentStatus>
+    <Sponsor>(Kloba)</Sponsor>
+    <PrimeSponsorID>26168</PrimeSponsorID>
+    <LongDescription>Concerning the leasing authority of the state parks and recreation commission at St. Edward State Park.</LongDescription>
+    <LegalTitle>AN ACT Relating to leasing authority of the state parks and recreation commission at St. Edward State Park;</LegalTitle>
+    <Companions>
+      <Companion>
+        <Biennium>2025-26</Biennium>
+        <BillId>SB 5300</BillId>
+        <Status>Ssubst for</Status>
+      </Companion>
+    </Companions>
+  </Legislation>
+    <Legislation>
+    <Biennium>2025-26</Biennium>
+    <BillId>SHB 1024</BillId>
+    <BillNumber>1024</BillNumber>
+    <SubstituteVersion>1</SubstituteVersion>
+    <EngrossedVersion>0</EngrossedVersion>
+    <ShortLegislationType>
+      <ShortLegislationType>B</ShortLegislationType>
+      <LongLegislationType>Bill</LongLegislationType>
+    </ShortLegislationType>
+    <OriginalAgency>House</OriginalAgency>
+    <Active>false</Active>
+    <StateFiscalNote>false</StateFiscalNote>
+    <LocalFiscalNote>false</LocalFiscalNote>
+    <Appropriations>false</Appropriations>
+    <RequestedByGovernor>false</RequestedByGovernor>
+    <RequestedByBudgetCommittee>false</RequestedByBudgetCommittee>
+    <RequestedByDepartment>false</RequestedByDepartment>
+    <RequestedByOther>true</RequestedByOther>
+    <ShortDescription>St. Edward state park</ShortDescription>
+    <Request>H-0953.1</Request>
+    <IntroducedDate>2025-01-27T00:00:00</IntroducedDate>
+    <CurrentStatus>
+      <BillId>SHB 1024</BillId>
+      <HistoryLine>2nd substitute bill substituted.</HistoryLine>
+      <ActionDate>2025-03-03T00:00:00</ActionDate>
+      <AmendedByOppositeBody>false</AmendedByOppositeBody>
+      <PartialVeto>false</PartialVeto>
+      <Veto>false</Veto>
+      <AmendmentsExist>false</AmendmentsExist>
+      <Status>H subst for</Status>
+    </CurrentStatus>
+    <Sponsor>ENVI(Kloba)</Sponsor>
+    <PrimeSponsorID>26168</PrimeSponsorID>
+    <LongDescription>Concerning the leasing authority of the state parks and recreation commission at St. Edward State Park.</LongDescription>
+    <LegalTitle>AN ACT Relating to leasing authority of the state parks and recreation commission at St. Edward State Park;</LegalTitle>
+    <Companions />
+  </Legislation>
+    <Legislation>
+    <Biennium>2025-26</Biennium>
+    <BillId>2SHB 1024</BillId>
+    <BillNumber>1024</BillNumber>
+    <SubstituteVersion>2</SubstituteVersion>
+    <EngrossedVersion>0</EngrossedVersion>
+    <ShortLegislationType>
+      <ShortLegislationType>B</ShortLegislationType>
+      <LongLegislationType>Bill</LongLegislationType>
+    </ShortLegislationType>
+    <OriginalAgency>House</OriginalAgency>
+    <Active>true</Active>
+    <StateFiscalNote>false</StateFiscalNote>
+    <LocalFiscalNote>false</LocalFiscalNote>
+    <Appropriations>false</Appropriations>
+    <RequestedByGovernor>false</RequestedByGovernor>
+    <RequestedByBudgetCommittee>false</RequestedByBudgetCommittee>
+    <RequestedByDepartment>false</RequestedByDepartment>
+    <RequestedByOther>true</RequestedByOther>
+    <ShortDescription>St. Edward state park</ShortDescription>
+    <Request>H-1520.1</Request>
+    <IntroducedDate>2025-02-20T00:00:00</IntroducedDate>
+    <CurrentStatus>
+      <BillId>2SHB 1024</BillId>
+      <HistoryLine>Effective date 7/27/2025.</HistoryLine>
+      <ActionDate>2025-04-07T00:00:00</ActionDate>
+      <AmendedByOppositeBody>false</AmendedByOppositeBody>
+      <PartialVeto>false</PartialVeto>
+      <Veto>false</Veto>
+      <AmendmentsExist>false</AmendmentsExist>
+      <Status>C 14 L 25</Status>
+    </CurrentStatus>
+    <Sponsor>CB(Kloba)</Sponsor>
+    <PrimeSponsorID>26168</PrimeSponsorID>
+    <LongDescription>Concerning the leasing authority of the state parks and recreation commission at St. Edward State Park.</LongDescription>
+    <LegalTitle>AN ACT Relating to leasing authority of the state parks and recreation commission at St. Edward State Park;</LegalTitle>
+    <Companions />
+  </Legislation>
+    <Legislation>
+    <Biennium>2025-26</Biennium>
+    <BillId>HB 1052</BillId>
+    <BillNumber>1052</BillNumber>
+    <SubstituteVersion>0</SubstituteVersion>
+    <EngrossedVersion>0</EngrossedVersion>
+    <ShortLegislationType>
+      <ShortLegislationType>B</ShortLegislationType>
+      <LongLegislationType>Bill</LongLegislationType>
+    </ShortLegislationType>
+    <OriginalAgency>House</OriginalAgency>
+    <Active>false</Active>
+    <StateFiscalNote>true</StateFiscalNote>
+    <LocalFiscalNote>false</LocalFiscalNote>
+    <Appropriations>false</Appropriations>
+    <RequestedByGovernor>false</RequestedByGovernor>
+    <RequestedByBudgetCommittee>false</RequestedByBudgetCommittee>
+    <RequestedByDepartment>false</RequestedByDepartment>
+    <RequestedByOther>false</RequestedByOther>
+    <ShortDescription>Hate crime offense</ShortDescription>
+    <IntroducedDate>2025-01-13T00:00:00</IntroducedDate>
+    <CurrentStatus>
+      <BillId>HB 1052</BillId>
+      <ActionDate>0001-01-01T00:00:00</ActionDate>
+      <AmendedByOppositeBody>false</AmendedByOppositeBody>
+      <PartialVeto>false</PartialVeto>
+      <Veto>false</Veto>
+      <AmendmentsExist>false</AmendmentsExist>
+      <Status>H 2nd Reading</Status>
+    </CurrentStatus>
+    <Sponsor>(Ryu)</Sponsor>
+    <PrimeSponsorID>15736</PrimeSponsorID>
+    <LongDescription>Clarifying a hate crime offense.</LongDescription>
+    <LegalTitle>AN ACT Relating to clarifying a hate crime offense;</LegalTitle>
+    <Companions />
+  </Legislation>
+    <Legislation>
+    <Biennium>2025-26</Biennium>
+    <BillId>EHB 1052</BillId>
+    <BillNumber>1052</BillNumber>
+    <SubstituteVersion>0</SubstituteVersion>
+    <EngrossedVersion>1</EngrossedVersion>
+    <ShortLegislationType>
+      <ShortLegislationType>B</ShortLegislationType>
+      <LongLegislationType>Bill</LongLegislationType>
+    </ShortLegislationType>
+    <OriginalAgency>House</OriginalAgency>
+    <Active>true</Active>
+    <StateFiscalNote>true</StateFiscalNote>
+    <LocalFiscalNote>false</LocalFiscalNote>
+    <Appropriations>false</Appropriations>
+    <RequestedByGovernor>false</RequestedByGovernor>
+    <RequestedByBudgetCommittee>false</RequestedByBudgetCommittee>
+    <RequestedByDepartment>false</RequestedByDepartment>
+    <RequestedByOther>false</RequestedByOther>
+    <ShortDescription>Hate crime offense</ShortDescription>
+    <Request>H-0028.1</Request>
+    <IntroducedDate>2025-01-13T00:00:00</IntroducedDate>
+    <CurrentStatus>
+      <BillId>EHB 1052</BillId>
+      <HistoryLine>Effective date 7/27/2025.</HistoryLine>
+      <ActionDate>2025-05-12T00:00:00</ActionDate>
+      <AmendedByOppositeBody>true</AmendedByOppositeBody>
+      <PartialVeto>false</PartialVeto>
+      <Veto>false</Veto>
+      <AmendmentsExist>true</AmendmentsExist>
+      <Status>C 249 L 25</Status>
+    </CurrentStatus>
+    <Sponsor>(Ryu)</Sponsor>
+    <PrimeSponsorID>15736</PrimeSponsorID>
+    <LongDescription>Clarifying a hate crime offense.</LongDescription>
+    <LegalTitle>AN ACT Relating to clarifying a hate crime offense;</LegalTitle>
+    <Companions>
+      <Companion>
+        <Biennium>2025-26</Biennium>
+        <BillId>SB 5038</BillId>
+        <Status>SLaw &amp; Justice</Status>
+      </Companion>
+    </Companions>
+  </Legislation>
+    <Legislation>
+    <Biennium>2025-26</Biennium>
+    <BillId>SB 5038</BillId>
+    <BillNumber>5038</BillNumber>
+    <SubstituteVersion>0</SubstituteVersion>
+    <EngrossedVersion>0</EngrossedVersion>
+    <ShortLegislationType>
+      <ShortLegislationType>B</ShortLegislationType>
+      <LongLegislationType>Bill</LongLegislationType>
+    </ShortLegislationType>
+    <OriginalAgency>Senate</OriginalAgency>
+    <Active>true</Active>
+    <StateFiscalNote>false</StateFiscalNote>
+    <LocalFiscalNote>false</LocalFiscalNote>
+    <Appropriations>false</Appropriations>
+    <RequestedByGovernor>false</RequestedByGovernor>
+    <RequestedByBudgetCommittee>false</RequestedByBudgetCommittee>
+    <RequestedByDepartment>false</RequestedByDepartment>
+    <RequestedByOther>false</RequestedByOther>
+    <ShortDescription>Hate crime offense</ShortDescription>
+    <Request>S-0033.1</Request>
+    <IntroducedDate>2025-01-13T00:00:00</IntroducedDate>
+    <CurrentStatus>
+      <BillId>SB 5038</BillId>
+      <HistoryLine>By resolution, reintroduced and retained in present status.</HistoryLine>
+      <ActionDate>2026-01-12T00:00:00</ActionDate>
+      <AmendedByOppositeBody>false</AmendedByOppositeBody>
+      <PartialVeto>false</PartialVeto>
+      <Veto>false</Veto>
+      <AmendmentsExist>false</AmendmentsExist>
+      <Status>S Law &amp; Justice</Status>
+    </CurrentStatus>
+    <Sponsor>(Dhingra)</Sponsor>
+    <PrimeSponsorID>28022</PrimeSponsorID>
+    <LongDescription>Clarifying a hate crime offense.</LongDescription>
+    <LegalTitle>AN ACT Relating to clarifying a hate crime offense;</LegalTitle>
+    <Companions>
+      <Companion>
+        <Biennium>2025-26</Biennium>
+        <BillId>EHB 1052</BillId>
+        <Status>C 249 L 25</Status>
+      </Companion>
+    </Companions>
+  </Legislation>
+    <Legislation>
+    <Biennium>2025-26</Biennium>
+    <BillId>SB 5300</BillId>
+    <BillNumber>5300</BillNumber>
+    <SubstituteVersion>0</SubstituteVersion>
+    <EngrossedVersion>0</EngrossedVersion>
+    <ShortLegislationType>
+      <ShortLegislationType>B</ShortLegislationType>
+      <LongLegislationType>Bill</LongLegislationType>
+    </ShortLegislationType>
+    <OriginalAgency>Senate</OriginalAgency>
+    <Active>false</Active>
+    <StateFiscalNote>true</StateFiscalNote>
+    <LocalFiscalNote>false</LocalFiscalNote>
+    <Appropriations>false</Appropriations>
+    <RequestedByGovernor>false</RequestedByGovernor>
+    <RequestedByBudgetCommittee>false</RequestedByBudgetCommittee>
+    <RequestedByDepartment>false</RequestedByDepartment>
+    <RequestedByOther>true</RequestedByOther>
+    <ShortDescription>St. Edward state park</ShortDescription>
+    <Request>Z-0179.1</Request>
+    <IntroducedDate>2025-01-16T00:00:00</IntroducedDate>
+    <CurrentStatus>
+      <BillId>SB 5300</BillId>
+      <HistoryLine>1st substitute bill substituted.</HistoryLine>
+      <ActionDate>2025-02-28T00:00:00</ActionDate>
+      <AmendedByOppositeBody>false</AmendedByOppositeBody>
+      <PartialVeto>false</PartialVeto>
+      <Veto>false</Veto>
+      <AmendmentsExist>false</AmendmentsExist>
+      <Status>S subst for</Status>
+    </CurrentStatus>
+    <Sponsor>(Stanford)</Sponsor>
+    <PrimeSponsorID>15809</PrimeSponsorID>
+    <LongDescription>Concerning the leasing authority of the state parks and recreation commission at St. Edward State Park.</LongDescription>
+    <LegalTitle>AN ACT Relating to leasing authority of the state parks and recreation commission at St. Edward State Park;</LegalTitle>
+    <Companions>
+      <Companion>
+        <Biennium>2025-26</Biennium>
+        <BillId>HB 1024</BillId>
+        <Status>Hsubst for</Status>
+      </Companion>
+    </Companions>
+  </Legislation>
+    <Legislation>
+    <Biennium>2025-26</Biennium>
+    <BillId>SSB 5300</BillId>
+    <BillNumber>5300</BillNumber>
+    <SubstituteVersion>1</SubstituteVersion>
+    <EngrossedVersion>0</EngrossedVersion>
+    <ShortLegislationType>
+      <ShortLegislationType>B</ShortLegislationType>
+      <LongLegislationType>Bill</LongLegislationType>
+    </ShortLegislationType>
+    <OriginalAgency>Senate</OriginalAgency>
+    <Active>true</Active>
+    <StateFiscalNote>true</StateFiscalNote>
+    <LocalFiscalNote>false</LocalFiscalNote>
+    <Appropriations>false</Appropriations>
+    <RequestedByGovernor>false</RequestedByGovernor>
+    <RequestedByBudgetCommittee>false</RequestedByBudgetCommittee>
+    <RequestedByDepartment>false</RequestedByDepartment>
+    <RequestedByOther>true</RequestedByOther>
+    <ShortDescription>St. Edward state park</ShortDescription>
+    <Request>S-1165.1</Request>
+    <IntroducedDate>2025-02-06T00:00:00</IntroducedDate>
+    <CurrentStatus>
+      <BillId>SSB 5300</BillId>
+      <HistoryLine>Senate Rules "X" file.</HistoryLine>
+      <ActionDate>2026-01-12T00:00:00</ActionDate>
+      <AmendedByOppositeBody>false</AmendedByOppositeBody>
+      <PartialVeto>false</PartialVeto>
+      <Veto>false</Veto>
+      <AmendmentsExist>false</AmendmentsExist>
+      <Status>S Rules X</Status>
+    </CurrentStatus>
+    <Sponsor>LGV(Stanford)</Sponsor>
+    <PrimeSponsorID>15809</PrimeSponsorID>
+    <LongDescription>Concerning the leasing authority of the state parks and recreation commission at St. Edward State Park.</LongDescription>
+    <LegalTitle>AN ACT Relating to leasing authority of the state parks and recreation commission at St. Edward State Park;</LegalTitle>
+    <Companions />
+  </Legislation>
+</ArrayOfLegislation>
