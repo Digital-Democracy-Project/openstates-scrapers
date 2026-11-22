@@ -1,0 +1,2135 @@
+{
+ "bills": {
+  "content": [
+   {
+    "billActions": [
+     {
+      "actionType": {
+       "code": 658,
+       "description": "Chapter Number Assigned",
+       "progressCategory": {
+        "code": "190",
+        "description": "Became Law"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 658,
+      "committee": null,
+      "date": "2021-04-01T00:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 656,
+       "description": "(H) Signed by Governor",
+       "progressCategory": {
+        "code": "190",
+        "description": "Became Law"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 656,
+      "committee": null,
+      "date": "2021-03-31T14:50:12",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 655,
+       "description": "(H) Transmitted to Governor",
+       "progressCategory": {
+        "code": "180",
+        "description": "Transmitted to Governor"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 655,
+      "committee": null,
+      "date": "2021-03-26T16:51:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 254,
+       "description": "(S) Signed by President",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 254,
+      "committee": null,
+      "date": "2021-03-26T15:40:48",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 654,
+       "description": "(H) Signed by Speaker",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 654,
+      "committee": null,
+      "date": "2021-03-26T09:30:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 43,
+       "description": "(C) Printed - Enrolled Version Available",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 43,
+      "committee": null,
+      "date": "2021-03-23T15:13:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 653,
+       "description": "(H) Returned from Enrolling",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 653,
+      "committee": null,
+      "date": "2021-03-23T15:12:59",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 652,
+       "description": "(H) Sent to Enrolling",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 652,
+      "committee": null,
+      "date": "2021-03-19T14:52:07",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 614,
+       "description": "(H) 3rd Reading Passed as Amended by Senate",
+       "progressCategory": {
+        "code": "130",
+        "description": "In Process to Consider Second House Amendments"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 614,
+      "committee": null,
+      "date": "2021-03-19T14:36:58",
+      "noVotes": "9",
+      "voteSeq": "H1135",
+      "yesVotes": "90"
+     },
+     {
+      "actionType": {
+       "code": 594,
+       "description": "(H) Scheduled for 3rd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 594,
+      "committee": null,
+      "date": "2021-03-19T13:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 610,
+       "description": "(H) 2nd Reading Senate Amendments Concurred",
+       "progressCategory": {
+        "code": "130",
+        "description": "In Process to Consider Second House Amendments"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 610,
+      "committee": null,
+      "date": "2021-03-18T13:15:33",
+      "noVotes": "4",
+      "voteSeq": "H1102",
+      "yesVotes": "96"
+     },
+     {
+      "actionType": {
+       "code": 553,
+       "description": "(H) Scheduled for 2nd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 553,
+      "committee": null,
+      "date": "2021-03-18T13:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 208,
+       "description": "(S) Returned to House with Amendments",
+       "progressCategory": {
+        "code": "120",
+        "description": "Returned to First House with Second House Amendments"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 208,
+      "committee": null,
+      "date": "2021-03-15T14:41:38",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 197,
+       "description": "(S) 3rd Reading Concurred",
+       "progressCategory": {
+        "code": "110",
+        "description": "In Second House--Through 3rd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 197,
+      "committee": null,
+      "date": "2021-03-15T14:24:24",
+      "noVotes": "0",
+      "voteSeq": "S948",
+      "yesVotes": "50"
+     },
+     {
+      "actionType": {
+       "code": 194,
+       "description": "(S) Scheduled for 3rd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 194,
+      "committee": null,
+      "date": "2021-03-15T13:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 157,
+       "description": "(S) 2nd Reading Concurred",
+       "progressCategory": {
+        "code": "100",
+        "description": "In Second House--Through 2nd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 157,
+      "committee": null,
+      "date": "2021-03-12T14:01:09",
+      "noVotes": "0",
+      "voteSeq": "S919",
+      "yesVotes": "50"
+     },
+     {
+      "actionType": {
+       "code": 153,
+       "description": "(S) Scheduled for 2nd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 153,
+      "committee": null,
+      "date": "2021-03-12T13:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 39,
+       "description": "(C) Printed - New Version Available",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 39,
+      "committee": null,
+      "date": "2021-03-10T14:36:59",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 133,
+       "description": "(S) Committee Report--Bill Concurred as Amended",
+       "progressCategory": {
+        "code": "090",
+        "description": "In Second House--Out of Committee"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 133,
+      "committee": {
+       "committeeEmail": "LEGCmte-JUStestimony@mt.gov",
+       "committeeName": "(S) Judiciary",
+       "committeeTypeName": "ST",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "JUS"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "303",
+       "meetingTime": "9:00 AM",
+       "zoomEmail": "LEGZoom-JUSzoom@mt.gov"
+      },
+      "date": "2021-03-10T13:15:11",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 119,
+       "description": "(S) Committee Executive Action--Bill Concurred as Amended",
+       "progressCategory": {
+        "code": "080",
+        "description": "In Second House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 119,
+      "committee": {
+       "committeeEmail": "LEGCmte-JUStestimony@mt.gov",
+       "committeeName": "(S) Judiciary",
+       "committeeTypeName": "ST",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "JUS"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "303",
+       "meetingTime": "9:00 AM",
+       "zoomEmail": "LEGZoom-JUSzoom@mt.gov"
+      },
+      "date": "2021-03-10T12:45:31",
+      "noVotes": "0",
+      "voteSeq": null,
+      "yesVotes": "11"
+     },
+     {
+      "actionType": {
+       "code": 50,
+       "description": "(C) Amendments Available",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 50,
+      "committee": null,
+      "date": "2021-03-10T08:43:20",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 113,
+       "description": "(S) Hearing",
+       "progressCategory": {
+        "code": "080",
+        "description": "In Second House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 113,
+      "committee": {
+       "committeeEmail": "LEGCmte-JUStestimony@mt.gov",
+       "committeeName": "(S) Judiciary",
+       "committeeTypeName": "ST",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "JUS"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "303",
+       "meetingTime": "9:00 AM",
+       "zoomEmail": "LEGZoom-JUSzoom@mt.gov"
+      },
+      "date": "2021-03-09T09:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 103,
+       "description": "(S) Referred to Committee",
+       "progressCategory": {
+        "code": "080",
+        "description": "In Second House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 103,
+      "committee": {
+       "committeeEmail": "LEGCmte-JUStestimony@mt.gov",
+       "committeeName": "(S) Judiciary",
+       "committeeTypeName": "ST",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "JUS"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "303",
+       "meetingTime": "9:00 AM",
+       "zoomEmail": "LEGZoom-JUSzoom@mt.gov"
+      },
+      "date": "2021-02-18T13:24:30",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 287,
+       "description": "(S) First Reading",
+       "progressCategory": {
+        "code": "070",
+        "description": "Transmitted to Second House"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 287,
+      "committee": null,
+      "date": "2021-02-18T13:24:25",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 605,
+       "description": "(H) Transmitted to Senate",
+       "progressCategory": {
+        "code": "070",
+        "description": "Transmitted to Second House"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 605,
+      "committee": null,
+      "date": "2021-02-17T15:09:54",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 596,
+       "description": "(H) 3rd Reading Passed",
+       "progressCategory": {
+        "code": "060",
+        "description": "In First House--Through 3rd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 596,
+      "committee": null,
+      "date": "2021-02-17T14:33:18",
+      "noVotes": "25",
+      "voteSeq": "H495",
+      "yesVotes": "74"
+     },
+     {
+      "actionType": {
+       "code": 594,
+       "description": "(H) Scheduled for 3rd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 594,
+      "committee": null,
+      "date": "2021-02-17T13:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 556,
+       "description": "(H) 2nd Reading Passed",
+       "progressCategory": {
+        "code": "050",
+        "description": "In First House--Through 2nd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 556,
+      "committee": null,
+      "date": "2021-02-16T14:19:47",
+      "noVotes": "22",
+      "voteSeq": "H459",
+      "yesVotes": "78"
+     },
+     {
+      "actionType": {
+       "code": 553,
+       "description": "(H) Scheduled for 2nd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 553,
+      "committee": null,
+      "date": "2021-02-16T13:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 530,
+       "description": "(H) Committee Report--Bill Passed",
+       "progressCategory": {
+        "code": "040",
+        "description": "In First House--Out of Committee"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 530,
+      "committee": {
+       "committeeEmail": "LEGCmte-JUHtestimony@mt.gov",
+       "committeeName": "(H) Judiciary",
+       "committeeTypeName": "ST",
+       "houseCode": "H",
+       "id": {
+        "committeeCode": "JUH"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "137",
+       "meetingTime": "8:00 AM",
+       "zoomEmail": "LEGZoom-JUHzoom@mt.gov"
+      },
+      "date": "2021-02-12T15:23:06",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 516,
+       "description": "(H) Committee Executive Action--Bill Passed",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 516,
+      "committee": {
+       "committeeEmail": "LEGCmte-JUHtestimony@mt.gov",
+       "committeeName": "(H) Judiciary",
+       "committeeTypeName": "ST",
+       "houseCode": "H",
+       "id": {
+        "committeeCode": "JUH"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "137",
+       "meetingTime": "8:00 AM",
+       "zoomEmail": "LEGZoom-JUHzoom@mt.gov"
+      },
+      "date": "2021-02-12T12:50:22",
+      "noVotes": "4",
+      "voteSeq": null,
+      "yesVotes": "15"
+     },
+     {
+      "actionType": {
+       "code": 512,
+       "description": "(H) Hearing",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 512,
+      "committee": {
+       "committeeEmail": "LEGCmte-JUHtestimony@mt.gov",
+       "committeeName": "(H) Judiciary",
+       "committeeTypeName": "ST",
+       "houseCode": "H",
+       "id": {
+        "committeeCode": "JUH"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "137",
+       "meetingTime": "8:00 AM",
+       "zoomEmail": "LEGZoom-JUHzoom@mt.gov"
+      },
+      "date": "2021-02-09T08:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 507,
+       "description": "(H) Fiscal Note Printed",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 507,
+      "committee": null,
+      "date": "2021-02-08T15:19:38",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 681,
+       "description": "(H) Fiscal Note Signed",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 681,
+      "committee": null,
+      "date": "2021-02-08T14:19:01",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 506,
+       "description": "(H) Fiscal Note Received",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 506,
+      "committee": null,
+      "date": "2021-02-08T09:52:50",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 501,
+       "description": "(H) First Reading",
+       "progressCategory": {
+        "code": "020",
+        "description": "In First House--Introduced"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 501,
+      "committee": null,
+      "date": "2021-02-04T13:21:23",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 502,
+       "description": "(H) Referred to Committee",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 502,
+      "committee": {
+       "committeeEmail": "LEGCmte-JUHtestimony@mt.gov",
+       "committeeName": "(H) Judiciary",
+       "committeeTypeName": "ST",
+       "houseCode": "H",
+       "id": {
+        "committeeCode": "JUH"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "137",
+       "meetingTime": "8:00 AM",
+       "zoomEmail": "LEGZoom-JUHzoom@mt.gov"
+      },
+      "date": "2021-02-04T12:01:10",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 29,
+       "description": "(C) Introduced Bill Text Available Electronically",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 29,
+      "committee": null,
+      "date": "2021-02-03T17:27:57",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 505,
+       "description": "(H) Fiscal Note Requested",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 505,
+      "committee": null,
+      "date": "2021-02-03T15:44:06",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 500,
+       "description": "(H) Introduced",
+       "progressCategory": {
+        "code": "020",
+        "description": "In First House--Introduced"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 500,
+      "committee": null,
+      "date": "2021-02-03T15:02:27",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 23,
+       "description": "(C) Draft Delivered to Requester",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 23,
+      "committee": null,
+      "date": "2021-02-03T14:21:48",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 22,
+       "description": "(C) Draft Ready for Delivery",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 22,
+      "committee": null,
+      "date": "2021-02-02T08:17:22",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 27,
+       "description": "(C) Executive Director Final Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 27,
+      "committee": null,
+      "date": "2021-02-01T15:39:23",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 22,
+       "description": "(C) Draft Ready for Delivery",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 22,
+      "committee": null,
+      "date": "2021-02-01T15:39:18",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 24,
+       "description": "(C) Draft in Assembly",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 24,
+      "committee": null,
+      "date": "2021-02-01T11:17:54",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 21,
+       "description": "(C) Executive Director Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 21,
+      "committee": null,
+      "date": "2021-01-29T16:37:23",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 28,
+       "description": "(C) Bill Draft Text Available Electronically",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 28,
+      "committee": null,
+      "date": "2021-01-29T16:17:52",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 18,
+       "description": "(C) Draft in Final Drafter Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 18,
+      "committee": null,
+      "date": "2021-01-29T16:17:51",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 17,
+       "description": "(C) Draft in Input/Proofing",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 17,
+      "committee": null,
+      "date": "2021-01-29T13:43:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 16,
+       "description": "(C) Draft to Drafter - Edit Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 16,
+      "committee": null,
+      "date": "2021-01-29T13:05:22",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 13,
+       "description": "(C) Draft in Edit",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 13,
+      "committee": null,
+      "date": "2021-01-27T13:54:48",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 12,
+       "description": "(C) Draft in Legal Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 12,
+      "committee": null,
+      "date": "2021-01-27T11:39:03",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 2,
+       "description": "(C) Draft to Requester for Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 2,
+      "committee": null,
+      "date": "2021-01-26T16:53:49",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 1,
+       "description": "(C) Draft Request Received",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 1,
+      "committee": null,
+      "date": "2021-01-23T14:23:20",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     }
+    ],
+    "billNumber": 313,
+    "billSortNumber": "HB0313",
+    "billType": "HB",
+    "coSponsor": null,
+    "deadlineCategory": {
+     "id": {
+      "code": "GE",
+      "sessionId": 20211
+     },
+     "name": "General Bills",
+     "returnDate": "2021-04-20T00:00:00",
+     "transmittalDate": "2021-03-02T00:00:00"
+    },
+    "drafters": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 19793,
+       "firstName": "Erin",
+       "lastName": "Sullivan"
+      },
+      "legislator": null
+     }
+    ],
+    "hasFiscalNote": true,
+    "id": {
+     "billDraftNumber": "LC3284",
+     "sessionId": 20211
+    },
+    "latestVersion": "ENR",
+    "preintroductionRequired": "N",
+    "primarySponsorBillRoles": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 19682,
+       "firstName": "Jane",
+       "lastName": "Gillette"
+      },
+      "legislator": {
+       "chamber": {
+        "houseCode": "H",
+        "houseName": "House"
+       },
+       "committeeAssignments": [
+        {
+         "committee": {
+          "committeeEmail": "LEGCmte-HUHtestimony@mt.gov",
+          "committeeName": "(H) Human Services",
+          "committeeTypeName": "ST",
+          "houseCode": "H",
+          "id": {
+           "committeeCode": "HUH"
+          },
+          "meetingDays": "M-F",
+          "meetingRoom": "152",
+          "meetingTime": "3:00 PM",
+          "zoomEmail": "LEGZoom-HUHzoom@mt.gov"
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "ME",
+          "assignmentName": "Member"
+         },
+         "id": {
+          "applicationSeq": 10,
+          "committeeCode": "HUH",
+          "sessionId": 20211
+         }
+        },
+        {
+         "committee": {
+          "committeeEmail": "LEGCmte-JUHtestimony@mt.gov",
+          "committeeName": "(H) Judiciary",
+          "committeeTypeName": "ST",
+          "houseCode": "H",
+          "id": {
+           "committeeCode": "JUH"
+          },
+          "meetingDays": "M-F",
+          "meetingRoom": "137",
+          "meetingTime": "8:00 AM",
+          "zoomEmail": "LEGZoom-JUHzoom@mt.gov"
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "ME",
+          "assignmentName": "Member"
+         },
+         "id": {
+          "applicationSeq": 10,
+          "committeeCode": "JUH",
+          "sessionId": 20211
+         }
+        }
+       ],
+       "districtNumber": 64,
+       "lawEntity": {
+        "entityIdSequence": 19682,
+        "firstName": "Jane",
+        "lastName": "Gillette"
+       },
+       "politicalParty": {
+        "partyCode": "R",
+        "partyName": "Republican"
+       },
+       "position": null
+      }
+     }
+    ],
+    "requestOf": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 14320,
+       "firstName": null,
+       "lastName": "Attorney General"
+      },
+      "legislator": null
+     }
+    ],
+    "requesters": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 19682,
+       "firstName": "Jane",
+       "lastName": "Gillette"
+      },
+      "legislator": {
+       "chamber": {
+        "houseCode": "H",
+        "houseName": "House"
+       },
+       "committeeAssignments": [
+        {
+         "committee": {
+          "committeeEmail": "LEGCmte-HUHtestimony@mt.gov",
+          "committeeName": "(H) Human Services",
+          "committeeTypeName": "ST",
+          "houseCode": "H",
+          "id": {
+           "committeeCode": "HUH"
+          },
+          "meetingDays": "M-F",
+          "meetingRoom": "152",
+          "meetingTime": "3:00 PM",
+          "zoomEmail": "LEGZoom-HUHzoom@mt.gov"
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "ME",
+          "assignmentName": "Member"
+         },
+         "id": {
+          "applicationSeq": 10,
+          "committeeCode": "HUH",
+          "sessionId": 20211
+         }
+        },
+        {
+         "committee": {
+          "committeeEmail": "LEGCmte-JUHtestimony@mt.gov",
+          "committeeName": "(H) Judiciary",
+          "committeeTypeName": "ST",
+          "houseCode": "H",
+          "id": {
+           "committeeCode": "JUH"
+          },
+          "meetingDays": "M-F",
+          "meetingRoom": "137",
+          "meetingTime": "8:00 AM",
+          "zoomEmail": "LEGZoom-JUHzoom@mt.gov"
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "ME",
+          "assignmentName": "Member"
+         },
+         "id": {
+          "applicationSeq": 10,
+          "committeeCode": "JUH",
+          "sessionId": 20211
+         }
+        }
+       ],
+       "districtNumber": 64,
+       "lawEntity": {
+        "entityIdSequence": 19682,
+        "firstName": "Jane",
+        "lastName": "Gillette"
+       },
+       "politicalParty": {
+        "partyCode": "R",
+        "partyName": "Republican"
+       },
+       "position": null
+      }
+     }
+    ],
+    "sessionLawChapterNumber": "123",
+    "shortTitle": "Generally revise medical examiner/coroner laws",
+    "subjects": [
+     {
+      "billDraftNumber": "LC3284",
+      "code": "LG",
+      "sessionId": 20211,
+      "subject": {
+       "code": "LG",
+       "description": "Local Government  (see also: City Subjects; County Subjects)"
+      }
+     },
+     {
+      "billDraftNumber": "LC3284",
+      "code": "RUL",
+      "sessionId": 20211,
+      "subject": {
+       "code": "RUL",
+       "description": "Rule Making"
+      }
+     }
+    ]
+   }
+  ],
+  "empty": false,
+  "first": false,
+  "last": false,
+  "number": 50,
+  "numberOfElements": 1,
+  "pageable": {
+   "offset": 500,
+   "pageNumber": 50,
+   "pageSize": 10,
+   "paged": true,
+   "sort": {
+    "empty": true,
+    "sorted": false,
+    "unsorted": true
+   },
+   "unpaged": false
+  },
+  "size": 10,
+  "sort": {
+   "empty": true,
+   "sorted": false,
+   "unsorted": true
+  },
+  "totalElements": 3367,
+  "totalPages": 337
+ },
+ "counts": {
+  "billTypes": {
+   "HB": 711,
+   "HJ": 53,
+   "HR": 7,
+   "NoBillType": 2054,
+   "SB": 408,
+   "SJ": 35,
+   "SR": 99
+  },
+  "chambers": {
+   "H": 771,
+   "S": 542
+  },
+  "deadlineCategories": {
+   "AD": 30,
+   "AP": 121,
+   "GE": 2863,
+   "IS": 69,
+   "RE": 257,
+   "RP": 26,
+   "RR": 1
+  },
+  "drafters": {
+   "12462": 172,
+   "12483": 159,
+   "12535": 145,
+   "12692": 138,
+   "12786": 133,
+   "13200": 78,
+   "13201": 112,
+   "13202": 119,
+   "13463": 235,
+   "14184": 230,
+   "14261": 191,
+   "14263": 95,
+   "14312": 17,
+   "14313": 3,
+   "15187": 131,
+   "15188": 144,
+   "15194": 148,
+   "16433": 272,
+   "17651": 1,
+   "18697": 130,
+   "18731": 190,
+   "18747": 196,
+   "18757": 252,
+   "19793": 76
+  },
+  "legislator": {
+   "12455": 4,
+   "12545": 17,
+   "12554": 11,
+   "12556": 16,
+   "12559": 23,
+   "12560": 9,
+   "12595": 57,
+   "12599": 5,
+   "12606": 24,
+   "12607": 8,
+   "12784": 5,
+   "12893": 8,
+   "12900": 9,
+   "12922": 7,
+   "12929": 11,
+   "13032": 7,
+   "13544": 3,
+   "13621": 1,
+   "13679": 15,
+   "13689": 28,
+   "13693": 9,
+   "13694": 5,
+   "13696": 11,
+   "13700": 14,
+   "13708": 19,
+   "13758": 4,
+   "13790": 6,
+   "13799": 14,
+   "13870": 9,
+   "13941": 12,
+   "14415": 16,
+   "14632": 4,
+   "14970": 7,
+   "15238": 10,
+   "15239": 27,
+   "15244": 6,
+   "15245": 23,
+   "15249": 18,
+   "15256": 2,
+   "15258": 2,
+   "16398": 21,
+   "16493": 6,
+   "16494": 4,
+   "16496": 7,
+   "16497": 6,
+   "16498": 11,
+   "16499": 7,
+   "16500": 11,
+   "16501": 12,
+   "16502": 2,
+   "16504": 6,
+   "16505": 11,
+   "16506": 7,
+   "16507": 3,
+   "16510": 14,
+   "16511": 10,
+   "16515": 13,
+   "16520": 7,
+   "16521": 6,
+   "16525": 9,
+   "16526": 4,
+   "17591": 17,
+   "17693": 19,
+   "17694": 10,
+   "17695": 18,
+   "17696": 15,
+   "17697": 8,
+   "17698": 9,
+   "17699": 6,
+   "17700": 14,
+   "17702": 5,
+   "17703": 8,
+   "17704": 10,
+   "17707": 5,
+   "17708": 6,
+   "17709": 13,
+   "17711": 8,
+   "17712": 8,
+   "17713": 3,
+   "17715": 7,
+   "17716": 6,
+   "17719": 12,
+   "17720": 5,
+   "17721": 10,
+   "17722": 16,
+   "17723": 3,
+   "17949": 3,
+   "18708": 5,
+   "18715": 12,
+   "18716": 11,
+   "18717": 5,
+   "18718": 1,
+   "18720": 15,
+   "18721": 5,
+   "18723": 7,
+   "18735": 3,
+   "18743": 2,
+   "18796": 6,
+   "18798": 4,
+   "18799": 8,
+   "18802": 17,
+   "18803": 26,
+   "18806": 6,
+   "18808": 3,
+   "18809": 15,
+   "18810": 4,
+   "18811": 4,
+   "18812": 4,
+   "18819": 8,
+   "18821": 7,
+   "19616": 1,
+   "19617": 4,
+   "19618": 7,
+   "19619": 3,
+   "19620": 3,
+   "19621": 3,
+   "19622": 5,
+   "19624": 4,
+   "19646": 5,
+   "19668": 3,
+   "19669": 3,
+   "19670": 3,
+   "19671": 11,
+   "19672": 21,
+   "19673": 12,
+   "19674": 7,
+   "19675": 3,
+   "19676": 4,
+   "19677": 9,
+   "19678": 4,
+   "19679": 3,
+   "19680": 8,
+   "19681": 6,
+   "19682": 15,
+   "19683": 7,
+   "19684": 6,
+   "19685": 4,
+   "19686": 6,
+   "19687": 2,
+   "19688": 4,
+   "19689": 3,
+   "19690": 1,
+   "19691": 12,
+   "19692": 6,
+   "19693": 8,
+   "19694": 3,
+   "19695": 2,
+   "19696": 8,
+   "19697": 9
+  },
+  "party": {
+   "D": 319,
+   "R": 994
+  },
+  "sessionLawChapterNumbers": {
+   "1": 1,
+   "10": 1,
+   "100": 1,
+   "101": 1,
+   "102": 1,
+   "103": 1,
+   "104": 1,
+   "105": 1,
+   "106": 1,
+   "107": 1,
+   "108": 1,
+   "109": 1,
+   "11": 1,
+   "110": 1,
+   "111": 1,
+   "112": 1,
+   "113": 1,
+   "114": 1,
+   "115": 1,
+   "116": 1,
+   "117": 1,
+   "118": 1,
+   "119": 1,
+   "12": 1,
+   "120": 1,
+   "121": 1,
+   "122": 1,
+   "123": 1,
+   "124": 1,
+   "125": 1,
+   "126": 1,
+   "127": 1,
+   "128": 1,
+   "129": 1,
+   "13": 1,
+   "130": 1,
+   "131": 1,
+   "132": 1,
+   "133": 1,
+   "134": 1,
+   "135": 1,
+   "136": 1,
+   "137": 1,
+   "138": 1,
+   "139": 1,
+   "14": 1,
+   "140": 1,
+   "141": 1,
+   "142": 1,
+   "143": 1,
+   "144": 1,
+   "145": 1,
+   "146": 1,
+   "147": 1,
+   "148": 1,
+   "149": 1,
+   "15": 1,
+   "150": 1,
+   "151": 1,
+   "152": 1,
+   "153": 1,
+   "154": 1,
+   "155": 1,
+   "156": 1,
+   "157": 1,
+   "158": 1,
+   "159": 1,
+   "16": 1,
+   "160": 1,
+   "161": 1,
+   "162": 1,
+   "163": 1,
+   "164": 1,
+   "165": 1,
+   "166": 1,
+   "167": 1,
+   "168": 1,
+   "169": 1,
+   "17": 1,
+   "170": 1,
+   "171": 1,
+   "172": 1,
+   "173": 1,
+   "174": 1,
+   "175": 1,
+   "176": 1,
+   "177": 1,
+   "178": 1,
+   "179": 1,
+   "18": 1,
+   "180": 1,
+   "181": 1,
+   "182": 1,
+   "183": 1,
+   "184": 1,
+   "185": 1,
+   "186": 1,
+   "187": 1,
+   "188": 1,
+   "189": 1,
+   "19": 1,
+   "190": 1,
+   "191": 1,
+   "192": 1,
+   "193": 1,
+   "194": 1,
+   "195": 1,
+   "196": 1,
+   "197": 1,
+   "198": 1,
+   "199": 1,
+   "2": 1,
+   "20": 1,
+   "200": 1,
+   "201": 1,
+   "202": 1,
+   "203": 1,
+   "204": 1,
+   "205": 1,
+   "206": 1,
+   "207": 1,
+   "208": 1,
+   "209": 1,
+   "21": 1,
+   "210": 1,
+   "211": 1,
+   "212": 1,
+   "213": 1,
+   "214": 1,
+   "215": 1,
+   "216": 1,
+   "217": 1,
+   "218": 1,
+   "219": 1,
+   "22": 1,
+   "220": 1,
+   "221": 1,
+   "222": 1,
+   "223": 1,
+   "224": 1,
+   "225": 1,
+   "226": 1,
+   "227": 1,
+   "228": 1,
+   "229": 1,
+   "23": 1,
+   "230": 1,
+   "231": 1,
+   "232": 1,
+   "233": 1,
+   "234": 1,
+   "235": 1,
+   "236": 1,
+   "237": 1,
+   "238": 1,
+   "239": 1,
+   "24": 1,
+   "240": 1,
+   "241": 1,
+   "242": 1,
+   "243": 1,
+   "244": 1,
+   "245": 1,
+   "246": 1,
+   "247": 1,
+   "248": 1,
+   "249": 1,
+   "25": 1,
+   "250": 1,
+   "251": 1,
+   "252": 1,
+   "253": 1,
+   "254": 1,
+   "255": 1,
+   "256": 1,
+   "257": 1,
+   "258": 1,
+   "259": 1,
+   "26": 1,
+   "260": 1,
+   "261": 1,
+   "262": 1,
+   "263": 1,
+   "264": 1,
+   "265": 1,
+   "266": 1,
+   "267": 1,
+   "268": 1,
+   "269": 1,
+   "27": 1,
+   "270": 1,
+   "271": 1,
+   "272": 1,
+   "273": 1,
+   "274": 1,
+   "275": 1,
+   "276": 1,
+   "277": 1,
+   "278": 1,
+   "279": 1,
+   "28": 1,
+   "280": 1,
+   "281": 1,
+   "282": 1,
+   "283": 1,
+   "284": 1,
+   "285": 1,
+   "286": 1,
+   "287": 1,
+   "288": 1,
+   "289": 1,
+   "29": 1,
+   "290": 1,
+   "291": 1,
+   "292": 1,
+   "293": 1,
+   "294": 1,
+   "295": 1,
+   "296": 1,
+   "297": 1,
+   "298": 1,
+   "299": 1,
+   "3": 1,
+   "30": 1,
+   "300": 1,
+   "301": 1,
+   "302": 1,
+   "303": 1,
+   "304": 1,
+   "305": 1,
+   "306": 1,
+   "307": 1,
+   "308": 1,
+   "309": 1,
+   "31": 1,
+   "310": 1,
+   "311": 1,
+   "312": 1,
+   "313": 1,
+   "314": 1,
+   "315": 1,
+   "316": 1,
+   "317": 1,
+   "318": 1,
+   "319": 1,
+   "32": 1,
+   "320": 1,
+   "321": 1,
+   "322": 1,
+   "323": 1,
+   "324": 1,
+   "325": 1,
+   "326": 1,
+   "327": 1,
+   "328": 1,
+   "329": 1,
+   "33": 1,
+   "330": 1,
+   "331": 1,
+   "332": 1,
+   "333": 1,
+   "334": 1,
+   "335": 1,
+   "336": 1,
+   "337": 1,
+   "338": 1,
+   "339": 1,
+   "34": 1,
+   "340": 1,
+   "341": 1,
+   "342": 1,
+   "343": 1,
+   "344": 1,
+   "345": 1,
+   "346": 1,
+   "347": 1,
+   "348": 1,
+   "349": 1,
+   "35": 1,
+   "350": 1,
+   "351": 1,
+   "352": 1,
+   "353": 1,
+   "354": 1,
+   "355": 1,
+   "356": 1,
+   "357": 1,
+   "358": 1,
+   "359": 1,
+   "36": 1,
+   "360": 1,
+   "361": 1,
+   "362": 1,
+   "363": 1,
+   "364": 1,
+   "365": 1,
+   "366": 1,
+   "367": 1,
+   "368": 1,
+   "369": 1,
+   "37": 1,
+   "370": 1,
+   "371": 1,
+   "372": 1,
+   "373": 1,
+   "374": 1,
+   "375": 1,
+   "376": 1,
+   "377": 1,
+   "378": 1,
+   "379": 1,
+   "38": 1,
+   "380": 1,
+   "381": 1,
+   "382": 1,
+   "383": 1,
+   "384": 1,
+   "385": 1,
+   "386": 1,
+   "387": 1,
+   "388": 1,
+   "389": 1,
+   "39": 1,
+   "390": 1,
+   "391": 1,
+   "392": 1,
+   "393": 1,
+   "394": 1,
+   "395": 1,
+   "396": 1,
+   "397": 1,
+   "398": 1,
+   "399": 1,
+   "4": 1,
+   "40": 1,
+   "400": 1,
+   "401": 1,
+   "402": 1,
+   "403": 1,
+   "404": 1,
+   "405": 1,
+   "406": 1,
+   "407": 1,
+   "408": 1,
+   "409": 1,
+   "41": 1,
+   "410": 1,
+   "411": 1,
+   "412": 1,
+   "413": 1,
+   "414": 1,
+   "415": 1,
+   "416": 1,
+   "417": 1,
+   "418": 1,
+   "419": 1,
+   "42": 1,
+   "420": 1,
+   "421": 1,
+   "422": 1,
+   "423": 1,
+   "424": 1,
+   "425": 1,
+   "426": 1,
+   "427": 1,
+   "428": 1,
+   "429": 1,
+   "43": 1,
+   "430": 1,
+   "431": 1,
+   "432": 1,
+   "433": 1,
+   "434": 1,
+   "435": 1,
+   "436": 1,
+   "437": 1,
+   "438": 1,
+   "439": 1,
+   "44": 1,
+   "440": 1,
+   "441": 1,
+   "442": 1,
+   "443": 1,
+   "444": 1,
+   "445": 1,
+   "446": 1,
+   "447": 1,
+   "448": 1,
+   "449": 1,
+   "45": 1,
+   "450": 1,
+   "451": 1,
+   "452": 1,
+   "453": 1,
+   "454": 1,
+   "455": 1,
+   "456": 1,
+   "457": 1,
+   "458": 1,
+   "459": 1,
+   "46": 1,
+   "460": 1,
+   "461": 1,
+   "462": 1,
+   "463": 1,
+   "464": 1,
+   "465": 1,
+   "466": 1,
+   "467": 1,
+   "468": 1,
+   "469": 1,
+   "47": 1,
+   "470": 1,
+   "471": 1,
+   "472": 1,
+   "473": 1,
+   "474": 1,
+   "475": 1,
+   "476": 1,
+   "477": 1,
+   "478": 1,
+   "479": 1,
+   "48": 1,
+   "480": 1,
+   "481": 1,
+   "482": 1,
+   "483": 1,
+   "484": 1,
+   "485": 1,
+   "486": 1,
+   "487": 1,
+   "488": 1,
+   "489": 1,
+   "49": 1,
+   "490": 1,
+   "491": 1,
+   "492": 1,
+   "493": 1,
+   "494": 1,
+   "495": 1,
+   "496": 1,
+   "497": 1,
+   "498": 1,
+   "499": 1,
+   "5": 1,
+   "50": 1,
+   "500": 1,
+   "501": 1,
+   "502": 1,
+   "503": 1,
+   "504": 1,
+   "505": 1,
+   "506": 1,
+   "507": 1,
+   "508": 1,
+   "509": 1,
+   "51": 1,
+   "510": 1,
+   "511": 1,
+   "512": 1,
+   "513": 1,
+   "514": 1,
+   "515": 1,
+   "516": 1,
+   "517": 1,
+   "518": 1,
+   "519": 1,
+   "52": 1,
+   "520": 1,
+   "521": 1,
+   "522": 1,
+   "523": 1,
+   "524": 1,
+   "525": 1,
+   "526": 1,
+   "527": 1,
+   "528": 1,
+   "529": 1,
+   "53": 1,
+   "530": 1,
+   "531": 1,
+   "532": 1,
+   "533": 1,
+   "534": 1,
+   "535": 1,
+   "536": 1,
+   "537": 1,
+   "538": 1,
+   "539": 1,
+   "54": 1,
+   "540": 1,
+   "541": 1,
+   "542": 1,
+   "543": 1,
+   "544": 1,
+   "545": 1,
+   "546": 1,
+   "547": 1,
+   "548": 1,
+   "549": 1,
+   "55": 1,
+   "550": 1,
+   "551": 1,
+   "552": 1,
+   "553": 1,
+   "554": 1,
+   "555": 1,
+   "556": 1,
+   "557": 1,
+   "558": 1,
+   "559": 1,
+   "56": 1,
+   "560": 1,
+   "561": 1,
+   "562": 1,
+   "563": 1,
+   "564": 1,
+   "565": 1,
+   "566": 1,
+   "567": 1,
+   "568": 1,
+   "569": 1,
+   "57": 1,
+   "570": 1,
+   "571": 1,
+   "572": 1,
+   "573": 1,
+   "574": 1,
+   "575": 1,
+   "576": 1,
+   "577": 1,
+   "58": 1,
+   "59": 1,
+   "6": 1,
+   "60": 1,
+   "61": 1,
+   "62": 1,
+   "63": 1,
+   "64": 1,
+   "65": 1,
+   "66": 1,
+   "67": 1,
+   "68": 1,
+   "69": 1,
+   "7": 1,
+   "70": 1,
+   "71": 1,
+   "72": 1,
+   "73": 1,
+   "74": 1,
+   "75": 1,
+   "76": 1,
+   "77": 1,
+   "78": 1,
+   "79": 1,
+   "8": 1,
+   "80": 1,
+   "81": 1,
+   "82": 1,
+   "83": 1,
+   "84": 1,
+   "85": 1,
+   "86": 1,
+   "87": 1,
+   "88": 1,
+   "89": 1,
+   "9": 1,
+   "90": 1,
+   "91": 1,
+   "92": 1,
+   "93": 1,
+   "94": 1,
+   "95": 1,
+   "96": 1,
+   "97": 1,
+   "98": 1,
+   "99": 1,
+   "NoSessionLawChapterNumber": 2790
+  },
+  "subjects": {
+   "ABOR": 18,
+   "AGR": 63,
+   "ALC": 141,
+   "APCT": 1,
+   "APP": 131,
+   "APRO": 9,
+   "AR": 19,
+   "ART": 17,
+   "BAL": 13,
+   "BON": 7,
+   "BUI": 7,
+   "CAP": 18,
+   "CIG": 21,
+   "CIT": 50,
+   "CITF": 6,
+   "CITO": 2,
+   "CIV": 29,
+   "COL": 23,
+   "COM": 37,
+   "CONS": 17,
+   "CONT": 13,
+   "CORP": 29,
+   "CORR": 34,
+   "CORT": 82,
+   "CR": 122,
+   "CRED": 13,
+   "CRP": 83,
+   "CTY": 52,
+   "CTYF": 11,
+   "CTYO": 13,
+   "DEBT": 2,
+   "DEV": 12,
+   "DISC": 30,
+   "DOC": 10,
+   "ECO": 26,
+   "ELEC": 177,
+   "EMER": 66,
+   "ENER": 121,
+   "ENVP": 119,
+   "EST": 17,
+   "EVID": 3,
+   "FAM": 72,
+   "FED": 63,
+   "FIN": 25,
+   "FIRE": 17,
+   "FISH": 147,
+   "FOR": 6,
+   "GAMB": 28,
+   "GUN": 37,
+   "HLTC": 159,
+   "HLTH": 182,
+   "HOUS": 21,
+   "HWY": 20,
+   "ICO": 3,
+   "INAT": 4,
+   "IND": 64,
+   "INS": 96,
+   "INST": 8,
+   "IT": 23,
+   "JUD": 22,
+   "JUR": 1,
+   "LAB": 104,
+   "LEG": 125,
+   "LEN": 78,
+   "LFI": 3,
+   "LG": 148,
+   "LGF": 17,
+   "LIA": 39,
+   "LIB": 2,
+   "LIS": 69,
+   "LT": 23,
+   "LVTK": 43,
+   "MENT": 37,
+   "MIL": 41,
+   "MIN": 101,
+   "MINE": 32,
+   "MON": 14,
+   "MTRV": 89,
+   "OIL": 20,
+   "PCON": 15,
+   "PLDV": 42,
+   "POFF": 147,
+   "PRIV": 30,
+   "PRO": 71,
+   "PROA": 18,
+   "PROE": 21,
+   "PROO": 21,
+   "PROP": 86,
+   "REC": 31,
+   "REF": 8,
+   "REL": 9,
+   "REM": 8,
+   "RETR": 45,
+   "REVE": 1,
+   "REVL": 45,
+   "REVS": 241,
+   "RUL": 164,
+   "SAF": 33,
+   "SCH": 191,
+   "SCHF": 51,
+   "SEC": 6,
+   "SGIS": 5,
+   "SIS": 9,
+   "SOC": 89,
+   "SRC": 15,
+   "STF": 89,
+   "STGO": 177,
+   "STLA": 39,
+   "TEA": 3,
+   "TORT": 9,
+   "TRAD": 9,
+   "TRAF": 12,
+   "TRAN": 87,
+   "TX": 282,
+   "TXAG": 1,
+   "TXCO": 6,
+   "TXCR": 21,
+   "TXFU": 4,
+   "TXIN": 61,
+   "TXOG": 2,
+   "TXPR": 100,
+   "TXSA": 15,
+   "TXTR": 2,
+   "UNEM": 6,
+   "UNIV": 34,
+   "UT": 39,
+   "VOED": 6,
+   "WAGE": 17,
+   "WAT": 72,
+   "WORK": 33
+  }
+ }
+}
