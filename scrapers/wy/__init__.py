@@ -20,7 +20,8 @@ class Wyoming(State):
     # included, closed on its last day with identical motions in both houses ("CLOSING OF
     # SESSION") that "if no such time is established before December 31, <year>, ... [the
     # session] is adjourned sine die effective at 12:00 o'clock noon on that date"; none was
-    # recalled. So each ends on December 31 of its year. Sources: the House and Senate Journals,
+    # recalled (2026's close holds unless it is recalled before then). So each ends on December
+    # 31 of its year. Sources: the House and Senate Journals,
     # wyoleg.gov/<year>/HouseDigest.pdf and SenateDigest.pdf to 2022 (the 2020 and 2021 special
     # sessions are in the next year's file), wyoleg.gov/<year>/HouseJournal.pdf and
     # SenateJournal.pdf from 2023.

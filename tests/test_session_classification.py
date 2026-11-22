@@ -260,14 +260,19 @@ def test_every_session_is_classified_as_the_legislature_lists_it(state):
 def test_ri_sessions_do_not_overlap_and_end_after_they_start():
     # OPEN-754: each Rhode Island session is one year's sitting days, so none ends before it
     # starts and no two overlap (a session's later sittings, as in Dec 2020, stay inside it).
-    # OPEN-756: a session may officially close on the day the next one opens (2021 closed on
-    # 2022-01-04), so one shared day is allowed, never more.
+    # OPEN-756: 2021 officially closed on 2022-01-04, the day 2022 opened (both chambers' last
+    # 2021 journals); that pair shares that one day, and no other pair shares any.
+    closes_on_next_opening = {("2021", "2022"): "2022-01-04"}
     sessions = sorted(_sessions("ri"), key=lambda s: s["start_date"])
     for s in sessions:
         assert s["start_date"] <= s["end_date"], s["identifier"]
     for a, b in zip(sessions, sessions[1:]):
-        assert a["end_date"] <= b["start_date"], (a["identifier"], b["identifier"])
-    assert {s["identifier"]: s["end_date"] for s in sessions}["2021"] == "2022-01-04"
+        pair = (a["identifier"], b["identifier"])
+        if pair in closes_on_next_opening:
+            shared = closes_on_next_opening[pair]
+            assert a["end_date"] == b["start_date"] == shared, pair
+        else:
+            assert a["end_date"] < b["start_date"], pair
 
 
 def test_wy_sessions_end_on_their_december_31_sine_die():
