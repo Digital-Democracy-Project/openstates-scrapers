@@ -8,6 +8,8 @@ from utils.events import match_coordinates
 from openstates.scrape import Scraper, Event
 from openstates.exceptions import EmptyScrape
 
+from .sessions import legislature
+
 
 class MEEventScraper(Scraper, LXMLMixin):
     _TZ = pytz.timezone("US/Eastern")
@@ -36,7 +38,9 @@ class MEEventScraper(Scraper, LXMLMixin):
 
         # Scrape Committee data so that we can match events
         # that lack proper committee context data points
-        committees_url = f"https://legislature.maine.gov/backend/breeze/data/getCommittees?legislature={session}"
+        # OPEN-747: the site's API takes the Legislature's number, not the session's identifier
+        number = legislature(self.jurisdiction.legislative_sessions, session)
+        committees_url = f"https://legislature.maine.gov/backend/breeze/data/getCommittees?legislature={number}"
         committees_response = self.get(committees_url)
         committees = json.loads(committees_response.content)
 
@@ -156,7 +160,7 @@ class MEEventScraper(Scraper, LXMLMixin):
                     agenda.add_bill("LD {}".format(bill["LD"]))
 
                     if bill["TestimonyCount"] > 0:
-                        self.scrape_testimony_documents(bill, event, session)
+                        self.scrape_testimony_documents(bill, event, number)
 
             match_coordinates(
                 event,
