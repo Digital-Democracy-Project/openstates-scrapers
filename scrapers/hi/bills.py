@@ -14,6 +14,7 @@ from .sessions import (
     special_session_on,
 )
 from .utils import get_short_codes, make_data_url
+from . import special_measures
 from classify_motion import classify_motion
 from urllib import parse as urlparse
 import dateutil
@@ -732,11 +733,16 @@ class HIBillScraper(Scraper):
 
     def scrape(self, chamber=None, session=None, scrape_since=None):
         if is_special(self.jurisdiction.legislative_sessions, session):
-            # OPEN-748: the site lists no special-session measures (OPEN-751 reads them from the
-            # journal PDFs); this session's roll calls on regular bills come with those bills
-            raise EmptyScrape(
-                f"{session}: special-session measures are not on the site's measure pages"
-            )
+            # OPEN-748: the site lists no special-session measures, and this session's roll calls
+            # on regular bills come with those bills. OPEN-751: the measures of the four special
+            # sessions both chambers sat in are read from their PDFs (special_measures.py); the
+            # other special sessions were the Senate alone confirming appointments
+            if session not in special_measures.SOURCES:
+                raise EmptyScrape(
+                    f"{session}: the Senate alone sat; no measures of its own"
+                )
+            yield from self.scrape_special(session, chamber)
+            return
         get_short_codes(self)
         # OPEN-709: seated members, for the tallies that print no aye count
         self.members = load_members(self)
@@ -753,6 +759,123 @@ class HIBillScraper(Scraper):
         else:
             day = dt.datetime.now(self.tz).date() - dt.timedelta(days=int(scrape_since))
             yield from self.scrape_xml(session, day)
+
+    def scrape_special(self, session, chamber=None):
+        """OPEN-751: the bills and resolutions of a two-chamber special session, from its
+        document folder and both chambers' journals on data.capitol.hawaii.gov."""
+        source = special_measures.SOURCES[session]
+        (entry,) = [
+            s
+            for s in self.jurisdiction.legislative_sessions
+            if s["identifier"] == session
+        ]
+        start = dt.date.fromisoformat(entry["start_date"])
+        end = dt.date.fromisoformat(entry["end_date"])
+        folder = special_measures.DATA + source["folder"]
+        measures = special_measures.folder_measures(self.get(folder).text)
+        if not measures:
+            raise EmptyScrape(f"{session}: no measures in {folder}")
+        events, journals = {}, {}
+        for side in ("upper", "lower"):
+            days = []
+            for path in source[side]:
+                url = special_measures.DATA + path
+                xml = special_measures.pdf_bytes_xml(self.get(url).content)
+                read = special_measures.journal_days(special_measures.xml_pages(xml))
+                # a journal must read as sitting days of this session, or nothing it says can be
+                # dated: stop rather than file its measures without their history
+                if not read or not all(start <= d <= end for d, _ in read):
+                    raise ValueError(
+                        f"{url}: sitting days {[str(d) for d, _ in read]} not within "
+                        f"{session} ({start} to {end})"
+                    )
+                days.extend(read)
+                journals.setdefault(side, []).append(url)
+            events[side] = special_measures.measure_events(days, side, set(measures))
+        for key in sorted(measures, key=lambda k: (k[0], int(k[1]))):
+            if chamber and special_measures.TYPES[key[0]][0] != chamber:
+                continue
+            yield from self.special_bill(
+                session, key, measures[key], events, folder, journals
+            )
+
+    def special_bill(self, session, key, measure, events, folder, journals):
+        """The Bill (and its VoteEvents) of one special-session measure: `measure` from
+        folder_measures(), `events` {"upper": ..., "lower": ...} from measure_events(), `journals`
+        {"upper": [url], "lower": [url]}."""
+        bill_chamber, classification, _ = special_measures.TYPES[key[0]]
+        bill_id = f"{key[0]}{key[1]}"
+        other = "lower" if bill_chamber == "upper" else "upper"
+        # the title its own chamber's journal gives it, else the other chamber's
+        title = None
+        for side in (bill_chamber, other):
+            titles = {t for _, t in events[side][key]["titles"]}
+            if len(titles) > 1:
+                self.warning(
+                    f"{session} {bill_id}: the {side} journal gives two titles {titles}"
+                )
+                return
+            if titles:
+                title = titles.pop()
+                break
+        if title is None:
+            self.warning(
+                f"{session} {bill_id}: no journal gives its title; not scraped"
+            )
+            return
+        bill = Bill(
+            bill_id,
+            session,
+            title,
+            chamber=bill_chamber,
+            classification=classification,
+        )
+        for url in [folder] + journals["upper"] + journals["lower"]:
+            bill.add_source(url)
+        # the journal names each introducer alike ("Introduced by: Representatives McKelvey,
+        # Carroll, Evans and Kawakami"; "jointly offered by"), so each is a primary sponsor
+        for name in dict.fromkeys(events[bill_chamber][key]["sponsors"]):
+            bill.add_sponsorship(name, "primary", "person", True)
+        for name, url in measure["versions"]:
+            version = name if name == bill_id else f"{bill_id}_{name}"
+            bill.add_version_link(version, url, media_type="application/pdf")
+        for name, url in measure["documents"]:
+            bill.add_document_link(name, url, media_type="application/pdf")
+        actions = events["upper"][key]["actions"] + events["lower"][key]["actions"]
+        for date, actor, description, action_type in sorted(
+            actions, key=lambda a: a[0]
+        ):
+            bill.add_action(
+                description, date.isoformat(), chamber=actor, classification=action_type
+            )
+        votes = events["upper"][key]["votes"] + events["lower"][key]["votes"]
+        for index, (date, actor, motion, tally) in enumerate(votes):
+            if tally == "unreadable":
+                self.warning(
+                    f"{session} {bill_id}: {actor} roll call of {date} ({motion}) does not read "
+                    "cleanly; left out"
+                )
+                continue
+            vote = VoteEvent(
+                start_date=date.isoformat(),
+                chamber=actor,
+                bill=bill_id,
+                bill_chamber=bill_chamber,
+                legislative_session=session,
+                motion_text=motion,
+                result=vote_result(actor, motion, tally["yes"], tally["no"]),
+                classification=classify_motion("hi", motion),
+            )
+            for url in journals[actor]:
+                vote.add_source(url)
+            vote.set_count("yes", tally["yes"])
+            vote.set_count("no", tally["no"])
+            vote.set_count("not voting", tally["excused"])
+            for option, name in tally["voters"]:
+                vote.vote(option, name)
+            vote.dedupe_key = f"{session}#{bill_id}#{actor}#{date}#{motion}#{index}"
+            yield vote
+        yield bill
 
     def scrape_xml(self, session, day):
         url = "https://www.capitol.hawaii.gov/sessions/session2024/rss/"
