@@ -65,6 +65,8 @@ read on 2026-11-17:
 * Oklahoma (OPEN-727, read 2026-11-21): the session menu on webapps.oklegislature.gov
   (WebApplication3/WebForm1.aspx, the page get_session_list reads) names each session "Regular
   Session" or "... Special Session"; the twelve special ones are below, every other is regular.
+  Since OPEN-755 (read 2026-11-22) each session's dates are its first and last legislative day in
+  either chamber's journal (OK_JOURNAL_DATES below).
 * Oregon: OLIS (api.oregonlegislature.gov LegislativeSessions), the "S" session keys.
 * Rhode Island (OPEN-726, read 2026-11-21): the year menu on status.rilegislature.gov (bill
   history, previous sessions) offers one regular session a year and names no special or
@@ -301,3 +303,44 @@ def test_no_regular_session_covers_a_special_session(state):
                 r["end_date"] < special["start_date"]
                 or special["end_date"] < r["start_date"]
             ), (r["identifier"], special["identifier"])
+
+
+# OPEN-755 (Oklahoma): each session's first and last legislative day in either chamber's journal
+# (House Journals on former.okhouse.gov, Senate Journals on oksenate.gov/calendar/journals, read
+# 2026-11-22); 2027 from the House's published schedule (okhouse.gov/leg_deadlines). Oklahoma is
+# not in the no-overlap test above: its two-year entries hold the special sessions held between
+# their two years, and the journals show special sessions sitting during the 2018, 2020, 2022,
+# 2023 and 2024 regular sessions, so honest dates overlap. 2012SS1 is not pinned: neither chamber
+# lists a journal for it, so its dates are upstream's, unchecked.
+OK_JOURNAL_DATES = {
+    "2011-2012": ("2011-01-04", "2012-05-25"),
+    "2013-2014": ("2013-01-08", "2014-05-23"),
+    "2013SS1": ("2013-09-03", "2013-09-09"),
+    "2015-2016": ("2015-01-06", "2016-05-27"),
+    "2017SS1": ("2017-09-25", "2017-11-17"),
+    "2017SS2": ("2017-12-18", "2018-04-19"),
+    "2017-2018": ("2017-01-03", "2018-05-03"),
+    "2019-2020": ("2019-01-08", "2019-05-23"),
+    "2020SS1": ("2020-04-06", "2020-05-22"),
+    "2020": ("2020-02-03", "2020-05-22"),
+    "2021": ("2021-01-05", "2021-05-27"),
+    "2022": ("2022-02-07", "2022-05-27"),
+    "2021SS1": ("2021-11-15", "2021-11-19"),
+    "2022SS2": ("2022-05-18", "2022-09-29"),
+    "2022SS3": ("2022-06-13", "2022-06-15"),
+    "2023": ("2023-01-03", "2023-05-26"),
+    "2023S1": ("2023-05-17", "2023-07-31"),
+    "2023S2": ("2023-10-03", "2023-10-04"),
+    "2024": ("2024-02-05", "2024-05-30"),
+    "2024S3": ("2024-01-29", "2024-05-20"),
+    "2024S4": ("2024-06-12", "2024-07-15"),
+    "2025": ("2025-01-07", "2025-05-30"),
+    "2026": ("2026-02-02", "2026-05-14"),
+    "2027": ("2027-01-05", "2027-05-28"),
+}
+
+
+def test_ok_session_dates_match_the_journals():
+    got = {s["identifier"]: (s["start_date"], s["end_date"]) for s in _sessions("ok")}
+    assert set(got) == set(OK_JOURNAL_DATES) | {"2012SS1"}
+    assert {i: got[i] for i in OK_JOURNAL_DATES} == OK_JOURNAL_DATES

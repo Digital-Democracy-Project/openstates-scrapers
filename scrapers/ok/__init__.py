@@ -16,13 +16,21 @@ class Oklahoma(State):
     #   - update the `_scraped_name`
     #   - update the session slug in the Bill scraper
     #   - ignore the odd-year session
+    # Dates (OPEN-755, read 2026-11-22): each session runs from its first to its last legislative
+    # day in either chamber's journal (House: former.okhouse.gov/Publications/HouseJournals.aspx,
+    # Senate: oksenate.gov/calendar/journals); an odd year's first day is its January
+    # Organizational Day. A two-year entry (2011-2012 to 2017-2018) runs from its first year's
+    # first day to its second year's last; "2019-2020" holds only 2019's days. Special sessions
+    # keep their own journal days, which in 2017-18, 2020, 2022, 2023 and 2024 fell inside a
+    # regular session's. 2027 is from okhouse.gov/leg_deadlines.
+    # 2012SS1 is unchecked: neither chamber lists a journal for it.
     legislative_sessions = [
         {
             "_scraped_name": "2012 Regular Session",
             "classification": "primary",
             "identifier": "2011-2012",
             "name": "2011-2012 Regular Session",
-            "start_date": "2011-02-07",
+            "start_date": "2011-01-04",
             "end_date": "2012-05-25",
         },
         {
@@ -38,15 +46,15 @@ class Oklahoma(State):
             "classification": "primary",
             "identifier": "2013-2014",
             "name": "2013-2014 Regular Session",
-            "start_date": "2013-02-04",
-            "end_date": "2014-05-24",
+            "start_date": "2013-01-08",
+            "end_date": "2014-05-23",
         },
         {
             "_scraped_name": "2013 Special Session",
             "classification": "special",
             "identifier": "2013SS1",
             "name": "2013 Special Session",
-            "start_date": "2013-09-02",
+            "start_date": "2013-09-03",
             "end_date": "2013-09-09",
         },
         {
@@ -54,7 +62,7 @@ class Oklahoma(State):
             "classification": "primary",
             "identifier": "2015-2016",
             "name": "2015-2016 Regular Session",
-            "start_date": "2015-02-02",
+            "start_date": "2015-01-06",
             "end_date": "2016-05-27",
         },
         {
@@ -78,8 +86,8 @@ class Oklahoma(State):
             "classification": "primary",
             "identifier": "2017-2018",
             "name": "2017-2018 Regular Session",
-            "start_date": "2017-02-06",
-            "end_date": "2018-05-31",
+            "start_date": "2017-01-03",
+            "end_date": "2018-05-03",
         },
         {
             "_scraped_name": "2019 Regular Session",
@@ -87,7 +95,7 @@ class Oklahoma(State):
             "identifier": "2019-2020",
             "name": "2019-2020 Regular Session",
             "start_date": "2019-01-08",
-            "end_date": "2019-05-22",
+            "end_date": "2019-05-23",
         },
         {
             "_scraped_name": "2020 First Special Session",
@@ -102,7 +110,7 @@ class Oklahoma(State):
             "classification": "primary",
             "identifier": "2020",
             "name": "2020 Regular Session",
-            "start_date": "2019-02-03",
+            "start_date": "2020-02-03",
             "end_date": "2020-05-22",
         },
         {
@@ -110,7 +118,7 @@ class Oklahoma(State):
             "classification": "primary",
             "identifier": "2021",
             "name": "2021 Regular Session",
-            "start_date": "2021-02-01",
+            "start_date": "2021-01-05",
             "end_date": "2021-05-27",
         },
         {
@@ -128,7 +136,7 @@ class Oklahoma(State):
             "identifier": "2021SS1",
             "name": "2021 First Special Session",
             "start_date": "2021-11-15",
-            "end_date": "2021-11-26",
+            "end_date": "2021-11-19",
             "active": False,
         },
         {
@@ -137,7 +145,7 @@ class Oklahoma(State):
             "identifier": "2022SS2",
             "name": "2022 Second Special Session",
             "start_date": "2022-05-18",
-            "end_date": "2022-05-29",
+            "end_date": "2022-09-29",
             "active": False,
         },
         {
@@ -146,7 +154,7 @@ class Oklahoma(State):
             "identifier": "2022SS3",
             "name": "2022 Third Special Session",
             "start_date": "2022-06-13",
-            "end_date": "2022-06-16",
+            "end_date": "2022-06-15",
             "active": False,
         },
         {
@@ -154,7 +162,7 @@ class Oklahoma(State):
             "classification": "primary",
             "identifier": "2023",
             "name": "2023 Regular Session",
-            "start_date": "2023-02-06",
+            "start_date": "2023-01-03",
             "end_date": "2023-05-26",
             "active": False,
         },
@@ -182,7 +190,7 @@ class Oklahoma(State):
             "identifier": "2024",
             "name": "2024 Regular Session",
             "start_date": "2024-02-05",
-            "end_date": "2024-05-31",
+            "end_date": "2024-05-30",
             "active": False,
         },
         {
@@ -191,7 +199,7 @@ class Oklahoma(State):
             "identifier": "2024S3",
             "name": "2024 Third Special Session",
             "start_date": "2024-01-29",
-            "end_date": "2024-01-30",
+            "end_date": "2024-05-20",
             "active": False,
         },
         {
@@ -200,8 +208,7 @@ class Oklahoma(State):
             "identifier": "2024S4",
             "name": "2024 Fourth Special Session",
             "start_date": "2024-06-12",
-            # TODO: update end date
-            "end_date": "2024-06-21",
+            "end_date": "2024-07-15",
             "active": False,
         },
         {
@@ -209,7 +216,7 @@ class Oklahoma(State):
             "classification": "primary",
             "identifier": "2025",
             "name": "2025 Regular Session",
-            "start_date": "2025-02-03",
+            "start_date": "2025-01-07",
             "end_date": "2025-05-30",
             "active": False,
         },
@@ -219,7 +226,7 @@ class Oklahoma(State):
             "identifier": "2026",
             "name": "2026 Regular Session",
             "start_date": "2026-02-02",
-            "end_date": "2026-05-29",
+            "end_date": "2026-05-14",
             "active": True,
         },
         {
@@ -227,9 +234,8 @@ class Oklahoma(State):
             "classification": "primary",
             "identifier": "2027",
             "name": "2027 Regular Session",
-            # TODO real dates
-            "start_date": "2027-02-02",
-            "end_date": "2027-05-29",
+            "start_date": "2027-01-05",
+            "end_date": "2027-05-28",
             "active": False,
         },
     ]
