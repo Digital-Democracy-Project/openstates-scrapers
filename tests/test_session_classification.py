@@ -310,19 +310,23 @@ def test_no_regular_session_covers_a_special_session(state):
 # Legislature, the first chamber's sine die, else the last day either chamber met; Ramon
 # 2026-11-22) in the House Journals (former.okhouse.gov) and Senate Journals (oksenate.gov/calendar/journals),
 # read 2026-11-22; 2027 from the House's published schedule (okhouse.gov/leg_deadlines).
-# Oklahoma is not in the no-overlap test above (Ramon 2026-11-22, "Keep true dates"): its two-year
-# entries hold the special sessions held between their two years, and its special sessions ran
-# alongside regular ones (2018, 2020, 2022, 2023, 2024). 2012SS1 is not pinned: neither chamber
+# OPEN-758: one regular session per year since, each year's own first day and close.
+# Oklahoma is not in the no-overlap test above (Ramon 2026-11-22, "Keep true dates"): its special
+# sessions ran alongside regular ones (2018, 2020, 2022, 2023, 2024). 2012SS1 is not pinned: neither chamber
 # lists a journal for it, so its dates are upstream's, unchecked.
 OK_JOURNAL_DATES = {
-    "2011-2012": ("2011-01-04", "2012-05-25"),
-    "2013-2014": ("2013-01-08", "2014-05-23"),
+    "2011": ("2011-01-04", "2011-05-27"),
+    "2012": ("2012-02-06", "2012-05-25"),
+    "2013": ("2013-01-08", "2013-05-24"),
+    "2014": ("2014-02-03", "2014-05-23"),
     "2013SS1": ("2013-09-03", "2013-09-09"),
-    "2015-2016": ("2015-01-06", "2016-05-27"),
+    "2015": ("2015-01-06", "2015-05-22"),
+    "2016": ("2016-02-01", "2016-05-27"),
     "2017SS1": ("2017-09-25", "2017-11-17"),
     "2017SS2": ("2017-12-18", "2018-04-19"),
-    "2017-2018": ("2017-01-03", "2018-05-03"),
-    "2019-2020": ("2019-01-08", "2019-05-31"),
+    "2017": ("2017-01-03", "2017-05-26"),
+    "2018": ("2018-02-05", "2018-05-03"),
+    "2019": ("2019-01-08", "2019-05-31"),
     "2020SS1": ("2020-04-06", "2020-05-30"),
     "2020": ("2020-02-03", "2020-05-29"),
     "2021": ("2021-01-05", "2021-05-27"),
