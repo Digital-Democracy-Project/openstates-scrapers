@@ -359,3 +359,37 @@ def test_ok_session_dates_match_the_journals():
     got = {s["identifier"]: (s["start_date"], s["end_date"]) for s in _sessions("ok")}
     assert set(got) == set(OK_JOURNAL_DATES) | {"2012SS1"}
     assert {i: got[i] for i in OK_JOURNAL_DATES} == OK_JOURNAL_DATES
+
+
+# OPEN-766 (Wyoming): each session ends on its last working day (Ramon 2026-11-22, "Use the last
+# working day"), the day both chambers last met and moved to adjourn, in the House and Senate
+# Digests (wyoleg.gov/<year>/HouseDigest.pdf, SenateDigest.pdf, to 2022) and Journals
+# (HouseJournal.pdf, SenateJournal.pdf, from 2023), read 2026-11-22. Both chambers agree in every
+# year (the 2011 Senate's thirty-seventh-day heading misprints March 1; its title page and the
+# House say March 3). In 2011-2015 and 2017 only the governor's signings and chapter numbers are
+# dated between this day and the numbered-day calendar's last day, the old end.
+WY_LAST_WORKING_DAY = {
+    "2011": "2011-03-03",
+    "2012": "2012-03-08",
+    "2013": "2013-02-27",
+    "2014": "2014-03-06",
+    "2015": "2015-03-06",
+    "2016": "2016-03-04",
+    "2017": "2017-03-03",
+    "2018": "2018-03-15",
+    "2019": "2019-02-28",
+    "2020": "2020-03-12",
+    "2020S1": "2020-05-16",
+    "2021": "2021-04-07",
+    "2021S1": "2021-11-03",
+    "2022": "2022-03-11",
+    "2023": "2023-03-03",
+    "2024": "2024-03-08",
+    "2025": "2025-03-06",
+    "2026": "2026-03-11",
+}
+
+
+def test_wy_sessions_end_on_the_last_working_day():
+    got = {s["identifier"]: s["end_date"] for s in _sessions("wy")}
+    assert got == WY_LAST_WORKING_DAY
