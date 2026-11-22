@@ -216,8 +216,12 @@ jurisdictions:
       - '^passage( to be engrossed( as amended)?| of emergency measure)?$'
       - '^adoption$'
       - '^(reconsideration ?- ?veto|veto override \(2/3\))$'   # whole-bill override; an unseen line-item text stays unlabelled
-      - '^(acc(ept)? |report ).*\b(ought not to pass|ontp)\b'  # "ACC MAJ OUGHT NOT TO PASS REP", "ACCEPT REPORT 'B' OUGHT NOT TO PASS", 'REPORT "A" ONTP': a YES is against the bill
+      - &me_ought_not_to_pass '^(acc(ept)? |report ).*\b(ought not to pass|ontp)\b'  # "ACC MAJ OUGHT NOT TO PASS REP", "ACCEPT REPORT 'B' OUGHT NOT TO PASS", 'REPORT "A" ONTP': a YES is against the bill
     default: null                                # postponement, recede and anything unseen stay unclassified
+    # BROKER-564 (Ramon, OPEN-698, 2026-11-20): a YES on these is a vote AGAINST the bill. The me scraper marks such a
+    # roll call (extras ddp_yes_is_against) and the broker's scorecards turn each legislator's yes/no round for it.
+    yes_is_against:
+      - *me_ought_not_to_pass
 
   mi:
     passage:

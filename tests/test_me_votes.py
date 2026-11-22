@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
 
 from openstates.scrape import Bill  # noqa: E402
 
-from classify_motion import classify_motion  # noqa: E402
+from classify_motion import KNOWN_JURISDICTIONS, classify_motion, yes_is_against  # noqa: E402
 from me.bills import (  # noqa: E402
     FINAL_ROLL_CALL,
     OUGHT_TO_PASS_REPORT,
@@ -345,3 +345,71 @@ def test_enactment_replaces_ought_to_pass_only_in_its_own_chamber():
         ("H-RC 59", "ACC MAJ OUGHT TO PASS REP", []),
         ("H-RC 64", "Enactment", ["passage"]),
     ]
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# BROKER-564 (Ramon, OPEN-698, 2026-11-20): a YES on accepting an "Ought Not to Pass" report is a vote against the
+# bill. The 14 wordings of the session-132 sample (307 roll calls), written out by hand from the OPEN-698 inventory;
+# every other text of the 166 says nothing of the kind.
+# ---------------------------------------------------------------------------------------------------------------
+
+OUGHT_NOT_TO_PASS_TEXTS = {
+    "ACCEPT MAJORITY OUGHT NOT TO PASS REPORT",
+    "ACC MAJ OUGHT NOT TO PASS REP",
+    "ACCEPT REPORT 'B' OUGHT NOT TO PASS",
+    "ACC MIN OUGHT NOT TO PASS REP",
+    "ACCEPT MINORITY OUGHT NOT TO PASS REPORT",
+    'ACC REPORT "B" ONTP',
+    'ACC REPORT "A" ONTP',
+    "ACCEPT REPORT 'A' OUGHT NOT TO PASS",
+    "Acc Maj Ought Not to Pass Rep",
+    "ACC REPORT \"B' ONTP",
+    "ACC REPORT 'B' ONTP",
+    'REPORT "A" ONTP',
+    'REPORT "B" ONTP',
+    'acc report "b" ontp',
+}
+
+
+@pytest.mark.parametrize("text", ALL_TEXTS_132, ids=lambda t: t["motion"])
+def test_yes_is_against_exactly_on_ought_not_to_pass(text):
+    assert yes_is_against("me", text["motion"]) is (text["motion"] in OUGHT_NOT_TO_PASS_TEXTS)
+
+
+def test_the_ought_not_to_pass_texts_are_the_307_roll_calls():
+    found = [t for t in ALL_TEXTS_132 if t["motion"] in OUGHT_NOT_TO_PASS_TEXTS]
+    assert len(found) == 14
+    assert sum(t["roll_calls"] for t in found) == 307
+
+
+def test_no_other_state_has_a_yes_against_rule():
+    others = [j for j in KNOWN_JURISDICTIONS if j != "me"]
+    assert others
+    for jurisdiction in others:
+        for text in OUGHT_NOT_TO_PASS_TEXTS:
+            assert yes_is_against(jurisdiction, text) is False, jurisdiction
+
+
+def test_a_real_ought_not_to_pass_roll_call_is_marked():
+    # LD 115, House RC 250: "ACC MAJ OUGHT NOT TO PASS REP", accepted (the bill died)
+    url = BASE + "rollcall.asp?ID=280095523&chamber=House&serialnumber=250"
+    scraper = _scraper({url: _page("rollcall_280095523_House_250.html")})
+    (vote,) = list(scraper.scrape_vote(_bill(), "ACC MAJ OUGHT NOT TO PASS REP", url))
+    assert vote.motion_classification == ["passage"]
+    assert vote.extras == {"ddp_yes_is_against": True}
+
+
+@pytest.mark.parametrize(
+    "fid,motion",
+    [
+        ("280095524_House_114", "Enactment"),
+        ("280095523_Senate_270", "PASSAGE TO BE ENGROSSED AS AMENDED"),
+        ("280095557_House_185", "ADOPT HAH-126 to CAS-44"),
+    ],
+)
+def test_other_real_roll_calls_are_not_marked(fid, motion):
+    paper, chamber, rc = fid.split("_")
+    url = BASE + f"rollcall.asp?ID={paper}&chamber={chamber}&serialnumber={rc}"
+    scraper = _scraper({url: _page(f"rollcall_{fid}.html")})
+    (vote,) = list(scraper.scrape_vote(_bill(), motion, url))
+    assert "ddp_yes_is_against" not in vote.extras

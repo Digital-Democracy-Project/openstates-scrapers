@@ -44,6 +44,21 @@ def needs_two_thirds(jurisdiction: str, motion_text: str) -> bool:
     return any(re.search(p, t) for p in cfg["two_thirds"])
 
 
+def yes_is_against(jurisdiction: str, motion_text: str) -> bool:
+    """True when a YES on the motion is a vote against the bill.
+
+    BROKER-564: accepting Maine's "Ought Not to Pass" committee report is passage (it
+    decides the bill), but a YES on it opposes the bill (Ramon, OPEN-698). Patterns are the
+    jurisdiction's `yes_is_against` list in config/motion_classification.yaml; a
+    jurisdiction without one returns False.
+    """
+    cfg = _config["jurisdictions"].get(jurisdiction)
+    if not cfg or not cfg.get("yes_is_against"):
+        return False
+    t = _normalise(jurisdiction, cfg, motion_text)
+    return any(re.search(p, t) for p in cfg["yes_is_against"])
+
+
 def classify_motion(
     jurisdiction: str, motion_text: str, bill_action: str = None
 ) -> list:

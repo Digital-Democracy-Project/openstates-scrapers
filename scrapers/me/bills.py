@@ -12,7 +12,7 @@ import scrapelib
 
 from openstates.scrape import Scraper, Bill, VoteEvent
 
-from classify_motion import classify_motion
+from classify_motion import classify_motion, yes_is_against
 
 from .actions import Categorizer
 
@@ -503,6 +503,9 @@ class MEBillScraper(Scraper):
         vote.set_count("other", other_count)
         vote.add_source(url)
         vote.dedupe_key = url
+        # BROKER-564: a YES on accepting an "Ought Not to Pass" report is a vote against the bill; the broker reads this
+        if yes_is_against("me", motion):
+            vote.extras["ddp_yes_is_against"] = True
 
         member_cell = page.xpath("//td[text() = 'Member']")[0]
         for row in member_cell.xpath("../../tr")[1:]:

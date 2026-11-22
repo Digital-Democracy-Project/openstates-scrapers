@@ -1,0 +1,4227 @@
+{
+ "bills": {
+  "content": [
+   {
+    "billActions": [
+     {
+      "actionType": {
+       "code": 40,
+       "description": "(C) Draft Died in Process",
+       "progressCategory": {
+        "code": "000",
+        "description": "Probably Dead"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 40,
+      "committee": null,
+      "date": "2017-11-16T01:15:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 8,
+       "description": "(C) Draft On Hold",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 8,
+      "committee": null,
+      "date": "2017-11-14T14:20:49",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 1,
+       "description": "(C) Draft Request Received",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 1,
+      "committee": null,
+      "date": "2017-11-13T16:13:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     }
+    ],
+    "billNumber": null,
+    "billSortNumber": null,
+    "billType": null,
+    "coSponsor": null,
+    "deadlineCategory": {
+     "id": {
+      "code": "AP",
+      "sessionId": 20172
+     },
+     "name": "Appropriation Bills",
+     "returnDate": "2018-02-14T00:00:00",
+     "transmittalDate": "2018-01-30T00:00:00"
+    },
+    "drafters": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 12483,
+       "firstName": "Jaret",
+       "lastName": "Coles"
+      },
+      "legislator": null
+     }
+    ],
+    "hasFiscalNote": false,
+    "id": {
+     "billDraftNumber": "LC0018",
+     "sessionId": 20172
+    },
+    "latestVersion": null,
+    "preintroductionRequired": "N",
+    "primarySponsorBillRoles": [],
+    "requestOf": [],
+    "requesters": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 13870,
+       "firstName": "Llew",
+       "lastName": "Jones"
+      },
+      "legislator": {
+       "chamber": {
+        "houseCode": "S",
+        "houseName": "Senate"
+       },
+       "committeeAssignments": [
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(S) Finance and Claims",
+          "committeeTypeName": "ST",
+          "houseCode": "S",
+          "id": {
+           "committeeCode": "FCS"
+          },
+          "meetingDays": "M-F",
+          "meetingRoom": "317",
+          "meetingTime": "8:00 AM",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "CH",
+          "assignmentName": "Chair"
+         },
+         "id": {
+          "applicationSeq": 1,
+          "committeeCode": "FCS",
+          "sessionId": 20172
+         }
+        },
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(S) Rules",
+          "committeeTypeName": "ST",
+          "houseCode": "S",
+          "id": {
+           "committeeCode": "RUS"
+          },
+          "meetingDays": "ON CALL",
+          "meetingRoom": "TBD",
+          "meetingTime": "TBD",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "ME",
+          "assignmentName": "Member"
+         },
+         "id": {
+          "applicationSeq": 4,
+          "committeeCode": "RUS",
+          "sessionId": 20172
+         }
+        }
+       ],
+       "districtNumber": 9,
+       "lawEntity": {
+        "entityIdSequence": 13870,
+        "firstName": "Llew",
+        "lastName": "Jones"
+       },
+       "politicalParty": {
+        "partyCode": "R",
+        "partyName": "Republican"
+       },
+       "position": null
+      }
+     }
+    ],
+    "sessionLawChapterNumber": null,
+    "shortTitle": "Provide deposit rules for proceeds from a private prison and transfers",
+    "subjects": [
+     {
+      "billDraftNumber": "LC0018",
+      "code": "CORR",
+      "sessionId": 20172,
+      "subject": {
+       "code": "CORR",
+       "description": "Corrections"
+      }
+     },
+     {
+      "billDraftNumber": "LC0018",
+      "code": "APP",
+      "sessionId": 20172,
+      "subject": {
+       "code": "APP",
+       "description": "Appropriations  (see also: State Finance)"
+      }
+     }
+    ]
+   },
+   {
+    "billActions": [
+     {
+      "actionType": {
+       "code": 646,
+       "description": "(H) Vetoed by Governor",
+       "progressCategory": {
+        "code": "000",
+        "description": "Probably Dead"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 646,
+      "committee": null,
+      "date": "2017-11-24T00:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 655,
+       "description": "(H) Transmitted to Governor",
+       "progressCategory": {
+        "code": "180",
+        "description": "Transmitted to Governor"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 655,
+      "committee": null,
+      "date": "2017-11-16T13:45:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 654,
+       "description": "(H) Signed by Speaker",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 654,
+      "committee": null,
+      "date": "2017-11-16T12:30:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 653,
+       "description": "(H) Returned from Enrolling",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 653,
+      "committee": null,
+      "date": "2017-11-15T19:35:35",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 43,
+       "description": "(C) Printed - Enrolled Version Available",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 43,
+      "committee": null,
+      "date": "2017-11-15T18:44:45",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 652,
+       "description": "(H) Sent to Enrolling",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 652,
+      "committee": null,
+      "date": "2017-11-15T15:26:34",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 206,
+       "description": "(S) Returned to House",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 206,
+      "committee": null,
+      "date": "2017-11-15T14:53:47",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 197,
+       "description": "(S) 3rd Reading Concurred",
+       "progressCategory": {
+        "code": "110",
+        "description": "In Second House--Through 3rd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 197,
+      "committee": null,
+      "date": "2017-11-15T14:41:05",
+      "noVotes": "18",
+      "voteSeq": "S1953",
+      "yesVotes": "30"
+     },
+     {
+      "actionType": {
+       "code": 157,
+       "description": "(S) 2nd Reading Concurred",
+       "progressCategory": {
+        "code": "100",
+        "description": "In Second House--Through 2nd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 157,
+      "committee": null,
+      "date": "2017-11-15T14:10:07",
+      "noVotes": "18",
+      "voteSeq": "S1943",
+      "yesVotes": "30"
+     },
+     {
+      "actionType": {
+       "code": 605,
+       "description": "(H) Transmitted to Senate",
+       "progressCategory": {
+        "code": "070",
+        "description": "Transmitted to Second House"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 605,
+      "committee": null,
+      "date": "2017-11-15T12:03:23",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 596,
+       "description": "(H) 3rd Reading Passed",
+       "progressCategory": {
+        "code": "060",
+        "description": "In First House--Through 3rd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 596,
+      "committee": null,
+      "date": "2017-11-15T11:52:43",
+      "noVotes": "42",
+      "voteSeq": "H2099",
+      "yesVotes": "58"
+     },
+     {
+      "actionType": {
+       "code": 153,
+       "description": "(S) Scheduled for 2nd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 153,
+      "committee": null,
+      "date": "2017-11-15T11:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 594,
+       "description": "(H) Scheduled for 3rd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 594,
+      "committee": null,
+      "date": "2017-11-15T10:45:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 556,
+       "description": "(H) 2nd Reading Passed",
+       "progressCategory": {
+        "code": "050",
+        "description": "In First House--Through 2nd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 556,
+      "committee": null,
+      "date": "2017-11-14T21:07:56",
+      "noVotes": "42",
+      "voteSeq": "H2091",
+      "yesVotes": "58"
+     },
+     {
+      "actionType": {
+       "code": 553,
+       "description": "(H) Scheduled for 2nd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 553,
+      "committee": null,
+      "date": "2017-11-14T20:20:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 530,
+       "description": "(H) Committee Report--Bill Passed",
+       "progressCategory": {
+        "code": "040",
+        "description": "In First House--Out of Committee"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 530,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(H) Appropriations",
+       "committeeTypeName": "ST",
+       "houseCode": "H",
+       "id": {
+        "committeeCode": "APH"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "102",
+       "meetingTime": "8:00 AM",
+       "zoomEmail": null
+      },
+      "date": "2017-11-14T20:19:15",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 29,
+       "description": "(C) Introduced Bill Text Available Electronically",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 29,
+      "committee": null,
+      "date": "2017-11-14T19:34:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 516,
+       "description": "(H) Committee Executive Action--Bill Passed",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 516,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(H) Appropriations",
+       "committeeTypeName": "ST",
+       "houseCode": "H",
+       "id": {
+        "committeeCode": "APH"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "102",
+       "meetingTime": "8:00 AM",
+       "zoomEmail": null
+      },
+      "date": "2017-11-14T19:22:28",
+      "noVotes": "10",
+      "voteSeq": null,
+      "yesVotes": "12"
+     },
+     {
+      "actionType": {
+       "code": 512,
+       "description": "(H) Hearing",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 512,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(H) Appropriations",
+       "committeeTypeName": "ST",
+       "houseCode": "H",
+       "id": {
+        "committeeCode": "APH"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "102",
+       "meetingTime": "8:00 AM",
+       "zoomEmail": null
+      },
+      "date": "2017-11-14T16:15:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 501,
+       "description": "(H) First Reading",
+       "progressCategory": {
+        "code": "020",
+        "description": "In First House--Introduced"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 501,
+      "committee": null,
+      "date": "2017-11-14T16:08:42",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 502,
+       "description": "(H) Referred to Committee",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 502,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(H) Appropriations",
+       "committeeTypeName": "ST",
+       "houseCode": "H",
+       "id": {
+        "committeeCode": "APH"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "102",
+       "meetingTime": "8:00 AM",
+       "zoomEmail": null
+      },
+      "date": "2017-11-14T14:42:01",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 500,
+       "description": "(H) Introduced",
+       "progressCategory": {
+        "code": "020",
+        "description": "In First House--Introduced"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 500,
+      "committee": null,
+      "date": "2017-11-14T14:35:49",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 23,
+       "description": "(C) Draft Delivered to Requester",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 23,
+      "committee": null,
+      "date": "2017-11-14T14:30:52",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 22,
+       "description": "(C) Draft Ready for Delivery",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 22,
+      "committee": null,
+      "date": "2017-11-14T14:18:06",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 27,
+       "description": "(C) Executive Director Final Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 27,
+      "committee": null,
+      "date": "2017-11-14T14:12:18",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 24,
+       "description": "(C) Draft in Assembly",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 24,
+      "committee": null,
+      "date": "2017-11-14T14:02:24",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 21,
+       "description": "(C) Executive Director Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 21,
+      "committee": null,
+      "date": "2017-11-14T13:43:06",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 28,
+       "description": "(C) Bill Draft Text Available Electronically",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 28,
+      "committee": null,
+      "date": "2017-11-14T13:20:57",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 18,
+       "description": "(C) Draft in Final Drafter Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 18,
+      "committee": null,
+      "date": "2017-11-14T13:20:55",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 17,
+       "description": "(C) Draft in Input/Proofing",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 17,
+      "committee": null,
+      "date": "2017-11-14T12:52:13",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 26,
+       "description": "(C) Draft to Drafter - Edit Review [SMH]",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 26,
+      "committee": null,
+      "date": "2017-11-14T12:35:22",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 13,
+       "description": "(C) Draft in Edit",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 13,
+      "committee": null,
+      "date": "2017-11-14T12:23:28",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 12,
+       "description": "(C) Draft in Legal Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 12,
+      "committee": null,
+      "date": "2017-11-14T12:08:58",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 2,
+       "description": "(C) Draft to Requester for Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 2,
+      "committee": null,
+      "date": "2017-11-14T11:38:51",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 1,
+       "description": "(C) Draft Request Received",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 1,
+      "committee": null,
+      "date": "2017-11-13T16:20:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     }
+    ],
+    "billNumber": 5,
+    "billSortNumber": "HB0005",
+    "billType": "HB",
+    "coSponsor": null,
+    "deadlineCategory": {
+     "id": {
+      "code": "GE",
+      "sessionId": 20172
+     },
+     "name": "General Bills",
+     "returnDate": "2018-02-06T00:00:00",
+     "transmittalDate": "2018-01-04T00:00:00"
+    },
+    "drafters": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 14184,
+       "firstName": "Sue",
+       "lastName": "O'Connell"
+      },
+      "legislator": null
+     }
+    ],
+    "hasFiscalNote": false,
+    "id": {
+     "billDraftNumber": "LC0022",
+     "sessionId": 20172
+    },
+    "latestVersion": null,
+    "preintroductionRequired": "N",
+    "primarySponsorBillRoles": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 12598,
+       "firstName": "Rob",
+       "lastName": "Cook"
+      },
+      "legislator": {
+       "chamber": {
+        "houseCode": "H",
+        "houseName": "House"
+       },
+       "committeeAssignments": [
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(H) Appropriations",
+          "committeeTypeName": "ST",
+          "houseCode": "H",
+          "id": {
+           "committeeCode": "APH"
+          },
+          "meetingDays": "M-F",
+          "meetingRoom": "102",
+          "meetingTime": "8:00 AM",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "ME",
+          "assignmentName": "Member"
+         },
+         "id": {
+          "applicationSeq": 6,
+          "committeeCode": "APH",
+          "sessionId": 20172
+         }
+        },
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(H) Rules",
+          "committeeTypeName": "ST",
+          "houseCode": "H",
+          "id": {
+           "committeeCode": "RUH"
+          },
+          "meetingDays": "ON CALL",
+          "meetingRoom": "TBD",
+          "meetingTime": "TBD",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "ME",
+          "assignmentName": "Member"
+         },
+         "id": {
+          "applicationSeq": 3,
+          "committeeCode": "RUH",
+          "sessionId": 20172
+         }
+        }
+       ],
+       "districtNumber": 18,
+       "lawEntity": {
+        "entityIdSequence": 12598,
+        "firstName": "Rob",
+        "lastName": "Cook"
+       },
+       "politicalParty": {
+        "partyCode": "R",
+        "partyName": "Republican"
+       },
+       "position": null
+      }
+     }
+    ],
+    "requestOf": [],
+    "requesters": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 13870,
+       "firstName": "Llew",
+       "lastName": "Jones"
+      },
+      "legislator": {
+       "chamber": {
+        "houseCode": "S",
+        "houseName": "Senate"
+       },
+       "committeeAssignments": [
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(S) Finance and Claims",
+          "committeeTypeName": "ST",
+          "houseCode": "S",
+          "id": {
+           "committeeCode": "FCS"
+          },
+          "meetingDays": "M-F",
+          "meetingRoom": "317",
+          "meetingTime": "8:00 AM",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "CH",
+          "assignmentName": "Chair"
+         },
+         "id": {
+          "applicationSeq": 1,
+          "committeeCode": "FCS",
+          "sessionId": 20172
+         }
+        },
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(S) Rules",
+          "committeeTypeName": "ST",
+          "houseCode": "S",
+          "id": {
+           "committeeCode": "RUS"
+          },
+          "meetingDays": "ON CALL",
+          "meetingRoom": "TBD",
+          "meetingTime": "TBD",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "ME",
+          "assignmentName": "Member"
+         },
+         "id": {
+          "applicationSeq": 4,
+          "committeeCode": "RUS",
+          "sessionId": 20172
+         }
+        }
+       ],
+       "districtNumber": 9,
+       "lawEntity": {
+        "entityIdSequence": 13870,
+        "firstName": "Llew",
+        "lastName": "Jones"
+       },
+       "politicalParty": {
+        "partyCode": "R",
+        "partyName": "Republican"
+       },
+       "position": null
+      }
+     }
+    ],
+    "sessionLawChapterNumber": null,
+    "shortTitle": "Authorize insurance commissioner to apply for health care innovation waivers",
+    "subjects": [
+     {
+      "billDraftNumber": "LC0021",
+      "code": "INS",
+      "sessionId": 20172,
+      "subject": {
+       "code": "INS",
+       "description": "Insurance"
+      }
+     },
+     {
+      "billDraftNumber": "LC0022",
+      "code": "RUL",
+      "sessionId": 20172,
+      "subject": {
+       "code": "RUL",
+       "description": "Rule Making"
+      }
+     },
+     {
+      "billDraftNumber": "LC0022",
+      "code": "LEG",
+      "sessionId": 20172,
+      "subject": {
+       "code": "LEG",
+       "description": "Legislature"
+      }
+     }
+    ]
+   },
+   {
+    "billActions": [
+     {
+      "actionType": {
+       "code": 257,
+       "description": "(S) Filed with Secretary of State",
+       "progressCategory": {
+        "code": "190",
+        "description": "Became Law"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 257,
+      "committee": null,
+      "date": "2017-11-16T14:10:07",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 254,
+       "description": "(S) Signed by President",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 254,
+      "committee": null,
+      "date": "2017-11-15T21:30:51",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 253,
+       "description": "(S) Returned from Enrolling",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 253,
+      "committee": null,
+      "date": "2017-11-15T12:06:56",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 43,
+       "description": "(C) Printed - Enrolled Version Available",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 43,
+      "committee": null,
+      "date": "2017-11-15T10:43:33",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 252,
+       "description": "(S) Sent to Enrolling",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 252,
+      "committee": null,
+      "date": "2017-11-14T17:42:10",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 172,
+       "description": "(S) Resolution Adopted",
+       "progressCategory": {
+        "code": "190",
+        "description": "Became Law"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 172,
+      "committee": null,
+      "date": "2017-11-14T17:22:17",
+      "noVotes": "0",
+      "voteSeq": "S1934",
+      "yesVotes": "46"
+     },
+     {
+      "actionType": {
+       "code": 292,
+       "description": "(S) Committee Report--Resolution Adopted",
+       "progressCategory": {
+        "code": "040",
+        "description": "In First House--Out of Committee"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 292,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(S) Select Committee on Judicial Appointments",
+       "committeeTypeName": "SE",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "JAS"
+       },
+       "meetingDays": "TBD",
+       "meetingRoom": "350",
+       "meetingTime": "TBD",
+       "zoomEmail": null
+      },
+      "date": "2017-11-14T17:13:43",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 288,
+       "description": "(S) Committee Executive Action--Resolution Adopted",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 288,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(S) Select Committee on Judicial Appointments",
+       "committeeTypeName": "SE",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "JAS"
+       },
+       "meetingDays": "TBD",
+       "meetingRoom": "350",
+       "meetingTime": "TBD",
+       "zoomEmail": null
+      },
+      "date": "2017-11-14T17:07:16",
+      "noVotes": "0",
+      "voteSeq": null,
+      "yesVotes": "8"
+     },
+     {
+      "actionType": {
+       "code": 112,
+       "description": "(S) Hearing",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 112,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(S) Select Committee on Judicial Appointments",
+       "committeeTypeName": "SE",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "JAS"
+       },
+       "meetingDays": "TBD",
+       "meetingRoom": "350",
+       "meetingTime": "TBD",
+       "zoomEmail": null
+      },
+      "date": "2017-11-14T16:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 101,
+       "description": "(S) First Reading",
+       "progressCategory": {
+        "code": "020",
+        "description": "In First House--Introduced"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 101,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(S) Select Committee on Judicial Appointments",
+       "committeeTypeName": "SE",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "JAS"
+       },
+       "meetingDays": "TBD",
+       "meetingRoom": "350",
+       "meetingTime": "TBD",
+       "zoomEmail": null
+      },
+      "date": "2017-11-14T11:50:54",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 102,
+       "description": "(S) Referred to Committee",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 102,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(S) Select Committee on Judicial Appointments",
+       "committeeTypeName": "SE",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "JAS"
+       },
+       "meetingDays": "TBD",
+       "meetingRoom": "350",
+       "meetingTime": "TBD",
+       "zoomEmail": null
+      },
+      "date": "2017-11-13T16:43:43",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 29,
+       "description": "(C) Introduced Bill Text Available Electronically",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 29,
+      "committee": null,
+      "date": "2017-11-13T16:21:30",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 100,
+       "description": "(S) Introduced",
+       "progressCategory": {
+        "code": "020",
+        "description": "In First House--Introduced"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 100,
+      "committee": null,
+      "date": "2017-11-13T16:21:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 20,
+       "description": "(C) Pre-Introduction Letter Sent",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 20,
+      "committee": null,
+      "date": "2017-11-13T14:06:44",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 24,
+       "description": "(C) Draft in Assembly",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 24,
+      "committee": null,
+      "date": "2017-11-13T13:48:54",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 21,
+       "description": "(C) Executive Director Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 21,
+      "committee": null,
+      "date": "2017-11-13T13:47:53",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 28,
+       "description": "(C) Bill Draft Text Available Electronically",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 28,
+      "committee": null,
+      "date": "2017-11-13T13:39:59",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 18,
+       "description": "(C) Draft in Final Drafter Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 18,
+      "committee": null,
+      "date": "2017-11-13T13:39:55",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 17,
+       "description": "(C) Draft in Input/Proofing",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 17,
+      "committee": null,
+      "date": "2017-11-13T13:12:25",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 25,
+       "description": "(C) Draft to Drafter - Edit Review [KWK]",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 25,
+      "committee": null,
+      "date": "2017-11-13T13:05:25",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 12,
+       "description": "(C) Draft in Legal Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 12,
+      "committee": null,
+      "date": "2017-11-13T12:43:22",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 2,
+       "description": "(C) Draft to Requester for Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 2,
+      "committee": null,
+      "date": "2017-11-13T12:33:49",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 1,
+       "description": "(C) Draft Request Received",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 1,
+      "committee": null,
+      "date": "2017-11-13T12:16:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     }
+    ],
+    "billNumber": 1,
+    "billSortNumber": "SR0001",
+    "billType": "SR",
+    "coSponsor": null,
+    "deadlineCategory": {
+     "id": {
+      "code": "AD",
+      "sessionId": 20172
+     },
+     "name": "No Deadline",
+     "returnDate": "2018-02-26T00:00:00",
+     "transmittalDate": "2018-02-26T00:00:00"
+    },
+    "drafters": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 14313,
+       "firstName": "Susan",
+       "lastName": "Fox"
+      },
+      "legislator": null
+     }
+    ],
+    "hasFiscalNote": false,
+    "id": {
+     "billDraftNumber": "LC0014",
+     "sessionId": 20172
+    },
+    "latestVersion": null,
+    "preintroductionRequired": "N",
+    "primarySponsorBillRoles": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 13689,
+       "firstName": "Keith",
+       "lastName": "Regier"
+      },
+      "legislator": {
+       "chamber": {
+        "houseCode": "S",
+        "houseName": "Senate"
+       },
+       "committeeAssignments": [
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(S) Select Committee on Judicial Appointments",
+          "committeeTypeName": "SE",
+          "houseCode": "S",
+          "id": {
+           "committeeCode": "JAS"
+          },
+          "meetingDays": "TBD",
+          "meetingRoom": "350",
+          "meetingTime": "TBD",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "ME",
+          "assignmentName": "Member"
+         },
+         "id": {
+          "applicationSeq": 3,
+          "committeeCode": "JAS",
+          "sessionId": 20172
+         }
+        }
+       ],
+       "districtNumber": 3,
+       "lawEntity": {
+        "entityIdSequence": 13689,
+        "firstName": "Keith",
+        "lastName": "Regier"
+       },
+       "politicalParty": {
+        "partyCode": "R",
+        "partyName": "Republican"
+       },
+       "position": null
+      }
+     }
+    ],
+    "requestOf": [],
+    "requesters": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 12926,
+       "firstName": "Scott",
+       "lastName": "Sales"
+      },
+      "legislator": {
+       "chamber": {
+        "houseCode": "S",
+        "houseName": "Senate"
+       },
+       "committeeAssignments": [
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(S) Taxation",
+          "committeeTypeName": "ST",
+          "houseCode": "S",
+          "id": {
+           "committeeCode": "TAS"
+          },
+          "meetingDays": "M-F",
+          "meetingRoom": "405",
+          "meetingTime": "8:00 AM",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "ME",
+          "assignmentName": "Member"
+         },
+         "id": {
+          "applicationSeq": 10,
+          "committeeCode": "TAS",
+          "sessionId": 20172
+         }
+        },
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(S) Rules",
+          "committeeTypeName": "ST",
+          "houseCode": "S",
+          "id": {
+           "committeeCode": "RUS"
+          },
+          "meetingDays": "ON CALL",
+          "meetingRoom": "TBD",
+          "meetingTime": "TBD",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "ME",
+          "assignmentName": "Member"
+         },
+         "id": {
+          "applicationSeq": 9,
+          "committeeCode": "RUS",
+          "sessionId": 20172
+         }
+        }
+       ],
+       "districtNumber": 35,
+       "lawEntity": {
+        "entityIdSequence": 12926,
+        "firstName": "Scott",
+        "lastName": "Sales"
+       },
+       "politicalParty": {
+        "partyCode": "R",
+        "partyName": "Republican"
+       },
+       "position": null
+      }
+     }
+    ],
+    "sessionLawChapterNumber": null,
+    "shortTitle": "Confirm Gubernatorial appointments to the judiciary ",
+    "subjects": [
+     {
+      "billDraftNumber": "LC0014",
+      "code": "JUD",
+      "sessionId": 20172,
+      "subject": {
+       "code": "JUD",
+       "description": "Judges and Justices  (see also: Courts)"
+      }
+     },
+     {
+      "billDraftNumber": "LC0014",
+      "code": "POFF",
+      "sessionId": 20172,
+      "subject": {
+       "code": "POFF",
+       "description": "Public Officers and Employees"
+      }
+     }
+    ]
+   },
+   {
+    "billActions": [
+     {
+      "actionType": {
+       "code": 658,
+       "description": "Chapter Number Assigned",
+       "progressCategory": {
+        "code": "190",
+        "description": "Became Law"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 658,
+      "committee": null,
+      "date": "2017-11-24T15:54:13",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 655,
+       "description": "(H) Transmitted to Governor",
+       "progressCategory": {
+        "code": "180",
+        "description": "Transmitted to Governor"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 655,
+      "committee": null,
+      "date": "2017-11-16T13:45:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 254,
+       "description": "(S) Signed by President",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 254,
+      "committee": null,
+      "date": "2017-11-16T13:35:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 654,
+       "description": "(H) Signed by Speaker",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 654,
+      "committee": null,
+      "date": "2017-11-16T12:30:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 653,
+       "description": "(H) Returned from Enrolling",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 653,
+      "committee": null,
+      "date": "2017-11-15T18:39:13",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 43,
+       "description": "(C) Printed - Enrolled Version Available",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 43,
+      "committee": null,
+      "date": "2017-11-15T18:39:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 652,
+       "description": "(H) Sent to Enrolling",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 652,
+      "committee": null,
+      "date": "2017-11-15T15:26:54",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 206,
+       "description": "(S) Returned to House",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 206,
+      "committee": null,
+      "date": "2017-11-15T14:54:14",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 197,
+       "description": "(S) 3rd Reading Concurred",
+       "progressCategory": {
+        "code": "110",
+        "description": "In Second House--Through 3rd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 197,
+      "committee": null,
+      "date": "2017-11-15T14:49:59",
+      "noVotes": "18",
+      "voteSeq": "S1958",
+      "yesVotes": "30"
+     },
+     {
+      "actionType": {
+       "code": 157,
+       "description": "(S) 2nd Reading Concurred",
+       "progressCategory": {
+        "code": "100",
+        "description": "In Second House--Through 2nd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 157,
+      "committee": null,
+      "date": "2017-11-15T14:47:52",
+      "noVotes": "18",
+      "voteSeq": "S1956",
+      "yesVotes": "30"
+     },
+     {
+      "actionType": {
+       "code": 605,
+       "description": "(H) Transmitted to Senate",
+       "progressCategory": {
+        "code": "070",
+        "description": "Transmitted to Second House"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 605,
+      "committee": null,
+      "date": "2017-11-15T12:03:09",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 39,
+       "description": "(C) Printed - New Version Available",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 39,
+      "committee": null,
+      "date": "2017-11-15T12:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 596,
+       "description": "(H) 3rd Reading Passed",
+       "progressCategory": {
+        "code": "060",
+        "description": "In First House--Through 3rd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 596,
+      "committee": null,
+      "date": "2017-11-15T11:53:39",
+      "noVotes": "41",
+      "voteSeq": "H2101",
+      "yesVotes": "59"
+     },
+     {
+      "actionType": {
+       "code": 594,
+       "description": "(H) Scheduled for 3rd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 594,
+      "committee": null,
+      "date": "2017-11-15T11:52:19",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 558,
+       "description": "(H) 2nd Reading Passed as Amended",
+       "progressCategory": {
+        "code": "050",
+        "description": "In First House--Through 2nd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 558,
+      "committee": null,
+      "date": "2017-11-15T11:48:46",
+      "noVotes": "41",
+      "voteSeq": "H2097",
+      "yesVotes": "59"
+     },
+     {
+      "actionType": {
+       "code": 714,
+       "description": "(H) 2nd Reading Motion to Amend Carried",
+       "progressCategory": null
+      },
+      "amendmentFileName": "HB0002-E001",
+      "code": 714,
+      "committee": null,
+      "date": "2017-11-15T11:11:13",
+      "noVotes": "41",
+      "voteSeq": "H2095",
+      "yesVotes": "59"
+     },
+     {
+      "actionType": {
+       "code": 39,
+       "description": "(C) Printed - New Version Available",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 39,
+      "committee": null,
+      "date": "2017-11-15T11:02:50",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 553,
+       "description": "(H) Scheduled for 2nd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 553,
+      "committee": null,
+      "date": "2017-11-15T11:02:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 532,
+       "description": "(H) Committee Report--Bill Passed as Amended",
+       "progressCategory": {
+        "code": "040",
+        "description": "In First House--Out of Committee"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 532,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(H) Appropriations",
+       "committeeTypeName": "ST",
+       "houseCode": "H",
+       "id": {
+        "committeeCode": "APH"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "102",
+       "meetingTime": "8:00 AM",
+       "zoomEmail": null
+      },
+      "date": "2017-11-15T11:00:58",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 153,
+       "description": "(S) Scheduled for 2nd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 153,
+      "committee": null,
+      "date": "2017-11-15T11:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 518,
+       "description": "(H) Committee Executive Action--Bill Passed as Amended",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 518,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(H) Appropriations",
+       "committeeTypeName": "ST",
+       "houseCode": "H",
+       "id": {
+        "committeeCode": "APH"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "102",
+       "meetingTime": "8:00 AM",
+       "zoomEmail": null
+      },
+      "date": "2017-11-14T22:46:15",
+      "noVotes": "9",
+      "voteSeq": null,
+      "yesVotes": "13"
+     },
+     {
+      "actionType": {
+       "code": 512,
+       "description": "(H) Hearing",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 512,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(H) Appropriations",
+       "committeeTypeName": "ST",
+       "houseCode": "H",
+       "id": {
+        "committeeCode": "APH"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "102",
+       "meetingTime": "8:00 AM",
+       "zoomEmail": null
+      },
+      "date": "2017-11-14T14:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 502,
+       "description": "(H) Referred to Committee",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 502,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(H) Appropriations",
+       "committeeTypeName": "ST",
+       "houseCode": "H",
+       "id": {
+        "committeeCode": "APH"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "102",
+       "meetingTime": "8:00 AM",
+       "zoomEmail": null
+      },
+      "date": "2017-11-14T13:39:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 29,
+       "description": "(C) Introduced Bill Text Available Electronically",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 29,
+      "committee": null,
+      "date": "2017-11-14T13:18:34",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 501,
+       "description": "(H) First Reading",
+       "progressCategory": {
+        "code": "020",
+        "description": "In First House--Introduced"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 501,
+      "committee": null,
+      "date": "2017-11-14T13:15:20",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 500,
+       "description": "(H) Introduced",
+       "progressCategory": {
+        "code": "020",
+        "description": "In First House--Introduced"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 500,
+      "committee": null,
+      "date": "2017-11-14T12:42:36",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 23,
+       "description": "(C) Draft Delivered to Requester",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 23,
+      "committee": null,
+      "date": "2017-11-14T12:42:05",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 22,
+       "description": "(C) Draft Ready for Delivery",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 22,
+      "committee": null,
+      "date": "2017-11-14T12:42:02",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 21,
+       "description": "(C) Executive Director Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 21,
+      "committee": null,
+      "date": "2017-11-14T12:41:41",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 17,
+       "description": "(C) Draft in Input/Proofing",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 17,
+      "committee": null,
+      "date": "2017-11-14T12:41:36",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 26,
+       "description": "(C) Draft to Drafter - Edit Review [SMH]",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 26,
+      "committee": null,
+      "date": "2017-11-14T12:41:34",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 13,
+       "description": "(C) Draft in Edit",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 13,
+      "committee": null,
+      "date": "2017-11-14T12:41:28",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 12,
+       "description": "(C) Draft in Legal Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 12,
+      "committee": null,
+      "date": "2017-11-14T12:41:27",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 2,
+       "description": "(C) Draft to Requester for Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 2,
+      "committee": null,
+      "date": "2017-11-14T12:41:14",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 1,
+       "description": "(C) Draft Request Received",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 1,
+      "committee": null,
+      "date": "2017-11-13T16:04:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     }
+    ],
+    "billNumber": 2,
+    "billSortNumber": "HB0002",
+    "billType": "HB",
+    "coSponsor": null,
+    "deadlineCategory": {
+     "id": {
+      "code": "AP",
+      "sessionId": 20172
+     },
+     "name": "Appropriation Bills",
+     "returnDate": "2018-02-14T00:00:00",
+     "transmittalDate": "2018-01-30T00:00:00"
+    },
+    "drafters": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 12483,
+       "firstName": "Jaret",
+       "lastName": "Coles"
+      },
+      "legislator": null
+     }
+    ],
+    "hasFiscalNote": false,
+    "id": {
+     "billDraftNumber": "LC0017",
+     "sessionId": 20172
+    },
+    "latestVersion": null,
+    "preintroductionRequired": "N",
+    "primarySponsorBillRoles": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 15260,
+       "firstName": "Nancy",
+       "lastName": "Ballance"
+      },
+      "legislator": {
+       "chamber": {
+        "houseCode": "H",
+        "houseName": "House"
+       },
+       "committeeAssignments": [
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(H) Appropriations",
+          "committeeTypeName": "ST",
+          "houseCode": "H",
+          "id": {
+           "committeeCode": "APH"
+          },
+          "meetingDays": "M-F",
+          "meetingRoom": "102",
+          "meetingTime": "8:00 AM",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "CH",
+          "assignmentName": "Chair"
+         },
+         "id": {
+          "applicationSeq": 1,
+          "committeeCode": "APH",
+          "sessionId": 20172
+         }
+        }
+       ],
+       "districtNumber": 87,
+       "lawEntity": {
+        "entityIdSequence": 15260,
+        "firstName": "Nancy",
+        "lastName": "Ballance"
+       },
+       "politicalParty": {
+        "partyCode": "R",
+        "partyName": "Republican"
+       },
+       "position": null
+      }
+     }
+    ],
+    "requestOf": [],
+    "requesters": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 15260,
+       "firstName": "Nancy",
+       "lastName": "Ballance"
+      },
+      "legislator": {
+       "chamber": {
+        "houseCode": "H",
+        "houseName": "House"
+       },
+       "committeeAssignments": [
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(H) Appropriations",
+          "committeeTypeName": "ST",
+          "houseCode": "H",
+          "id": {
+           "committeeCode": "APH"
+          },
+          "meetingDays": "M-F",
+          "meetingRoom": "102",
+          "meetingTime": "8:00 AM",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "CH",
+          "assignmentName": "Chair"
+         },
+         "id": {
+          "applicationSeq": 1,
+          "committeeCode": "APH",
+          "sessionId": 20172
+         }
+        }
+       ],
+       "districtNumber": 87,
+       "lawEntity": {
+        "entityIdSequence": 15260,
+        "firstName": "Nancy",
+        "lastName": "Ballance"
+       },
+       "politicalParty": {
+        "partyCode": "R",
+        "partyName": "Republican"
+       },
+       "position": null
+      }
+     }
+    ],
+    "sessionLawChapterNumber": "8",
+    "shortTitle": "Incorp. HB 2 revisions from reg. session and revise appropriations within call",
+    "subjects": [
+     {
+      "billDraftNumber": "LC0017",
+      "code": "APRO",
+      "sessionId": 20172,
+      "subject": {
+       "code": "APRO",
+       "description": "Appropriation Process"
+      }
+     },
+     {
+      "billDraftNumber": "LC0018",
+      "code": "APP",
+      "sessionId": 20172,
+      "subject": {
+       "code": "APP",
+       "description": "Appropriations  (see also: State Finance)"
+      }
+     }
+    ]
+   },
+   {
+    "billActions": [
+     {
+      "actionType": {
+       "code": 258,
+       "description": "Chapter Number Assigned",
+       "progressCategory": {
+        "code": "190",
+        "description": "Became Law"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 258,
+      "committee": null,
+      "date": "2017-11-24T00:05:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 256,
+       "description": "(S) Signed by Governor",
+       "progressCategory": {
+        "code": "190",
+        "description": "Became Law"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 256,
+      "committee": null,
+      "date": "2017-11-24T00:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 255,
+       "description": "(S) Transmitted to Governor",
+       "progressCategory": {
+        "code": "180",
+        "description": "Transmitted to Governor"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 255,
+      "committee": null,
+      "date": "2017-11-16T13:45:55",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 654,
+       "description": "(H) Signed by Speaker",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 654,
+      "committee": null,
+      "date": "2017-11-16T12:30:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 254,
+       "description": "(S) Signed by President",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 254,
+      "committee": null,
+      "date": "2017-11-15T21:30:16",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 43,
+       "description": "(C) Printed - Enrolled Version Available",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 43,
+      "committee": null,
+      "date": "2017-11-15T19:50:57",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 253,
+       "description": "(S) Returned from Enrolling",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 253,
+      "committee": null,
+      "date": "2017-11-15T19:35:48",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 252,
+       "description": "(S) Sent to Enrolling",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 252,
+      "committee": null,
+      "date": "2017-11-15T18:40:25",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 606,
+       "description": "(H) Returned to Senate",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 606,
+      "committee": null,
+      "date": "2017-11-15T18:26:02",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 597,
+       "description": "(H) 3rd Reading Concurred",
+       "progressCategory": {
+        "code": "110",
+        "description": "In Second House--Through 3rd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 597,
+      "committee": null,
+      "date": "2017-11-15T18:17:44",
+      "noVotes": "5",
+      "voteSeq": "H2108",
+      "yesVotes": "95"
+     },
+     {
+      "actionType": {
+       "code": 557,
+       "description": "(H) 2nd Reading Concurred",
+       "progressCategory": {
+        "code": "100",
+        "description": "In Second House--Through 2nd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 557,
+      "committee": null,
+      "date": "2017-11-15T17:59:35",
+      "noVotes": "6",
+      "voteSeq": "H2104",
+      "yesVotes": "93"
+     },
+     {
+      "actionType": {
+       "code": 553,
+       "description": "(H) Scheduled for 2nd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 553,
+      "committee": null,
+      "date": "2017-11-15T17:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 687,
+       "description": "(H) First Reading",
+       "progressCategory": {
+        "code": "070",
+        "description": "Transmitted to Second House"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 687,
+      "committee": null,
+      "date": "2017-11-15T16:59:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 205,
+       "description": "(S) Transmitted to House",
+       "progressCategory": {
+        "code": "070",
+        "description": "Transmitted to Second House"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 205,
+      "committee": null,
+      "date": "2017-11-15T14:52:26",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 196,
+       "description": "(S) 3rd Reading Passed",
+       "progressCategory": {
+        "code": "060",
+        "description": "In First House--Through 3rd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 196,
+      "committee": null,
+      "date": "2017-11-15T14:38:17",
+      "noVotes": "0",
+      "voteSeq": "S1951",
+      "yesVotes": "48"
+     },
+     {
+      "actionType": {
+       "code": 156,
+       "description": "(S) 2nd Reading Passed",
+       "progressCategory": {
+        "code": "050",
+        "description": "In First House--Through 2nd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 156,
+      "committee": null,
+      "date": "2017-11-15T13:54:30",
+      "noVotes": "0",
+      "voteSeq": "S1941",
+      "yesVotes": "48"
+     },
+     {
+      "actionType": {
+       "code": 132,
+       "description": "(S) Committee Report--Bill Passed as Amended",
+       "progressCategory": {
+        "code": "040",
+        "description": "In First House--Out of Committee"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 132,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(S) Finance and Claims",
+       "committeeTypeName": "ST",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "FCS"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "317",
+       "meetingTime": "8:00 AM",
+       "zoomEmail": null
+      },
+      "date": "2017-11-15T13:37:36",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 39,
+       "description": "(C) Printed - New Version Available",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 39,
+      "committee": null,
+      "date": "2017-11-15T11:34:49",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 153,
+       "description": "(S) Scheduled for 2nd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 153,
+      "committee": null,
+      "date": "2017-11-15T11:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 118,
+       "description": "(S) Committee Executive Action--Bill Passed as Amended",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 118,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(S) Finance and Claims",
+       "committeeTypeName": "ST",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "FCS"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "317",
+       "meetingTime": "8:00 AM",
+       "zoomEmail": null
+      },
+      "date": "2017-11-15T10:25:53",
+      "noVotes": "0",
+      "voteSeq": null,
+      "yesVotes": "18"
+     },
+     {
+      "actionType": {
+       "code": 101,
+       "description": "(S) First Reading",
+       "progressCategory": {
+        "code": "020",
+        "description": "In First House--Introduced"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 101,
+      "committee": null,
+      "date": "2017-11-14T11:54:04",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 107,
+       "description": "(S) Fiscal Note Printed",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 107,
+      "committee": null,
+      "date": "2017-11-13T10:42:30",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 112,
+       "description": "(S) Hearing",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 112,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(S) Finance and Claims",
+       "committeeTypeName": "ST",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "FCS"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "317",
+       "meetingTime": "8:00 AM",
+       "zoomEmail": null
+      },
+      "date": "2017-11-13T10:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 102,
+       "description": "(S) Referred to Committee",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 102,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(S) Finance and Claims",
+       "committeeTypeName": "ST",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "FCS"
+       },
+       "meetingDays": "M-F",
+       "meetingRoom": "317",
+       "meetingTime": "8:00 AM",
+       "zoomEmail": null
+      },
+      "date": "2017-11-13T09:16:08",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 106,
+       "description": "(S) Fiscal Note Received",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 106,
+      "committee": null,
+      "date": "2017-11-13T08:43:29",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 29,
+       "description": "(C) Introduced Bill Text Available Electronically",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 29,
+      "committee": null,
+      "date": "2017-11-10T11:56:30",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 100,
+       "description": "(S) Introduced",
+       "progressCategory": {
+        "code": "020",
+        "description": "In First House--Introduced"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 100,
+      "committee": null,
+      "date": "2017-11-10T11:56:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 24,
+       "description": "(C) Draft in Assembly",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 24,
+      "committee": null,
+      "date": "2017-11-08T12:58:52",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 21,
+       "description": "(C) Executive Director Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 21,
+      "committee": null,
+      "date": "2017-11-08T12:47:14",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 28,
+       "description": "(C) Bill Draft Text Available Electronically",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 28,
+      "committee": null,
+      "date": "2017-11-08T12:14:17",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 18,
+       "description": "(C) Draft in Final Drafter Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 18,
+      "committee": null,
+      "date": "2017-11-08T12:14:14",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 17,
+       "description": "(C) Draft in Input/Proofing",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 17,
+      "committee": null,
+      "date": "2017-11-08T09:21:37",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 26,
+       "description": "(C) Draft to Drafter - Edit Review [SMH]",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 26,
+      "committee": null,
+      "date": "2017-11-08T09:19:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 13,
+       "description": "(C) Draft in Edit",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 13,
+      "committee": null,
+      "date": "2017-11-07T16:22:12",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 12,
+       "description": "(C) Draft in Legal Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 12,
+      "committee": null,
+      "date": "2017-11-07T14:58:51",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 2,
+       "description": "(C) Draft to Requester for Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 2,
+      "committee": null,
+      "date": "2017-11-07T10:38:44",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 1,
+       "description": "(C) Draft Request Received",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 1,
+      "committee": null,
+      "date": "2017-11-06T16:18:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     }
+    ],
+    "billNumber": 1,
+    "billSortNumber": "SB0001",
+    "billType": "SB",
+    "coSponsor": null,
+    "deadlineCategory": {
+     "id": {
+      "code": "GE",
+      "sessionId": 20172
+     },
+     "name": "General Bills",
+     "returnDate": "2018-02-06T00:00:00",
+     "transmittalDate": "2018-01-04T00:00:00"
+    },
+    "drafters": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 14263,
+       "firstName": "Sheri",
+       "lastName": "Scurr"
+      },
+      "legislator": null
+     }
+    ],
+    "hasFiscalNote": true,
+    "id": {
+     "billDraftNumber": "LC0003",
+     "sessionId": 20172
+    },
+    "latestVersion": "ENR",
+    "preintroductionRequired": "N",
+    "primarySponsorBillRoles": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 16524,
+       "firstName": "Nels",
+       "lastName": "Swandal"
+      },
+      "legislator": {
+       "chamber": {
+        "houseCode": "S",
+        "houseName": "Senate"
+       },
+       "committeeAssignments": [
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(S) Select Committee on Judicial Appointments",
+          "committeeTypeName": "SE",
+          "houseCode": "S",
+          "id": {
+           "committeeCode": "JAS"
+          },
+          "meetingDays": "TBD",
+          "meetingRoom": "350",
+          "meetingTime": "TBD",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "ME",
+          "assignmentName": "Member"
+         },
+         "id": {
+          "applicationSeq": 5,
+          "committeeCode": "JAS",
+          "sessionId": 20172
+         }
+        }
+       ],
+       "districtNumber": 30,
+       "lawEntity": {
+        "entityIdSequence": 16524,
+        "firstName": "Nels",
+        "lastName": "Swandal"
+       },
+       "politicalParty": {
+        "partyCode": "R",
+        "partyName": "Republican"
+       },
+       "position": null
+      }
+     }
+    ],
+    "requestOf": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 14275,
+       "firstName": null,
+       "lastName": "Governor"
+      },
+      "legislator": null
+     }
+    ],
+    "requesters": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 14275,
+       "firstName": null,
+       "lastName": "Governor"
+      },
+      "legislator": null
+     }
+    ],
+    "sessionLawChapterNumber": "1",
+    "shortTitle": "Temporarily suspend employer contributions to judges' retirement system",
+    "subjects": [
+     {
+      "billDraftNumber": "LC0014",
+      "code": "JUD",
+      "sessionId": 20172,
+      "subject": {
+       "code": "JUD",
+       "description": "Judges and Justices  (see also: Courts)"
+      }
+     },
+     {
+      "billDraftNumber": "LC0003",
+      "code": "RETR",
+      "sessionId": 20172,
+      "subject": {
+       "code": "RETR",
+       "description": "Retirement (see also: Senior Citizens)"
+      }
+     }
+    ]
+   },
+   {
+    "billActions": [
+     {
+      "actionType": {
+       "code": 257,
+       "description": "(S) Filed with Secretary of State",
+       "progressCategory": {
+        "code": "190",
+        "description": "Became Law"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 257,
+      "committee": null,
+      "date": "2017-11-16T14:10:37",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 654,
+       "description": "(H) Signed by Speaker",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 654,
+      "committee": null,
+      "date": "2017-11-16T12:30:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 254,
+       "description": "(S) Signed by President",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 254,
+      "committee": null,
+      "date": "2017-11-15T21:30:14",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 253,
+       "description": "(S) Returned from Enrolling",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 253,
+      "committee": null,
+      "date": "2017-11-15T12:06:46",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 43,
+       "description": "(C) Printed - Enrolled Version Available",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 43,
+      "committee": null,
+      "date": "2017-11-15T10:43:21",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 252,
+       "description": "(S) Sent to Enrolling",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 252,
+      "committee": null,
+      "date": "2017-11-14T14:31:43",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 606,
+       "description": "(H) Returned to Senate",
+       "progressCategory": {
+        "code": "170",
+        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 606,
+      "committee": null,
+      "date": "2017-11-14T13:43:43",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 597,
+       "description": "(H) 3rd Reading Concurred",
+       "progressCategory": {
+        "code": "110",
+        "description": "In Second House--Through 3rd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 597,
+      "committee": null,
+      "date": "2017-11-14T12:57:35",
+      "noVotes": "41",
+      "voteSeq": "H2086",
+      "yesVotes": "59"
+     },
+     {
+      "actionType": {
+       "code": 594,
+       "description": "(H) Scheduled for 3rd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 594,
+      "committee": null,
+      "date": "2017-11-14T12:57:30",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 557,
+       "description": "(H) 2nd Reading Concurred",
+       "progressCategory": {
+        "code": "100",
+        "description": "In Second House--Through 2nd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 557,
+      "committee": null,
+      "date": "2017-11-14T12:42:55",
+      "noVotes": "41",
+      "voteSeq": "H2082",
+      "yesVotes": "59"
+     },
+     {
+      "actionType": {
+       "code": 553,
+       "description": "(H) Scheduled for 2nd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 553,
+      "committee": null,
+      "date": "2017-11-14T12:35:01",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 531,
+       "description": "(H) Committee Report--Bill Concurred",
+       "progressCategory": {
+        "code": "090",
+        "description": "In Second House--Out of Committee"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 531,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(H) Rules",
+       "committeeTypeName": "ST",
+       "houseCode": "H",
+       "id": {
+        "committeeCode": "RUH"
+       },
+       "meetingDays": "ON CALL",
+       "meetingRoom": "TBD",
+       "meetingTime": "TBD",
+       "zoomEmail": null
+      },
+      "date": "2017-11-14T12:31:43",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 517,
+       "description": "(H) Committee Executive Action--Bill Concurred",
+       "progressCategory": {
+        "code": "080",
+        "description": "In Second House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 517,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(H) Rules",
+       "committeeTypeName": "ST",
+       "houseCode": "H",
+       "id": {
+        "committeeCode": "RUH"
+       },
+       "meetingDays": "ON CALL",
+       "meetingRoom": "TBD",
+       "meetingTime": "TBD",
+       "zoomEmail": null
+      },
+      "date": "2017-11-14T12:30:56",
+      "noVotes": "6",
+      "voteSeq": null,
+      "yesVotes": "11"
+     },
+     {
+      "actionType": {
+       "code": 687,
+       "description": "(H) First Reading",
+       "progressCategory": {
+        "code": "070",
+        "description": "Transmitted to Second House"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 687,
+      "committee": null,
+      "date": "2017-11-14T12:30:43",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 205,
+       "description": "(S) Transmitted to House",
+       "progressCategory": {
+        "code": "070",
+        "description": "Transmitted to Second House"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 205,
+      "committee": null,
+      "date": "2017-11-14T12:12:23",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 196,
+       "description": "(S) 3rd Reading Passed",
+       "progressCategory": {
+        "code": "060",
+        "description": "In First House--Through 3rd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 196,
+      "committee": null,
+      "date": "2017-11-14T12:09:40",
+      "noVotes": "2",
+      "voteSeq": "S1931",
+      "yesVotes": "46"
+     },
+     {
+      "actionType": {
+       "code": 156,
+       "description": "(S) 2nd Reading Passed",
+       "progressCategory": {
+        "code": "050",
+        "description": "In First House--Through 2nd Reading"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 156,
+      "committee": null,
+      "date": "2017-11-14T12:07:23",
+      "noVotes": "1",
+      "voteSeq": "S1929",
+      "yesVotes": "47"
+     },
+     {
+      "actionType": {
+       "code": 153,
+       "description": "(S) Scheduled for 2nd Reading",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 153,
+      "committee": null,
+      "date": "2017-11-14T12:00:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 130,
+       "description": "(S) Committee Report--Bill Passed",
+       "progressCategory": {
+        "code": "040",
+        "description": "In First House--Out of Committee"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 130,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(S) Rules",
+       "committeeTypeName": "ST",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "RUS"
+       },
+       "meetingDays": "ON CALL",
+       "meetingRoom": "TBD",
+       "meetingTime": "TBD",
+       "zoomEmail": null
+      },
+      "date": "2017-11-14T11:21:54",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 101,
+       "description": "(S) First Reading",
+       "progressCategory": {
+        "code": "020",
+        "description": "In First House--Introduced"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 101,
+      "committee": null,
+      "date": "2017-11-14T11:20:28",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 116,
+       "description": "(S) Committee Executive Action--Bill Passed",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 116,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(S) Rules",
+       "committeeTypeName": "ST",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "RUS"
+       },
+       "meetingDays": "ON CALL",
+       "meetingRoom": "TBD",
+       "meetingTime": "TBD",
+       "zoomEmail": null
+      },
+      "date": "2017-11-13T15:50:55",
+      "noVotes": "0",
+      "voteSeq": null,
+      "yesVotes": "12"
+     },
+     {
+      "actionType": {
+       "code": 114,
+       "description": "(S) Hearing Canceled",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 114,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(S) Rules",
+       "committeeTypeName": "ST",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "RUS"
+       },
+       "meetingDays": "ON CALL",
+       "meetingRoom": "TBD",
+       "meetingTime": "TBD",
+       "zoomEmail": null
+      },
+      "date": "2017-11-13T12:55:44",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 102,
+       "description": "(S) Referred to Committee",
+       "progressCategory": {
+        "code": "030",
+        "description": "In First House Committee--Nontabled"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 102,
+      "committee": {
+       "committeeEmail": null,
+       "committeeName": "(S) Rules",
+       "committeeTypeName": "ST",
+       "houseCode": "S",
+       "id": {
+        "committeeCode": "RUS"
+       },
+       "meetingDays": "ON CALL",
+       "meetingRoom": "TBD",
+       "meetingTime": "TBD",
+       "zoomEmail": null
+      },
+      "date": "2017-11-11T16:25:03",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 29,
+       "description": "(C) Introduced Bill Text Available Electronically",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 29,
+      "committee": null,
+      "date": "2017-11-11T14:01:30",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 100,
+       "description": "(S) Introduced",
+       "progressCategory": {
+        "code": "020",
+        "description": "In First House--Introduced"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 100,
+      "committee": null,
+      "date": "2017-11-11T14:01:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 20,
+       "description": "(C) Pre-Introduction Letter Sent",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 20,
+      "committee": null,
+      "date": "2017-11-11T13:01:04",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 24,
+       "description": "(C) Draft in Assembly",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 24,
+      "committee": null,
+      "date": "2017-11-11T09:31:27",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 21,
+       "description": "(C) Executive Director Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 21,
+      "committee": null,
+      "date": "2017-11-11T08:48:49",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 28,
+       "description": "(C) Bill Draft Text Available Electronically",
+       "progressCategory": null
+      },
+      "amendmentFileName": null,
+      "code": 28,
+      "committee": null,
+      "date": "2017-11-10T16:55:28",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 18,
+       "description": "(C) Draft in Final Drafter Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 18,
+      "committee": null,
+      "date": "2017-11-10T16:55:24",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 17,
+       "description": "(C) Draft in Input/Proofing",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 17,
+      "committee": null,
+      "date": "2017-11-10T16:12:57",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 25,
+       "description": "(C) Draft to Drafter - Edit Review [KWK]",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 25,
+      "committee": null,
+      "date": "2017-11-10T15:56:42",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 13,
+       "description": "(C) Draft in Edit",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 13,
+      "committee": null,
+      "date": "2017-11-10T15:34:50",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 12,
+       "description": "(C) Draft in Legal Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 12,
+      "committee": null,
+      "date": "2017-11-10T15:29:11",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 2,
+       "description": "(C) Draft to Requester for Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 2,
+      "committee": null,
+      "date": "2017-11-10T15:26:58",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 2,
+       "description": "(C) Draft to Requester for Review",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 2,
+      "committee": null,
+      "date": "2017-11-10T15:24:21",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     },
+     {
+      "actionType": {
+       "code": 1,
+       "description": "(C) Draft Request Received",
+       "progressCategory": {
+        "code": "010",
+        "description": "In Drafting Process"
+       }
+      },
+      "amendmentFileName": null,
+      "code": 1,
+      "committee": null,
+      "date": "2017-11-09T08:19:00",
+      "noVotes": null,
+      "voteSeq": null,
+      "yesVotes": null
+     }
+    ],
+    "billNumber": 1,
+    "billSortNumber": "SJ0001",
+    "billType": "SJ",
+    "coSponsor": null,
+    "deadlineCategory": {
+     "id": {
+      "code": "GE",
+      "sessionId": 20172
+     },
+     "name": "General Bills",
+     "returnDate": "2018-02-06T00:00:00",
+     "transmittalDate": "2018-01-04T00:00:00"
+    },
+    "drafters": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 14312,
+       "firstName": "Todd",
+       "lastName": "Everts"
+      },
+      "legislator": null
+     }
+    ],
+    "hasFiscalNote": false,
+    "id": {
+     "billDraftNumber": "LC0011",
+     "sessionId": 20172
+    },
+    "latestVersion": null,
+    "preintroductionRequired": "N",
+    "primarySponsorBillRoles": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 14716,
+       "firstName": "Fred",
+       "lastName": "Thomas"
+      },
+      "legislator": {
+       "chamber": {
+        "houseCode": "S",
+        "houseName": "Senate"
+       },
+       "committeeAssignments": [
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(S) Taxation",
+          "committeeTypeName": "ST",
+          "houseCode": "S",
+          "id": {
+           "committeeCode": "TAS"
+          },
+          "meetingDays": "M-F",
+          "meetingRoom": "405",
+          "meetingTime": "8:00 AM",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "ME",
+          "assignmentName": "Member"
+         },
+         "id": {
+          "applicationSeq": 11,
+          "committeeCode": "TAS",
+          "sessionId": 20172
+         }
+        },
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(S) Rules",
+          "committeeTypeName": "ST",
+          "houseCode": "S",
+          "id": {
+           "committeeCode": "RUS"
+          },
+          "meetingDays": "ON CALL",
+          "meetingRoom": "TBD",
+          "meetingTime": "TBD",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "CH",
+          "assignmentName": "Chair"
+         },
+         "id": {
+          "applicationSeq": 12,
+          "committeeCode": "RUS",
+          "sessionId": 20172
+         }
+        }
+       ],
+       "districtNumber": 44,
+       "lawEntity": {
+        "entityIdSequence": 14716,
+        "firstName": "Fred",
+        "lastName": "Thomas"
+       },
+       "politicalParty": {
+        "partyCode": "R",
+        "partyName": "Republican"
+       },
+       "position": null
+      }
+     }
+    ],
+    "requestOf": [],
+    "requesters": [
+     {
+      "lawEntity": {
+       "entityIdSequence": 14716,
+       "firstName": "Fred",
+       "lastName": "Thomas"
+      },
+      "legislator": {
+       "chamber": {
+        "houseCode": "S",
+        "houseName": "Senate"
+       },
+       "committeeAssignments": [
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(S) Taxation",
+          "committeeTypeName": "ST",
+          "houseCode": "S",
+          "id": {
+           "committeeCode": "TAS"
+          },
+          "meetingDays": "M-F",
+          "meetingRoom": "405",
+          "meetingTime": "8:00 AM",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "ME",
+          "assignmentName": "Member"
+         },
+         "id": {
+          "applicationSeq": 11,
+          "committeeCode": "TAS",
+          "sessionId": 20172
+         }
+        },
+        {
+         "committee": {
+          "committeeEmail": null,
+          "committeeName": "(S) Rules",
+          "committeeTypeName": "ST",
+          "houseCode": "S",
+          "id": {
+           "committeeCode": "RUS"
+          },
+          "meetingDays": "ON CALL",
+          "meetingRoom": "TBD",
+          "meetingTime": "TBD",
+          "zoomEmail": null
+         },
+         "committeeAssignmentType": {
+          "assignmentCode": "CH",
+          "assignmentName": "Chair"
+         },
+         "id": {
+          "applicationSeq": 12,
+          "committeeCode": "RUS",
+          "sessionId": 20172
+         }
+        }
+       ],
+       "districtNumber": 44,
+       "lawEntity": {
+        "entityIdSequence": 14716,
+        "firstName": "Fred",
+        "lastName": "Thomas"
+       },
+       "politicalParty": {
+        "partyCode": "R",
+        "partyName": "Republican"
+       },
+       "position": null
+      }
+     }
+    ],
+    "sessionLawChapterNumber": null,
+    "shortTitle": "Special session joint rules resolution ",
+    "subjects": [
+     {
+      "billDraftNumber": "LC0022",
+      "code": "LEG",
+      "sessionId": 20172,
+      "subject": {
+       "code": "LEG",
+       "description": "Legislature"
+      }
+     }
+    ]
+   }
+  ],
+  "empty": false,
+  "first": true,
+  "last": true,
+  "number": 0,
+  "numberOfElements": 6,
+  "pageable": {
+   "offset": 0,
+   "pageNumber": 0,
+   "pageSize": 100,
+   "paged": true,
+   "sort": {
+    "empty": true,
+    "sorted": false,
+    "unsorted": true
+   },
+   "unpaged": false
+  },
+  "size": 100,
+  "sort": {
+   "empty": true,
+   "sorted": false,
+   "unsorted": true
+  },
+  "totalElements": 27,
+  "totalPages": 1
+ },
+ "counts": {
+  "billTypes": {
+   "HB": 8,
+   "HR": 1,
+   "NoBillType": 3,
+   "SB": 12,
+   "SJ": 1,
+   "SR": 2
+  },
+  "chambers": {
+   "H": 9,
+   "S": 15
+  },
+  "deadlineCategories": {
+   "AD": 3,
+   "AP": 5,
+   "GE": 13,
+   "RE": 6
+  },
+  "drafters": {
+   "12462": 3,
+   "12483": 2,
+   "12692": 1,
+   "13200": 1,
+   "13202": 4,
+   "14184": 2,
+   "14263": 1,
+   "14312": 2,
+   "14313": 2,
+   "14315": 2,
+   "15187": 2,
+   "15194": 1,
+   "16433": 4
+  },
+  "legislator": {
+   "12545": 2,
+   "12595": 1,
+   "12598": 1,
+   "12599": 1,
+   "13615": 1,
+   "13689": 3,
+   "13708": 1,
+   "13799": 1,
+   "13870": 2,
+   "14716": 1,
+   "15143": 1,
+   "15239": 1,
+   "15260": 4,
+   "16505": 1,
+   "16516": 1,
+   "16524": 1,
+   "17704": 1
+  },
+  "party": {
+   "D": 1,
+   "R": 23
+  },
+  "sessionLawChapterNumbers": {
+   "1": 1,
+   "2": 1,
+   "3": 1,
+   "4": 1,
+   "5": 1,
+   "6": 1,
+   "7": 1,
+   "8": 1,
+   "9": 1,
+   "NoSessionLawChapterNumber": 18
+  },
+  "subjects": {
+   "ALC": 1,
+   "APP": 6,
+   "APRO": 1,
+   "CORR": 1,
+   "DEV": 1,
+   "ENER": 1,
+   "FIRE": 2,
+   "HLTH": 1,
+   "HWY": 1,
+   "INS": 5,
+   "INST": 1,
+   "JUD": 3,
+   "LEG": 3,
+   "POFF": 4,
+   "RETR": 1,
+   "REVS": 6,
+   "RUL": 4,
+   "SCHF": 3,
+   "STF": 7,
+   "STGO": 3,
+   "TX": 5,
+   "TXCR": 1,
+   "TXIN": 1,
+   "TXSA": 2,
+   "WORK": 1
+  }
+ }
+}
