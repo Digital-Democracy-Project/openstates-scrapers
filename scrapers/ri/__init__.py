@@ -9,6 +9,14 @@ class RhodeIsland(State):
         "bills": RIBillScraper,
         "events": RIEventScraper,
     }
+    # OPEN-754 (read 2026-11-22): each session runs from the first to the last day either
+    # chamber sat, as listed (by Session Year) on the House Journals page
+    # (rilegislature.gov/journals/housejournals/SiteAssets/HouseJournal.aspx) and the Senate
+    # Journals page (rilegislature.gov/journals/senatejournals/SitePages/senateJournals.aspx).
+    # Each year is one "January Session"; the later sittings (Aug/Sep 2017, Jul/Dec 2020) are
+    # recessed days of that year's session, not special sessions. 2021 ends on its last sitting,
+    # July 1: both chambers' journals for that day (House 45th, Senate 27th legislative day) are
+    # headed "July 1, 2021 and January 4, 2022", the formal close on the day 2022 opened.
     legislative_sessions = [
         {
             "_scraped_name": "2012",
@@ -16,7 +24,7 @@ class RhodeIsland(State):
             "identifier": "2012",
             "name": "2012 Regular Session",
             "start_date": "2012-01-03",
-            "end_date": "2012-06-13",
+            "end_date": "2012-06-12",
         },
         {
             "_scraped_name": "2013",
@@ -32,7 +40,7 @@ class RhodeIsland(State):
             "identifier": "2014",
             "name": "2014 Regular Session",
             "start_date": "2014-01-07",
-            "end_date": "2014-06-21",
+            "end_date": "2014-06-30",
         },
         {
             "_scraped_name": "2015",
@@ -56,7 +64,7 @@ class RhodeIsland(State):
             "identifier": "2017",
             "name": "2017 Regular Session",
             "start_date": "2017-01-03",
-            "end_date": "2017-06-30",
+            "end_date": "2017-09-19",
         },
         {
             "_scraped_name": "2018",
@@ -64,7 +72,7 @@ class RhodeIsland(State):
             "identifier": "2018",
             "name": "2018 Regular Session",
             "start_date": "2018-01-02",
-            "end_date": "2018-06-25",
+            "end_date": "2018-06-23",
         },
         {
             "_scraped_name": "2019",
@@ -72,7 +80,7 @@ class RhodeIsland(State):
             "identifier": "2019",
             "name": "2019 Regular Session",
             "start_date": "2019-01-01",
-            "end_date": "2019-06-30",
+            "end_date": "2019-06-28",
         },
         {
             "_scraped_name": "2020",
@@ -80,7 +88,7 @@ class RhodeIsland(State):
             "identifier": "2020",
             "name": "2020 Regular Session",
             "start_date": "2020-01-07",
-            "end_date": "2020-08-30",
+            "end_date": "2020-12-18",
         },
         {
             "_scraped_name": "2021",
@@ -97,7 +105,7 @@ class RhodeIsland(State):
             "identifier": "2022",
             "name": "2022 Regular Session",
             "start_date": "2022-01-04",
-            "end_date": "2022-06-30",
+            "end_date": "2022-06-23",
             "active": False,
         },
         {
@@ -106,7 +114,7 @@ class RhodeIsland(State):
             "identifier": "2023",
             "name": "2023 Regular Session",
             "start_date": "2023-01-03",
-            "end_date": "2023-06-30",
+            "end_date": "2023-06-15",
             "active": False,
         },
         {
@@ -115,7 +123,7 @@ class RhodeIsland(State):
             "identifier": "2024",
             "name": "2024 Regular Session",
             "start_date": "2024-01-02",
-            "end_date": "2024-06-30",
+            "end_date": "2024-06-13",
             "active": False,
         },
         {
@@ -123,8 +131,8 @@ class RhodeIsland(State):
             "classification": "primary",
             "identifier": "2025",
             "name": "2025 Regular Session",
-            "start_date": "2025-01-02",
-            "end_date": "2025-06-30",
+            "start_date": "2025-01-07",
+            "end_date": "2025-06-20",
             "active": False,
         },
         {
@@ -132,8 +140,8 @@ class RhodeIsland(State):
             "classification": "primary",
             "identifier": "2026",
             "name": "2026 Regular Session",
-            "start_date": "2026-01-02",
-            "end_date": "2026-06-30",
+            "start_date": "2026-01-06",
+            "end_date": "2026-06-11",
             "active": True,
         },
     ]

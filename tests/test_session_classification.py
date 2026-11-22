@@ -67,7 +67,9 @@ read on 2026-11-17:
 * Oregon: OLIS (api.oregonlegislature.gov LegislativeSessions), the "S" session keys.
 * Rhode Island (OPEN-726, read 2026-11-21): the year menu on status.rilegislature.gov (bill
   history, previous sessions) offers one regular session a year and names no special or
-  extraordinary sessions, so every session is regular.
+  extraordinary sessions, so every session is regular. Since OPEN-754 (read 2026-11-22) every
+  session runs from the first to the last day either chamber sat, on the House and Senate
+  Journals pages (rilegislature.gov/journals/), each year one "January Session".
 * Virginia: LIS (lis.virginia.gov GetSessionListAsync), SessionType "Special".
 * Washington: leg.wa.gov lists only two-year bienniums, which are regular sessions; its special
   sessions are not separate sessions there.
@@ -247,6 +249,16 @@ def test_every_session_is_classified_as_the_legislature_lists_it(state):
     assert got == expected
     # every special named above is in the list (a typo here would otherwise pass silently)
     assert SPECIAL[state] <= set(got)
+
+
+def test_ri_sessions_do_not_overlap_and_end_after_they_start():
+    # OPEN-754: each Rhode Island session is one year's sitting days, so none ends before it
+    # starts and no two share a day (a session's later sittings, as in Dec 2020, stay inside it)
+    sessions = sorted(_sessions("ri"), key=lambda s: s["start_date"])
+    for s in sessions:
+        assert s["start_date"] <= s["end_date"], s["identifier"]
+    for a, b in zip(sessions, sessions[1:]):
+        assert a["end_date"] < b["start_date"], (a["identifier"], b["identifier"])
 
 
 # Sessions the upstream lists had the wrong way round, each checked against the
