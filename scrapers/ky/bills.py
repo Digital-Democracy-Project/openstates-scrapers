@@ -58,6 +58,18 @@ LINE_ITEM_VETO_ACTION = re.compile(r"\bline items? vetoed\b", re.I)
 AMENDMENT_VOTE = re.compile(r"^(adopt )?[hs](fa|ca|cs|fta|cta)\s*\d+$", re.I)
 
 
+# OPEN-760: a page's roll-call line ends with the chamber's own roll-call number: the House's "RCS# 423", the
+# Senate's "RSN# 3792". House numbers restart every session (RCS# 155 is in both 25RS HB 4 and 26RS HB 500), so the
+# vote's dedupe_key is the PDF's address (record/<session>/<bill>/vote_history.pdf) plus this number.
+ROLL_CALL_NUMBER = re.compile(r"\bR(CS|SN)#\s*(\d+)")
+
+
+def roll_call_number(line):
+    """The roll-call number a page's roll-call line ends with, as "RCS423" or "RSN3792", else None."""
+    match = ROLL_CALL_NUMBER.search(line)
+    return f"R{match.group(1)}{match.group(2)}" if match else None
+
+
 def roll_call_item(line):
     """The measure and the amendment a page's roll-call line names: ("HB 1", "HFA 8") for "HB 1 HFA 8  RCS# 6",
     ("HCR 20", None) for "HCR 20  A CONCURRENT RESOLUTION ...  RCS# 40", (None, None) when it is not one."""
@@ -369,12 +381,14 @@ class KYBillScraper(Scraper, LXMLMixin):
         vote_date = 0
         voters = defaultdict(list)
         vote_chamber = None
-        measure = part = None
+        measure = part = roll_call = None
+        keys_seen = set()
         for x in range(len(pdflines)):
             line = pdflines[x]
             vote_chamber = voting_chamber(line) or vote_chamber
             if "RCS#" in line or "RSN#" in line:
                 measure, part = roll_call_item(line)
+                roll_call = roll_call_number(line)
             if re.search(r"(\d+/\d+/\d+)", line):
                 initial_date = line.strip()
             if ("AM" in line) or ("PM" in line):
@@ -482,10 +496,21 @@ class KYBillScraper(Scraper, LXMLMixin):
                     for voter in how_voted_voters:
                         if len(voter) > 0:
                             ve.vote(how_voted, voter)
+                # OPEN-760: without a key the importer matches on motion text + time + chamber, which two roll
+                # calls can share (as North Dakota's did, OPEN-757); a page printed twice is kept once
+                dedupe_key = f"{vote_url}#{roll_call}" if roll_call else None
+                if dedupe_key:
+                    ve.dedupe_key = dedupe_key
+                else:
+                    self.warning(f"No roll-call number on a page of {vote_url}")
                 # Resets voters dictionary before going onto next page in pdf
                 voters = defaultdict(list)
                 vote_chamber = None
-                measure = part = None
+                measure = part = roll_call = None
+                if dedupe_key:
+                    if dedupe_key in keys_seen:
+                        continue
+                    keys_seen.add(dedupe_key)
                 yield ve
 
     def parse_subjects(self, page, bill):

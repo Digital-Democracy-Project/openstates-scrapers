@@ -388,6 +388,7 @@ class MTBillScraper(Scraper):
             yield from self.scrape_archive_list_page(session, page_num + 1)
 
     def scrape_archive_actions(self, bill: Bill, row: dict):
+        keys_seen = set()
         for action in row["billActions"]:
             name = action["actionType"]["description"]
             when = dateutil.parser.parse(action["date"])
@@ -421,6 +422,14 @@ class MTBillScraper(Scraper):
                 vote.set_count("yes", int(action["yesVotes"]))
                 vote.set_count("no", int(action["noVotes"]))
                 vote.add_source(bill.sources[0]["url"])
+                # OPEN-760: a floor vote carries its chamber's roll-call number for the session ("H2534",
+                # "S1204"), the vote's dedupe_key with the bill's page (session, bill); a committee vote has none
+                # and keeps the importer's match on motion + time + chamber
+                if action.get("voteSeq"):
+                    vote.dedupe_key = f"{bill.sources[0]['url']}#{action['voteSeq']}"
+                    if vote.dedupe_key in keys_seen:
+                        continue
+                    keys_seen.add(vote.dedupe_key)
                 yield vote
 
     def scrape_archive_extras(self, bill: Bill, row: dict):
@@ -521,7 +530,15 @@ class MTBillScraper(Scraper):
             # no data = 404 instead of empty json
             return
 
+        keys_seen = set()
         for row in page:
+            # OPEN-760: the API's vote id with the page it came from is the vote's dedupe_key. Floor votes
+            # (bills/v1/votes) and committee votes (committees/v1/executiveActions) are numbered separately, so
+            # one bill's floor and committee votes can share an id; the page tells them apart. A vote the page
+            # lists twice is kept once.
+            dedupe_key = f"{vote_url}#{row['id']}"
+            if dedupe_key in keys_seen:
+                continue
             # at least one example where this value is "null" in source
             # https://api.legmt.gov/bills/v1/votes/findByBillId?billId=2308
             motion = row["motion"] if row["motion"] else "Unknown"
@@ -651,6 +668,7 @@ class MTBillScraper(Scraper):
                 classification=vote_classification(bill_action, motion),
             )
 
+            vote.dedupe_key = dedupe_key
             for count_key in counts.keys():
                 vote.set_count(count_key.lower(), counts[count_key])
             vote.add_source(bill.sources[0]["url"])
@@ -680,4 +698,5 @@ class MTBillScraper(Scraper):
                     )
                     vote.vote("other", voter)
 
+            keys_seen.add(dedupe_key)
             yield vote
