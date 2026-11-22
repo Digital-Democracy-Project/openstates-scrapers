@@ -323,6 +323,7 @@ def test_scrape_start_loads_the_members(monkeypatch):
     monkeypatch.setattr(hi.bills, "get_short_codes", lambda scraper: None)
     monkeypatch.setattr(hi.bills, "load_members", lambda scraper: loaded)
     scraper = object.__new__(HIBillScraper)
+    scraper.jurisdiction = hi.Hawaii()  # OPEN-748: scrape() looks the session up
     monkeypatch.setattr(scraper, "scrape_type", lambda *a: iter(()), raising=False)
     list(scraper.scrape(chamber="lower", session="2026 Regular Session"))
     assert scraper.members is loaded
