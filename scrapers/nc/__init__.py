@@ -370,7 +370,12 @@ class NorthCarolina(State):
             "identifier": "2025",
             "name": "2025-2026 Session",
             "start_date": "2025-01-11",
-            "end_date": "2026-07-01",
+            # OPEN-765: the legislature's own adjournment resolution, Resolution 2026-6 (SJR 1091,
+            # ratified 2026-08-06), section 6: the 2025 Regular Session "adjourn[s] on Friday,
+            # December 18, 2026 ... sine die" (ncleg.gov/Sessions/2025/Bills/Senate/PDF/S1091v2.pdf).
+            # It was 2026-07-01, so a member sworn in later (Sen. Jerry Tillett, 2026-09-03) fell
+            # outside the session and his votes were not matched.
+            "end_date": "2026-12-18",
             "active": True,
         },
         {
