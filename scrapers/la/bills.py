@@ -12,6 +12,7 @@ from utils import LXMLMixin
 
 # from . import actions
 from .actions import Categorizer
+from .voter_names import add_voter
 
 
 class LABillScraper(Scraper, LXMLMixin):
@@ -273,9 +274,22 @@ class LABillScraper(Scraper, LXMLMixin):
         vote.set_count("yes", yes_count)
         vote.set_count("no", no_count)
         vote.set_count("other", other_count)
+        session = bill.legislative_session
+        # (manifest field, session) pairs already warned about in this run, one warning each
+        warned = self.__dict__.setdefault("_warned_officers", set())
         for key, values in d.items():
             for item in values:
-                vote.vote(key, item)
+                # "Mr. Speaker" / "Mr. President" is the session's presiding officer,
+                # from the manifest (OPEN-764, voter_names.py)
+                unnamed = add_voter(vote, key, item, chamber, session)
+                if unnamed and (unnamed, session) not in warned:
+                    warned.add((unnamed, session))
+                    self.warning(
+                        "OPEN-764: manifest la.votes.%s has no %s; %r left as printed",
+                        unnamed,
+                        session,
+                        item,
+                    )
         # OPEN-685: Louisiana gives a vote its day only. The link text ends with the roll call's
         # number, "FINAL PASSAGE (#1400)", which rises in the order the votes were taken (SB 487's
         # House: #1393 at 3:37 PM, then #1400 at 4:01 PM, the same day). The broker reads this key
