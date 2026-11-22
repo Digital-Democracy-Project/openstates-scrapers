@@ -19,9 +19,11 @@ and keeps only what is its own:
   page and come with the bill, so a bill always brings all its roll calls (openstates-core
   deletes a bill's stored roll calls that an import does not bring).
 
-Checked 2026-11-21 against the printed bills' headers (bills/getPDF.asp and, before the 125th,
-the bill text pages): at every session boundary from the 121st to the 132nd, the bills first
-acted on before and after it are printed for the session this rule gives them.
+Checked 2026-11-21 against the session printed at the head of each bill (bills/getPDF.asp, the
+Law Library's copies at lldc.mainelegislature.org/Open/LDs/, and the 121st and 122nd's bill text
+pages): the bills first acted on either side of a session boundary in the 121st, 122nd, 123rd,
+125th and 128th to 132nd Legislatures, and 42 bills drawn at random from the 125th, 126th and
+128th to 132nd, are all printed for the session this rule gives them.
 """
 from datetime import date
 
