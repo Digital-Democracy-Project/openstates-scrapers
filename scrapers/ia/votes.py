@@ -4,24 +4,13 @@ import re
 import collections
 import lxml.etree
 
-from openstates.utils import convert_pdf
+from openstates.utils import _make_pseudo_id, convert_pdf, get_pseudo_id
 from openstates.scrape import Scraper, VoteEvent
 from openstates.exceptions import EmptyScrape
 
 from classify_motion import classify_motion
 
-# https://www.legis.iowa.gov/legislation/findLegislation/allbills?ga=91
-SITE_IDS = {
-    "2027-2028": "92",
-    "2025-2026": "91",
-    "2023-2024": "90",
-    "2021-2022": "89",
-    "2019-2020": "88",
-    "2017-2018": "87",
-    "2015-2016": "86",
-    "2013-2014": "85",
-    "2011-2012": "84",
-}
+from .sessions import is_regular, of_general_assembly, ordinal, session_for_journal
 
 # OPEN-699: a roll call on an amendment ("Shall amendment H-1011 be adopted?", "Shall the rules be
 # suspended to consider amendment H-8313?", "Shall the House concur in the Senate amendment H-8459?") or
@@ -43,30 +32,44 @@ def vote_classification(motion):
     return []
 
 
+def link_to_general_assembly(vote, sessions):
+    """OPEN-745: a roll call is filed under the session of its journal's date, but its bill
+    may be filed under another session of the same General Assembly (a 2025 bill voted on in
+    2026 stays under 2025), so its bill is looked up among all of them. Bill numbers are unique
+    within a General Assembly."""
+    if vote.bill:
+        spec = get_pseudo_id(vote.bill)
+        del spec["legislative_session__identifier"]
+        spec["legislative_session__identifier__in"] = sessions
+        vote.bill = _make_pseudo_id(**spec)
+    return vote
+
+
 class IAVoteScraper(Scraper):
     def scrape(self, chamber=None, session=None):
         event_count = 0
-        if chamber:
+        sessions = self.jurisdiction.legislative_sessions
+        assembly = of_general_assembly(sessions, ordinal(sessions, session))
+        for chamber in [chamber] if chamber else ["upper", "lower"]:
             for journal in self.scrape_chamber(chamber, session):
                 for event in journal:
                     event_count += 1
-                    yield event
-        else:
-            for journal in self.scrape_chamber("upper", session):
-                for event in journal:
-                    event_count += 1
-                    yield event
-            for journal in self.scrape_chamber("lower", session):
-                for event in journal:
-                    event_count += 1
-                    yield event
+                    yield link_to_general_assembly(event, assembly)
         if event_count < 1:
             raise EmptyScrape
 
     def scrape_chamber(self, chamber, session):
-        # Each PDF index page contains just one year, not a whole session
-        # Therefore, we need to iterate over both years in the session
-        session_id = SITE_IDS[session]
+        # Each PDF index page contains just one year of the General Assembly; every session of
+        # it (its two years and its extraordinary sessions) reads both (OPEN-745). Each roll call
+        # is filed under its journal's session (the extraordinary session that sat that day, else
+        # the year). An extraordinary session keeps only its own journals. Either year keeps both
+        # years' journals: openstates-core's vote import deletes a bill's stored roll calls that
+        # the same import does not bring, so a bill carried over from 2025 into 2026 keeps both
+        # years' roll calls even when one year is scraped and imported alone (the same roll call
+        # read by both years in one run is imported once).
+        sessions = self.jurisdiction.legislative_sessions
+        session_id = ordinal(sessions, session)
+        regular = is_regular(sessions, session)
         for sub_session in [1, 2]:
             url = "https://www.legis.iowa.gov/legislation/journals/{}".format(
                 "house" if chamber == "lower" else "senate"
@@ -92,10 +95,16 @@ class IAVoteScraper(Scraper):
                         raise ValueError(f"Unknown chamber: {chamber}")
 
                     date = datetime.strptime(filename, journal_format)
+                    # OPEN-745: a journal, with its roll calls, belongs to one session only
+                    owner = session_for_journal(sessions, session_id, date.date())
+                    if owner is None or not (
+                        owner == session or regular and is_regular(sessions, owner)
+                    ):
+                        continue
                     date = datetime.combine(
                         date, time(tzinfo=timezone(timedelta(hours=-5)))
                     )
-                    yield self.scrape_journal(url, chamber, session, date)
+                    yield self.scrape_journal(url, chamber, owner, date)
                 except ValueError:
                     journal_format = "%m-%d-%Y.pdf"
                     try:
