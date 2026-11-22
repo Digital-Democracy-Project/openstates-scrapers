@@ -268,6 +268,11 @@ class IAVoteScraper(Scraper):
                     vote.vote(vtype, voter)
 
             vote.add_source(url)
+            # OPEN-760: a journal prints no roll-call number, so a roll call is known by the day's journal (its
+            # address names the chamber and date), its bill and its question, numbered above when the bill's
+            # question is put more than once that day. That is the vote's dedupe_key, unique across sessions and
+            # bills; the same journal read again (by both years of a General Assembly) gives the same key.
+            vote.dedupe_key = f"{url}#{bill_id}#{motion_text}"
             yield vote
 
     def parse_votes(self, lines):
