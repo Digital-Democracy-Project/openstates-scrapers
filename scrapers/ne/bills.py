@@ -381,7 +381,11 @@ class NEBillScraper(Scraper, LXMLMixin):
             "/following-sibling::table//td/div/text()"
         )
         cells_xpath = page.xpath(cells_xpath.format(row_string))
-        cells = [cell.strip() for cell in cells_xpath if cell.strip()]
+        # OPEN-761: a trailing "*" ("Hansen*", "Cavanaugh, M.*") marks a senator who was Present Not
+        # Voting when the vote was taken and had the vote recorded later (Rule 6, Sec. 9). The vote
+        # counts as cast; the marker is not part of the name, and left on it the name matches no one.
+        cells = [cell.strip().rstrip("*").rstrip() for cell in cells_xpath]
+        cells = [cell for cell in cells if cell]
 
         return cells, int(value) if value else 0
 
