@@ -325,8 +325,16 @@ class WYBillScraper(Scraper, LXMLMixin):
 
         bill.extras["wy_bill_id"] = bill_json["id"]
 
+        keys_seen = set()
         for vote_json in bill_json["rollCalls"]:
-            yield from self.scrape_vote(bill, vote_json, session)
+            for vote in self.scrape_vote(bill, vote_json, session):
+                # OPEN-769: a roll call the API lists twice for one bill is kept once
+                key = getattr(vote, "dedupe_key", None)
+                if key:
+                    if key in keys_seen:
+                        continue
+                    keys_seen.add(key)
+                yield vote
 
         yield bill
 
@@ -396,6 +404,14 @@ class WYBillScraper(Scraper, LXMLMixin):
             session, vote_json["billNumber"]
         )
         v.add_source(source_url)
+        # OPEN-769: the API numbers every roll call ("voteID": Senate floor votes in the hundreds, House floor votes
+        # from 5000 up, committee votes negative), and the numbers run on through a year's regular and special
+        # sessions. That number with the bill's page (session, bill) is the vote's dedupe_key. The API's own
+        # chamber is left out of it: it is sometimes wrong (OPEN-675).
+        if vote_json.get("voteID") is not None:
+            v.dedupe_key = "{}#{}".format(source_url, vote_json["voteID"])
+        else:
+            self.warning("No voteID on a roll call of {}".format(source_url))
 
         yield v
 

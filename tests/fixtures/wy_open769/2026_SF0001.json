@@ -1,0 +1,3002 @@
+{
+ "amendments": [
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "SF0001HS001",
+   "house": "H",
+   "id": 0,
+   "order": "Standing Committee",
+   "sequence": "001",
+   "sponsor": "House Appropriations Committee",
+   "status": "Reported"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "SF0001JC001",
+   "house": "S",
+   "id": 0,
+   "order": "Conference Committee",
+   "sequence": "001",
+   "sponsor": "",
+   "status": "S Adopted, H Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "OFFICE OF THE GOVERNOR",
+     "agencyNumber": "001",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "ADMINISTRATION AND INFORMATION",
+     "agencyNumber": "006",
+     "id": 0,
+     "sortOrder": 2
+    },
+    {
+     "agencyName": "ATTORNEY GENERAL",
+     "agencyNumber": "015",
+     "id": 0,
+     "sortOrder": 3
+    },
+    {
+     "agencyName": "STATE ENGINEER",
+     "agencyNumber": "037",
+     "id": 0,
+     "sortOrder": 5
+    },
+    {
+     "agencyName": "WILDLIFE/NATURAL RESOURCE TRUST",
+     "agencyNumber": "039",
+     "id": 0,
+     "sortOrder": 6
+    },
+    {
+     "agencyName": "DEPARTMENT OF TRANSPORTATION",
+     "agencyNumber": "045",
+     "id": 0,
+     "sortOrder": 7
+    },
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 8
+    },
+    {
+     "agencyName": "DEPARTMENT OF FAMILY SERVICES",
+     "agencyNumber": "049",
+     "id": 0,
+     "sortOrder": 9
+    },
+    {
+     "agencyName": "LIVESTOCK BOARD",
+     "agencyNumber": "051",
+     "id": 0,
+     "sortOrder": 10
+    },
+    {
+     "agencyName": "COMMUNITY COLLEGE COMMISSION",
+     "agencyNumber": "057",
+     "id": 0,
+     "sortOrder": 11
+    },
+    {
+     "agencyName": "STATE LANDS AND INVESTMENTS",
+     "agencyNumber": "060",
+     "id": 0,
+     "sortOrder": 12
+    },
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 13
+    },
+    {
+     "agencyName": "ENTERPRISE TECHNOLOGY SERVICES",
+     "agencyNumber": "077",
+     "id": 0,
+     "sortOrder": 14
+    },
+    {
+     "agencyName": "WYOMING BUSINESS COUNCIL",
+     "agencyNumber": "085",
+     "id": 0,
+     "sortOrder": 15
+    },
+    {
+     "agencyName": "STATE BUDGET DEPARTMENT",
+     "agencyNumber": "096",
+     "id": 0,
+     "sortOrder": 17
+    },
+    {
+     "agencyName": "SUPREME COURT",
+     "agencyNumber": "101",
+     "id": 0,
+     "sortOrder": 19
+    },
+    {
+     "agencyName": "COUNTY & PROS ATTORNEYS",
+     "agencyNumber": "160",
+     "id": 0,
+     "sortOrder": 21
+    },
+    {
+     "agencyName": "DEPARTMENT OF EDUCATION",
+     "agencyNumber": "206",
+     "id": 0,
+     "sortOrder": 22
+    },
+    {
+     "agencyName": "[WYOMING STABLE TOKEN - DISTRIBUTION OF FUNDS]",
+     "agencyNumber": "319",
+     "id": 0,
+     "sortOrder": 31
+    },
+    {
+     "agencyName": "[ADDITIONS TO 300 SECTIONS]",
+     "agencyNumber": "328",
+     "id": 0,
+     "sortOrder": 34
+    },
+    {
+     "agencyName": "[ENERGY MATCHING FUND LOAN]",
+     "agencyNumber": "312",
+     "id": 0,
+     "sortOrder": 25
+    },
+    {
+     "agencyName": "COLLECTION AGENCY BOARD",
+     "agencyNumber": "031",
+     "id": 0,
+     "sortOrder": 4
+    },
+    {
+     "agencyName": "[COMMON SCHOOL ACCOUNT PERMANENT LAND FUND SPENDING POLICY]",
+     "agencyNumber": "315",
+     "id": 0,
+     "sortOrder": 28
+    },
+    {
+     "agencyName": "[FEDERAL MINERAL ROYALTIES-DISTRIBUTION AMENDMENTS]",
+     "agencyNumber": "316",
+     "id": 0,
+     "sortOrder": 29
+    },
+    {
+     "agencyName": "[DEAPPROPRIATION - BUSINESS READY COMMUNITY ACCOUNT]",
+     "agencyNumber": "317",
+     "id": 0,
+     "sortOrder": 30
+    },
+    {
+     "agencyName": "[PERMANENT WYOMING MINERAL TRUST FUND SPENDING POLICY]",
+     "agencyNumber": "314",
+     "id": 0,
+     "sortOrder": 27
+    },
+    {
+     "agencyName": "WYOMING STABLE TOKEN COMMISSION",
+     "agencyNumber": "091",
+     "id": 0,
+     "sortOrder": 16
+    },
+    {
+     "agencyName": "OFFICE OF GUARDIAN AD LITEM",
+     "agencyNumber": "098",
+     "id": 0,
+     "sortOrder": 18
+    },
+    {
+     "agencyName": "COMM ON JUDICIAL CONDUCT & ETHICS",
+     "agencyNumber": "103",
+     "id": 0,
+     "sortOrder": 20
+    },
+    {
+     "agencyName": "[FLEX - EXECUTIVE]",
+     "agencyNumber": "305",
+     "id": 0,
+     "sortOrder": 23
+    },
+    {
+     "agencyName": "[LEGISLATIVE INTENT FOR FUTURE APPROPRIATION REDUCTIONS]",
+     "agencyNumber": "325",
+     "id": 0,
+     "sortOrder": 32
+    },
+    {
+     "agencyName": "[INCREASE OF HATHAWAY SCHOLARSHIP PROGRAM AWARDS]",
+     "agencyNumber": "326",
+     "id": 0,
+     "sortOrder": 33
+    },
+    {
+     "agencyName": "[FLEX - JUDICIARY]",
+     "agencyNumber": "306",
+     "id": 0,
+     "sortOrder": 24
+    },
+    {
+     "agencyName": "[COST-BENEFIT ANALYSIS OF LOCAL GOVERNMENT GRANT APPLICATIONS]",
+     "agencyNumber": "313",
+     "id": 0,
+     "sortOrder": 26
+    }
+   ],
+   "amendmentNumber": "SF0001S2001",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "001",
+   "sponsor": "Senator Driskill",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "OFFICE OF THE GOVERNOR",
+     "agencyNumber": "001",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S2002",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "002",
+   "sponsor": "Senator Boner",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "OFFICE OF THE GOVERNOR",
+     "agencyNumber": "001",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S2003",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "003",
+   "sponsor": "Senator Hicks",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "STATE AUDITOR",
+     "agencyNumber": "003",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S2004",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "004",
+   "sponsor": "Senator Landen",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT  OF AGRICULTURE",
+     "agencyNumber": "010",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S2005",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "005",
+   "sponsor": "Senator Boner",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ATTORNEY GENERAL",
+     "agencyNumber": "015",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S2006",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "006",
+   "sponsor": "Senator Hicks",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "PUBLIC SERVICE COMMISSION",
+     "agencyNumber": "023",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S2007",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "007",
+   "sponsor": "Senator Case",
+   "status": "Corrected, Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "STATE PARKS & CULTURAL RESOURCES",
+     "agencyNumber": "024",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S2008",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "008",
+   "sponsor": "Senator Driskill",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "STATE PARKS & CULTURAL RESOURCES",
+     "agencyNumber": "024",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S2009",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "009",
+   "sponsor": "Senator Barlow",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "STATE ENGINEER",
+     "agencyNumber": "037",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S2010",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "010",
+   "sponsor": "Senator Hicks",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF FAMILY SERVICES",
+     "agencyNumber": "049",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S2011",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "011",
+   "sponsor": "Senator Salazar",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S2012",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "012",
+   "sponsor": "Senator Scott",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S2013",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "013",
+   "sponsor": "Senator Scott",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF EDUCATION",
+     "agencyNumber": "206",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S2014",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "014",
+   "sponsor": "Senator Boner",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[BUDGET BALANCERS - TRANSFERS]",
+     "agencyNumber": "300",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S2015",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "015",
+   "sponsor": "Senator Hicks",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[FEDERAL MINERAL ROYALTIES-DISTRIBUTION AMENDMENTS]",
+     "agencyNumber": "316",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S2016",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "016",
+   "sponsor": "Senator Hicks",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[ADDITIONS TO 300 SECTIONS]",
+     "agencyNumber": "328",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S2017",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "017",
+   "sponsor": "Senator Laursen, D",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[ADDITIONS TO 300 SECTIONS]",
+     "agencyNumber": "328",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S2018",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "018",
+   "sponsor": "Senator Boner",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[ADDITIONS TO 300 SECTIONS]",
+     "agencyNumber": "328",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S2019",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "019",
+   "sponsor": "Senator Steinmetz",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ADMINISTRATION AND INFORMATION",
+     "agencyNumber": "006",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3001",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "001",
+   "sponsor": "Senator Laursen, D",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ADMINISTRATION AND INFORMATION",
+     "agencyNumber": "006",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3002",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "002",
+   "sponsor": "Senator Laursen, D",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT  OF AGRICULTURE",
+     "agencyNumber": "010",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3003",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "003",
+   "sponsor": "Senator Crago",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT  OF AGRICULTURE",
+     "agencyNumber": "010",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3004",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "004",
+   "sponsor": "Senator Crago",
+   "status": "Corrected, Corrected, Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT  OF AGRICULTURE",
+     "agencyNumber": "010",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3005",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "005",
+   "sponsor": "Senator Crago",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT  OF AGRICULTURE",
+     "agencyNumber": "010",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3006",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "006",
+   "sponsor": "Senator Landen",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "STATE PARKS & CULTURAL RESOURCES",
+     "agencyNumber": "024",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3007",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "007",
+   "sponsor": "Senator Driskill",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "STATE PARKS & CULTURAL RESOURCES",
+     "agencyNumber": "024",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3008",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "008",
+   "sponsor": "Senator Barlow",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "STATE ENGINEER",
+     "agencyNumber": "037",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3009",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "009",
+   "sponsor": "Senator Salazar",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "STATE ENGINEER",
+     "agencyNumber": "037",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3010",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "010",
+   "sponsor": "Senator Laursen, D",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3011",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "011",
+   "sponsor": "Senator Driskill",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3012",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "012",
+   "sponsor": "Senator Gierau",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3013",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "013",
+   "sponsor": "Senator Biteman",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "COMMUNITY COLLEGE COMMISSION",
+     "agencyNumber": "057",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3014",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "014",
+   "sponsor": "Senator Brennan",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "COMMUNITY COLLEGE COMMISSION",
+     "agencyNumber": "057",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3015",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "015",
+   "sponsor": "Senator Brennan",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "COMMUNITY COLLEGE COMMISSION",
+     "agencyNumber": "057",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3016",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "016",
+   "sponsor": "Senator Driskill",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "COMMUNITY COLLEGE COMMISSION",
+     "agencyNumber": "057",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3017",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "017",
+   "sponsor": "Senator Laursen, D",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "COMMUNITY COLLEGE COMMISSION",
+     "agencyNumber": "057",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3018",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "018",
+   "sponsor": "Senator Brennan",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "COMMUNITY COLLEGE COMMISSION",
+     "agencyNumber": "057",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3019",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "019",
+   "sponsor": "Senator Brennan",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "STATE LANDS AND INVESTMENTS",
+     "agencyNumber": "060",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3020",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "020",
+   "sponsor": "Senator Laursen, D",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "STATE LANDS AND INVESTMENTS",
+     "agencyNumber": "060",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3021",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "021",
+   "sponsor": "Senator Laursen, D",
+   "status": "Corrected, Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3022",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "022",
+   "sponsor": "Senator Rothfuss",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3023",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "023",
+   "sponsor": "Senator Love",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3024",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "024",
+   "sponsor": "Senator Steinmetz",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3025",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "025",
+   "sponsor": "Senator Barlow",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3026",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "026",
+   "sponsor": "Senator Laursen, D",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3027",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "027",
+   "sponsor": "Senator Crum",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3028",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "028",
+   "sponsor": "Senator Crum",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "WYOMING BUSINESS COUNCIL",
+     "agencyNumber": "085",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "[DEAPPROPRIATION - BUSINESS READY COMMUNITY ACCOUNT]",
+     "agencyNumber": "317",
+     "id": 0,
+     "sortOrder": 2
+    }
+   ],
+   "amendmentNumber": "SF0001S3029",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "029",
+   "sponsor": "Senator Driskill",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "WYOMING BUSINESS COUNCIL",
+     "agencyNumber": "085",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "[DEAPPROPRIATION - BUSINESS READY COMMUNITY ACCOUNT]",
+     "agencyNumber": "317",
+     "id": 0,
+     "sortOrder": 2
+    },
+    {
+     "agencyName": "STATE BUDGET DEPARTMENT",
+     "agencyNumber": "096",
+     "id": 0,
+     "sortOrder": 3
+    }
+   ],
+   "amendmentNumber": "SF0001S3030",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "030",
+   "sponsor": "Senator Love",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "WYOMING BUSINESS COUNCIL",
+     "agencyNumber": "085",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3031",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "031",
+   "sponsor": "Senator Love",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "WYOMING BUSINESS COUNCIL",
+     "agencyNumber": "085",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3032",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "032",
+   "sponsor": "Senator Scott",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "COUNTY & PROS ATTORNEYS",
+     "agencyNumber": "160",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3033",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "033",
+   "sponsor": "Senator Driskill",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "EDUCATION-SCHOOL FINANCE",
+     "agencyNumber": "205",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3034",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "034",
+   "sponsor": "Senator Crago",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF EDUCATION",
+     "agencyNumber": "206",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3035",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "035",
+   "sponsor": "Senator Driskill",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF EDUCATION",
+     "agencyNumber": "206",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3036",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "036",
+   "sponsor": "Senator Boner",
+   "status": "Corrected, Corrected, Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[BUDGET BALANCERS - TRANSFERS]",
+     "agencyNumber": "300",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3037",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "037",
+   "sponsor": "Senator Hicks",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[BUDGET BALANCERS - TRANSFERS]",
+     "agencyNumber": "300",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3038",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "038",
+   "sponsor": "Senator Hicks",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[BUDGET BALANCERS - TRANSFERS]",
+     "agencyNumber": "300",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3039",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "039",
+   "sponsor": "Senator Crago",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[ENERGY MATCHING FUND LOAN]",
+     "agencyNumber": "312",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3040",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "040",
+   "sponsor": "Senator Love",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[PERMANENT WYOMING MINERAL TRUST FUND SPENDING POLICY]",
+     "agencyNumber": "314",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3041",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "041",
+   "sponsor": "Senator Steinmetz",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[COMMON SCHOOL ACCOUNT PERMANENT LAND FUND SPENDING POLICY]",
+     "agencyNumber": "315",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3042",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "042",
+   "sponsor": "Senator Steinmetz",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[FEDERAL MINERAL ROYALTIES-DISTRIBUTION AMENDMENTS]",
+     "agencyNumber": "316",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3043",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "043",
+   "sponsor": "Senator Hicks",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[DEAPPROPRIATION - BUSINESS READY COMMUNITY ACCOUNT]",
+     "agencyNumber": "317",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "[ADDITIONS TO 300 SECTIONS]",
+     "agencyNumber": "328",
+     "id": 0,
+     "sortOrder": 2
+    }
+   ],
+   "amendmentNumber": "SF0001S3044",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "044",
+   "sponsor": "Senator Steinmetz",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[BUSINESS RELOCATION INCENTIVE]",
+     "agencyNumber": "320",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3045",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "045",
+   "sponsor": "Senator Driskill",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[BUSINESS RELOCATION INCENTIVE]",
+     "agencyNumber": "320",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3046",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "046",
+   "sponsor": "Senator Steinmetz",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[ADDITIONS TO 300 SECTIONS]",
+     "agencyNumber": "328",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3047",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "047",
+   "sponsor": "Senator Gierau",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[ADDITIONS TO 300 SECTIONS]",
+     "agencyNumber": "328",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3048",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "048",
+   "sponsor": "Senator Hicks",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[ADDITIONS TO 300 SECTIONS]",
+     "agencyNumber": "328",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3049",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "049",
+   "sponsor": "Senator Dockstader",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[ADDITIONS TO 300 SECTIONS]",
+     "agencyNumber": "328",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3050",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "050",
+   "sponsor": "Senator Driskill",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[ADDITIONS TO 300 SECTIONS]",
+     "agencyNumber": "328",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3051",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "051",
+   "sponsor": "Senator Schuler",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "STATE LANDS AND INVESTMENTS",
+     "agencyNumber": "060",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "OFFICE OF THE GOVERNOR",
+     "agencyNumber": "001",
+     "id": 0,
+     "sortOrder": 2
+    },
+    {
+     "agencyName": "SECRETARY OF STATE",
+     "agencyNumber": "002",
+     "id": 0,
+     "sortOrder": 3
+    },
+    {
+     "agencyName": "DEPARTMENT OF REVENUE",
+     "agencyNumber": "011",
+     "id": 0,
+     "sortOrder": 4
+    },
+    {
+     "agencyName": "LIVESTOCK BOARD",
+     "agencyNumber": "051",
+     "id": 0,
+     "sortOrder": 5
+    },
+    {
+     "agencyName": "[EMPLOYEE BENEFITS]",
+     "agencyNumber": "304",
+     "id": 0,
+     "sortOrder": 6
+    },
+    {
+     "agencyName": "[BUDGET BALANCERS - TRANSFERS]",
+     "agencyNumber": "300",
+     "id": 0,
+     "sortOrder": 7
+    },
+    {
+     "agencyName": "[ENERGY MATCHING FUND LOAN]",
+     "agencyNumber": "312",
+     "id": 0,
+     "sortOrder": 8
+    }
+   ],
+   "amendmentNumber": "SF0001S3052",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "052",
+   "sponsor": "Senator Salazar",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[BUDGET BALANCERS - TRANSFERS]",
+     "agencyNumber": "300",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "SF0001S3053",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "053",
+   "sponsor": "Senator Gierau",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "SF0001VT001",
+   "house": "S",
+   "id": 0,
+   "order": "Veto Override",
+   "sequence": "001",
+   "sponsor": "",
+   "status": "S Adopted, H Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "SF0001VT002",
+   "house": "S",
+   "id": 0,
+   "order": "Veto Override",
+   "sequence": "002",
+   "sponsor": "",
+   "status": "S Adopted, H Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "SF0001VT003",
+   "house": "S",
+   "id": 0,
+   "order": "Veto Override",
+   "sequence": "003",
+   "sponsor": "",
+   "status": "S Adopted, H Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "SF0001VT004",
+   "house": "S",
+   "id": 0,
+   "order": "Veto Override",
+   "sequence": "004",
+   "sponsor": "",
+   "status": "S Adopted, H Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "SF0001VT005",
+   "house": "S",
+   "id": 0,
+   "order": "Veto Override",
+   "sequence": "005",
+   "sponsor": "",
+   "status": "S Adopted, H Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "SF0001VT006",
+   "house": "S",
+   "id": 0,
+   "order": "Veto Override",
+   "sequence": "006",
+   "sponsor": "",
+   "status": "S Adopted, H Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "SF0001VT007",
+   "house": "S",
+   "id": 0,
+   "order": "Veto Override",
+   "sequence": "007",
+   "sponsor": "",
+   "status": "S Adopted, H Failed"
+  }
+ ],
+ "bill": "SF0001",
+ "billActions": [
+  {
+   "billInformationID": 13382,
+   "location": "LSO",
+   "statusDate": "2026-03-09T12:38:00",
+   "statusMessage": "Assigned Chapter Number 44",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13382,
+   "location": "Governor",
+   "statusDate": "2026-03-06T08:14:00",
+   "statusMessage": "Governor Signed and Line Item Vetoed",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13382,
+   "location": "House",
+   "statusDate": "2026-03-02T15:29:20",
+   "statusMessage": "H Speaker Signed SEA No. 0027",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13382,
+   "location": "Senate",
+   "statusDate": "2026-03-02T15:04:34",
+   "statusMessage": "S President Signed SEA No. 0027",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13382,
+   "location": "LSO",
+   "statusDate": "2026-03-02T14:52:38",
+   "statusMessage": "Assigned Number SEA No. 0027",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13382,
+   "location": "Senate",
+   "statusDate": "2026-02-25T10:29:06",
+   "statusMessage": "S Appointed JCC01 Members",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13382,
+   "location": "House",
+   "statusDate": "2026-02-24T16:55:06",
+   "statusMessage": "H Appointed JCC01 Members",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13382,
+   "location": "House",
+   "statusDate": "2026-02-24T16:53:22",
+   "statusMessage": "House:Pursuant to JR 14-1 (g) referred directly to JCC",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13382,
+   "location": "House",
+   "statusDate": "2026-02-23T10:18:58",
+   "statusMessage": "H Introduced and Referred to H02",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13382,
+   "location": "House",
+   "statusDate": "2026-02-23T10:11:04",
+   "statusMessage": "H Received for Introduction",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13382,
+   "location": "Senate",
+   "statusDate": "2026-02-20T17:33:08",
+   "statusMessage": "S 3rd Reading:Passed 20-10-1-0-0",
+   "voteId": "355"
+  },
+  {
+   "billInformationID": 13382,
+   "location": "Senate",
+   "statusDate": "2026-02-19T11:31:55",
+   "statusMessage": "S 3rd Reading:Laid Back",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13382,
+   "location": "Senate",
+   "statusDate": "2026-02-17T14:43:15",
+   "statusMessage": "S 2nd Reading:Passed",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13382,
+   "location": "Senate",
+   "statusDate": "2026-02-13T16:52:02",
+   "statusMessage": "S COW:Passed",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13382,
+   "location": "Senate",
+   "statusDate": "2026-02-12T10:30:00",
+   "statusMessage": "S Introduced and Referred to SCOW",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13382,
+   "location": "Senate",
+   "statusDate": "2026-02-09T16:28:00",
+   "statusMessage": "S Received for Introduction",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13382,
+   "location": "LSO",
+   "statusDate": "2026-02-06T15:05:33",
+   "statusMessage": "Bill Number Assigned",
+   "voteId": ""
+  }
+ ],
+ "billStatus": "enrolled",
+ "billTitle": "AN ACT to make appropriations for the fiscal biennium commencing July 1, 2026 and ending June 30, 2028; providing definitions; providing for appropriations and transfers of funds for the period of the budget and for the remainder of the current biennium ending June 30, 2026 as specified; providing for carryover of certain funds beyond the biennium as specified; providing for employee positions as specified; providing for duties, terms and conditions and other requirements relating to appropriations for the remainder of the current biennium ending June 30, 2026 and the period of the budget as specified; providing for position and other budgetary limitations; continuing an account; authorizing grants and loans; discharging interfund loans; funding a higher education program; requiring an audit of funds; making conforming amendments; amending and repealing prior appropriations; and providing for effective dates.",
+ "billType": "SF",
+ "catchTitle": "General government appropriations.",
+ "chapter": "CH0044",
+ "concurrenceLink": null,
+ "currentBillHTML": null,
+ "customEnrolledLinkText": null,
+ "customEnrolledPath": null,
+ "digest": "2026/Digest/SF0001.pdf",
+ "digestHTML": null,
+ "effectiveDate": "7/1/2026",
+ "engrossedVersion": null,
+ "enrolledAct": "2026/Enroll/SF0001.pdf",
+ "enrolledNumber": "SEA0027",
+ "fiscalNote": "2026/Fiscal/SF0001.pdf",
+ "fiscalNoteHTML": null,
+ "id": 13382,
+ "introduced": "2026/Introduced/SF0001.pdf",
+ "isEngrossed": false,
+ "isPublic": null,
+ "lastAction": "Assigned Chapter Number 44",
+ "lastActionDate": "2026-03-09T00:00:00",
+ "lsoNumber": null,
+ "rollCalls": [
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 20-11-0-0-0",
+   "amendmentNumber": "SF0001S2001",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Boner, French, Hutchings, Hicks, Ide, Laursen, McKeown, Pearson, Salazar, Steinmetz, Biteman",
+   "noVotesCount": 11,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-17T11:10:05",
+   "voteID": 264,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Brennan, Case, Cooper, Crago, Crum, Dockstader, Driskill, Gierau, Jones, Kolb, Landen, Love, Nethercott, Olsen, Pappas, Rothfuss, Schuler, Scott",
+   "yesVotesCount": 20
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment failed 2-29-0-0-0",
+   "amendmentNumber": "SF0001S2002",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Anderson, Barlow, Brennan, Case, Cooper, Crum, Dockstader, Driskill, French, Gierau, Hutchings, Hicks, Ide, Jones, Kolb, Landen, Laursen, Love, McKeown, Nethercott, Pappas, Pearson, Rothfuss, Olsen, Salazar, Schuler, Scott, Biteman, Steinmetz",
+   "noVotesCount": 29,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-17T11:16:14",
+   "voteID": 265,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Boner, Crago",
+   "yesVotesCount": 2
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 28-3-0-0-0",
+   "amendmentNumber": "SF0001S2010",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "French, Hutchings, McKeown",
+   "noVotesCount": 3,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-17T11:32:20",
+   "voteID": 266,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Cooper, Case, Crago, Crum, Dockstader, Driskill, Gierau, Hicks, Ide, Jones, Kolb, Landen, Laursen, Love, Nethercott, Olsen, Pappas, Pearson, Salazar, Schuler, Rothfuss, Scott, Steinmetz, Biteman",
+   "yesVotesCount": 28
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 30-1-0-0-0",
+   "amendmentNumber": "SF0001S2011",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Ide",
+   "noVotesCount": 1,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-17T11:34:55",
+   "voteID": 267,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Cooper, Case, Crago, Crum, Dockstader, Driskill, French, Hicks, Gierau, Hutchings, Jones, Kolb, Landen, Love, Laursen, McKeown, Olsen, Nethercott, Pappas, Pearson, Rothfuss, Salazar, Scott, Schuler, Steinmetz, Biteman",
+   "yesVotesCount": 30
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment failed 12-19-0-0-0",
+   "amendmentNumber": "SF0001S2014",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Anderson, Barlow, Case, Cooper, Driskill, Gierau, Hicks, Ide, Kolb, Landen, Laursen, McKeown, Nethercott, Pearson, Rothfuss, Salazar, Schuler, Steinmetz, Biteman",
+   "noVotesCount": 19,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-17T11:39:56",
+   "voteID": 268,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Boner, Brennan, Crum, Crago, Dockstader, French, Hutchings, Jones, Love, Olsen, Pappas, Scott",
+   "yesVotesCount": 12
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 20-11-0-0-0",
+   "amendmentNumber": "SF0001S2017",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Boner, Case, Dockstader, French, Ide, McKeown, Nethercott, Pearson, Salazar, Steinmetz, Biteman",
+   "noVotesCount": 11,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-17T12:07:37",
+   "voteID": 269,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Brennan, Cooper, Crago, Crum, Driskill, Gierau, Hicks, Hutchings, Jones, Kolb, Landen, Laursen, Love, Olsen, Pappas, Rothfuss, Schuler, Scott",
+   "yesVotesCount": 20
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 27-4-0-0-0",
+   "amendmentNumber": "SF0001S2018",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Ide, Kolb, Nethercott, Biteman",
+   "noVotesCount": 4,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-17T14:41:32",
+   "voteID": 271,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Case, Cooper, Crago, Dockstader, Crum, Driskill, Gierau, French, Hicks, Hutchings, Jones, Laursen, Landen, McKeown, Love, Olsen, Pappas, Pearson, Salazar, Rothfuss, Schuler, Scott, Steinmetz",
+   "yesVotesCount": 27
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment failed 12-19-0-0-0",
+   "amendmentNumber": "SF0001S3001",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Anderson, Barlow, Brennan, Crago, Cooper, Crum, Dockstader, French, Ide, Jones, Kolb, Landen, Love, McKeown, Olsen, Nethercott, Pappas, Schuler, Steinmetz",
+   "noVotesCount": 19,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T11:46:51",
+   "voteID": 321,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Boner, Case, Driskill, Gierau, Hicks, Hutchings, Laursen, Rothfuss, Pearson, Salazar, Scott, Biteman",
+   "yesVotesCount": 12
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment failed 12-19-0-0-0",
+   "amendmentNumber": "SF0001S3002",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Anderson, Barlow, Brennan, Cooper, Crago, Crum, Dockstader, Driskill, French, Gierau, Jones, Kolb, Landen, Love, Olsen, Nethercott, Pappas, Rothfuss, Schuler",
+   "noVotesCount": 19,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T11:54:56",
+   "voteID": 322,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Boner, Case, Hicks, Hutchings, Ide, Laursen, McKeown, Pearson, Salazar, Scott, Steinmetz, Biteman",
+   "yesVotesCount": 12
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 24-7-0-0-0",
+   "amendmentNumber": "SF0001S3003",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Case, French, Hutchings, Ide, Kolb, McKeown, Nethercott",
+   "noVotesCount": 7,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T12:00:03",
+   "voteID": 323,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Cooper, Crago, Crum, Dockstader, Driskill, Hicks, Gierau, Jones, Landen, Love, Laursen, Olsen, Pearson, Pappas, Salazar, Rothfuss, Schuler, Scott, Steinmetz, Biteman",
+   "yesVotesCount": 24
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 30-1-0-0-0",
+   "amendmentNumber": "SF0001S3004",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Nethercott",
+   "noVotesCount": 1,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T12:05:05",
+   "voteID": 324,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Cooper, Case, Crago, Crum, Dockstader, French, Driskill, Gierau, Hicks, Hutchings, Ide, Jones, Kolb, Landen, Laursen, Love, McKeown, Olsen, Pappas, Rothfuss, Pearson, Salazar, Schuler, Scott, Steinmetz, Biteman",
+   "yesVotesCount": 30
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment failed 13-18-0-0-0",
+   "amendmentNumber": "SF0001S3007",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Boner, Dockstader, French, Ide, Jones, Kolb, Landen, Love, Laursen, McKeown, Olsen, Nethercott, Pappas, Pearson, Salazar, Scott, Biteman, Steinmetz",
+   "noVotesCount": 18,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T12:10:06",
+   "voteID": 325,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Brennan, Case, Cooper, Crago, Crum, Driskill, Gierau, Hicks, Hutchings, Rothfuss, Schuler",
+   "yesVotesCount": 13
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 22-9-0-0-0",
+   "amendmentNumber": "SF0001S3008",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Dockstader, French, Hutchings, Ide, Kolb, Laursen, McKeown, Pearson, Steinmetz",
+   "noVotesCount": 9,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T12:14:52",
+   "voteID": 326,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Case, Cooper, Crago, Crum, Driskill, Gierau, Hicks, Jones, Landen, Love, Olsen, Nethercott, Pappas, Rothfuss, Salazar, Schuler, Scott, Biteman",
+   "yesVotesCount": 22
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 23-8-0-0-0",
+   "amendmentNumber": "SF0001S3010",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Anderson, Case, Crum, French, Ide, Kolb, Landen, McKeown",
+   "noVotesCount": 8,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T12:21:18",
+   "voteID": 327,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Barlow, Boner, Brennan, Cooper, Dockstader, Crago, Driskill, Gierau, Hicks, Hutchings, Jones, Laursen, Love, Nethercott, Pappas, Olsen, Pearson, Rothfuss, Salazar, Schuler, Scott, Steinmetz, Biteman",
+   "yesVotesCount": 23
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 31-0-0-0-0",
+   "amendmentNumber": "SF0001S3011",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "",
+   "noVotesCount": 0,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T13:40:52",
+   "voteID": 328,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Case, Cooper, Crago, Crum, Dockstader, French, Driskill, Hicks, Gierau, Hutchings, Ide, Jones, Kolb, Landen, Laursen, McKeown, Love, Olsen, Nethercott, Pappas, Pearson, Rothfuss, Salazar, Schuler, Scott, Steinmetz, Biteman",
+   "yesVotesCount": 31
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 31-0-0-0-0",
+   "amendmentNumber": "SF0001S3012",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "",
+   "noVotesCount": 0,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T13:43:30",
+   "voteID": 329,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Case, Cooper, Crum, Crago, Dockstader, Driskill, French, Gierau, Hicks, Hutchings, Ide, Jones, Kolb, Laursen, Landen, Love, McKeown, Nethercott, Olsen, Pappas, Pearson, Rothfuss, Salazar, Schuler, Scott, Steinmetz, Biteman",
+   "yesVotesCount": 31
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 31-0-0-0-0",
+   "amendmentNumber": "SF0001S3013",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "",
+   "noVotesCount": 0,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T13:46:07",
+   "voteID": 330,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Case, Cooper, Crago, Crum, Dockstader, Driskill, Gierau, French, Hicks, Hutchings, Ide, Jones, Kolb, Landen, Laursen, Love, McKeown, Nethercott, Olsen, Pappas, Pearson, Rothfuss, Schuler, Salazar, Scott, Steinmetz, Biteman",
+   "yesVotesCount": 31
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 16-15-0-0-0",
+   "amendmentNumber": "SF0001S3014",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Boner, Case, French, Gierau, Hicks, Ide, Hutchings, Kolb, Laursen, McKeown, Pearson, Salazar, Scott, Biteman, Steinmetz",
+   "noVotesCount": 15,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T13:54:09",
+   "voteID": 331,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Brennan, Crago, Cooper, Crum, Dockstader, Driskill, Jones, Landen, Love, Nethercott, Olsen, Pappas, Rothfuss, Schuler",
+   "yesVotesCount": 16
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 26-5-0-0-0",
+   "amendmentNumber": "SF0001S3015",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "French, Hutchings, Ide, McKeown, Salazar",
+   "noVotesCount": 5,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T13:56:41",
+   "voteID": 332,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Case, Cooper, Crago, Dockstader, Crum, Driskill, Gierau, Hicks, Jones, Kolb, Landen, Laursen, Love, Nethercott, Olsen, Pappas, Pearson, Rothfuss, Schuler, Scott, Steinmetz, Biteman",
+   "yesVotesCount": 26
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 27-4-0-0-0",
+   "amendmentNumber": "SF0001S3016",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Ide, McKeown, Pearson, Steinmetz",
+   "noVotesCount": 4,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T14:02:33",
+   "voteID": 333,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Cooper, Case, Crago, Crum, Dockstader, Driskill, French, Gierau, Hicks, Hutchings, Jones, Kolb, Laursen, Landen, Love, Nethercott, Olsen, Pappas, Rothfuss, Salazar, Schuler, Scott, Biteman",
+   "yesVotesCount": 27
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 20-11-0-0-0",
+   "amendmentNumber": "SF0001S3017",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Boner, Case, French, Ide, Hutchings, Kolb, McKeown, Pearson, Salazar, Steinmetz, Biteman",
+   "noVotesCount": 11,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T14:12:50",
+   "voteID": 334,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Brennan, Cooper, Crum, Crago, Dockstader, Driskill, Hicks, Gierau, Jones, Landen, Laursen, Love, Nethercott, Olsen, Pappas, Rothfuss, Schuler, Scott",
+   "yesVotesCount": 20
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment failed 10-21-0-0-0",
+   "amendmentNumber": "SF0001S3018",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Boner, Case, Crago, Crum, Dockstader, French, Gierau, Hutchings, Ide, Jones, Kolb, Landen, Laursen, Love, McKeown, Pappas, Olsen, Pearson, Salazar, Steinmetz, Biteman",
+   "noVotesCount": 21,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T14:18:18",
+   "voteID": 335,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Brennan, Cooper, Driskill, Hicks, Nethercott, Rothfuss, Schuler, Scott",
+   "yesVotesCount": 10
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 17-14-0-0-0",
+   "amendmentNumber": "SF0001S3019",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Boner, Case, Crum, Dockstader, French, Hutchings, Ide, Jones, Kolb, McKeown, Pearson, Salazar, Steinmetz, Biteman",
+   "noVotesCount": 14,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T14:20:28",
+   "voteID": 336,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Brennan, Cooper, Crago, Driskill, Gierau, Hicks, Laursen, Love, Landen, Nethercott, Olsen, Pappas, Rothfuss, Schuler, Scott",
+   "yesVotesCount": 17
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment failed 13-18-0-0-0",
+   "amendmentNumber": "SF0001S3020",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Anderson, Barlow, Boner, Brennan, Cooper, Crago, Crum, Dockstader, Driskill, French, Jones, Landen, Love, Nethercott, Olsen, Pappas, Rothfuss, Schuler",
+   "noVotesCount": 18,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T14:23:57",
+   "voteID": 337,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Case, Gierau, Hicks, Ide, Hutchings, Kolb, Laursen, McKeown, Pearson, Salazar, Steinmetz, Scott, Biteman",
+   "yesVotesCount": 13
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 16-15-0-0-0",
+   "amendmentNumber": "SF0001S3021",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Boner, Case, Dockstader, French, Gierau, Hicks, Hutchings, Ide, Kolb, McKeown, Love, Pearson, Salazar, Steinmetz, Biteman",
+   "noVotesCount": 15,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T14:31:52",
+   "voteID": 338,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Brennan, Cooper, Crago, Crum, Driskill, Jones, Landen, Laursen, Nethercott, Olsen, Pappas, Rothfuss, Scott, Schuler",
+   "yesVotesCount": 16
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 16-15-0-0-0",
+   "amendmentNumber": "SF0001S3022",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Boner, Case, French, Hutchings, Ide, Kolb, Laursen, McKeown, Love, Nethercott, Pearson, Salazar, Scott, Steinmetz, Biteman",
+   "noVotesCount": 15,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T14:35:50",
+   "voteID": 339,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Brennan, Crago, Cooper, Crum, Dockstader, Driskill, Gierau, Hicks, Jones, Landen, Olsen, Pappas, Rothfuss, Schuler",
+   "yesVotesCount": 16
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 27-4-0-0-0",
+   "amendmentNumber": "SF0001S3025",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Case, French, Ide, Kolb",
+   "noVotesCount": 4,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T14:56:19",
+   "voteID": 340,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Cooper, Crago, Crum, Dockstader, Driskill, Gierau, Hicks, Hutchings, Jones, Landen, Laursen, McKeown, Love, Nethercott, Olsen, Pappas, Pearson, Rothfuss, Salazar, Schuler, Steinmetz, Scott, Biteman",
+   "yesVotesCount": 27
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment failed 2-29-0-0-0",
+   "amendmentNumber": "SF0001S3026",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Anderson, Barlow, Boner, Brennan, Case, Cooper, Crago, Crum, Dockstader, Driskill, French, Gierau, Hutchings, Ide, Jones, Kolb, Landen, Love, McKeown, Nethercott, Olsen, Pappas, Pearson, Rothfuss, Salazar, Schuler, Scott, Biteman, Steinmetz",
+   "noVotesCount": 29,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T14:59:36",
+   "voteID": 341,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Hicks, Laursen",
+   "yesVotesCount": 2
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 29-1-0-0-1",
+   "amendmentNumber": "SF0001S3033",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "Crago",
+   "conflictVotesCount": 1,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Ide",
+   "noVotesCount": 1,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T15:05:11",
+   "voteID": 342,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Cooper, Case, Crum, Driskill, Dockstader, French, Gierau, Hicks, Hutchings, Jones, Kolb, Landen, Laursen, Love, McKeown, Nethercott, Olsen, Pappas, Pearson, Rothfuss, Schuler, Salazar, Scott, Steinmetz, Biteman",
+   "yesVotesCount": 29
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 21-10-0-0-0",
+   "amendmentNumber": "SF0001S3034",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Anderson, Barlow, Case, French, Hutchings, Ide, Laursen, Nethercott, Pearson, Steinmetz",
+   "noVotesCount": 10,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T15:11:16",
+   "voteID": 343,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Boner, Brennan, Cooper, Crago, Crum, Dockstader, Driskill, Hicks, Gierau, Jones, Kolb, Landen, Love, McKeown, Olsen, Pappas, Rothfuss, Salazar, Schuler, Scott, Biteman",
+   "yesVotesCount": 21
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 27-4-0-0-0",
+   "amendmentNumber": "SF0001S3035",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Anderson, Case, Kolb, Scott",
+   "noVotesCount": 4,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T15:15:05",
+   "voteID": 344,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Barlow, Boner, Brennan, Cooper, Crago, Dockstader, Crum, Driskill, French, Gierau, Hicks, Hutchings, Ide, Jones, Landen, Love, Laursen, McKeown, Nethercott, Olsen, Pappas, Pearson, Rothfuss, Salazar, Schuler, Steinmetz, Biteman",
+   "yesVotesCount": 27
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 18-13-0-0-0",
+   "amendmentNumber": "SF0001S3036",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Anderson, Barlow, Case, Cooper, Crum, Driskill, Gierau, Jones, Landen, Nethercott, Pappas, Rothfuss, Schuler",
+   "noVotesCount": 13,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T15:29:34",
+   "voteID": 345,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Boner, Brennan, Crago, Dockstader, French, Hicks, Hutchings, Ide, Kolb, Laursen, Love, McKeown, Olsen, Pearson, Salazar, Scott, Steinmetz, Biteman",
+   "yesVotesCount": 18
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 22-9-0-0-0",
+   "amendmentNumber": "SF0001S3037",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Barlow, Cooper, Case, Crum, Crago, Dockstader, French, Gierau, Love",
+   "noVotesCount": 9,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T15:35:06",
+   "voteID": 346,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Boner, Brennan, Driskill, Hutchings, Hicks, Ide, Jones, Kolb, Landen, Laursen, McKeown, Nethercott, Olsen, Pearson, Rothfuss, Pappas, Salazar, Schuler, Scott, Steinmetz, Biteman",
+   "yesVotesCount": 22
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 24-7-0-0-0",
+   "amendmentNumber": "SF0001S3038",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Anderson, Barlow, Case, Crago, Crum, Dockstader, Landen",
+   "noVotesCount": 7,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T15:43:28",
+   "voteID": 347,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Boner, Brennan, Cooper, Driskill, Gierau, French, Hicks, Hutchings, Ide, Jones, Kolb, Laursen, McKeown, Love, Nethercott, Olsen, Pappas, Pearson, Rothfuss, Salazar, Schuler, Scott, Biteman, Steinmetz",
+   "yesVotesCount": 24
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 26-5-0-0-0",
+   "amendmentNumber": "SF0001S3039",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Anderson, Case, Cooper, Landen, Rothfuss",
+   "noVotesCount": 5,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T15:50:09",
+   "voteID": 348,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Barlow, Boner, Brennan, Crago, Crum, Dockstader, Driskill, French, Gierau, Hicks, Hutchings, Ide, Jones, Kolb, Laursen, Love, McKeown, Nethercott, Olsen, Pappas, Pearson, Salazar, Schuler, Steinmetz, Scott, Biteman",
+   "yesVotesCount": 26
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 23-8-0-0-0",
+   "amendmentNumber": "SF0001S3040",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Case, French, Ide, Hutchings, McKeown, Pearson, Scott, Steinmetz",
+   "noVotesCount": 8,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T16:06:41",
+   "voteID": 349,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Crago, Cooper, Crum, Dockstader, Driskill, Hicks, Gierau, Jones, Kolb, Landen, Laursen, Love, Nethercott, Olsen, Pappas, Rothfuss, Salazar, Schuler, Biteman",
+   "yesVotesCount": 23
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment failed 13-18-0-0-0",
+   "amendmentNumber": "SF0001S3044",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Barlow, Brennan, Case, Crago, Cooper, Crum, Dockstader, Driskill, French, Jones, Landen, Kolb, Love, Nethercott, Pappas, Olsen, Rothfuss, Scott",
+   "noVotesCount": 18,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T16:18:05",
+   "voteID": 350,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Boner, Gierau, Hicks, Hutchings, Ide, Laursen, McKeown, Pearson, Salazar, Schuler, Steinmetz, Biteman",
+   "yesVotesCount": 13
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment failed 11-20-0-0-0",
+   "amendmentNumber": "SF0001S3048",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Anderson, Barlow, Boner, Brennan, Cooper, Crago, Case, Dockstader, Crum, Driskill, Gierau, Jones, Landen, Love, Nethercott, Olsen, Pappas, Rothfuss, Schuler, Scott",
+   "noVotesCount": 20,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T16:45:07",
+   "voteID": 351,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "French, Hicks, Ide, Hutchings, Kolb, Laursen, McKeown, Pearson, Salazar, Steinmetz, Biteman",
+   "yesVotesCount": 11
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 16-15-0-0-0",
+   "amendmentNumber": "SF0001S3049",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Barlow, Case, French, Hutchings, Ide, Kolb, Hicks, Laursen, McKeown, Nethercott, Olsen, Pearson, Salazar, Scott, Steinmetz",
+   "noVotesCount": 15,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T16:49:16",
+   "voteID": 352,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Boner, Brennan, Cooper, Crago, Crum, Dockstader, Driskill, Gierau, Jones, Landen, Love, Pappas, Rothfuss, Schuler, Biteman",
+   "yesVotesCount": 16
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 23-8-0-0-0",
+   "amendmentNumber": "SF0001S3050",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Case, French, Hutchings, Ide, McKeown, Pearson, Salazar, Steinmetz",
+   "noVotesCount": 8,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T16:55:36",
+   "voteID": 353,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Cooper, Crago, Crum, Dockstader, Driskill, Gierau, Hicks, Jones, Kolb, Landen, Laursen, Love, Pappas, Nethercott, Olsen, Rothfuss, Schuler, Scott, Biteman",
+   "yesVotesCount": 23
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 30-0-1-0-0",
+   "amendmentNumber": "SF0001S3053",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Anderson",
+   "excusedVotesCount": 1,
+   "noVotes": "",
+   "noVotesCount": 0,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T17:31:00",
+   "voteID": 354,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Barlow, Boner, Brennan, Case, Crago, Cooper, Crum, Dockstader, French, Driskill, Gierau, Hicks, Ide, Hutchings, Jones, Kolb, Laursen, Landen, Love, McKeown, Nethercott, Olsen, Pearson, Pappas, Rothfuss, Salazar, Schuler, Scott, Steinmetz, Biteman",
+   "yesVotesCount": 30
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "S 3rd Reading:Passed 20-10-1-0-0",
+   "amendmentNumber": null,
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Anderson",
+   "excusedVotesCount": 1,
+   "noVotes": "Case, French, Hutchings, Ide, Laursen, McKeown, Pearson, Salazar, Steinmetz, Biteman",
+   "noVotesCount": 10,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T17:33:08",
+   "voteID": 355,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Barlow, Boner, Brennan, Cooper, Crago, Crum, Dockstader, Driskill, Gierau, Hicks, Jones, Landen, Kolb, Love, Nethercott, Olsen, Pappas, Rothfuss, Scott, Schuler",
+   "yesVotesCount": 20
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "H Adopted SF0001JC001: 59-1-2-0-0",
+   "amendmentNumber": "SF0001JC001",
+   "billNumber": "SF0001",
+   "chamber": "H",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Kelly, Schmid",
+   "excusedVotesCount": 2,
+   "noVotes": "Nicholas",
+   "noVotesCount": 1,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-03-02T12:05:10",
+   "voteID": 5447,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Allemand, Andrew, Angelos, Banks, Brady, Bear, Bratten, Brown, G, Byron, Brown, L, Campbell, E, Campbell, K, Chestek, Clouston, Connolly, Davis, Erickson, Filer, Geringer, Fornstrom, Guggenmos, Haroldson, Harshman, Heiner, Hoeft, Jarvis, Johnson, Knapp, Larsen, L, Larson, JT, Lien, Lawley, Locke, Lucas, McCann, Ottman, Pendergraft, Posey, Provenza, Riggins, Rodriguez-Williams, Sherwood, Singh, Smith, Storer, Strock, Styvar, Tarver, Thayer, Washut, Wasserburger, Webb, Webber, Wharff, Williams, Winter, Yin, Wylie, Neiman",
+   "yesVotesCount": 59
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "S Adopted SF0001JC001: 28-3-0-0-0",
+   "amendmentNumber": "SF0001JC001",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Case, Ide, McKeown",
+   "noVotesCount": 3,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-03-02T12:30:08",
+   "voteID": 440,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Cooper, Crago, Dockstader, Crum, Driskill, French, Gierau, Hicks, Hutchings, Jones, Kolb, Landen, Laursen, Love, Olsen, Nethercott, Pappas, Pearson, Rothfuss, Salazar, Schuler, Scott, Steinmetz, Biteman",
+   "yesVotesCount": 28
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Line Item Veto Override 23-6-2-0-0",
+   "amendmentNumber": "SF0001VT001",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Driskill, Steinmetz",
+   "excusedVotesCount": 2,
+   "noVotes": "Barlow, Cooper, Dockstader, Pappas, Rothfuss, Schuler",
+   "noVotesCount": 6,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-03-06T17:32:55",
+   "voteID": 523,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Boner, Case, Brennan, Crago, Crum, French, Gierau, Hicks, Hutchings, Ide, Jones, Kolb, Landen, Laursen, Love, Nethercott, McKeown, Olsen, Pearson, Salazar, Scott, Biteman",
+   "yesVotesCount": 23
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Line Item Veto Override 29-0-2-0-0",
+   "amendmentNumber": "SF0001VT002",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Driskill, Steinmetz",
+   "excusedVotesCount": 2,
+   "noVotes": "",
+   "noVotesCount": 0,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-03-06T17:33:04",
+   "voteID": 524,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Case, Cooper, Crago, Crum, Dockstader, French, Gierau, Hicks, Hutchings, Ide, Jones, Kolb, Landen, Love, Laursen, McKeown, Olsen, Nethercott, Pappas, Pearson, Rothfuss, Salazar, Schuler, Scott, Biteman",
+   "yesVotesCount": 29
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Line Item Veto Override 25-4-2-0-0",
+   "amendmentNumber": "SF0001VT003",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Driskill, Steinmetz",
+   "excusedVotesCount": 2,
+   "noVotes": "Barlow, Crago, Dockstader, Rothfuss",
+   "noVotesCount": 4,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-03-06T17:34:57",
+   "voteID": 525,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Boner, Brennan, Case, Cooper, Crum, Gierau, French, Hicks, Hutchings, Ide, Jones, Kolb, Landen, Laursen, Love, McKeown, Nethercott, Olsen, Pappas, Pearson, Salazar, Schuler, Scott, Biteman",
+   "yesVotesCount": 25
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Line Item Veto Override 29-0-2-0-0",
+   "amendmentNumber": "SF0001VT004",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Driskill, Steinmetz",
+   "excusedVotesCount": 2,
+   "noVotes": "",
+   "noVotesCount": 0,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-03-06T17:38:06",
+   "voteID": 526,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Case, Cooper, Crago, Crum, Dockstader, French, Gierau, Hutchings, Hicks, Ide, Kolb, Jones, Landen, Laursen, Love, McKeown, Nethercott, Olsen, Pappas, Pearson, Rothfuss, Salazar, Schuler, Scott, Biteman",
+   "yesVotesCount": 29
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Line Item Veto Override 28-1-2-0-0",
+   "amendmentNumber": "SF0001VT005",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Driskill, Steinmetz",
+   "excusedVotesCount": 2,
+   "noVotes": "Cooper",
+   "noVotesCount": 1,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-03-06T17:40:36",
+   "voteID": 527,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Case, Crago, Dockstader, Crum, French, Gierau, Hicks, Hutchings, Ide, Jones, Kolb, Landen, Love, Laursen, McKeown, Nethercott, Pearson, Olsen, Pappas, Rothfuss, Salazar, Schuler, Scott, Biteman",
+   "yesVotesCount": 28
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Line Item Veto Override 28-1-2-0-0",
+   "amendmentNumber": "SF0001VT006",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Driskill, Steinmetz",
+   "excusedVotesCount": 2,
+   "noVotes": "Cooper",
+   "noVotesCount": 1,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-03-06T17:43:35",
+   "voteID": 528,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Case, Crago, Crum, Dockstader, French, Gierau, Hicks, Hutchings, Jones, Ide, Kolb, Landen, Laursen, Love, McKeown, Nethercott, Pappas, Olsen, Pearson, Rothfuss, Schuler, Salazar, Scott, Biteman",
+   "yesVotesCount": 28
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Line Item Veto Override 24-5-2-0-0",
+   "amendmentNumber": "SF0001VT007",
+   "billNumber": "SF0001",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Driskill, Steinmetz",
+   "excusedVotesCount": 2,
+   "noVotes": "Cooper, Crago, Dockstader, Landen, Rothfuss",
+   "noVotesCount": 5,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-03-06T17:46:17",
+   "voteID": 529,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Case, Crum, French, Gierau, Hicks, Hutchings, Ide, Jones, Kolb, Laursen, Love, McKeown, Nethercott, Olsen, Pappas, Pearson, Salazar, Schuler, Scott, Biteman",
+   "yesVotesCount": 24
+  },
+  {
+   "absentVotes": "Singh",
+   "absentVotesCount": 1,
+   "action": "Line Item Veto Override 60-0-1-1-0",
+   "amendmentNumber": "SF0001VT001",
+   "billNumber": "SF0001",
+   "chamber": "H",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Kelly",
+   "excusedVotesCount": 1,
+   "noVotes": "",
+   "noVotesCount": 0,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-03-06T19:02:13",
+   "voteID": 5542,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Allemand, Andrew, Angelos, Banks, Bear, Brady, Bratten, Brown, L, Brown, G, Byron, Campbell, E, Campbell, K, Chestek, Clouston, Connolly, Davis, Erickson, Filer, Fornstrom, Geringer, Guggenmos, Harshman, Haroldson, Heiner, Hoeft, Jarvis, Johnson, Knapp, Larsen, L, Lawley, Larson, JT, Lien, Lucas, Locke, McCann, Nicholas, Ottman, Pendergraft, Posey, Provenza, Schmid, Riggins, Rodriguez-Williams, Sherwood, Smith, Storer, Strock, Styvar, Tarver, Thayer, Washut, Wasserburger, Webb, Webber, Wharff, Williams, Winter, Wylie, Yin, Neiman",
+   "yesVotesCount": 60
+  },
+  {
+   "absentVotes": "Singh",
+   "absentVotesCount": 1,
+   "action": "Did Not Override Line Item Veto 34-26-1-1-0",
+   "amendmentNumber": "SF0001VT002",
+   "billNumber": "SF0001",
+   "chamber": "H",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Kelly",
+   "excusedVotesCount": 1,
+   "noVotes": "Brown, L, Byron, Campbell, E, Chestek, Connolly, Clouston, Davis, Erickson, Filer, Fornstrom, Geringer, Harshman, Jarvis, Larsen, L, Larson, JT, Lawley, Nicholas, Posey, Provenza, Sherwood, Storer, Thayer, Washut, Williams, Wylie, Yin",
+   "noVotesCount": 26,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-03-06T19:02:26",
+   "voteID": 5543,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Allemand, Andrew, Angelos, Banks, Bear, Brady, Bratten, Brown, G, Campbell, K, Guggenmos, Haroldson, Heiner, Hoeft, Johnson, Knapp, Lien, Locke, Lucas, McCann, Ottman, Pendergraft, Riggins, Rodriguez-Williams, Schmid, Smith, Strock, Tarver, Styvar, Wasserburger, Webb, Webber, Wharff, Winter, Neiman",
+   "yesVotesCount": 34
+  },
+  {
+   "absentVotes": "Singh",
+   "absentVotesCount": 1,
+   "action": "Did Not Override Line Item Veto 34-26-1-1-0",
+   "amendmentNumber": "SF0001VT003",
+   "billNumber": "SF0001",
+   "chamber": "H",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Kelly",
+   "excusedVotesCount": 1,
+   "noVotes": "Brown, L, Byron, Campbell, E, Chestek, Connolly, Clouston, Davis, Erickson, Filer, Geringer, Fornstrom, Harshman, Jarvis, Larsen, L, Larson, JT, Lawley, Nicholas, Posey, Provenza, Sherwood, Storer, Washut, Thayer, Williams, Yin, Wylie",
+   "noVotesCount": 26,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-03-06T19:02:42",
+   "voteID": 5544,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Allemand, Andrew, Angelos, Banks, Bear, Brady, Brown, G, Bratten, Campbell, K, Guggenmos, Haroldson, Heiner, Hoeft, Johnson, Knapp, Locke, Lien, Lucas, McCann, Ottman, Pendergraft, Riggins, Rodriguez-Williams, Schmid, Smith, Strock, Styvar, Tarver, Wasserburger, Webb, Webber, Wharff, Winter, Neiman",
+   "yesVotesCount": 34
+  },
+  {
+   "absentVotes": "Singh",
+   "absentVotesCount": 1,
+   "action": "Line Item Veto Override 57-3-1-1-0",
+   "amendmentNumber": "SF0001VT004",
+   "billNumber": "SF0001",
+   "chamber": "H",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Kelly",
+   "excusedVotesCount": 1,
+   "noVotes": "Nicholas, Provenza, Storer",
+   "noVotesCount": 3,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-03-06T19:02:58",
+   "voteID": 5545,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Allemand, Andrew, Angelos, Banks, Bear, Brady, Bratten, Brown, G, Brown, L, Byron, Campbell, E, Campbell, K, Chestek, Clouston, Connolly, Davis, Erickson, Fornstrom, Filer, Geringer, Guggenmos, Haroldson, Heiner, Harshman, Hoeft, Jarvis, Johnson, Knapp, Larsen, L, Larson, JT, Lawley, Lien, Locke, Lucas, McCann, Ottman, Pendergraft, Posey, Riggins, Rodriguez-Williams, Schmid, Sherwood, Smith, Strock, Styvar, Tarver, Thayer, Washut, Wasserburger, Webb, Webber, Wharff, Williams, Winter, Yin, Wylie, Neiman",
+   "yesVotesCount": 57
+  },
+  {
+   "absentVotes": "Singh",
+   "absentVotesCount": 1,
+   "action": "Line Item Veto Override 60-0-1-1-0",
+   "amendmentNumber": "SF0001VT005",
+   "billNumber": "SF0001",
+   "chamber": "H",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Kelly",
+   "excusedVotesCount": 1,
+   "noVotes": "",
+   "noVotesCount": 0,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-03-06T19:03:19",
+   "voteID": 5546,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Allemand, Andrew, Angelos, Banks, Bear, Brady, Bratten, Brown, G, Brown, L, Byron, Campbell, E, Campbell, K, Chestek, Clouston, Connolly, Davis, Erickson, Filer, Fornstrom, Guggenmos, Geringer, Haroldson, Harshman, Heiner, Hoeft, Jarvis, Johnson, Knapp, Larsen, L, Larson, JT, Lawley, Lien, Locke, Lucas, McCann, Nicholas, Ottman, Pendergraft, Posey, Provenza, Riggins, Schmid, Rodriguez-Williams, Sherwood, Smith, Strock, Styvar, Storer, Tarver, Thayer, Washut, Wasserburger, Webb, Webber, Williams, Wharff, Wylie, Winter, Yin, Neiman",
+   "yesVotesCount": 60
+  },
+  {
+   "absentVotes": "Singh",
+   "absentVotesCount": 1,
+   "action": "Line Item Veto Override 60-0-1-1-0",
+   "amendmentNumber": "SF0001VT006",
+   "billNumber": "SF0001",
+   "chamber": "H",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Kelly",
+   "excusedVotesCount": 1,
+   "noVotes": "",
+   "noVotesCount": 0,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-03-06T19:03:33",
+   "voteID": 5547,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Allemand, Andrew, Angelos, Banks, Bear, Brady, Bratten, Brown, L, Brown, G, Byron, Campbell, E, Chestek, Clouston, Campbell, K, Connolly, Davis, Erickson, Filer, Fornstrom, Geringer, Guggenmos, Harshman, Haroldson, Heiner, Hoeft, Jarvis, Johnson, Knapp, Larsen, L, Larson, JT, Lawley, Lien, Locke, Lucas, McCann, Nicholas, Ottman, Posey, Pendergraft, Riggins, Provenza, Rodriguez-Williams, Sherwood, Schmid, Smith, Storer, Strock, Styvar, Tarver, Thayer, Wasserburger, Washut, Webb, Wharff, Webber, Williams, Winter, Wylie, Yin, Neiman",
+   "yesVotesCount": 60
+  },
+  {
+   "absentVotes": "Singh",
+   "absentVotesCount": 1,
+   "action": "Did Not Override Line Item Veto 41-19-1-1-0",
+   "amendmentNumber": "SF0001VT007",
+   "billNumber": "SF0001",
+   "chamber": "H",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Kelly",
+   "excusedVotesCount": 1,
+   "noVotes": "Brown, L, Campbell, E, Chestek, Davis, Connolly, Harshman, Jarvis, Larson, JT, Larsen, L, Nicholas, Provenza, Posey, Riggins, Sherwood, Storer, Thayer, Washut, Yin, Wylie",
+   "noVotesCount": 19,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-03-06T19:04:27",
+   "voteID": 5548,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Allemand, Andrew, Angelos, Banks, Bear, Brady, Bratten, Brown, G, Byron, Campbell, K, Clouston, Erickson, Filer, Geringer, Fornstrom, Guggenmos, Haroldson, Heiner, Hoeft, Johnson, Knapp, Lien, Lawley, Locke, Lucas, McCann, Ottman, Pendergraft, Rodriguez-Williams, Schmid, Smith, Strock, Styvar, Tarver, Webb, Wasserburger, Webber, Wharff, Williams, Winter, Neiman",
+   "yesVotesCount": 41
+  }
+ ],
+ "scheduledActions": [],
+ "showPDF": true,
+ "signedDate": "3/6/2026",
+ "specialSessionValue": null,
+ "sponsor": "Appropriations",
+ "sponsorStringHouse": "",
+ "sponsorStringSenate": "",
+ "sponsors": [
+  {
+   "house": null,
+   "name": "Appropriations",
+   "primarySponsor": true,
+   "sponsorTitle": null
+  }
+ ],
+ "substitute": null,
+ "substituteBills": [],
+ "summary": "2026/Summaries/SF0001.pdf",
+ "summaryHTML": null,
+ "veto": null,
+ "vetoLinkText": null,
+ "vetoes": [
+  {
+   "billInformationID": 0,
+   "customEnrolledLinkText": null,
+   "customEnrolledPath": null,
+   "id": 0,
+   "linkType": "Veto",
+   "sortOrder": 10,
+   "vetoLinkPath": "2026/Veto/SF0001Line-Item Veto Message SF001 SEA27 3_5_2026.pdf",
+   "vetoLinkText": "Governor's Line Item Veto Message"
+  },
+  {
+   "billInformationID": 0,
+   "customEnrolledLinkText": null,
+   "customEnrolledPath": null,
+   "id": 0,
+   "linkType": "Veto",
+   "sortOrder": 20,
+   "vetoLinkPath": "2026/Veto/SF00012026 SF0001 Vetoes.pdf",
+   "vetoLinkText": "Governor's Line Item Vetoes"
+  },
+  {
+   "billInformationID": 0,
+   "customEnrolledLinkText": null,
+   "customEnrolledPath": null,
+   "id": 0,
+   "linkType": "Veto",
+   "sortOrder": 30,
+   "vetoLinkPath": "2026/Veto/SF0001-Chapter.pdf",
+   "vetoLinkText": "Chaptered Law with Final Veto Actions"
+  }
+ ],
+ "year": 2026
+}

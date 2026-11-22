@@ -1,0 +1,413 @@
+{
+ "amendments": [
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB0010H2001",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "001",
+   "sponsor": "Representative Yin",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB0010H2002",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "002",
+   "sponsor": "Representative Jarvis",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB0010H2003",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "003",
+   "sponsor": "Representative Connolly",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB0010H2004",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "004",
+   "sponsor": "Representative Larsen, L",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB0010H3001",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "001",
+   "sponsor": "Representative Jarvis",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB0010HS001",
+   "house": "H",
+   "id": 0,
+   "order": "Standing Committee",
+   "sequence": "001",
+   "sponsor": "House Judiciary Committee",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB0010HW001",
+   "house": "H",
+   "id": 0,
+   "order": "Committee of the Whole",
+   "sequence": "001",
+   "sponsor": "Representative Davis",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB0010HW002",
+   "house": "H",
+   "id": 0,
+   "order": "Committee of the Whole",
+   "sequence": "002",
+   "sponsor": "Representative Bratten",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB0010SS001",
+   "house": "S",
+   "id": 0,
+   "order": "Standing Committee",
+   "sequence": "001",
+   "sponsor": "Senate Judiciary Committee",
+   "status": ""
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB0010SW001",
+   "house": "S",
+   "id": 0,
+   "order": "Committee of the Whole",
+   "sequence": "001",
+   "sponsor": "Senator Olsen",
+   "status": ""
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB0010SW002",
+   "house": "S",
+   "id": 0,
+   "order": "Committee of the Whole",
+   "sequence": "002",
+   "sponsor": "Senator Cooper",
+   "status": ""
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB0010SW003",
+   "house": "S",
+   "id": 0,
+   "order": "Committee of the Whole",
+   "sequence": "003",
+   "sponsor": "Senator Brennan",
+   "status": ""
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB0010SW004",
+   "house": "S",
+   "id": 0,
+   "order": "Committee of the Whole",
+   "sequence": "004",
+   "sponsor": "Senator Love",
+   "status": ""
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB0010SW005",
+   "house": "S",
+   "id": 0,
+   "order": "Committee of the Whole",
+   "sequence": "005",
+   "sponsor": "Senator Love",
+   "status": ""
+  }
+ ],
+ "bill": "HB0010",
+ "billActions": [
+  {
+   "billInformationID": 12973,
+   "location": "Senate",
+   "statusDate": "2026-03-04T16:45:00",
+   "statusMessage": "S Motion to Suspend Rules to Resolve into COW & Place at the Top of GF Failed 13-18-0-0-0",
+   "voteId": "485"
+  },
+  {
+   "billInformationID": 12973,
+   "location": "Senate",
+   "statusDate": "2026-03-03T20:43:55",
+   "statusMessage": "S COW:S Did not consider for COW",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 12973,
+   "location": "Senate",
+   "statusDate": "2026-02-26T10:28:39",
+   "statusMessage": "S Placed on General File",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 12973,
+   "location": "Senate",
+   "statusDate": "2026-02-26T10:28:33",
+   "statusMessage": "S01 - Judiciary:Recommend Amend and Do Pass 3-2-0-0-0",
+   "voteId": "-307"
+  },
+  {
+   "billInformationID": 12973,
+   "location": "Senate",
+   "statusDate": "2026-02-23T10:33:35",
+   "statusMessage": "S Introduced and Referred to S01 - Judiciary",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 12973,
+   "location": "Senate",
+   "statusDate": "2026-02-20T17:02:53",
+   "statusMessage": "S Received for Introduction",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 12973,
+   "location": "House",
+   "statusDate": "2026-02-20T11:07:22",
+   "statusMessage": "H 3rd Reading:Passed 48-13-1-0-0",
+   "voteId": "5275"
+  },
+  {
+   "billInformationID": 12973,
+   "location": "House",
+   "statusDate": "2026-02-19T10:52:49",
+   "statusMessage": "H 2nd Reading:Passed",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 12973,
+   "location": "House",
+   "statusDate": "2026-02-18T23:24:30",
+   "statusMessage": "H 2nd Reading:Laid Back",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 12973,
+   "location": "House",
+   "statusDate": "2026-02-17T11:00:20",
+   "statusMessage": "H 2nd Reading:Laid Back",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 12973,
+   "location": "House",
+   "statusDate": "2026-02-16T16:32:42",
+   "statusMessage": "H COW:Passed",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 12973,
+   "location": "House",
+   "statusDate": "2026-02-13T19:17:11",
+   "statusMessage": "H Placed on General File",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 12973,
+   "location": "House",
+   "statusDate": "2026-02-13T19:17:04",
+   "statusMessage": "H01 - Judiciary:Recommend Amend and Do Pass 6-1-2-0-0",
+   "voteId": "-95"
+  },
+  {
+   "billInformationID": 12973,
+   "location": "House",
+   "statusDate": "2026-02-09T16:11:13",
+   "statusMessage": "H Introduced and Referred to H01 - Judiciary 46-16-0-0-0",
+   "voteId": "5043"
+  },
+  {
+   "billInformationID": 12973,
+   "location": "House",
+   "statusDate": "2026-01-09T16:01:52",
+   "statusMessage": "H Received for Introduction",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 12973,
+   "location": "LSO",
+   "statusDate": "2025-12-01T10:27:11",
+   "statusMessage": "Bill Number Assigned",
+   "voteId": ""
+  }
+ ],
+ "billStatus": "inactive",
+ "billTitle": "AN ACT relating to libraries and education; specifying requirements for county libraries and school libraries to govern access to sexually explicit materials by minors; providing definitions; providing a cause of action for violations; specifying penalties; making conforming amendments; and providing for an effective date.",
+ "billType": "HB",
+ "catchTitle": "Sexually explicit materials in libraries-requirements.",
+ "chapter": "",
+ "concurrenceLink": null,
+ "currentBillHTML": null,
+ "customEnrolledLinkText": null,
+ "customEnrolledPath": null,
+ "digest": "2026/Digest/HB0010.pdf",
+ "digestHTML": null,
+ "effectiveDate": "3/1/2026",
+ "engrossedVersion": "2026/Engross/HB0010.pdf",
+ "enrolledAct": null,
+ "enrolledNumber": "",
+ "fiscalNote": "2026/Fiscal/HB0010.pdf",
+ "fiscalNoteHTML": null,
+ "id": 12973,
+ "introduced": "2026/Introduced/HB0010.pdf",
+ "isEngrossed": false,
+ "isPublic": null,
+ "lastAction": "S Motion to Suspend Rules to Resolve into COW & Place at the Top of GF Failed 13-18-0-0-0",
+ "lastActionDate": "2026-03-04T00:00:00",
+ "lsoNumber": null,
+ "rollCalls": [
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "H Introduced and Referred to H01 - Judiciary 46-16-0-0-0",
+   "amendmentNumber": null,
+   "billNumber": "HB0010",
+   "chamber": "H",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Byron, Brown, L, Campbell, E, Chestek, Connolly, Clouston, Davis, Jarvis, Nicholas, Posey, Provenza, Schmid, Sherwood, Storer, Williams, Yin",
+   "noVotesCount": 16,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-09T16:11:13",
+   "voteID": 5043,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Allemand, Andrew, Angelos, Banks, Bear, Brady, Bratten, Brown, G, Campbell, K, Erickson, Filer, Fornstrom, Geringer, Guggenmos, Haroldson, Harshman, Heiner, Hoeft, Johnson, Kelly, Knapp, Larsen, L, Larson, JT, Lawley, Lien, Locke, Lucas, McCann, Ottman, Pendergraft, Rodriguez-Williams, Riggins, Singh, Smith, Strock, Styvar, Washut, Tarver, Webb, Thayer, Webber, Wasserburger, Wharff, Winter, Wylie, Neiman",
+   "yesVotesCount": 46
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "H01 - Judiciary:Recommend Amend and Do Pass 6-1-2-0-0",
+   "amendmentNumber": null,
+   "billNumber": "HB0010",
+   "chamber": "H",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "FILER, KELLY",
+   "excusedVotesCount": 2,
+   "noVotes": "CHESTEK",
+   "noVotesCount": 1,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-13T19:17:04",
+   "voteID": -95,
+   "voteType": "C",
+   "year": 2026,
+   "yesVotes": "BRADY, BRATTEN, LIEN, SINGH, WEBB, WASHUT",
+   "yesVotesCount": 6
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "H 3rd Reading:Passed 48-13-1-0-0",
+   "amendmentNumber": null,
+   "billNumber": "HB0010",
+   "chamber": "H",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Kelly",
+   "excusedVotesCount": 1,
+   "noVotes": "Brown, L, Byron, Campbell, E, Chestek, Connolly, Jarvis, Nicholas, Posey, Provenza, Sherwood, Storer, Williams, Yin",
+   "noVotesCount": 13,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-20T11:07:22",
+   "voteID": 5275,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Allemand, Andrew, Angelos, Banks, Brady, Bear, Bratten, Brown, G, Campbell, K, Clouston, Davis, Erickson, Filer, Fornstrom, Geringer, Guggenmos, Haroldson, Harshman, Heiner, Hoeft, Johnson, Knapp, Larsen, L, Larson, JT, Lawley, Lien, Lucas, Locke, McCann, Ottman, Pendergraft, Riggins, Schmid, Rodriguez-Williams, Smith, Singh, Strock, Styvar, Tarver, Washut, Thayer, Wasserburger, Webb, Wharff, Webber, Winter, Wylie, Neiman",
+   "yesVotesCount": 48
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "S01 - Judiciary:Recommend Amend and Do Pass 3-2-0-0-0",
+   "amendmentNumber": null,
+   "billNumber": "HB0010",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "CRAGO, CRUM",
+   "noVotesCount": 2,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-26T10:28:33",
+   "voteID": -307,
+   "voteType": "C",
+   "year": 2026,
+   "yesVotes": "HICKS, KOLB, OLSEN",
+   "yesVotesCount": 3
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "S Motion to Suspend Rules to Resolve into COW & Place at the Top of GF Failed 13-18-0-0-0",
+   "amendmentNumber": null,
+   "billNumber": "HB0010",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Anderson, Barlow, Brennan, Case, Cooper, Crago, Dockstader, Crum, Driskill, Gierau, Landen, Love, Olsen, Nethercott, Pappas, Rothfuss, Schuler, Scott",
+   "noVotesCount": 18,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-03-04T16:45:00",
+   "voteID": 485,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Boner, French, Hicks, Hutchings, Ide, Jones, Kolb, Laursen, McKeown, Pearson, Salazar, Steinmetz, Biteman",
+   "yesVotesCount": 13
+  }
+ ],
+ "scheduledActions": [],
+ "showPDF": false,
+ "signedDate": "",
+ "specialSessionValue": null,
+ "sponsor": "Judiciary",
+ "sponsorStringHouse": "",
+ "sponsorStringSenate": "",
+ "sponsors": [
+  {
+   "house": null,
+   "name": "Judiciary",
+   "primarySponsor": true,
+   "sponsorTitle": null
+  }
+ ],
+ "substitute": null,
+ "substituteBills": [],
+ "summary": null,
+ "summaryHTML": null,
+ "veto": null,
+ "vetoLinkText": null,
+ "vetoes": [],
+ "year": 2026
+}
