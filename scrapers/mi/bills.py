@@ -7,7 +7,7 @@ import requests
 import scrapelib
 import collections
 import typing
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 from datetime import date
 from utils.media import get_media_type
 
@@ -765,6 +765,7 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
         self.scrape_legal(bill, page)
         self.scrape_sponsors(bill, page)
         self.scrape_subjects(bill, page)
+        self.scrape_analysis_related(bill, page)
         self.scrape_versions(bill, page)
         yield from self.scrape_votes(bill, page)
         yield bill
@@ -1142,6 +1143,37 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
             "//div[@id='CateogryList']/a|//div[@id='CategoryList']/a"
         ):
             bill.add_subject(row.xpath("text()")[0].strip())
+
+    def scrape_analysis_related(self, bill: Bill, page: lxml.html.HtmlElement):
+        """OPEN-648: Michigan publishes no companion list. The one place a bill page names other
+        bills is the Analysis section: each fiscal agency document says "This document analyzes
+        HB5152, HB5153" (a package analysed together). Ramon, 2026-11-22: store them as related,
+        never companion, labelled with the agency's own heading ("House Fiscal Agency Analysis");
+        a bill analysed by both agencies carries both, "; "-joined."""
+        own_no = _mi_bill_id_to_no(bill.identifier)
+        found = {}  # (bill no, session) -> [agency headings]
+        for section in page.xpath("//div[contains(@id, 'AnalysisSection')]"):
+            agency = section.xpath("string(h3)").strip()
+            for span in section.xpath(
+                ".//span[starts-with(normalize-space(.), 'This document analyzes')]"
+            ):
+                for link in span.xpath("a"):
+                    no = _mi_bill_id_to_no(link.text_content())
+                    if not no or no == own_no:
+                        continue
+                    query = parse_qs(urlparse(link.get("href", "")).query)
+                    session = query.get("sessions", [bill.legislative_session])[0]
+                    agencies = found.setdefault((no, session), [])
+                    if agency and agency not in agencies:
+                        agencies.append(agency)
+        for (no, session), agencies in found.items():
+            # core's fix_bill_id spaces it ("HJRE" -> "HJR E", "HB5805" -> "HB 5805")
+            bill.add_related_bill(
+                no,
+                session,
+                "related",
+                label="; ".join(agencies) or None,
+            )
 
     def scrape_versions(self, bill: Bill, page: lxml.html.HtmlElement):
         for row in page.xpath("//div[@class='billDocuments']/div[@class='billDocRow']"):
