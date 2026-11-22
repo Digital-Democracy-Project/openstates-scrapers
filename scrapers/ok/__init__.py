@@ -20,12 +20,13 @@ class Oklahoma(State):
     # former.okhouse.gov/Publications/HouseJournals.aspx, Senate: oksenate.gov/calendar/journals).
     # A session starts on its first legislative day (an odd year's January Organizational Day) and
     # ends on its official close as the journals record it (Ramon, 2026-11-22): the sine die day,
-    # including one set by concurrent resolution after the last sitting, or the day an
-    # extraordinary session expired with its Legislature. A two-year entry (2011-2012 to
-    # 2017-2018) runs from its first year's start to its second year's close; "2019-2020" holds
-    # only 2019. Special sessions keep their own dates, even where they ran alongside a regular
-    # session. 2027 is from okhouse.gov/leg_deadlines. 2012SS1 is unchecked: neither chamber
-    # lists a journal for it.
+    # including one set by concurrent resolution after the last sitting. A special session that
+    # simply expired with its Legislature ends on the day the first chamber formally closed it, or
+    # the last day either chamber met if neither did. A two-year entry (2011-2012 to 2017-2018)
+    # runs from its first year's start to its second year's close; "2019-2020" holds only 2019.
+    # Special sessions keep their own dates, even where they ran alongside a regular session.
+    # 2027 is from okhouse.gov/leg_deadlines. 2012SS1 is unchecked: neither chamber lists a
+    # journal for it.
     legislative_sessions = [
         {
             "_scraped_name": "2012 Regular Session",
@@ -156,7 +157,7 @@ class Oklahoma(State):
             "identifier": "2022SS3",
             "name": "2022 Third Special Session",
             "start_date": "2022-06-13",
-            "end_date": "2022-11-22",
+            "end_date": "2022-06-15",
             "active": False,
         },
         {
@@ -183,7 +184,7 @@ class Oklahoma(State):
             "identifier": "2023S2",
             "name": "2023 Second Special Session",
             "start_date": "2023-10-03",
-            "end_date": "2024-11-19",
+            "end_date": "2023-10-03",
             "active": False,
         },
         {
@@ -201,7 +202,7 @@ class Oklahoma(State):
             "identifier": "2024S3",
             "name": "2024 Third Special Session",
             "start_date": "2024-01-29",
-            "end_date": "2024-11-19",
+            "end_date": "2024-05-20",
             "active": False,
         },
         {

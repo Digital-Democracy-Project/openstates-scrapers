@@ -306,8 +306,9 @@ def test_no_regular_session_covers_a_special_session(state):
 
 
 # OPEN-755 (Oklahoma): each session's first legislative day and its official close (sine die,
-# including one set by concurrent resolution, or expiry with its Legislature; Ramon 2026-11-22)
-# in the House Journals (former.okhouse.gov) and Senate Journals (oksenate.gov/calendar/journals),
+# including one set by concurrent resolution; for a special session that expired with its
+# Legislature, the first chamber's sine die, else the last day either chamber met; Ramon
+# 2026-11-22) in the House Journals (former.okhouse.gov) and Senate Journals (oksenate.gov/calendar/journals),
 # read 2026-11-22; 2027 from the House's published schedule (okhouse.gov/leg_deadlines).
 # Oklahoma is not in the no-overlap test above (Ramon 2026-11-22, "Keep true dates"): its two-year
 # entries hold the special sessions held between their two years, and its special sessions ran
@@ -328,12 +329,12 @@ OK_JOURNAL_DATES = {
     "2022": ("2022-02-07", "2022-05-27"),
     "2021SS1": ("2021-11-15", "2021-11-26"),
     "2022SS2": ("2022-05-18", "2022-10-14"),
-    "2022SS3": ("2022-06-13", "2022-11-22"),
+    "2022SS3": ("2022-06-13", "2022-06-15"),
     "2023": ("2023-01-03", "2023-05-26"),
     "2023S1": ("2023-05-17", "2023-07-31"),
-    "2023S2": ("2023-10-03", "2024-11-19"),
+    "2023S2": ("2023-10-03", "2023-10-03"),
     "2024": ("2024-02-05", "2024-05-30"),
-    "2024S3": ("2024-01-29", "2024-11-19"),
+    "2024S3": ("2024-01-29", "2024-05-20"),
     "2024S4": ("2024-06-12", "2024-07-15"),
     "2025": ("2025-01-07", "2025-05-30"),
     "2026": ("2026-02-02", "2026-05-14"),
