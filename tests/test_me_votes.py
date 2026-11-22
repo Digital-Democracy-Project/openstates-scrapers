@@ -14,7 +14,11 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
 
 from openstates.scrape import Bill  # noqa: E402
 
-from classify_motion import KNOWN_JURISDICTIONS, classify_motion, yes_is_against  # noqa: E402
+from classify_motion import (  # noqa: E402
+    KNOWN_JURISDICTIONS,
+    classify_motion,
+    yes_is_against,
+)
 from me import Maine  # noqa: E402
 from me.bills import (  # noqa: E402
     FINAL_ROLL_CALL,
@@ -375,7 +379,9 @@ OUGHT_NOT_TO_PASS_TEXTS = {
 
 @pytest.mark.parametrize("text", ALL_TEXTS_132, ids=lambda t: t["motion"])
 def test_yes_is_against_exactly_on_ought_not_to_pass(text):
-    assert yes_is_against("me", text["motion"]) is (text["motion"] in OUGHT_NOT_TO_PASS_TEXTS)
+    assert yes_is_against("me", text["motion"]) is (
+        text["motion"] in OUGHT_NOT_TO_PASS_TEXTS
+    )
 
 
 def test_the_ought_not_to_pass_texts_are_the_307_roll_calls():
