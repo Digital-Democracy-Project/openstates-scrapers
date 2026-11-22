@@ -444,6 +444,13 @@ jurisdictions:
       - "^concur in (house|senate) amendments$"                  # Senate (and the House's form, if it ever names them)
       - "^concur in (house amendments to senate|senate amendments to house) amendments$"
       - "^concurrence in (house|senate) amendments as amended$"
+      # BROKER-579 (Ramon, 2026-11-22: "Count overrides too"; the override replaces the chamber's earlier
+      # passage vote, as for nc, mt, ms, hi, md): the House's whole-bill veto override roll call is "MOT
+      # OVERRIDE", with the mover's name after it when the page gives one (palegis.us, 2019-2020: HB 2388, roll call
+      # 1340, "MOT OVERRIDE", 115-87; HB 2513, roll call 1688, "MOT OVERRIDE" / "BENNINGHOFF", which the scraper
+      # joins into "MOT OVERRIDE BENNINGHOFF", 133-69). No Senate override roll call was found (SB 327, HB 1100 and
+      # HB 2513 of 2019-2020 have none), and no line-item override was read: those texts stay unlabelled.
+      - '^mot override\b'
     default: null
 
   # OPEN-700 (Maryland, gate E). The motion text is the last line above the tally of a roll-call PDF
@@ -484,10 +491,16 @@ jurisdictions:
       - "^returned to select file"
       - "^motion to return"
       - "^adopted$"
-      - "notwithstanding the objections"         # governor's veto override attempt
       - ' (adopted|lost|failed|prevailed|withdrawn)$'   # "Hansen AM1097 lost", "Arch AM1312 adopted", "Dorn MO30 prevailed"
     passage:
       - "^(passed|failed) on final reading"      # includes "with Emergency Clause" and "Emergency Clause stricken"
+      # BROKER-579 (Ramon, 2026-11-22: "Count overrides too"; it replaces the earlier final reading, as for nc,
+      # mt, ms, hi, md): the whole-bill veto override, lost or carried. 2025 rows carry the result text with the
+      # vote ("Failed to become law notwithstanding the objections of the Governor 24-24-1", LB 319 and LB 287 of
+      # 2025). From 2026 the vote is on the motion's row ("Cavanaugh, J. MO585 failed", LB 1256): the ne scraper
+      # labels that one from the motion's filed text (override_motions() in ne/bills.py). A line-item override
+      # stays unlabelled (no such text seen).
+      - '^(?!.*\bline[- ]item).*\bnotwithstanding the objections of the governor\b'
     default: null
 
   la:
@@ -507,6 +520,11 @@ jurisdictions:
       - "^adopt$"                                # Senate: "Conference Committee Report read; adopted ..." (HB, SB),
                                                  # or a Senate resolution "Read by title and adopted ..." (SR, SCR)
       - "^final consideration$"                  # House: a resolution "... roll called on final consideration ... adopted"
+      # BROKER-579 (Ramon, 2026-11-22: "Count overrides too"; it replaces the chamber's earlier passage vote, as
+      # for nc, mt, ms, hi, md): a veto override, voted on the regular-session bill in the veto session. HB 648 of
+      # 2023 (legis.la.gov): House "PASS BILL SUBSEQUENT TO VETO (#40)" ("Veto overridden by two-thirds vote of
+      # the elected members"), Senate "PASS SUBSEQUENT TO VETO (#5)".
+      - "^pass (bill )?subsequent to veto$"
     # Left unclassified (default): "REJECT" / "REJECT SENATE AMENDMENTS" (refuse the other chamber's
     # amendments, a conference follows), "CO-AUTHORS", "MODIFY TIME LIMITS" and other procedure.
     default: null
@@ -634,7 +652,7 @@ jurisdictions:
       - "resolution adopted in conjunction with" # "Rules suspended. Resolution adopted in conjunction with the 2025 Rules of the House."
       - "concurred in (house|senate) amendments and re(passed|adopted)"   # concurrence = passage (ut, mi, wa, va, al, nc)
       - "adopted conference committee report"    # conference report adoption = passage (ut, mi, va, al, nc)
-      - "notwithstanding governor['’]s veto"      # FOR RAMON: veto override counted as passage, as nc (Ramon, 2026-11-16); ma and ne do not
+      - "notwithstanding governor['’]s veto"      # FOR RAMON: veto override counted as passage, as nc (Ramon, 2026-11-16); ma does not (ne, pa and la do since BROKER-579)
     default: null
 
   # OPEN-677 (Wyoming, gate E). The motion text is the roll call's action from Wyoming's bill API

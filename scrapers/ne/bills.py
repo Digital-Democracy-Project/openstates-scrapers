@@ -24,6 +24,26 @@ VOTE_PASSED = re.compile(
 )
 
 
+# BROKER-579: since 2026 an override roll call sits on its motion's row ("Cavanaugh, J. MO585 failed",
+# LB 1256), and only the motion's filed row says what it is ("Cavanaugh, J. MO585 That LB1256 becomes law
+# notwithstanding the objections of the Governor filed"; 2025: "Rountree MO259 That the bill becomes law ...").
+# A whole-bill override only: a line-item one stays unlabelled.
+OVERRIDE_MOTION = re.compile(
+    r"\b(MO\d+)\s+That\b(?!.*\bline[- ]item).*\bbecomes? law notwithstanding the objections of the Governor\b",
+    re.I,
+)
+VOTE_ON_MOTION = re.compile(r"\b(MO\d+)\s+(prevailed|failed|lost)\b", re.I)
+
+
+def override_motions(history_texts):
+    """The bill's motion numbers ("MO585") filed as a veto override."""
+    return {
+        m.group(1).upper()
+        for m in (OVERRIDE_MOTION.search(text) for text in history_texts)
+        if m
+    }
+
+
 def vote_passed(motion_text):
     if VOTE_FAILED.search(motion_text):
         return False
@@ -320,6 +340,14 @@ class NEBillScraper(Scraper, LXMLMixin):
         vote_links = bill_page.xpath(
             '//table[contains(@class,"history")]//a[contains(@href, "view_votes")]'
         )
+        overrides = override_motions(
+            tds[1].text_content()
+            for tds in (
+                row.xpath("./td")
+                for row in bill_page.xpath('//table[contains(@class,"history")]//tr')
+            )
+            if len(tds) > 1
+        )
         for vote_link in vote_links:
             vote_url = vote_link.attrib["href"]
             date_td, motion_td, *_ = vote_link.xpath("ancestor::tr/td")
@@ -333,7 +361,12 @@ class NEBillScraper(Scraper, LXMLMixin):
                 chamber=chamber,
                 start_date=TIMEZONE.localize(date),
                 motion_text=motion_text,
-                classification=classify_motion("ne", motion_text),
+                classification=(
+                    ["passage"]
+                    if (m := VOTE_ON_MOTION.search(motion_text))
+                    and m.group(1).upper() in overrides
+                    else classify_motion("ne", motion_text)
+                ),
                 result="pass" if passed else "fail",
             )
 
