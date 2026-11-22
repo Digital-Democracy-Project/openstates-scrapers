@@ -42,6 +42,22 @@ class Montana(State):
             "start_date": "2017-01-02",
             "end_date": "2017-04-29",
         },
+        # OPEN-749: the archive API lists 20172 "November Special Session" (sessionTypeDesc
+        # "Special", ordinal 65), a session of its own. Its dates are the journals': both
+        # chambers convened November 14, 2017 (House and Senate Journal, first legislative day)
+        # and adjourned sine die after midnight, on November 16, 2017 (House at 1:07 a.m.,
+        # Senate at 12:36 a.m.; leg.mt.gov/bills/Specsess/1117/). The ordinal lets the document
+        # endpoints (versions, fiscal notes) find its bills.
+        {
+            "_scraped_name": "20172",
+            "classification": "special",
+            "identifier": "2017s1",
+            "name": "2017 November Special Session",
+            "start_date": "2017-11-14",
+            "end_date": "2017-11-16",
+            "active": False,
+            "extras": {"legislatureOrdinal": 65, "newAPIIdentifier": None},
+        },
         {
             "_scraped_name": "20191",
             "classification": "primary",
@@ -93,7 +109,6 @@ class Montana(State):
     ]
     ignored_scraped_sessions = [
         "20271",
-        "20172",
         "20091",
         "20072",
         "20071",

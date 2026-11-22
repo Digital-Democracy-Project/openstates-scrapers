@@ -51,8 +51,8 @@ read on 2026-11-17:
 * Montana (OPEN-734, read 2026-11-21): the two session endpoints get_session_list reads,
   api.legmt.gov/archive/v1/sessions (sessionTypeDesc "Regular" for 2011 to 2023) and
   api.legmt.gov/legislators/v1/sessions (type REGULAR for 2025 and 2027); its one special session
-  in that span, 20172 ("November Special Session"), is in ignored_scraped_sessions, so every
-  session in the list is regular.
+  in that span, 20172 ("November Special Session", sessionTypeDesc "Special"), is a session of its
+  own since OPEN-749, 2017s1; every other session in the list is regular.
 * North Dakota (OPEN-721, read 2026-11-20): ndlegis.gov/assembly/ lists only two-year Legislative
   Assemblies, which are regular sessions; it keeps later special sessions inside their assembly,
   so only 67S1 (November 2021) is special.
@@ -119,7 +119,7 @@ SPECIAL = {
         "20261E",
     },
     "mo": {"2019S1", "2020S1", "2020S2", "2021S1", "2022S1", "2025S1", "2025S2"},
-    "mt": set(),
+    "mt": {"2017s1"},
     "nd": {"67S1"},
     "ok": {
         "2012SS1",

@@ -1,0 +1,130 @@
+[
+ {
+  "ordinal": 68,
+  "sessionId": 20231,
+  "sessionName": "68th Regular Session",
+  "sessionTypeCode": "R",
+  "sessionTypeDesc": "Regular",
+  "sessionYear": 2023
+ },
+ {
+  "ordinal": 67,
+  "sessionId": 20211,
+  "sessionName": "67th Regular Session",
+  "sessionTypeCode": "R",
+  "sessionTypeDesc": "Regular",
+  "sessionYear": 2021
+ },
+ {
+  "ordinal": 66,
+  "sessionId": 20191,
+  "sessionName": "66th Regular Session",
+  "sessionTypeCode": "R",
+  "sessionTypeDesc": "Regular",
+  "sessionYear": 2019
+ },
+ {
+  "ordinal": 65,
+  "sessionId": 20172,
+  "sessionName": "November Special Session",
+  "sessionTypeCode": "S",
+  "sessionTypeDesc": "Special",
+  "sessionYear": 2017
+ },
+ {
+  "ordinal": 65,
+  "sessionId": 20171,
+  "sessionName": "65th Regular Session",
+  "sessionTypeCode": "R",
+  "sessionTypeDesc": "Regular",
+  "sessionYear": 2017
+ },
+ {
+  "ordinal": 64,
+  "sessionId": 20151,
+  "sessionName": "64th Regular Session",
+  "sessionTypeCode": "R",
+  "sessionTypeDesc": "Regular",
+  "sessionYear": 2015
+ },
+ {
+  "ordinal": 63,
+  "sessionId": 20131,
+  "sessionName": "63rd Regular Session",
+  "sessionTypeCode": "R",
+  "sessionTypeDesc": "Regular",
+  "sessionYear": 2013
+ },
+ {
+  "ordinal": 62,
+  "sessionId": 20111,
+  "sessionName": "62nd Regular Session",
+  "sessionTypeCode": "R",
+  "sessionTypeDesc": "Regular",
+  "sessionYear": 2011
+ },
+ {
+  "ordinal": 61,
+  "sessionId": 20091,
+  "sessionName": "61st Regular Session",
+  "sessionTypeCode": "R",
+  "sessionTypeDesc": "Regular",
+  "sessionYear": 2009
+ },
+ {
+  "ordinal": 60,
+  "sessionId": 20071,
+  "sessionName": "60th Regular Session",
+  "sessionTypeCode": "R",
+  "sessionTypeDesc": "Regular",
+  "sessionYear": 2007
+ },
+ {
+  "ordinal": 60,
+  "sessionId": 20072,
+  "sessionName": "May Special Session",
+  "sessionTypeCode": "S",
+  "sessionTypeDesc": "Special",
+  "sessionYear": 2007
+ },
+ {
+  "ordinal": 59,
+  "sessionId": 20051,
+  "sessionName": "59th Regular Session",
+  "sessionTypeCode": "R",
+  "sessionTypeDesc": "Regular",
+  "sessionYear": 2005
+ },
+ {
+  "ordinal": 56,
+  "sessionId": 20052,
+  "sessionName": "December Special Session",
+  "sessionTypeCode": "S",
+  "sessionTypeDesc": "Special",
+  "sessionYear": 2005
+ },
+ {
+  "ordinal": 58,
+  "sessionId": 20031,
+  "sessionName": "58th Regular Session",
+  "sessionTypeCode": "R",
+  "sessionTypeDesc": "Regular",
+  "sessionYear": 2003
+ },
+ {
+  "ordinal": 57,
+  "sessionId": 20011,
+  "sessionName": "57th Regular Session",
+  "sessionTypeCode": "R",
+  "sessionTypeDesc": "Regular",
+  "sessionYear": 2001
+ },
+ {
+  "ordinal": 56,
+  "sessionId": 19991,
+  "sessionName": "56th Regular Session",
+  "sessionTypeCode": "R",
+  "sessionTypeDesc": "Regular",
+  "sessionYear": 1999
+ }
+]
