@@ -11,20 +11,10 @@ class Wyoming(State):
     # OPEN-752 (read 2026-11-22): names, types and dates mirror the legislature's own record.
     # The session menu on wyoleg.gov/Legislation/<year> names a General Session in odd years, a
     # Budget Session in even years (both regular) and a Special Session in 2020 and 2021 (and
-    # 2004, before this list). Start dates are the first numbered legislative day on
+    # 2004, before this list). Dates are the first and last numbered legislative day on
     # wyoleg.gov/Session/<year>/Archive ("Prior Session Calendars"; the same days are in
     # lsoservice.wyoleg.gov/api/Session, specialSessionValue 1 for the special sessions). A
     # session marked "special" here reads only that year's special-session bills (bills.py).
-    # OPEN-756 (Ramon 2026-11-22: the end is the official close, including one set by motion or
-    # resolution after the last sitting): every session, the 2020 and 2021 special sessions
-    # included, closed on its last day with identical motions in both houses ("CLOSING OF
-    # SESSION") that "if no such time is established before December 31, <year>, ... [the
-    # session] is adjourned sine die effective at 12:00 o'clock noon on that date"; none was
-    # recalled (2026's close holds unless it is recalled before then). So each ends on December
-    # 31 of its year. Sources: the House and Senate Journals,
-    # wyoleg.gov/<year>/HouseDigest.pdf and SenateDigest.pdf to 2022 (the 2020 and 2021 special
-    # sessions are in the next year's file), wyoleg.gov/<year>/HouseJournal.pdf and
-    # SenateJournal.pdf from 2023.
     legislative_sessions = [
         {
             "_scraped_name": "2011",
@@ -32,7 +22,7 @@ class Wyoming(State):
             "identifier": "2011",
             "name": "2011 General Session",
             "start_date": "2011-01-11",
-            "end_date": "2011-12-31",
+            "end_date": "2011-03-08",
         },
         {
             "_scraped_name": "2012",
@@ -40,7 +30,7 @@ class Wyoming(State):
             "identifier": "2012",
             "name": "2012 Budget Session",
             "start_date": "2012-02-13",
-            "end_date": "2012-12-31",
+            "end_date": "2012-03-09",
         },
         {
             "_scraped_name": "2013",
@@ -48,7 +38,7 @@ class Wyoming(State):
             "identifier": "2013",
             "name": "2013 General Session",
             "start_date": "2013-01-08",
-            "end_date": "2013-12-31",
+            "end_date": "2013-03-05",
         },
         {
             "_scraped_name": "2014",
@@ -56,7 +46,7 @@ class Wyoming(State):
             "identifier": "2014",
             "name": "2014 Budget Session",
             "start_date": "2014-02-10",
-            "end_date": "2014-12-31",
+            "end_date": "2014-03-07",
         },
         {
             "_scraped_name": "2015",
@@ -64,7 +54,7 @@ class Wyoming(State):
             "identifier": "2015",
             "name": "2015 General Session",
             "start_date": "2015-01-13",
-            "end_date": "2015-12-31",
+            "end_date": "2015-03-11",
         },
         {
             "_scraped_name": "2016",
@@ -72,7 +62,7 @@ class Wyoming(State):
             "identifier": "2016",
             "name": "2016 Budget Session",
             "start_date": "2016-02-08",
-            "end_date": "2016-12-31",
+            "end_date": "2016-03-04",
         },
         {
             "_scraped_name": "2017",
@@ -80,7 +70,7 @@ class Wyoming(State):
             "identifier": "2017",
             "name": "2017 General Session",
             "start_date": "2017-01-10",
-            "end_date": "2017-12-31",
+            "end_date": "2017-03-08",
         },
         {
             "_scraped_name": "2018",
@@ -88,7 +78,7 @@ class Wyoming(State):
             "identifier": "2018",
             "name": "2018 Budget Session",
             "start_date": "2018-02-12",
-            "end_date": "2018-12-31",
+            "end_date": "2018-03-15",
         },
         {
             "_scraped_name": "2019",
@@ -96,7 +86,7 @@ class Wyoming(State):
             "identifier": "2019",
             "name": "2019 General Session",
             "start_date": "2019-01-08",
-            "end_date": "2019-12-31",
+            "end_date": "2019-02-28",
         },
         {
             "_scraped_name": "2020",
@@ -104,7 +94,7 @@ class Wyoming(State):
             "identifier": "2020",
             "name": "2020 Budget Session",
             "start_date": "2020-02-10",
-            "end_date": "2020-12-31",
+            "end_date": "2020-03-12",
         },
         {
             "_scraped_name": "2020S1",
@@ -112,7 +102,7 @@ class Wyoming(State):
             "identifier": "2020S1",
             "name": "2020 Special Session",
             "start_date": "2020-05-15",
-            "end_date": "2020-12-31",
+            "end_date": "2020-05-16",
         },
         {
             "_scraped_name": "2021",
@@ -120,7 +110,7 @@ class Wyoming(State):
             "identifier": "2021",
             "name": "2021 General Session",
             "start_date": "2021-01-12",
-            "end_date": "2021-12-31",
+            "end_date": "2021-04-07",
         },
         {
             "_scraped_name": "2021S1",
@@ -128,7 +118,7 @@ class Wyoming(State):
             "identifier": "2021S1",
             "name": "2021 Special Session",
             "start_date": "2021-10-26",
-            "end_date": "2021-12-31",
+            "end_date": "2021-11-03",
             "active": False,
         },
         {
@@ -137,7 +127,7 @@ class Wyoming(State):
             "identifier": "2022",
             "name": "2022 Budget Session",
             "start_date": "2022-02-14",
-            "end_date": "2022-12-31",
+            "end_date": "2022-03-11",
             "active": False,
         },
         {
@@ -146,7 +136,7 @@ class Wyoming(State):
             "identifier": "2023",
             "name": "2023 General Session",
             "start_date": "2023-01-10",
-            "end_date": "2023-12-31",
+            "end_date": "2023-03-03",
             "active": False,
         },
         {
@@ -155,7 +145,7 @@ class Wyoming(State):
             "identifier": "2024",
             "name": "2024 Budget Session",
             "start_date": "2024-02-12",
-            "end_date": "2024-12-31",
+            "end_date": "2024-03-08",
             "active": False,
         },
         {
@@ -164,7 +154,7 @@ class Wyoming(State):
             "identifier": "2025",
             "name": "2025 General Session",
             "start_date": "2025-01-14",
-            "end_date": "2025-12-31",
+            "end_date": "2025-03-06",
             "active": False,
         },
         {
@@ -173,7 +163,7 @@ class Wyoming(State):
             "identifier": "2026",
             "name": "2026 Budget Session",
             "start_date": "2026-02-09",
-            "end_date": "2026-12-31",
+            "end_date": "2026-03-11",
             "active": True,
         },
     ]

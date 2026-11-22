@@ -81,9 +81,7 @@ read on 2026-11-17:
   "General Session" in odd years and a "Budget Session" in even years (both regular) and a
   "Special Session" in 2020 and 2021 (and 2004, before the scraper's list starts); the
   legislature's session days (lsoservice.wyoleg.gov/api/Session) flag only those two with a
-  specialSessionValue since 2011. Every other session is regular, 2012 included. Since OPEN-756
-  each session ends on its official close, noon on December 31 of its year (House and Senate
-  Journals: the closing motions adjourn it sine die then unless recalled).
+  specialSessionValue since 2011. Every other session is regular, 2012 included.
 """
 import ast
 import os
@@ -275,15 +273,6 @@ def test_ri_sessions_do_not_overlap_and_end_after_they_start():
             assert a["end_date"] < b["start_date"], pair
 
 
-def test_wy_sessions_end_on_their_december_31_sine_die():
-    # OPEN-756: every Wyoming session, special ones included, closed on its last day with
-    # motions in both houses adjourning it sine die at noon on December 31 of that year unless
-    # recalled (none was), so that is its official close, after the session started.
-    for s in _sessions("wy"):
-        assert s["end_date"] == s["identifier"][:4] + "-12-31", s["identifier"]
-        assert s["start_date"] < s["end_date"], s["identifier"]
-
-
 # Sessions the upstream lists had the wrong way round, each checked against the
 # legislature's own record of that session (2026-11-17, Wyoming 2026-11-22).
 CORRECTED = [
@@ -312,10 +301,8 @@ def test_corrected_sessions(state, identifier, classification):
 
 
 # OPEN-752 (Wyoming), OPEN-753 (Idaho): regular and special sessions are separate, each with its
-# own dates, so no regular session's dates may cover a special session's. Wyoming left this test
-# with OPEN-756: its 2020 and 2021 special sessions met while that year's regular session stood
-# adjourned to December 31, and true dates are kept (Ramon 2026-11-22, as for Oklahoma).
-@pytest.mark.parametrize("state", ["id"])
+# own dates, so no regular session's dates may cover a special session's.
+@pytest.mark.parametrize("state", ["id", "wy"])
 def test_no_regular_session_covers_a_special_session(state):
     sessions = _sessions(state)
     regular = [s for s in sessions if s["classification"] == "primary"]
