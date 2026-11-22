@@ -72,7 +72,8 @@ read on 2026-11-17:
   history, previous sessions) offers one regular session a year and names no special or
   extraordinary sessions, so every session is regular. Since OPEN-754 (read 2026-11-22) every
   session runs from the first to the last day either chamber sat, on the House and Senate
-  Journals pages (rilegislature.gov/journals/), each year one "January Session".
+  Journals pages (rilegislature.gov/journals/), each year one "January Session". Since OPEN-756
+  the end is the official close where one is recorded: 2021 closed on 2022-01-04.
 * Virginia: LIS (lis.virginia.gov GetSessionListAsync), SessionType "Special".
 * Washington: leg.wa.gov lists only two-year bienniums, which are regular sessions; its special
   sessions are not separate sessions there.
@@ -80,7 +81,9 @@ read on 2026-11-17:
   "General Session" in odd years and a "Budget Session" in even years (both regular) and a
   "Special Session" in 2020 and 2021 (and 2004, before the scraper's list starts); the
   legislature's session days (lsoservice.wyoleg.gov/api/Session) flag only those two with a
-  specialSessionValue since 2011. Every other session is regular, 2012 included.
+  specialSessionValue since 2011. Every other session is regular, 2012 included. Since OPEN-756
+  each session ends on its official close, noon on December 31 of its year (House and Senate
+  Journals: the closing motions adjourn it sine die then unless recalled).
 """
 import ast
 import os
@@ -256,12 +259,24 @@ def test_every_session_is_classified_as_the_legislature_lists_it(state):
 
 def test_ri_sessions_do_not_overlap_and_end_after_they_start():
     # OPEN-754: each Rhode Island session is one year's sitting days, so none ends before it
-    # starts and no two share a day (a session's later sittings, as in Dec 2020, stay inside it)
+    # starts and no two overlap (a session's later sittings, as in Dec 2020, stay inside it).
+    # OPEN-756: a session may officially close on the day the next one opens (2021 closed on
+    # 2022-01-04), so one shared day is allowed, never more.
     sessions = sorted(_sessions("ri"), key=lambda s: s["start_date"])
     for s in sessions:
         assert s["start_date"] <= s["end_date"], s["identifier"]
     for a, b in zip(sessions, sessions[1:]):
-        assert a["end_date"] < b["start_date"], (a["identifier"], b["identifier"])
+        assert a["end_date"] <= b["start_date"], (a["identifier"], b["identifier"])
+    assert {s["identifier"]: s["end_date"] for s in sessions}["2021"] == "2022-01-04"
+
+
+def test_wy_sessions_end_on_their_december_31_sine_die():
+    # OPEN-756: every Wyoming session, special ones included, closed on its last day with
+    # motions in both houses adjourning it sine die at noon on December 31 of that year unless
+    # recalled (none was), so that is its official close, after the session started.
+    for s in _sessions("wy"):
+        assert s["end_date"] == s["identifier"][:4] + "-12-31", s["identifier"]
+        assert s["start_date"] < s["end_date"], s["identifier"]
 
 
 # Sessions the upstream lists had the wrong way round, each checked against the
@@ -292,8 +307,10 @@ def test_corrected_sessions(state, identifier, classification):
 
 
 # OPEN-752 (Wyoming), OPEN-753 (Idaho): regular and special sessions are separate, each with its
-# own dates, so no regular session's dates may cover a special session's.
-@pytest.mark.parametrize("state", ["id", "wy"])
+# own dates, so no regular session's dates may cover a special session's. Wyoming left this test
+# with OPEN-756: its 2020 and 2021 special sessions met while that year's regular session stood
+# adjourned to December 31, and true dates are kept (Ramon 2026-11-22, as for Oklahoma).
+@pytest.mark.parametrize("state", ["id"])
 def test_no_regular_session_covers_a_special_session(state):
     sessions = _sessions(state)
     regular = [s for s in sessions if s["classification"] == "primary"]
