@@ -9,6 +9,9 @@ class Idaho(State):
         "bills": IDBillScraper,
         "events": IDEventScraper,
     }
+    # Dates are the legislature's own "Convened" and "Adjourned" days on
+    # legislature.idaho.gov/sessioninfo/sessiondates/?yr=<year> (read 2026-11-22, OPEN-753).
+    # Each extraordinary session is a session of its own, with its own dates.
     legislative_sessions = [
         {
             "_scraped_name": "2011 Session",
@@ -130,7 +133,7 @@ class Idaho(State):
             "identifier": "2022spcl",
             "name": "66th Legislature, First Extraordinary Session (2022)",
             "start_date": "2022-09-01",
-            "end_date": "2022-09-08",
+            "end_date": "2022-09-01",
             "active": False,
         },
         {
@@ -139,7 +142,7 @@ class Idaho(State):
             "identifier": "2023",
             "name": "67th Legislature, 1st Regular Session (2023)",
             "start_date": "2023-01-09",
-            "end_date": "2023-03-31",
+            "end_date": "2023-04-06",
             "active": False,
         },
         {
@@ -148,7 +151,7 @@ class Idaho(State):
             "identifier": "2024",
             "name": "67th Legislature, 2nd Regular Session (2024)",
             "start_date": "2024-01-08",
-            "end_date": "2024-03-29",
+            "end_date": "2024-04-10",
             "active": False,
         },
         {
@@ -157,7 +160,7 @@ class Idaho(State):
             "identifier": "2025",
             "name": "68th Legislature, 1st Regular Session (2025)",
             "start_date": "2025-01-06",
-            "end_date": "2025-04-10",
+            "end_date": "2025-04-04",
             "active": False,
         },
         {
@@ -165,9 +168,8 @@ class Idaho(State):
             "classification": "primary",
             "identifier": "2026",
             "name": "68th Legislature, 2nd Regular Session (2026)",
-            "start_date": "2026-01-05",
-            # TODO: Update end data
-            "end_date": "2026-04-10",
+            "start_date": "2026-01-12",
+            "end_date": "2026-04-02",
             "active": True,
         },
     ]

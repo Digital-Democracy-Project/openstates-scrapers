@@ -17,7 +17,8 @@ read on 2026-11-17:
   on the journals' count) each is a special session of its own, named as its journal names it.
 * Idaho (OPEN-724, read 2026-11-20): legislature.idaho.gov/sessioninfo/ names a "First
   Extraordinary Session" in 2015, 2020 and 2022 (and 2000 and 2006, before the scraper's list
-  starts); every other session is regular.
+  starts); every other session is regular. Since OPEN-753 (read 2026-11-22) every session's dates
+  are the "Convened" and "Adjourned" days on legislature.idaho.gov/sessioninfo/sessiondates/.
 * Iowa (OPEN-741, read 2026-11-21): legis.iowa.gov/legislation/findLegislation (the page
   get_session_list reads) names only two-year General Assemblies (76 to 91) and lists no special
   or extraordinary sessions, which Iowa keeps inside their General Assembly, so every session is
@@ -276,9 +277,11 @@ def test_corrected_sessions(state, identifier, classification):
     assert session["classification"] == classification
 
 
-def test_wy_no_regular_session_covers_a_special_session():
-    # OPEN-752: regular and special sessions are separate, each with its own dates
-    sessions = _sessions("wy")
+# OPEN-752 (Wyoming), OPEN-753 (Idaho): regular and special sessions are separate, each with its
+# own dates, so no regular session's dates may cover a special session's.
+@pytest.mark.parametrize("state", ["id", "wy"])
+def test_no_regular_session_covers_a_special_session(state):
+    sessions = _sessions(state)
     regular = [s for s in sessions if s["classification"] == "primary"]
     for special in (s for s in sessions if s["classification"] == "special"):
         for r in regular:
