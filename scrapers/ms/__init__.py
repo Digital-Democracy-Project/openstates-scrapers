@@ -48,7 +48,11 @@ class Mississippi(State):
             "identifier": "20093E",
             "name": "2009, 3rd Extraordinary Session",
             "start_date": "2009-07-10",
-            "end_date": "2013-06-27",
+            # OPEN-759: no sine die on record, so the last day the chambers met (Ramon
+            # 2026-11-22): every floor action is dated 07/10/2009 in the bill histories
+            # (billstatus.ls.state.ms.us/20093E/pdf/history/) and the House calendar
+            # (20093E/pdf/misc/h_cal.htm) calls it "1st LEGISLATIVE DAY JULY 10, 2009"
+            "end_date": "2009-07-10",
         },
         {
             "_scraped_name": "2010 Regular Session",
