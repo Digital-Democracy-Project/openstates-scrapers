@@ -406,6 +406,12 @@ def test_va_committee_passage(text):
     ("NONCONCURRENCE", []),
     ("CONCUR IN HOUSE AMENDMENTS TO HOUSE AMENDMENTS", []),
     ("CONCUR IN HOUSE AMENDMENTS TO SENATE AMENDMENTS AS AMENDED", []),
+    # BROKER-579: the House's whole-bill veto override (HB 2388 of 2019-2020, roll call 1340) counts;
+    # a procedural motion still does not
+    ("MOT OVERRIDE", ["passage"]),                 # HB 2388, roll call 1340
+    ("MOT OVERRIDE BENNINGHOFF", ["passage"]),     # HB 2513, roll call 1688 (mover's name joined on)
+    ("MOTION TO OVERRIDE THE RULING OF THE CHAIR", []),
+    ("MOTION TO TABLE", []),
 ])
 def test_pa(text, expected):
     # the pa scraper upper-cases floor motions before classifying
@@ -432,7 +438,12 @@ def test_pa(text, expected):
     ("Arch AM1312 adopted", []),
     ("Raybould FA27 lost", []),
     ("Cavanaugh, M. MO207 prevailed", []),
-    ("Failed to become law notwithstanding the objections of the Governor 25-24-0", []),
+    # BROKER-579: the whole-bill veto override counts, lost or carried (LB 319 of 2025: 24-24-1)
+    ("Failed to become law notwithstanding the objections of the Governor 24-24-1", ["passage"]),
+    ("Failed to become law notwithstanding the objections of the Governor 25-24-0", ["passage"]),
+    # an override's motion row is labelled by the ne scraper, not here (tests/test_ne_veto_override.py)
+    ("Cavanaugh, J. MO585 failed", []),
+    ("Failed to become law notwithstanding the objections of the Governor on line-item 3", []),
 ])
 def test_ne(text, expected):
     assert classify_motion("ne", text) == expected
@@ -467,6 +478,9 @@ def test_ne(text, expected):
     ("SUSPEND THE RULES (#1)", []),
     ("LAY ON THE TABLE (#1)", []),
     ("SB 243 BY KLEINPETER (#1)", []),
+    # BROKER-579: a veto override (HB 648 of 2023, legis.la.gov) counts
+    ("PASS BILL SUBSEQUENT TO VETO (#40)", ["passage"]),          # House
+    ("PASS SUBSEQUENT TO VETO (#5)", ["passage"]),                # Senate
 ])
 def test_la(text, expected):
     assert classify_motion("la", text) == expected
