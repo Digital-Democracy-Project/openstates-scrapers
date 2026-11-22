@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfLegislation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://WSLWebServices.leg.wa.gov/">
+  <Legislation>
+    <Biennium>2025-26</Biennium>
+    <BillId>HB 1198</BillId>
+    <BillNumber>1198</BillNumber>
+    <SubstituteVersion>0</SubstituteVersion>
+    <EngrossedVersion>0</EngrossedVersion>
+    <ShortLegislationType>
+      <ShortLegislationType>B</ShortLegislationType>
+      <LongLegislationType>Bill</LongLegislationType>
+    </ShortLegislationType>
+    <OriginalAgency>House</OriginalAgency>
+    <Active>true</Active>
+    <StateFiscalNote>false</StateFiscalNote>
+    <LocalFiscalNote>false</LocalFiscalNote>
+    <Appropriations>false</Appropriations>
+    <RequestedByGovernor>false</RequestedByGovernor>
+    <RequestedByBudgetCommittee>false</RequestedByBudgetCommittee>
+    <RequestedByDepartment>true</RequestedByDepartment>
+    <RequestedByOther>false</RequestedByOther>
+    <ShortDescription>Operating budget</ShortDescription>
+    <Request>Z-0236.3</Request>
+    <IntroducedDate>2025-01-13T00:00:00</IntroducedDate>
+    <CurrentStatus>
+      <BillId>HB 1198</BillId>
+      <HistoryLine>House Rules "X" file.</HistoryLine>
+      <ActionDate>2026-01-12T00:00:00</ActionDate>
+      <AmendedByOppositeBody>false</AmendedByOppositeBody>
+      <PartialVeto>false</PartialVeto>
+      <Veto>false</Veto>
+      <AmendmentsExist>false</AmendmentsExist>
+      <Status>H Rules X</Status>
+    </CurrentStatus>
+    <Sponsor>(Ormsby)</Sponsor>
+    <PrimeSponsorID>9207</PrimeSponsorID>
+    <LongDescription>Making 2025-2027 fiscal biennium operating appropriations.</LongDescription>
+    <LegalTitle>AN ACT Relating to fiscal matters;</LegalTitle>
+    <Companions>
+      <Companion>
+        <Biennium>2025-26</Biennium>
+        <BillId>SB 5167</BillId>
+        <Status>Ssubst for</Status>
+      </Companion>
+    </Companions>
+  </Legislation>
+  <Legislation>
+    <Biennium>2025-26</Biennium>
+    <BillId>SHB 1198</BillId>
+    <BillNumber>1198</BillNumber>
+    <SubstituteVersion>1</SubstituteVersion>
+    <EngrossedVersion>0</EngrossedVersion>
+    <ShortLegislationType>
+      <ShortLegislationType>B</ShortLegislationType>
+      <LongLegislationType>Bill</LongLegislationType>
+    </ShortLegislationType>
+    <OriginalAgency>House</OriginalAgency>
+    <Active>true</Active>
+    <StateFiscalNote>false</StateFiscalNote>
+    <LocalFiscalNote>false</LocalFiscalNote>
+    <Appropriations>false</Appropriations>
+    <RequestedByGovernor>false</RequestedByGovernor>
+    <RequestedByBudgetCommittee>false</RequestedByBudgetCommittee>
+    <RequestedByDepartment>true</RequestedByDepartment>
+    <RequestedByOther>false</RequestedByOther>
+    <ShortDescription>Operating budget</ShortDescription>
+    <Request>H-2074.2</Request>
+    <IntroducedDate>2025-03-27T00:00:00</IntroducedDate>
+    <CurrentStatus>
+      <BillId>SHB 1198</BillId>
+      <HistoryLine>House Rules "X" file.</HistoryLine>
+      <ActionDate>2026-01-12T00:00:00</ActionDate>
+      <AmendedByOppositeBody>false</AmendedByOppositeBody>
+      <PartialVeto>false</PartialVeto>
+      <Veto>false</Veto>
+      <AmendmentsExist>false</AmendmentsExist>
+      <Status>H Rules X</Status>
+    </CurrentStatus>
+    <Sponsor>APP(Ormsby)</Sponsor>
+    <PrimeSponsorID>9207</PrimeSponsorID>
+    <LongDescription>Making 2025-2027 fiscal biennium operating appropriations and 2023-2025 fiscal biennium second supplemental operating appropriations.</LongDescription>
+    <LegalTitle>AN ACT Relating to fiscal matters;</LegalTitle>
+    <Companions />
+  </Legislation>
+</ArrayOfLegislation>
