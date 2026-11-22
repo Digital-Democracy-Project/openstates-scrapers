@@ -71,6 +71,11 @@ read on 2026-11-17:
 * Virginia: LIS (lis.virginia.gov GetSessionListAsync), SessionType "Special".
 * Washington: leg.wa.gov lists only two-year bienniums, which are regular sessions; its special
   sessions are not separate sessions there.
+* Wyoming (OPEN-752, read 2026-11-22): the session menu on wyoleg.gov/Legislation/<year> names a
+  "General Session" in odd years and a "Budget Session" in even years (both regular) and a
+  "Special Session" in 2020 and 2021 (and 2004, before the scraper's list starts); the
+  legislature's session days (lsoservice.wyoleg.gov/api/Session) flag only those two with a
+  specialSessionValue since 2011. Every other session is regular, 2012 included.
 """
 import ast
 import os
@@ -200,6 +205,7 @@ SPECIAL = {
     },
     "ri": set(),
     "wa": set(),
+    "wy": {"2020S1", "2021S1"},
 }
 
 
@@ -243,8 +249,8 @@ def test_every_session_is_classified_as_the_legislature_lists_it(state):
     assert SPECIAL[state] <= set(got)
 
 
-# Six sessions the upstream lists had the wrong way round, each checked against the
-# legislature's own record of that session (2026-11-17).
+# Sessions the upstream lists had the wrong way round, each checked against the
+# legislature's own record of that session (2026-11-17, Wyoming 2026-11-22).
 CORRECTED = [
     # azleg.gov: "Fifty-first Legislature - First Special Session" (June 2013)
     ("az", "51st-1st-special", "special"),
@@ -258,6 +264,9 @@ CORRECTED = [
     ("ne", "102S1", "special"),
     # palegis.us: First Special Session of 2023-2024 (called for January 9, 2023)
     ("pa", "2023-2024S1", "special"),
+    # wyoleg.gov/Legislation/2012: "Legislation - 2012 Budget Session" (Feb 13 to Mar 9, 2012);
+    # OPEN-752, upstream had it special
+    ("wy", "2012", "primary"),
 ]
 
 
@@ -265,3 +274,15 @@ CORRECTED = [
 def test_corrected_sessions(state, identifier, classification):
     (session,) = [s for s in _sessions(state) if s["identifier"] == identifier]
     assert session["classification"] == classification
+
+
+def test_wy_no_regular_session_covers_a_special_session():
+    # OPEN-752: regular and special sessions are separate, each with its own dates
+    sessions = _sessions("wy")
+    regular = [s for s in sessions if s["classification"] == "primary"]
+    for special in (s for s in sessions if s["classification"] == "special"):
+        for r in regular:
+            assert (
+                r["end_date"] < special["start_date"]
+                or special["end_date"] < r["start_date"]
+            ), (r["identifier"], special["identifier"])
