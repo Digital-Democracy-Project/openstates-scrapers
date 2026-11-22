@@ -285,12 +285,15 @@ class RIBillScraper(Scraper):
         for idex in idexes:
             blocks = "FOO"  # Ugh.
             while len(blocks) > 0:
-                self.info(
-                    f"Searching for bills in {chamber} in range {idex} to {idex + MAXQUERY}"
-                )
+                # OPEN-771: the search includes both ends ("8250 to 8500" lists 251
+                # bills), so each range stops one short of the next one's start;
+                # otherwise every boundary bill (HB 8500) is yielded twice and the
+                # import stops on it
+                last = idex + MAXQUERY - 1
+                self.info(f"Searching for bills in {chamber} in range {idex} to {last}")
                 default_headers = get_default_headers(SEARCH_URL)
                 default_headers[FROM] = idex
-                default_headers[TO] = idex + MAXQUERY
+                default_headers[TO] = last
                 default_headers[YEAR] = session
                 idex += MAXQUERY
                 blocks = self.parse_results_page(
