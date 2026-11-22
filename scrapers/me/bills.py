@@ -15,8 +15,10 @@ from openstates.scrape import Scraper, Bill, VoteEvent
 from classify_motion import classify_motion
 
 from .actions import Categorizer
+from .sessions import legislature, session_for_bill, session_for_roll_call
 
-BLACKLISTED_BILL_IDS = {"128": ("SP 601", "SP 602"), "129": (), "130": ()}
+# by Legislature (OPEN-747: every session of it reads its one bill list)
+BLACKLISTED_BILL_IDS = {128: ("SP 601", "SP 602"), 129: (), 130: ()}
 
 # OPEN-698: a floor amendment roll call ("ADOPT HAH-126 to CAS-44", "INDEF PP HAH-2 TO
 # CAH-1", "IPP HAH-640", "INDEFINITELY POSTPONE SENATE AMENDMENT (SAS-1)"), labelled here
@@ -43,6 +45,20 @@ OUGHT_TO_PASS_REPORT = re.compile(
 FINAL_ROLL_CALL = re.compile(
     r"^(enact|final passage\b|passage( of emergency measure)?$|adoption$)", re.I
 )
+
+
+def first_action_date(html):
+    """The earliest date in a dockets.asp page's action table, or None (OPEN-747)."""
+    page = lxml.html.fromstring(html)
+    dates = []
+    for row in page.xpath("//b[. = 'Date']/../../../following-sibling::tr"):
+        try:
+            dates.append(
+                datetime.datetime.strptime(row.xpath("string(td[1])"), "%m/%d/%Y")
+            )
+        except ValueError:
+            continue
+    return min(dates).date() if dates else None
 
 
 def vote_classification(motion):
@@ -82,7 +98,8 @@ class MEBillScraper(Scraper):
     def _start_search(self, request_session, chamber, session):
         # the result pages belong to this search, held server side on the session
         search_url = "https://legislature.maine.gov/LawMakerWeb/doadvancedsearch.asp"
-        session_number = str(int(session) - 116)
+        number = legislature(self.jurisdiction.legislative_sessions, session)
+        session_number = str(number - 116)
         paper_type = "HP" if chamber == "lower" else "SP"
         form_data = {
             "PaperType": paper_type,
@@ -107,6 +124,7 @@ class MEBillScraper(Scraper):
         self._start_search(request_session, chamber, session)
 
         self.seen = set()
+        self.dockets = {}
         yield from self._recursively_process_bills(
             request_session=request_session,
             chamber=chamber,
@@ -156,10 +174,8 @@ class MEBillScraper(Scraper):
                 bill_id = bill.text[:2] + " " + bill.text[2:]
                 bill_id = re.sub(r"\s+", " ", bill_id).strip()
 
-                if (
-                    session in BLACKLISTED_BILL_IDS
-                    and bill_id in BLACKLISTED_BILL_IDS[session]
-                ):
+                number = legislature(self.jurisdiction.legislative_sessions, session)
+                if bill_id in BLACKLISTED_BILL_IDS.get(number, ()):
                     self.logger.info(f"Skipping blacklisted bill ID {bill_id}")
                     continue
 
@@ -167,6 +183,26 @@ class MEBillScraper(Scraper):
                 if bill_id in self.seen:
                     continue
                 self.seen.add(bill_id)
+
+                # OPEN-747: every session of the Legislature reads its one bill list; a bill
+                # belongs to one session only, decided by its first dated action (sessions.py).
+                # Its docket (the Actions tab) is read here, once, and kept for scrape_actions.
+                docket_url = bill_url.replace("summary.asp", "dockets.asp")
+                docket = self.get(docket_url, retry_on_404=True).text
+                first_action = first_action_date(docket)
+                owner = session_for_bill(
+                    self.jurisdiction.legislative_sessions, number, first_action
+                )
+                if owner is None:
+                    self.warning(
+                        f"Skipping {bill_id}: no session of the {number} Legislature holds "
+                        f"its first dated action ({first_action})"
+                    )
+                    continue
+                if owner != session:
+                    self.info(f"Skipping {bill_id}: it belongs to {owner}")
+                    continue
+                self.dockets[docket_url] = docket
 
                 bill = Bill(
                     identifier=bill_id,
@@ -487,9 +523,22 @@ class MEBillScraper(Scraper):
         outcome_cell = page.xpath("//td[text()='Outcome:']")[0]
         outcome = outcome_cell.xpath("string(following-sibling::td)")
 
+        # OPEN-747: a roll call is filed under the session sitting on its date, though its bill
+        # may be filed under an earlier session of the same Legislature
+        sessions = self.jurisdiction.legislative_sessions
+        number = legislature(sessions, bill.legislative_session)
+        sitting = session_for_roll_call(sessions, number, date.date())
+        if sitting is None:
+            self.warning(
+                f"Skipping roll call {url}: no session of the {number} Legislature sat on "
+                f"{date.date()}"
+            )
+            return
+
         # same-day roll calls can share motion and roll, so keep the RC number
         serial = re.search(r"serialnumber=(\d+)", url).group(1)
         vote = VoteEvent(
+            legislative_session=sitting,
             identifier=f"{'S' if chamber == 'upper' else 'H'}-RC {serial}",
             chamber=chamber,
             start_date=date.strftime("%Y-%m-%d"),
@@ -521,7 +570,7 @@ class MEBillScraper(Scraper):
 
     def scrape_actions(self, bill, url):
         try:
-            page = self.get(url, retry_on_404=True).text
+            page = self.dockets.pop(url, None) or self.get(url, retry_on_404=True).text
         except scrapelib.HTTPError:
             self.warning(
                 "Error loading actions webpage for bill {}".format(bill["bill_id"])

@@ -15,6 +15,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
 from openstates.scrape import Bill  # noqa: E402
 
 from classify_motion import classify_motion  # noqa: E402
+from me import Maine  # noqa: E402
 from me.bills import (  # noqa: E402
     FINAL_ROLL_CALL,
     OUGHT_TO_PASS_REPORT,
@@ -212,6 +213,7 @@ class _Resp:
 
 def _scraper(pages):
     scraper = MEBillScraper.__new__(MEBillScraper)
+    scraper.jurisdiction = Maine()
     scraper.get = lambda url, **kwargs: _Resp(pages[url])
     return scraper
 
@@ -225,7 +227,7 @@ BASE = "https://legislature.maine.gov/LawMakerWeb/"
 
 
 def _bill():
-    return Bill("SP 10", legislative_session="132", chamber="upper", title="t")
+    return Bill("SP 10", legislative_session="132R1", chamber="upper", title="t")
 
 
 def test_sp10_roll_calls_from_the_real_page():

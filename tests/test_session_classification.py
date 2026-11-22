@@ -29,8 +29,11 @@ read on 2026-11-17:
 * Maine (OPEN-739, read 2026-11-21): the LegSession menu on mainelegislature.org
   (LawMakerWeb/advancedsearch.asp, the page get_session_list reads) offers one entry per two-year
   Legislature (121st to 131st, plus "2001-2002"; the current 132nd is not on it yet) and lists no
-  special sessions, which Maine keeps inside their Legislature's bill numbering, so every session
-  is regular.
+  special sessions, which Maine keeps inside their Legislature's bill numbering. Since OPEN-747
+  (Ramon 2026-11-21: "Separate sessions, own dates") each Legislature's First and Second Regular
+  Sessions and each of its special sessions are sessions of their own, as Maine names them on its
+  printed bills and in the Laws of Maine; the fourteen special sessions below are listed on the
+  Legislative Statistics pages of the Laws of Maine (lldc.mainelegislature.org/Open/Laws/).
 * Maryland (OPEN-742, read 2026-11-21): the session menu on mgaleg.maryland.gov
   (mgawebsite/Search/Legislation, the page get_session_list reads) names each session a
   "Regular Session" or a "Special Session"; the six special ones in the scraper's list are
@@ -78,7 +81,22 @@ SPECIAL = {
     "id": {"2015spcl", "2020spcl", "2022spcl"},
     "ky": {"2011SS", "2012SS", "2013SS", "2018SS", "2019SS", "2021SS", "2022SS"},
     "md": {"2007s1", "2011s1", "2012s1", "2012s2", "2021s1", "2026s1"},
-    "me": set(),
+    "me": {
+        "121S1",
+        "121S2",
+        "122S1",
+        "122S2",
+        "123S1",
+        "125S1",
+        "126S1",
+        "128S1",
+        "128S2",
+        "129S1",
+        "130S1",
+        "130S2",
+        "131S1",
+        "132S1",
+    },
     "ms": {
         "20091E",
         "20092E",
