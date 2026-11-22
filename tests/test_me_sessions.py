@@ -210,9 +210,11 @@ class OfflineBills(MEBillScraper):
         super().__init__(Maine(), str(tmp_path))
         self.papers = papers  # paper ID -> (LD, Actions tab)
         self.scraped = []
+        self.fetched = []
 
     def get(self, url, **kwargs):
         assert url.startswith(BASE + "dockets.asp?ID="), url
+        self.fetched.append(url)
         return _Response(self.papers[url.split("=")[1]][1])
 
     def scrape_bill(self, bill, chamber):
@@ -261,6 +263,10 @@ def _bills_of(number, tmp_path, session):
     assert [b.identifier for b in bills] == [b.identifier for b in scraper.scraped]
     assert all(b.legislative_session == session for b in bills)
     assert not scraper.dockets  # every kept Actions tab was used
+    # and each bill's Actions tab is read once: for the session decision, then kept
+    assert sorted(scraper.fetched) == sorted(
+        BASE + "dockets.asp?ID=" + p for p in papers
+    )
     return {int(b.identifier.split()[1]) for b in bills}, bills
 
 
@@ -394,3 +400,43 @@ def test_events_ask_the_site_for_the_legislatures_number(tmp_path):
     assert seen == [
         "https://legislature.maine.gov/backend/breeze/data/getCommittees?legislature=132"
     ]
+
+
+class _FormSession:
+    def __init__(self):
+        self.forms = []
+
+    def post(self, url, data, timeout):
+        self.forms.append(data)
+        return _Response("")
+
+
+@pytest.mark.parametrize(
+    "session,menu_value", [("132S1", "16"), ("132R2", "16"), ("121S2", "5")]
+)
+def test_search_asks_for_the_sessions_legislature(session, menu_value, tmp_path):
+    # LegSession is the value of the Legislature on the LawMakerWeb menu (OPTION VALUE=16 is the
+    # 132nd Legislature, VALUE=5 the 121st)
+    form = _FormSession()
+    MEBillScraper(Maine(), str(tmp_path))._start_search(form, "lower", session)
+    assert form.forms[0]["LegSession"] == menu_value
+
+
+def test_blacklisted_papers_are_skipped_in_every_session_of_their_legislature(tmp_path):
+    papers = {"280068001": ("SP 601", None)}
+
+    class Search(_SearchSession):
+        def __init__(self):
+            self.pages = {
+                1: '<html><body><table><tr><td><b><a href="summary.asp?ID=280068001">SP601</a>'
+                "</b></td></tr></table></body></html>"
+            }
+
+    for session in ("128R1", "128S1", "128R2", "128S2"):
+        scraper = OfflineBills(
+            tmp_path, papers
+        )  # its get() would fail: nothing is read
+        scraper.dockets, scraper.seen = {}, set()
+        assert (
+            list(scraper._recursively_process_bills(Search(), "upper", session)) == []
+        )
