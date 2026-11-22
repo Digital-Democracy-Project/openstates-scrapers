@@ -98,7 +98,8 @@ def test_every_special_session_has_its_own_entry_with_the_legislatures_dates():
         assert s["classification"] == "special"
         assert (s["start_date"], s["end_date"]) == (start, end)
         assert nd_bills.site_session(s) == (assembly, tag)
-        assert s["active"] is False  # switched on only when Ramon decides
+        # Ramon 2026-11-21: switch both 2026 special sessions on; the older ones stay off
+        assert s["active"] is (identifier in ("69S1", "69S2"))
 
 
 def test_regular_sessions_read_their_own_assembly_and_tag():
@@ -166,3 +167,26 @@ def test_the_source_is_the_assemblys_bill_list():
     assert bill_list.source == (
         "https://ndlegis.gov/api/assembly/69-2025/data/bills.json"
     )
+
+
+def test_a_nightly_run_scrapes_69_and_both_2026_specials_each_keeping_its_own(
+    monkeypatch,
+):
+    """With no session given, os-update scrapes every active session in turn (openstates-core
+    cli/update.py, check_session_list then do_scrape). All three read the 69-2025 list; each
+    keeps only its own bills and roll calls, and together they keep every bill exactly once."""
+    active = [s["identifier"] for s in SESSIONS if s.get("active")]
+    assert sorted(active) == ["69", "69S1", "69S2"]
+    kept = {}
+    for identifier in active:
+        assert nd_bills.site_session(session(identifier))[0] == "69-2025"
+        out = scrape(identifier, "bills_69-2025.json", monkeypatch)
+        assert {o.legislative_session for o in out} == {identifier}
+        kept[identifier] = sorted(o.identifier for o in out if isinstance(o, Bill))
+    assert kept == {
+        "69": ["HB 1620", "SCR 4029"],
+        "69S1": ["HB 1621"],
+        "69S2": ["SB 2405"],
+    }
+    listed = json.load(open(os.path.join(FIXTURES, "bills_69-2025.json")))["bills"]
+    assert sorted(sum(kept.values(), [])) == sorted(b["name"] for b in listed.values())

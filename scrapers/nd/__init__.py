@@ -28,7 +28,8 @@ class NorthDakota(State):
     # for the special session of August 2016), so each session reads its assembly's list and keeps
     # only the bills tagged with its `site_session_id` (bills.py). A regular session's assembly is
     # "<identifier>-<start year>" and its tag "<start year>01"; a special session names both in
-    # `extras`.
+    # `extras`. Both 2026 special sessions are switched on (Ramon 2026-11-21, OPEN-746), so a
+    # nightly run scrapes 69, 69S1 and 69S2, each keeping only its own bills.
     legislative_sessions = [
         {
             "_scraped_name": "62nd Legislative Assembly (2011-12)",
@@ -150,7 +151,7 @@ class NorthDakota(State):
             "start_date": "2026-01-21",
             "end_date": "2026-01-23",
             "classification": "special",
-            "active": False,
+            "active": True,
             "extras": {"assembly": "69-2025", "site_session_id": "202502"},
         },
         {
@@ -161,7 +162,7 @@ class NorthDakota(State):
             "start_date": "2026-09-02",
             "end_date": "2026-09-04",
             "classification": "special",
-            "active": False,
+            "active": True,
             "extras": {"assembly": "69-2025", "site_session_id": "202503"},
         },
         {
