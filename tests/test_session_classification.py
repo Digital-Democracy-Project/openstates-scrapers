@@ -65,8 +65,8 @@ read on 2026-11-17:
 * Oklahoma (OPEN-727, read 2026-11-21): the session menu on webapps.oklegislature.gov
   (WebApplication3/WebForm1.aspx, the page get_session_list reads) names each session "Regular
   Session" or "... Special Session"; the twelve special ones are below, every other is regular.
-  Since OPEN-755 (read 2026-11-22) each session's dates are its first and last legislative day in
-  either chamber's journal (OK_JOURNAL_DATES below).
+  Since OPEN-755 (read 2026-11-22) each session runs from its first legislative day to its
+  official close in the House and Senate journals (OK_JOURNAL_DATES below).
 * Oregon: OLIS (api.oregonlegislature.gov LegislativeSessions), the "S" session keys.
 * Rhode Island (OPEN-726, read 2026-11-21): the year menu on status.rilegislature.gov (bill
   history, previous sessions) offers one regular session a year and names no special or
@@ -305,12 +305,13 @@ def test_no_regular_session_covers_a_special_session(state):
             ), (r["identifier"], special["identifier"])
 
 
-# OPEN-755 (Oklahoma): each session's first and last legislative day in either chamber's journal
-# (House Journals on former.okhouse.gov, Senate Journals on oksenate.gov/calendar/journals, read
-# 2026-11-22); 2027 from the House's published schedule (okhouse.gov/leg_deadlines). Oklahoma is
-# not in the no-overlap test above: its two-year entries hold the special sessions held between
-# their two years, and the journals show special sessions sitting during the 2018, 2020, 2022,
-# 2023 and 2024 regular sessions, so honest dates overlap. 2012SS1 is not pinned: neither chamber
+# OPEN-755 (Oklahoma): each session's first legislative day and its official close (sine die,
+# including one set by concurrent resolution, or expiry with its Legislature; Ramon 2026-11-22)
+# in the House Journals (former.okhouse.gov) and Senate Journals (oksenate.gov/calendar/journals),
+# read 2026-11-22; 2027 from the House's published schedule (okhouse.gov/leg_deadlines).
+# Oklahoma is not in the no-overlap test above (Ramon 2026-11-22, "Keep true dates"): its two-year
+# entries hold the special sessions held between their two years, and its special sessions ran
+# alongside regular ones (2018, 2020, 2022, 2023, 2024). 2012SS1 is not pinned: neither chamber
 # lists a journal for it, so its dates are upstream's, unchecked.
 OK_JOURNAL_DATES = {
     "2011-2012": ("2011-01-04", "2012-05-25"),
@@ -320,19 +321,19 @@ OK_JOURNAL_DATES = {
     "2017SS1": ("2017-09-25", "2017-11-17"),
     "2017SS2": ("2017-12-18", "2018-04-19"),
     "2017-2018": ("2017-01-03", "2018-05-03"),
-    "2019-2020": ("2019-01-08", "2019-05-23"),
-    "2020SS1": ("2020-04-06", "2020-05-22"),
-    "2020": ("2020-02-03", "2020-05-22"),
+    "2019-2020": ("2019-01-08", "2019-05-31"),
+    "2020SS1": ("2020-04-06", "2020-05-30"),
+    "2020": ("2020-02-03", "2020-05-29"),
     "2021": ("2021-01-05", "2021-05-27"),
     "2022": ("2022-02-07", "2022-05-27"),
-    "2021SS1": ("2021-11-15", "2021-11-19"),
-    "2022SS2": ("2022-05-18", "2022-09-29"),
-    "2022SS3": ("2022-06-13", "2022-06-15"),
+    "2021SS1": ("2021-11-15", "2021-11-26"),
+    "2022SS2": ("2022-05-18", "2022-10-14"),
+    "2022SS3": ("2022-06-13", "2022-11-22"),
     "2023": ("2023-01-03", "2023-05-26"),
     "2023S1": ("2023-05-17", "2023-07-31"),
-    "2023S2": ("2023-10-03", "2023-10-04"),
+    "2023S2": ("2023-10-03", "2024-11-19"),
     "2024": ("2024-02-05", "2024-05-30"),
-    "2024S3": ("2024-01-29", "2024-05-20"),
+    "2024S3": ("2024-01-29", "2024-11-19"),
     "2024S4": ("2024-06-12", "2024-07-15"),
     "2025": ("2025-01-07", "2025-05-30"),
     "2026": ("2026-02-02", "2026-05-14"),

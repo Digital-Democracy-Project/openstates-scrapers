@@ -16,14 +16,16 @@ class Oklahoma(State):
     #   - update the `_scraped_name`
     #   - update the session slug in the Bill scraper
     #   - ignore the odd-year session
-    # Dates (OPEN-755, read 2026-11-22): each session runs from its first to its last legislative
-    # day in either chamber's journal (House: former.okhouse.gov/Publications/HouseJournals.aspx,
-    # Senate: oksenate.gov/calendar/journals); an odd year's first day is its January
-    # Organizational Day. A two-year entry (2011-2012 to 2017-2018) runs from its first year's
-    # first day to its second year's last; "2019-2020" holds only 2019's days. Special sessions
-    # keep their own journal days, which in 2017-18, 2020, 2022, 2023 and 2024 fell inside a
-    # regular session's. 2027 is from okhouse.gov/leg_deadlines.
-    # 2012SS1 is unchecked: neither chamber lists a journal for it.
+    # Dates (OPEN-755, read 2026-11-22) are from the House and Senate journals (House:
+    # former.okhouse.gov/Publications/HouseJournals.aspx, Senate: oksenate.gov/calendar/journals).
+    # A session starts on its first legislative day (an odd year's January Organizational Day) and
+    # ends on its official close as the journals record it (Ramon, 2026-11-22): the sine die day,
+    # including one set by concurrent resolution after the last sitting, or the day an
+    # extraordinary session expired with its Legislature. A two-year entry (2011-2012 to
+    # 2017-2018) runs from its first year's start to its second year's close; "2019-2020" holds
+    # only 2019. Special sessions keep their own dates, even where they ran alongside a regular
+    # session. 2027 is from okhouse.gov/leg_deadlines. 2012SS1 is unchecked: neither chamber
+    # lists a journal for it.
     legislative_sessions = [
         {
             "_scraped_name": "2012 Regular Session",
@@ -95,7 +97,7 @@ class Oklahoma(State):
             "identifier": "2019-2020",
             "name": "2019-2020 Regular Session",
             "start_date": "2019-01-08",
-            "end_date": "2019-05-23",
+            "end_date": "2019-05-31",
         },
         {
             "_scraped_name": "2020 First Special Session",
@@ -103,7 +105,7 @@ class Oklahoma(State):
             "identifier": "2020SS1",
             "name": "2020 First Special Session",
             "start_date": "2020-04-06",
-            "end_date": "2020-05-22",
+            "end_date": "2020-05-30",
         },
         {
             "_scraped_name": "2020 Regular Session",
@@ -111,7 +113,7 @@ class Oklahoma(State):
             "identifier": "2020",
             "name": "2020 Regular Session",
             "start_date": "2020-02-03",
-            "end_date": "2020-05-22",
+            "end_date": "2020-05-29",
         },
         {
             "_scraped_name": "2021 Regular Session",
@@ -136,7 +138,7 @@ class Oklahoma(State):
             "identifier": "2021SS1",
             "name": "2021 First Special Session",
             "start_date": "2021-11-15",
-            "end_date": "2021-11-19",
+            "end_date": "2021-11-26",
             "active": False,
         },
         {
@@ -145,7 +147,7 @@ class Oklahoma(State):
             "identifier": "2022SS2",
             "name": "2022 Second Special Session",
             "start_date": "2022-05-18",
-            "end_date": "2022-09-29",
+            "end_date": "2022-10-14",
             "active": False,
         },
         {
@@ -154,7 +156,7 @@ class Oklahoma(State):
             "identifier": "2022SS3",
             "name": "2022 Third Special Session",
             "start_date": "2022-06-13",
-            "end_date": "2022-06-15",
+            "end_date": "2022-11-22",
             "active": False,
         },
         {
@@ -181,7 +183,7 @@ class Oklahoma(State):
             "identifier": "2023S2",
             "name": "2023 Second Special Session",
             "start_date": "2023-10-03",
-            "end_date": "2023-10-04",
+            "end_date": "2024-11-19",
             "active": False,
         },
         {
@@ -199,7 +201,7 @@ class Oklahoma(State):
             "identifier": "2024S3",
             "name": "2024 Third Special Session",
             "start_date": "2024-01-29",
-            "end_date": "2024-05-20",
+            "end_date": "2024-11-19",
             "active": False,
         },
         {
