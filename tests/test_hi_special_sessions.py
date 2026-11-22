@@ -7,8 +7,9 @@ The 27 special sessions since 2011, with the dates on each Senate journal's titl
 (data.capitol.hawaii.gov/sessions/journal/Senate/<year>/Senate_Journal_<year>_..._Special_Session.pdf,
 read 2026-11-21: "Special Session of 2011, Convened Wednesday, August 31, 2011, Adjourned
 Thursday, September 1, 2011", ...), are written out in SPECIAL below, apart from the list in
-hi/__init__.py. The site's bill lists and measure pages hold only regular measures, so no special
-session's own measures are scraped (OPEN-751). A roll call a regular measure page dates on a
+hi/__init__.py. The site's bill lists and measure pages hold only regular measures, so a special
+session's own measures are read from its PDFs instead (OPEN-751, test_hi_special_session_bills.py;
+the Senate-only sessions have none). A roll call a regular measure page dates on a
 special-session day is filed under that special session and stays linked to its regular bill.
 
 The fixtures are the site's own pages:
@@ -312,8 +313,8 @@ def test_a_companion_first_acted_on_in_2011_is_linked_under_2011():
     assert companion["legislative_session"] == "2011 Regular Session"
 
 
-def test_a_special_session_scrapes_no_measures():
+def test_a_senate_only_special_session_scrapes_no_measures():
     scraper = _scraper({})
     with pytest.raises(EmptyScrape):
-        list(scraper.scrape(session="2021 Special Session"))
+        list(scraper.scrape(session="2019 Special Session"))
     assert scraper.requested == []
