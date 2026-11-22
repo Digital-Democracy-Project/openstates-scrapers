@@ -8,33 +8,44 @@ class Oklahoma(State):
         "events": OKEventScraper,
         "bills": OKBillScraper,
     }
-    # Sessions are named on OK's website as "{odd year} regular session" until the even year,
-    # when all data rolls over. For example, even year sessions include all odd-year-session bills.
-    # We have opted to name sessions {odd-even} Regular Session and treat them as such.
-    # - If adding a new odd-year session, add a new entry and copy the biennium pattern as above
-    # - If adding an even-year session, all you'll need to do is:
-    #   - update the `_scraped_name`
-    #   - update the session slug in the Bill scraper
-    #   - ignore the odd-year session
+    # OPEN-758: one regular session per year, as the journals ("First Regular Session of the
+    # Sixtieth Legislature" in 2025, "Second Regular Session" in 2026) and the search form ("2025
+    # Regular Session", "2026 Regular Session") name them, and each special session on its own.
+    # Bills are numbered once per Legislature and carry over into its second year, whose list on
+    # the form holds both years; sessions.py says which session each bill and roll call is filed
+    # under (the Iowa rule, Ramon 2026-11-21: bills by filing year). Once a Legislature's second
+    # year is in this list (with its code in OKBillScraper.meta_session_id), the first year's
+    # scrape reads the second year's list.
     # Dates (OPEN-755, read 2026-11-22) are from the House and Senate journals (House:
     # former.okhouse.gov/Publications/HouseJournals.aspx, Senate: oksenate.gov/calendar/journals).
     # A session starts on its first legislative day (an odd year's January Organizational Day) and
     # ends on its official close as the journals record it (Ramon, 2026-11-22): the sine die day,
     # including one set by concurrent resolution after the last sitting. A special session that
     # simply expired with its Legislature ends on the day the first chamber formally closed it, or
-    # the last day either chamber met if neither did. A two-year entry (2011-2012 to 2017-2018)
-    # runs from its first year's start to its second year's close; "2019-2020" holds only 2019.
-    # Special sessions keep their own dates, even where they ran alongside a regular session.
-    # 2027 is from okhouse.gov/leg_deadlines. 2012SS1 is unchecked: neither chamber lists a
-    # journal for it.
+    # the last day either chamber met if neither did. Each year's dates (OPEN-758, the same
+    # journals) are cited on its entry. Special sessions keep their own dates, even where they
+    # ran alongside a regular session. 2027 is from okhouse.gov/leg_deadlines. 2012SS1 is
+    # unchecked: neither chamber lists a journal for it.
     legislative_sessions = [
         {
+            # sine die under SCR 20 (5:00 p.m., May 27, 2011): HJ 2011 Day 60, SJ 2011-05-20
+            "_scraped_name": "2011 Regular Session",
+            "classification": "primary",
+            "identifier": "2011",
+            "name": "2011 Regular Session",
+            "start_date": "2011-01-04",
+            "end_date": "2011-05-27",
+            "active": False,
+        },
+        {
+            # HJ 2012 Day 1; sine die SJ 2012-05-25 (4:27 p.m.), HJ Day 65
             "_scraped_name": "2012 Regular Session",
             "classification": "primary",
-            "identifier": "2011-2012",
-            "name": "2011-2012 Regular Session",
-            "start_date": "2011-01-04",
+            "identifier": "2012",
+            "name": "2012 Regular Session",
+            "start_date": "2012-02-06",
             "end_date": "2012-05-25",
+            "active": False,
         },
         {
             "_scraped_name": "2012 Special Session",
@@ -45,12 +56,24 @@ class Oklahoma(State):
             "end_date": "2012-06-02",
         },
         {
+            # sine die under HCR 1022: HJ 2013 Day 65 and SJ 2013-05-24
+            "_scraped_name": "2013 Regular Session",
+            "classification": "primary",
+            "identifier": "2013",
+            "name": "2013 Regular Session",
+            "start_date": "2013-01-08",
+            "end_date": "2013-05-24",
+            "active": False,
+        },
+        {
+            # HJ 2014 Day 1; sine die SJ 2014-05-23, HJ Day 64
             "_scraped_name": "2014 Regular Session",
             "classification": "primary",
-            "identifier": "2013-2014",
-            "name": "2013-2014 Regular Session",
-            "start_date": "2013-01-08",
+            "identifier": "2014",
+            "name": "2014 Regular Session",
+            "start_date": "2014-02-03",
             "end_date": "2014-05-23",
+            "active": False,
         },
         {
             "_scraped_name": "2013 Special Session",
@@ -61,12 +84,24 @@ class Oklahoma(State):
             "end_date": "2013-09-09",
         },
         {
+            # sine die SJ 2015-05-22 (3:04 p.m.), HJ 2015 Day 64
+            "_scraped_name": "2015 Regular Session",
+            "classification": "primary",
+            "identifier": "2015",
+            "name": "2015 Regular Session",
+            "start_date": "2015-01-06",
+            "end_date": "2015-05-22",
+            "active": False,
+        },
+        {
+            # HJ 2016 Day 1; sine die SJ 2016-05-27 (12:09 p.m.), HJ Day 68
             "_scraped_name": "2016 Regular Session",
             "classification": "primary",
-            "identifier": "2015-2016",
-            "name": "2015-2016 Regular Session",
-            "start_date": "2015-01-06",
+            "identifier": "2016",
+            "name": "2016 Regular Session",
+            "start_date": "2016-02-01",
             "end_date": "2016-05-27",
+            "active": False,
         },
         {
             "_scraped_name": "2017 First Special Session",
@@ -85,20 +120,34 @@ class Oklahoma(State):
             "end_date": "2018-04-19",
         },
         {
-            "_scraped_name": "2018 Regular Session",
+            # sine die SJ 2017-05-26 (11:50 a.m.), HJ 2017 Day 66
+            "_scraped_name": "2017 Regular Session",
             "classification": "primary",
-            "identifier": "2017-2018",
-            "name": "2017-2018 Regular Session",
+            "identifier": "2017",
+            "name": "2017 Regular Session",
             "start_date": "2017-01-03",
-            "end_date": "2018-05-03",
+            "end_date": "2017-05-26",
+            "active": False,
         },
         {
+            # HJ 2018 Day 1; sine die SJ 2018-05-03 (7:22 p.m.), HJ Day 52
+            "_scraped_name": "2018 Regular Session",
+            "classification": "primary",
+            "identifier": "2018",
+            "name": "2018 Regular Session",
+            "start_date": "2018-02-05",
+            "end_date": "2018-05-03",
+            "active": False,
+        },
+        {
+            # sine die under SCR 5: SJ 2019-05-23, HJ 2019 Day 64
             "_scraped_name": "2019 Regular Session",
             "classification": "primary",
-            "identifier": "2019-2020",
-            "name": "2019-2020 Regular Session",
+            "identifier": "2019",
+            "name": "2019 Regular Session",
             "start_date": "2019-01-08",
             "end_date": "2019-05-31",
+            "active": False,
         },
         {
             "_scraped_name": "2020 First Special Session",
@@ -221,7 +270,7 @@ class Oklahoma(State):
             "name": "2025 Regular Session",
             "start_date": "2025-01-07",
             "end_date": "2025-05-30",
-            "active": False,
+            "active": True,
         },
         {
             "_scraped_name": "2026 Regular Session",
@@ -246,10 +295,6 @@ class Oklahoma(State):
         "2021 Regular Session - Web",
         "2020 Second Special Session",
         "2020 Regular Session (web)",
-        "2017 Regular Session",
-        "2015 Regular Session",
-        "2013 Regular Session",
-        "2011 Regular Session",
         "2010 Regular Session",
         "2009 Regular Session",
         "2008 Regular Session",

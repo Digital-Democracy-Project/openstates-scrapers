@@ -11,6 +11,7 @@ from urllib import parse
 
 from openstates.scrape import Scraper, Bill, VoteEvent as Vote
 from .actions import Categorizer
+from .sessions import listing_session, session_for_day
 
 from classify_motion import classify_motion
 
@@ -98,15 +99,19 @@ class OKBillScraper(Scraper):
     # Can be found in the session select dropdown at
     # http://www.oklegislature.gov/TextOfMeasures.aspx
     meta_session_id = {
-        "2011-2012": "1200",
+        "2011": "1100",
+        "2012": "1200",
         "2012SS1": "121X",
         "2013SS1": "131X",
-        "2013-2014": "1400",
-        "2015-2016": "1600",
+        "2013": "1300",
+        "2014": "1400",
+        "2015": "1500",
+        "2016": "1600",
         "2017SS1": "171X",
         "2017SS2": "172X",
-        "2017-2018": "1800",
-        "2019-2020": "1900",
+        "2017": "1700",
+        "2018": "1800",
+        "2019": "1900",
         "2020": "2000",
         "2020SS1": "201X",
         "2021": "2100",
@@ -124,6 +129,13 @@ class OKBillScraper(Scraper):
         "2026": "2600",
         "2027": "2700",
     }
+
+    def listing_code(self, session):
+        """The search form's code for the list the scrape of `session` reads (OPEN-758): a
+        regular session reads its Legislature's newest list, which holds both years' bills."""
+        return self.meta_session_id[
+            listing_session(self.jurisdiction.legislative_sessions, session)
+        ]
 
     def scrape(self, chamber=None, session=None, only_bills=None):
         chambers = [chamber] if chamber else ["upper", "lower"]
@@ -144,7 +156,7 @@ class OKBillScraper(Scraper):
         else:
             chamber_letter = "H"
 
-        session_id = self.meta_session_id[session]
+        session_id = self.listing_code(session)
         self.debug("Using session slug `{}`".format(session_id))
         values = {
             "cbxSessionId": session_id,
@@ -279,6 +291,20 @@ class OKBillScraper(Scraper):
                 related_entities=related_entities,
             )
 
+        # OPEN-758: both years of a Legislature read the same list; a bill belongs to one session
+        # only, the one its first dated action falls in (sessions.py)
+        sessions = self.jurisdiction.legislative_sessions
+        first_action = min(
+            (datetime.date.fromisoformat(a["date"]) for a in bill.actions), default=None
+        )
+        owner = session_for_day(sessions, session, first_action)
+        if owner is None:
+            self.warning(f"Skipping {bill_id}: no dated action on {url}")
+            return
+        if owner != session:
+            self.info(f"Skipping {bill_id}: it belongs to {owner}")
+            return
+
         version_table = page.xpath("//table[contains(@id, 'Versions')]")[0]
         # Keep track of already seen versions to prevent processing duplicates.
         version_urls = []
@@ -310,7 +336,15 @@ class OKBillScraper(Scraper):
 
         for link in page.xpath(".//a[contains(@href, '_VOTES')]"):
             if "HT_" not in link.attrib["href"]:
-                yield from self.scrape_votes(bill, self.urlescape(link.attrib["href"]))
+                for vote in self.scrape_votes(
+                    bill, self.urlescape(link.attrib["href"])
+                ):
+                    # OPEN-758: a roll call is filed under the session of its own date, and
+                    # stays linked to its bill (a 2025 bill's 2026 roll call goes to 2026)
+                    vote.legislative_session = session_for_day(
+                        sessions, session, datetime.date.fromisoformat(vote.start_date)
+                    )
+                    yield vote
 
         # # If the bill has no actions and no versions, it's a bogus bill on
         # # their website, which appears to happen occasionally. Skip.
@@ -584,7 +618,7 @@ class OKBillScraper(Scraper):
         letter = "H" if chamber == "lower" else "S"
         types = [letter + t for t in self.bill_types]
 
-        session_id = self.meta_session_id[session]
+        session_id = self.listing_code(session)
 
         # do a request per subject
         for subj in fdoc.xpath('//select[@name="lbxSubjects"]/option/@value'):
