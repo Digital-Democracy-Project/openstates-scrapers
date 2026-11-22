@@ -12,6 +12,52 @@ from openstates.scrape import Scraper, Bill, VoteEvent
 from classify_motion import classify_motion
 from utils.votes import safe_lookup
 from .actions import Categorizer
+from openstates.utils.transformers import fix_bill_id
+
+# OPEN-646 (PLAN-companion-lineage §5.3): Virginia states a bill's links inside its summary (the LIS feed's
+# LegislationSummary; there is no link field): "This bill is identical to SB 1." (553 bills of 2026), "This bill
+# incorporates HB 122.", "This bill was incorporated into SB 780.". Ramon, 2026-11-20 ("Yes, same rule"): "identical
+# to" is a companion, as for Congress and Florida (D1); the others are related. "identical to relevant provisions of"
+# names only part of the bill, so it is related too. The legislature's own words are the label (OPEN-640).
+_VA_BILL = r"(?:HB|SB|HJ|SJ|HR|SR)\s*\d+"
+_VA_BILL_LIST = rf"{_VA_BILL}(?:\s*(?:,\s*and|,|and)\s*{_VA_BILL})*"
+_VA_SUMMARY_LINKS = [
+    # (pattern, relation_type, label); the partial wording is tried before the whole-bill one
+    (
+        re.compile(rf"\bidentical to relevant provisions of ({_VA_BILL_LIST})", re.I),
+        "related",
+        "identical to relevant provisions of",
+    ),
+    (
+        re.compile(
+            rf"(?<!not )(?<!not necessarily )\bidentical to (?:both )?({_VA_BILL_LIST})",
+            re.I,
+        ),
+        "companion",
+        "identical to",
+    ),
+    (re.compile(rf"\bincorporates ({_VA_BILL_LIST})", re.I), "related", "incorporates"),
+    (
+        re.compile(rf"\bwas incorporated into ({_VA_BILL_LIST})", re.I),
+        "related",
+        "was incorporated into",
+    ),
+]
+
+
+def summary_links(summary):
+    """OPEN-646: the bills a Virginia summary links to, as (identifier, relation_type, label), each bill once (the
+    first wording that names it wins, so a partial "identical to relevant provisions of" is never also a companion)."""
+    links, seen = [], set()
+    for pattern, relation_type, label in _VA_SUMMARY_LINKS:
+        for match in pattern.finditer(summary or ""):
+            for number in re.findall(_VA_BILL, match.group(1), re.I):
+                identifier = fix_bill_id(re.sub(r"\s+", "", number.upper()))
+                if identifier not in seen:
+                    seen.add(identifier)
+                    links.append((identifier, relation_type, label))
+    return links
+
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -204,6 +250,12 @@ class VaBillScraper(Scraper):
                 bill.add_abstract(subtitle, note="title")
             if description is not None:
                 bill.add_abstract(description, row["SummaryVersion"])
+                own = fix_bill_id(bill.identifier)
+                for identifier, relation_type, label in summary_links(description):
+                    if identifier != own:
+                        bill.add_related_bill(
+                            identifier, session, relation_type, label=label
+                        )
 
             bill.extras["VA_LEG_ID"] = row["LegislationID"]
 

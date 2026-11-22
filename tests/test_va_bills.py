@@ -563,3 +563,88 @@ def test_senate_vote_uses_the_senate_key(monkeypatch):
     row.update(ChamberCode="S", VoteDate="2026-03-02T14:18:19")
     (vote,) = run_add_votes(monkeypatch, row)
     assert vote.extras == {"senate-rollcall-num": "141819"}
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# OPEN-646 (PLAN-companion-lineage §5.3): Virginia's links stated in the bill summary (LIS LegislationSummary). Ramon,
+# 2026-11-20, "Yes, same rule": "identical to" is a companion (as Congress and Florida); "incorporates" and the rest
+# are related. The summaries below are real 2026 ones from the Mac replica of production, read 2026-11-21; the
+# expected links are written out by hand.
+# ---------------------------------------------------------------------------------------------------------------
+
+from va.bills import summary_links  # noqa: E402
+
+REAL_SUMMARIES = [
+    # (bill, real summary sentence, expected links)
+    ("HB 1477", "This bill is identical to SB 806.", [("SB 806", "companion", "identical to")]),
+    (
+        "HB 820",
+        "This bill is identical to HB 196 and SB 490.",
+        [("HB 196", "companion", "identical to"), ("SB 490", "companion", "identical to")],
+    ),
+    (
+        "SB 75",
+        "The provisions of this bill are identical to both HB 681 and HB 976.",
+        [("HB 681", "companion", "identical to"), ("HB 976", "companion", "identical to")],
+    ),
+    (
+        "HB 595",
+        "This bill incorporates HB 132 and is identical to SB 63.",
+        [("SB 63", "companion", "identical to"), ("HB 132", "related", "incorporates")],
+    ),
+    (
+        "HB 976",
+        "The provisions of this bill are identical to relevant provisions of SB 75.",
+        [("SB 75", "related", "identical to relevant provisions of")],
+    ),
+    ("SB 780", "This bill was incorporated into SB 158.", [("SB 158", "related", "was incorporated into")]),
+    (
+        "SB 291",
+        "Directs the State Board of Health to establish standards for designation of care in neonatal services "
+        "consistent with, but not necessarily identical to, standards published by the American Academy of "
+        "Pediatrics.",
+        [],
+    ),
+]
+
+
+@pytest.mark.parametrize("bill,summary,expected", REAL_SUMMARIES, ids=[r[0] for r in REAL_SUMMARIES])
+def test_real_summary_links(bill, summary, expected):
+    assert summary_links(summary) == expected
+
+
+def test_scrape_adds_the_summary_links_to_the_bill(monkeypatch):
+    """Through scrape(): the summary's links land on the bill, in its session; a bill never links to itself."""
+    from va.tests.test_bills import _bill_row, _mock_bill_list, _mock_downstream, make_scraper as make_list_scraper
+
+    row = _bill_row("HB595")
+    # the bill's own number in its list is not a link to itself
+    row["LegislationSummary"] = "<p>This bill incorporates HB 132 and is identical to HB 595 and SB 63.</p>"
+    _mock_bill_list(monkeypatch, [row])
+    _mock_downstream(monkeypatch)
+    [bill] = [o for o in make_list_scraper().scrape(session="2026") if getattr(o, "_type", "") == "bill"]
+    assert [
+        (r["identifier"], r["legislative_session"], r["relation_type"], r["ddp_relation_label"])
+        for r in bill.related_bills
+    ] == [("SB 63", "2026", "companion", "identical to"), ("HB 132", "2026", "related", "incorporates")]
+
+
+def test_a_bill_named_twice_is_linked_once():
+    # e.g. a summary restating its last sentence; the first wording that names the bill wins
+    summary = "This bill is identical to SB 806. As amended, this bill is identical to SB 806."
+    assert summary_links(summary) == [("SB 806", "companion", "identical to")]
+
+
+def test_a_negated_identity_is_no_companion():
+    """Not seen in Virginia's summaries so far, but "not identical to" a bill must never make a companion."""
+    assert summary_links("This bill is not identical to HB 1.") == []
+    assert summary_links("This bill is similar, but not necessarily identical to SB 2.") == []
+    # only the negation is excluded: an affirmative "necessarily identical to" is a companion
+    assert summary_links("This bill is necessarily identical to HB 1.") == [("HB 1", "companion", "identical to")]
+
+
+def test_partly_identical_stays_related_when_also_called_identical():
+    """The first wording that names a bill wins, and the partial one is read first: a bill called both "identical to
+    relevant provisions of" and "identical to" stays related, never a stand-in."""
+    summary = "The provisions of this bill are identical to relevant provisions of SB 75. It is identical to SB 75."
+    assert summary_links(summary) == [("SB 75", "related", "identical to relevant provisions of")]
