@@ -14,9 +14,14 @@ class RhodeIsland(State):
     # (rilegislature.gov/journals/housejournals/SiteAssets/HouseJournal.aspx) and the Senate
     # Journals page (rilegislature.gov/journals/senatejournals/SitePages/senateJournals.aspx).
     # Each year is one "January Session"; the later sittings (Aug/Sep 2017, Jul/Dec 2020) are
-    # recessed days of that year's session, not special sessions. 2021 ends on its last sitting,
-    # July 1: both chambers' journals for that day (House 45th, Senate 27th legislative day) are
-    # headed "July 1, 2021 and January 4, 2022", the formal close on the day 2022 opened.
+    # recessed days of that year's session, not special sessions.
+    # OPEN-756 (Ramon 2026-11-22: the end is the legislature's official close): 2021 ends on
+    # 2022-01-04, the day 2022 opened. Both chambers' last 2021 journals (House 45th, Senate 27th
+    # legislative day) are headed "July 1, 2021 and January 4, 2022", and the House's records
+    # "ADJOURNMENT OF 2021 SESSION ... the House adjourns the 2021 session". Every other year
+    # ended on a joint resolution "declaring and consenting to a recess of the general assembly"
+    # (e.g. 2012-S 3053) that allows reconvening only before the next January; no chamber
+    # formally closed those sessions, so each ends on its last sitting day.
     legislative_sessions = [
         {
             "_scraped_name": "2012",
@@ -96,7 +101,7 @@ class RhodeIsland(State):
             "identifier": "2021",
             "name": "2021 Regular Session",
             "start_date": "2021-01-05",
-            "end_date": "2021-07-01",
+            "end_date": "2022-01-04",
             "active": False,
         },
         {
