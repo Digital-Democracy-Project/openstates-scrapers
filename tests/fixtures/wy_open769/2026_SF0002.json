@@ -1,0 +1,363 @@
+{
+ "amendments": [
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "SF0002S2001",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "001",
+   "sponsor": "Senator Laursen, D",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "SF0002S2002",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "002",
+   "sponsor": "Senator Case",
+   "status": "Failed"
+  }
+ ],
+ "bill": "SF0002",
+ "billActions": [
+  {
+   "billInformationID": 13171,
+   "location": "LSO",
+   "statusDate": "2026-03-03T17:47:58",
+   "statusMessage": "Assigned Chapter Number 23",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13171,
+   "location": "Governor",
+   "statusDate": "2026-03-03T17:47:40",
+   "statusMessage": "Governor Signed SEA No. 0001 ",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13171,
+   "location": "House",
+   "statusDate": "2026-02-27T10:44:10",
+   "statusMessage": "H Speaker Signed SEA No. 0001",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13171,
+   "location": "Senate",
+   "statusDate": "2026-02-19T10:20:08",
+   "statusMessage": "S President Signed SEA No. 0001",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13171,
+   "location": "LSO",
+   "statusDate": "2026-02-19T08:02:45",
+   "statusMessage": "Assigned Number SEA No. 0001",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13171,
+   "location": "House",
+   "statusDate": "2026-02-19T00:05:03",
+   "statusMessage": "H 3rd Reading:Passed 55-2-5-0-0",
+   "voteId": "5262"
+  },
+  {
+   "billInformationID": 13171,
+   "location": "House",
+   "statusDate": "2026-02-17T11:00:02",
+   "statusMessage": "H 2nd Reading:Passed",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13171,
+   "location": "House",
+   "statusDate": "2026-02-16T15:32:44",
+   "statusMessage": "H COW:Passed",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13171,
+   "location": "House",
+   "statusDate": "2026-02-16T10:37:10",
+   "statusMessage": "H Placed on General File",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13171,
+   "location": "House",
+   "statusDate": "2026-02-16T10:37:02",
+   "statusMessage": "H02 - Appropriations:Recommend Do Pass 7-0-0-0-0",
+   "voteId": "-122"
+  },
+  {
+   "billInformationID": 13171,
+   "location": "House",
+   "statusDate": "2026-02-13T10:38:32",
+   "statusMessage": "H Introduced and Referred to H02 - Appropriations",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13171,
+   "location": "House",
+   "statusDate": "2026-02-13T08:27:23",
+   "statusMessage": "H Received for Introduction",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13171,
+   "location": "Senate",
+   "statusDate": "2026-02-12T14:46:24",
+   "statusMessage": "S 3rd Reading:Passed 31-0-0-0-0",
+   "voteId": "231"
+  },
+  {
+   "billInformationID": 13171,
+   "location": "Senate",
+   "statusDate": "2026-02-11T15:10:15",
+   "statusMessage": "S 2nd Reading:Passed",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13171,
+   "location": "Senate",
+   "statusDate": "2026-02-10T15:12:01",
+   "statusMessage": "S COW:Passed",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13171,
+   "location": "Senate",
+   "statusDate": "2026-02-10T14:08:30",
+   "statusMessage": "S Placed on General File",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13171,
+   "location": "Senate",
+   "statusDate": "2026-02-10T14:08:22",
+   "statusMessage": "S02 - Appropriations:Recommend Do Pass 5-0-0-0-0",
+   "voteId": "-1"
+  },
+  {
+   "billInformationID": 13171,
+   "location": "Senate",
+   "statusDate": "2026-02-09T14:45:59",
+   "statusMessage": "S Introduced and Referred to S02 - Appropriations 31-0-0-0-0",
+   "voteId": "102"
+  },
+  {
+   "billInformationID": 13171,
+   "location": "Senate",
+   "statusDate": "2026-01-14T15:35:16",
+   "statusMessage": "S Received for Introduction",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13171,
+   "location": "LSO",
+   "statusDate": "2026-01-12T08:28:01",
+   "statusMessage": "Bill Number Assigned",
+   "voteId": ""
+  }
+ ],
+ "billStatus": "enrolled",
+ "billTitle": "AN ACT relating to appropriations for the legislature; providing appropriations for the operation of the legislative branch of state government; providing for terms and conditions and other requirements relating to appropriations for the remainder of the current biennium ending June 30, 2026 and the period of the budget as specified; providing for carryover of certain funds beyond the biennium as specified; and providing for effective dates.",
+ "billType": "SF",
+ "catchTitle": "Legislative budget.",
+ "chapter": "CH0023",
+ "concurrenceLink": null,
+ "currentBillHTML": null,
+ "customEnrolledLinkText": null,
+ "customEnrolledPath": null,
+ "digest": "2026/Digest/SF0002.pdf",
+ "digestHTML": null,
+ "effectiveDate": "7/1/2026",
+ "engrossedVersion": null,
+ "enrolledAct": "2026/Enroll/SF0002.pdf",
+ "enrolledNumber": "SEA0001",
+ "fiscalNote": "2026/Fiscal/SF0002.pdf",
+ "fiscalNoteHTML": null,
+ "id": 13171,
+ "introduced": "2026/Introduced/SF0002.pdf",
+ "isEngrossed": false,
+ "isPublic": null,
+ "lastAction": "Assigned Chapter Number 23",
+ "lastActionDate": "2026-03-03T00:00:00",
+ "lsoNumber": null,
+ "rollCalls": [
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "S Introduced and Referred to S02 - Appropriations 31-0-0-0-0",
+   "amendmentNumber": null,
+   "billNumber": "SF0002",
+   "chamber": "H",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "",
+   "noVotesCount": 0,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-09T14:45:59",
+   "voteID": 102,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Case, Cooper, Crago, Crum, Dockstader, Driskill, French, Gierau, Hicks, Hutchings, Ide, Jones, Landen, Kolb, Laursen, Love, McKeown, Nethercott, Olsen, Pappas, Pearson, Rothfuss, Salazar, Schuler, Scott, Steinmetz, Biteman",
+   "yesVotesCount": 31
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "S02 - Appropriations:Recommend Do Pass 5-0-0-0-0",
+   "amendmentNumber": null,
+   "billNumber": "SF0002",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "",
+   "noVotesCount": 0,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-10T14:08:22",
+   "voteID": -1,
+   "voteType": "C",
+   "year": 2026,
+   "yesVotes": "DRISKILL, FRENCH, GIERAU, LAURSEN, SALAZAR",
+   "yesVotesCount": 5
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment failed 3-28-0-0-0",
+   "amendmentNumber": "SF0002S2001",
+   "billNumber": "SF0002",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Anderson, Barlow, Brennan, Case, Cooper, Crago, Crum, Dockstader, Driskill, French, Gierau, Hutchings, Ide, Jones, Kolb, Landen, McKeown, Love, Nethercott, Olsen, Pearson, Pappas, Rothfuss, Salazar, Schuler, Scott, Steinmetz, Biteman",
+   "noVotesCount": 28,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-11T14:56:10",
+   "voteID": 205,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Boner, Hicks, Laursen",
+   "yesVotesCount": 3
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Amendment failed 14-17-0-0-0",
+   "amendmentNumber": "SF0002S2002",
+   "billNumber": "SF0002",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Barlow, Crum, French, Hicks, Hutchings, Ide, Kolb, Laursen, Love, McKeown, Olsen, Pearson, Salazar, Rothfuss, Scott, Steinmetz, Biteman",
+   "noVotesCount": 17,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-11T15:09:37",
+   "voteID": 206,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Boner, Brennan, Case, Cooper, Crago, Dockstader, Driskill, Gierau, Jones, Landen, Nethercott, Pappas, Schuler",
+   "yesVotesCount": 14
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "S 3rd Reading:Passed 31-0-0-0-0",
+   "amendmentNumber": null,
+   "billNumber": "SF0002",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "",
+   "noVotesCount": 0,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-12T14:46:24",
+   "voteID": 231,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Barlow, Boner, Brennan, Cooper, Case, Crago, Crum, Dockstader, Driskill, French, Gierau, Hicks, Hutchings, Ide, Jones, Kolb, Anderson, Landen, Laursen, Love, McKeown, Nethercott, Olsen, Pappas, Rothfuss, Salazar, Pearson, Schuler, Scott, Steinmetz, Biteman",
+   "yesVotesCount": 31
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "H02 - Appropriations:Recommend Do Pass 7-0-0-0-0",
+   "amendmentNumber": null,
+   "billNumber": "SF0002",
+   "chamber": "H",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "",
+   "noVotesCount": 0,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-16T10:37:02",
+   "voteID": -122,
+   "voteType": "C",
+   "year": 2026,
+   "yesVotes": "ALLEMAND, ANGELOS, HAROLDSON, PENDERGRAFT, SHERWOOD, SMITH, S, BEAR",
+   "yesVotesCount": 7
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "H 3rd Reading:Passed 55-2-5-0-0",
+   "amendmentNumber": null,
+   "billNumber": "SF0002",
+   "chamber": "H",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Banks, Campbell, E, Jarvis, Kelly, Nicholas",
+   "excusedVotesCount": 5,
+   "noVotes": "Brown, L, Williams",
+   "noVotesCount": 2,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-19T00:05:03",
+   "voteID": 5262,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Allemand, Andrew, Angelos, Bear, Brady, Bratten, Brown, G, Byron, Campbell, K, Chestek, Clouston, Connolly, Davis, Filer, Erickson, Fornstrom, Geringer, Guggenmos, Harshman, Haroldson, Heiner, Hoeft, Johnson, Knapp, Larsen, L, Lawley, Larson, JT, Lien, Locke, Lucas, McCann, Ottman, Pendergraft, Provenza, Posey, Riggins, Rodriguez-Williams, Sherwood, Schmid, Singh, Smith, Storer, Strock, Styvar, Tarver, Washut, Thayer, Wasserburger, Webb, Webber, Wharff, Winter, Wylie, Neiman, Yin",
+   "yesVotesCount": 55
+  }
+ ],
+ "scheduledActions": [],
+ "showPDF": false,
+ "signedDate": "3/3/2026",
+ "specialSessionValue": null,
+ "sponsor": "Mgt Council",
+ "sponsorStringHouse": "",
+ "sponsorStringSenate": "",
+ "sponsors": [
+  {
+   "house": null,
+   "name": "Mgt Council",
+   "primarySponsor": true,
+   "sponsorTitle": null
+  }
+ ],
+ "substitute": null,
+ "substituteBills": [],
+ "summary": "2026/Summaries/SF0002.pdf",
+ "summaryHTML": null,
+ "veto": null,
+ "vetoLinkText": null,
+ "vetoes": [],
+ "year": 2026
+}

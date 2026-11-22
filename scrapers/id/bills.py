@@ -213,6 +213,8 @@ class IDBillScraper(Scraper):
         has_moved_chambers = False
         # OPEN-682: the action row above a roll call, for a tally row printed without its own text
         previous_action = ""
+        # OPEN-769: the roll-call rows already read on each day, for the votes' dedupe_keys
+        roll_calls_by_day = defaultdict(list)
         for row in bill_tables[2]:
             # lots of empty rows
             if len(row) == 1:
@@ -235,7 +237,20 @@ class IDBillScraper(Scraper):
 
             # votes
             is_vote = "AYES" in action or "NAYS" in action
-            if is_vote:
+            # OPEN-769: a bill page prints no roll-call number, so a roll call is known by its bill page (session,
+            # bill), its day and its place among that day's roll calls on the page: the vote's dedupe_key. The
+            # chamber is left out (it is worked out from the rows above). A row printed twice word for word on one
+            # day, under the same motion, is one roll call and is kept once; a tally row with no text of its own
+            # takes its motion from the row above (OPEN-682), so that row is part of what makes it the same.
+            seen_today = roll_calls_by_day[date]
+            roll_call = (
+                action,
+                _motion_text(row[2].text) or _motion_text(previous_action),
+            )
+            if is_vote and roll_call in seen_today:
+                self.warning(f"Roll call printed twice on {date}: {url}")
+            elif is_vote:
+                seen_today.append(roll_call)
                 yield from self.parse_vote(
                     actor,
                     date,
@@ -245,6 +260,7 @@ class IDBillScraper(Scraper):
                     chamber,
                     url,
                     previous_action,
+                    dedupe_key=f"{url}#{date}-{len(seen_today)}",
                 )
                 # bill.add_vote_event(vote)
             # some td's text is separated by br elements
@@ -324,6 +340,7 @@ class IDBillScraper(Scraper):
         bill_chamber,
         source,
         previous_action="",
+        dedupe_key=None,
     ):
         """
         takes the actor, date and row element and returns a Vote object
@@ -364,6 +381,8 @@ class IDBillScraper(Scraper):
             classification=classify_motion("id", motion),
             legislative_session=session,
         )
+        if dedupe_key:
+            vote.dedupe_key = dedupe_key
         vote.add_source(source)
         vote.set_count("yes", int(yes_count))
         vote.set_count("no", int(no_count))

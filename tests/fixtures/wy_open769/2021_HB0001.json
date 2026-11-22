@@ -1,0 +1,1997 @@
+{
+ "amendments": [
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "STATE TREASURER",
+     "agencyNumber": "004",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2001",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "001",
+   "sponsor": "Representative Walters",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF REVENUE",
+     "agencyNumber": "011",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2002",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "002",
+   "sponsor": "Representative Duncan",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ATTORNEY GENERAL",
+     "agencyNumber": "015",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2003",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "003",
+   "sponsor": "Representative Baker",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ATTORNEY GENERAL",
+     "agencyNumber": "015",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2004",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "004",
+   "sponsor": "Representative Washut",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "STATE PARKS & CULTURAL RESOURCES",
+     "agencyNumber": "024",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2005",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "005",
+   "sponsor": "Representative Sommers",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "STATE CONSTRUCTION DEPARTMENT",
+     "agencyNumber": "027",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2006",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "006",
+   "sponsor": "Representative Walters",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "GEOLOGICAL SURVEY",
+     "agencyNumber": "042",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2007",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "007",
+   "sponsor": "Representative Burkhart",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2008",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "008",
+   "sponsor": "Representative Connolly",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2009",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "009",
+   "sponsor": "Representative Larsen",
+   "status": "Corrected, Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF WORKFORCE SERVICES",
+     "agencyNumber": "053",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "WYOMING BUSINESS COUNCIL",
+     "agencyNumber": "085",
+     "id": 0,
+     "sortOrder": 2
+    }
+   ],
+   "amendmentNumber": "HB0001H2010",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "010",
+   "sponsor": "Representative Connolly",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "COMMUNITY COLLEGE COMMISSION",
+     "agencyNumber": "057",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2011",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "011",
+   "sponsor": "Representative Duncan",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "COMMUNITY COLLEGE COMMISSION",
+     "agencyNumber": "057",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "STATE LANDS AND INVESTMENTS",
+     "agencyNumber": "060",
+     "id": 0,
+     "sortOrder": 2
+    }
+   ],
+   "amendmentNumber": "HB0001H2012",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "012",
+   "sponsor": "Representative Hunt",
+   "status": "Divided"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "COMMUNITY COLLEGE COMMISSION",
+     "agencyNumber": "057",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "STATE LANDS AND INVESTMENTS",
+     "agencyNumber": "060",
+     "id": 0,
+     "sortOrder": 2
+    }
+   ],
+   "amendmentNumber": "HB0001H2012.01",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "012",
+   "sponsor": "Representative Hunt",
+   "status": "Corrected, Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "COMMUNITY COLLEGE COMMISSION",
+     "agencyNumber": "057",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "STATE LANDS AND INVESTMENTS",
+     "agencyNumber": "060",
+     "id": 0,
+     "sortOrder": 2
+    }
+   ],
+   "amendmentNumber": "HB0001H2012.02",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "012",
+   "sponsor": "Representative Hunt",
+   "status": "Corrected, Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2013",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "013",
+   "sponsor": "Representative Brown",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2014",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "014",
+   "sponsor": "Representative MacGuire",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2015",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "015",
+   "sponsor": "Representative Burkhart",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2016",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "016",
+   "sponsor": "Representative Yin",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF CORRECTIONS",
+     "agencyNumber": "080",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2017",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "017",
+   "sponsor": "Representative Stith",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DISTRICT ATTORNEY/JUD DIST #7",
+     "agencyNumber": "157",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2018",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "018",
+   "sponsor": "Representative Washut",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[BUDGET BALANCERS - TRANSFERS]",
+     "agencyNumber": "300",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2019",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "019",
+   "sponsor": "Representative Harshman",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[MINERAL SEVERANCE TAX DIVERSION]",
+     "agencyNumber": "314",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2020",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "020",
+   "sponsor": "Representative Harshman",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ADDITION TO 300 SECTIONS",
+     "agencyNumber": "300s",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2021",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "021",
+   "sponsor": "Representative Baker",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ADDITION TO 300 SECTIONS",
+     "agencyNumber": "300s",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2022",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "022",
+   "sponsor": "Representative Harshman",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ADDITION TO 300 SECTIONS",
+     "agencyNumber": "300s",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2023",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "023",
+   "sponsor": "Representative Greear",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "OFFICE OF THE GOVERNOR",
+     "agencyNumber": "001",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2024",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "024",
+   "sponsor": "Representative Gray",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "OFFICE OF THE GOVERNOR",
+     "agencyNumber": "001",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2025",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "025",
+   "sponsor": "Representative Flitner",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "STATE TREASURER",
+     "agencyNumber": "004",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2026",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "026",
+   "sponsor": "Representative Nicholas",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ADMINISTRATION AND INFORMATION",
+     "agencyNumber": "006",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2027",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "027",
+   "sponsor": "Representative Nicholas",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ATTORNEY GENERAL",
+     "agencyNumber": "015",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2028",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "028",
+   "sponsor": "Representative Nicholas",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF TRANSPORTATION",
+     "agencyNumber": "045",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2029",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "029",
+   "sponsor": "Representative Gray",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "DEPARTMENT OF FAMILY SERVICES",
+     "agencyNumber": "049",
+     "id": 0,
+     "sortOrder": 2
+    },
+    {
+     "agencyName": "ADDITION TO 300 SECTIONS",
+     "agencyNumber": "300s",
+     "id": 0,
+     "sortOrder": 3
+    }
+   ],
+   "amendmentNumber": "HB0001H2030",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "030",
+   "sponsor": "Representative Hallinan",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "WYOMING BUSINESS COUNCIL",
+     "agencyNumber": "085",
+     "id": 0,
+     "sortOrder": 2
+    }
+   ],
+   "amendmentNumber": "HB0001H2031",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "031",
+   "sponsor": "Representative Heiner",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 2
+    }
+   ],
+   "amendmentNumber": "HB0001H2032",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "032",
+   "sponsor": "Representative Bear",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "DEPARTMENT OF FAMILY SERVICES",
+     "agencyNumber": "049",
+     "id": 0,
+     "sortOrder": 2
+    },
+    {
+     "agencyName": "WYOMING TOURISM BOARD",
+     "agencyNumber": "066",
+     "id": 0,
+     "sortOrder": 3
+    }
+   ],
+   "amendmentNumber": "HB0001H2033",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "033",
+   "sponsor": "Representative Gray",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 2
+    }
+   ],
+   "amendmentNumber": "HB0001H2034",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "034",
+   "sponsor": "Representative Burt",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "DEPARTMENT OF FAMILY SERVICES",
+     "agencyNumber": "049",
+     "id": 0,
+     "sortOrder": 2
+    }
+   ],
+   "amendmentNumber": "HB0001H2035",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "035",
+   "sponsor": "Representative Larsen",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "DEPARTMENT OF FAMILY SERVICES",
+     "agencyNumber": "049",
+     "id": 0,
+     "sortOrder": 2
+    },
+    {
+     "agencyName": "DEPARTMENT OF CORRECTIONS",
+     "agencyNumber": "080",
+     "id": 0,
+     "sortOrder": 3
+    }
+   ],
+   "amendmentNumber": "HB0001H2036",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "036",
+   "sponsor": "Representative Harshman",
+   "status": "Corrected, Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2037",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "037",
+   "sponsor": "Representative Gray",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2038",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "038",
+   "sponsor": "Representative Gray",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "COMMUNITY COLLEGE COMMISSION",
+     "agencyNumber": "057",
+     "id": 0,
+     "sortOrder": 2
+    }
+   ],
+   "amendmentNumber": "HB0001H2039",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "039",
+   "sponsor": "Representative Nicholas",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ADDITION TO 300 SECTIONS",
+     "agencyNumber": "300s",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2040",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "040",
+   "sponsor": "Representative Gray",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ADDITION TO 300 SECTIONS",
+     "agencyNumber": "300s",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2041",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "041",
+   "sponsor": "Representative Gray",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ADDITION TO 300 SECTIONS",
+     "agencyNumber": "300s",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H2042",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "042",
+   "sponsor": "Representative Connolly",
+   "status": "Corrected, Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "OFFICE OF THE PUBLIC DEFENDER",
+     "agencyNumber": "008",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 2
+    }
+   ],
+   "amendmentNumber": "HB0001H3001",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "001",
+   "sponsor": "Representative Olsen",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT  OF AGRICULTURE",
+     "agencyNumber": "010",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "WYOMING BUSINESS COUNCIL",
+     "agencyNumber": "085",
+     "id": 0,
+     "sortOrder": 2
+    }
+   ],
+   "amendmentNumber": "HB0001H3002",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "002",
+   "sponsor": "Representative Clausen",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT  OF AGRICULTURE",
+     "agencyNumber": "010",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3003",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "003",
+   "sponsor": "Representative Sommers",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "STATE PARKS & CULTURAL RESOURCES",
+     "agencyNumber": "024",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3004",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "004",
+   "sponsor": "Representative Sommers",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3005",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "005",
+   "sponsor": "Representative Sherwood",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3006",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "006",
+   "sponsor": "Representative Olsen",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "DEPARTMENT OF FAMILY SERVICES",
+     "agencyNumber": "049",
+     "id": 0,
+     "sortOrder": 2
+    },
+    {
+     "agencyName": "DEPARTMENT OF CORRECTIONS",
+     "agencyNumber": "080",
+     "id": 0,
+     "sortOrder": 3
+    }
+   ],
+   "amendmentNumber": "HB0001H3007",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "007",
+   "sponsor": "Representative Wilson",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "STATE LANDS AND INVESTMENTS",
+     "agencyNumber": "060",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3008",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "008",
+   "sponsor": "Representative Burkhart",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3009",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "009",
+   "sponsor": "Representative Yin",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "EDUCATION-SCHOOL FINANCE",
+     "agencyNumber": "205",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "[SCHOOL FOUNDATION PROGRAM \u2013 HEALTH INSURANCE]",
+     "agencyNumber": "334",
+     "id": 0,
+     "sortOrder": 2
+    },
+    {
+     "agencyName": "ADDITION TO 300 SECTION",
+     "agencyNumber": "300s",
+     "id": 0,
+     "sortOrder": 3
+    }
+   ],
+   "amendmentNumber": "HB0001H3010",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "010",
+   "sponsor": "Representative Simpson",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ADDITION TO 300 SECTIONS",
+     "agencyNumber": "300s",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "[BUDGET BALANCERS - TRANSFERS]",
+     "agencyNumber": "300",
+     "id": 0,
+     "sortOrder": 2
+    }
+   ],
+   "amendmentNumber": "HB0001H3011",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "011",
+   "sponsor": "Representative Harshman",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ADDITION TO 300 SECTIONS",
+     "agencyNumber": "300s",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3012",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "012",
+   "sponsor": "Representative Connolly",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ADDITION TO 300 SECTIONS",
+     "agencyNumber": "300s",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3013",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "013",
+   "sponsor": "Representative Harshman",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "STATE ENGINEER",
+     "agencyNumber": "037",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3014",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "014",
+   "sponsor": "Representative Harshman",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "STATE PARKS & CULTURAL RESOURCES",
+     "agencyNumber": "024",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3015",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "015",
+   "sponsor": "Representative Bear",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF HEALTH",
+     "agencyNumber": "048",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3016",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "016",
+   "sponsor": "Representative Gray",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3017",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "017",
+   "sponsor": "Representative Burkhart",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[BUDGET BALANCERS - TRANSFERS]",
+     "agencyNumber": "300",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3018",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "018",
+   "sponsor": "Representative Harshman",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ADDITION TO 300 SECTIONS",
+     "agencyNumber": "300s",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3019",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "019",
+   "sponsor": "Representative Gray",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ADDITION TO 300 SECTIONS",
+     "agencyNumber": "300s",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3020",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "020",
+   "sponsor": "Representative Bear",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ADDITION TO 300 SECTIONS",
+     "agencyNumber": "300s",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3021",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "021",
+   "sponsor": "Representative Gray",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ADDITION TO 300 SECTIONS",
+     "agencyNumber": "300s",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3022",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "022",
+   "sponsor": "Representative Gray",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[BUDGET BALANCERS - TRANSFERS]",
+     "agencyNumber": "300",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3023",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "023",
+   "sponsor": "Representative Nicholas",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "ADDITION TO 300 SECTIONS",
+     "agencyNumber": "300s",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "[BUDGET BALANCERS - TRANSFERS]",
+     "agencyNumber": "300",
+     "id": 0,
+     "sortOrder": 2
+    }
+   ],
+   "amendmentNumber": "HB0001H3024",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "024",
+   "sponsor": "Representative Nicholas",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "DEPARTMENT OF WORKFORCE SERVICES",
+     "agencyNumber": "053",
+     "id": 0,
+     "sortOrder": 1
+    },
+    {
+     "agencyName": "[BUDGET BALANCERS - TRANSFERS]",
+     "agencyNumber": "300",
+     "id": 0,
+     "sortOrder": 2
+    },
+    {
+     "agencyName": "STATE LANDS AND INVESTMENTS",
+     "agencyNumber": "060",
+     "id": 0,
+     "sortOrder": 3
+    }
+   ],
+   "amendmentNumber": "HB0001H3025",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "025",
+   "sponsor": "Representative Nicholas",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "UNIVERSITY OF WYOMING",
+     "agencyNumber": "067",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3026",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "026",
+   "sponsor": "Representative Nicholas",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [
+    {
+     "agencyName": "[MINERAL SEVERANCE TAX DIVERSION]",
+     "agencyNumber": "314",
+     "id": 0,
+     "sortOrder": 1
+    }
+   ],
+   "amendmentNumber": "HB0001H3027",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "027",
+   "sponsor": "Representative Nicholas",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB0001JC001",
+   "house": "H",
+   "id": 0,
+   "order": "Conference Committee",
+   "sequence": "001",
+   "sponsor": "",
+   "status": "H Adopted, S Adopted"
+  }
+ ],
+ "bill": "HB0001",
+ "billActions": [
+  {
+   "billInformationID": 10037,
+   "location": "LSO",
+   "statusDate": "2021-04-01T12:46:59",
+   "statusMessage": "Assigned Chapter Number 69",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10037,
+   "location": "Governor",
+   "statusDate": "2021-04-01T12:42:59",
+   "statusMessage": "Governor Signed HEA No. 0045 ",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10037,
+   "location": "Senate",
+   "statusDate": "2021-03-29T18:28:25",
+   "statusMessage": "S President Signed HEA No. 0045",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10037,
+   "location": "House",
+   "statusDate": "2021-03-29T18:24:21",
+   "statusMessage": "H Speaker Signed HEA No. 0045",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10037,
+   "location": "LSO",
+   "statusDate": "2021-03-29T18:18:37",
+   "statusMessage": "Assigned Number HEA No. 0045",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10037,
+   "location": "House",
+   "statusDate": "2021-03-19T13:51:25",
+   "statusMessage": "H Appointed JCC01 Members",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10037,
+   "location": "Senate",
+   "statusDate": "2021-03-19T13:09:37",
+   "statusMessage": "S Appointed JCC01 Members",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10037,
+   "location": "Senate",
+   "statusDate": "2021-03-18T18:28:25",
+   "statusMessage": "Senate:Pursuant to JR 14-1 (f) referred directly to 3rd Reading",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10037,
+   "location": "Senate",
+   "statusDate": "2021-03-17T10:55:00",
+   "statusMessage": "S Received for Introduction",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10037,
+   "location": "Senate",
+   "statusDate": "2021-03-17T10:55:00",
+   "statusMessage": "S Introduced and Referred to S02",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10037,
+   "location": "House",
+   "statusDate": "2021-03-12T17:04:04",
+   "statusMessage": "H 3rd Reading:Passed 49-10-1-0-0",
+   "voteId": "5173"
+  },
+  {
+   "billInformationID": 10037,
+   "location": "House",
+   "statusDate": "2021-03-10T20:37:38",
+   "statusMessage": "H 2nd Reading:Passed",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10037,
+   "location": "House",
+   "statusDate": "2021-03-09T15:49:49",
+   "statusMessage": "H COW:Passed",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10037,
+   "location": "House",
+   "statusDate": "2021-03-08T10:13:36",
+   "statusMessage": "H Introduced and Referred to HCOW",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10037,
+   "location": "House",
+   "statusDate": "2021-02-03T15:24:00",
+   "statusMessage": "H Received for Introduction",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10037,
+   "location": "LSO",
+   "statusDate": "2021-02-02T14:23:46",
+   "statusMessage": "Bill Number Assigned",
+   "voteId": ""
+  }
+ ],
+ "billStatus": "enrolled",
+ "billTitle": "AN ACT relating to supplemental appropriations and reduction of existing appropriations for the operation of state government for the fiscal biennium commencing July 1, 2020 and ending June 30, 2022; providing definitions; providing for additional appropriations and transfers of funds for the period of the budget; increasing or decreasing certain amounts; adjusting the number of positions; modifying prior appropriations; providing for duties, terms and conditions and other requirements relating to appropriations for the period of the budget as specified; providing for position and other budgetary limitations; requiring agreements between agencies; amending existing law by redirecting revenues and making transfers for the period of the budget; creating a cryptocurrency staking program and advisory council; providing for matching funds related to carbon capture, utilization and storage projects; repealing prior appropriations and budget conditions; and providing for an effective date.",
+ "billType": "HB",
+ "catchTitle": "General government appropriations-2.",
+ "chapter": "CH0069",
+ "concurrenceLink": null,
+ "currentBillHTML": null,
+ "customEnrolledLinkText": null,
+ "customEnrolledPath": null,
+ "digest": "2021/Digest/HB0001.pdf",
+ "digestHTML": null,
+ "effectiveDate": "4/1/2021",
+ "engrossedVersion": null,
+ "enrolledAct": "2021/Enroll/HB0001.pdf",
+ "enrolledNumber": "HEA0045",
+ "fiscalNote": "2021/Fiscal/HB0001.pdf",
+ "fiscalNoteHTML": null,
+ "id": 10037,
+ "introduced": "2021/Introduced/HB0001.pdf",
+ "isEngrossed": false,
+ "isPublic": null,
+ "lastAction": "Assigned Chapter Number 69",
+ "lastActionDate": "2021-04-01T00:00:00",
+ "lsoNumber": null,
+ "rollCalls": [
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment failed 29-31-0-0-0",
+   "amendmentNumber": "HB0001H2025",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": null,
+   "excusedVotesCount": 0,
+   "noVotes": "ANDREW, BAKER, BEAR, BROWN, BURT, CRAGO, EKLUND, EYRE, FORTNER, GRAY, GREEAR, HALLINAN, HAROLDSON, HEINER, HENDERSON, JENNINGS, KINNER, LARSEN, L, LAURSEN, D, NEIMAN, NICHOLAS, OTTMAN, SCHWARTZ, SIMPSON, SOMMERS, STITH, STYVAR, WALTERS, WHARFF, WILLIAMS, ZWONITZER",
+   "noVotesCount": 31,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-10T11:08:21",
+   "voteID": 5144,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "BANKS, BLACKBURN, BURKHART, CLAUSEN, CLIFFORD, CONNOLLY, DUNCAN, FLITNER, HARSHMAN, HUNT, BARLOW, KNAPP, MACGUIRE, MARTINEZ, NEWSOME, OAKLEY, OBERMUELLER, O'HEARN, OLSEN, PAXTON, PROVENZA, ROSCOE, SHERWOOD, SWEENEY, WASHUT, WESTERN, WILSON, WINTER, YIN",
+   "yesVotesCount": 29
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 35-24-0-0-1",
+   "amendmentNumber": "HB0001H2001",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": "STYVAR",
+   "conflictVotesCount": 1,
+   "excusedVotes": null,
+   "excusedVotesCount": 0,
+   "noVotes": "ANDREW, BEAR, BLACKBURN, BURT, EYRE, FLITNER, FORTNER, GRAY, GREEAR, HALLINAN, HAROLDSON, HEINER, JENNINGS, KNAPP, LAURSEN, D, NEIMAN, OTTMAN, SIMPSON, WASHUT, WESTERN, WHARFF, WILLIAMS, WINTER, ZWONITZER",
+   "noVotesCount": 24,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-10T11:12:36",
+   "voteID": 5145,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "BAKER, BANKS, BROWN, BURKHART, CLAUSEN, CLIFFORD, CONNOLLY, CRAGO, DUNCAN, EKLUND, HARSHMAN, HENDERSON, HUNT, KINNER, BARLOW, LARSEN, L, MACGUIRE, MARTINEZ, NEWSOME, NICHOLAS, OAKLEY, OBERMUELLER, O'HEARN, OLSEN, PAXTON, PROVENZA, ROSCOE, SCHWARTZ, SHERWOOD, SOMMERS, STITH, SWEENEY, WALTERS, WILSON, YIN",
+   "yesVotesCount": 35
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 37-23-0-0-0",
+   "amendmentNumber": "HB0001H2026",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": null,
+   "excusedVotesCount": 0,
+   "noVotes": "ANDREW, BAKER, BEAR, BLACKBURN, BROWN, BURT, FLITNER, FORTNER, GRAY, HAROLDSON, HEINER, HUNT, JENNINGS, KNAPP, LAURSEN, D, MARTINEZ, NEIMAN, OTTMAN, STYVAR, WASHUT, WHARFF, WILLIAMS, WINTER",
+   "noVotesCount": 23,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-10T11:19:31",
+   "voteID": 5146,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "BANKS, BURKHART, CLAUSEN, CLIFFORD, CONNOLLY, CRAGO, DUNCAN, EKLUND, EYRE, GREEAR, HALLINAN, HARSHMAN, HENDERSON, KINNER, BARLOW, LARSEN, L, MACGUIRE, NEWSOME, NICHOLAS, OAKLEY, OBERMUELLER, O'HEARN, OLSEN, PAXTON, PROVENZA, ROSCOE, SCHWARTZ, SHERWOOD, SIMPSON, SOMMERS, STITH, SWEENEY, WALTERS, WESTERN, WILSON, YIN, ZWONITZER",
+   "yesVotesCount": 37
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 37-23-0-0-0",
+   "amendmentNumber": "HB0001H2028",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": null,
+   "excusedVotesCount": 0,
+   "noVotes": "ANDREW, BAKER, BEAR, BLACKBURN, BURT, CLIFFORD, CRAGO, FORTNER, GRAY, HALLINAN, HAROLDSON, HEINER, HUNT, JENNINGS, KNAPP, LAURSEN, D, NEIMAN, OTTMAN, PROVENZA, STYVAR, WHARFF, WILLIAMS, WINTER",
+   "noVotesCount": 23,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-10T12:05:10",
+   "voteID": 5147,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "BANKS, BROWN, BURKHART, CLAUSEN, CONNOLLY, DUNCAN, EKLUND, EYRE, FLITNER, GREEAR, HARSHMAN, HENDERSON, KINNER, BARLOW, LARSEN, L, MACGUIRE, MARTINEZ, NEWSOME, NICHOLAS, OAKLEY, OBERMUELLER, O'HEARN, OLSEN, PAXTON, ROSCOE, SCHWARTZ, SHERWOOD, SIMPSON, SOMMERS, STITH, SWEENEY, WALTERS, WASHUT, WESTERN, WILSON, YIN, ZWONITZER",
+   "yesVotesCount": 37
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 31-28-1-0-0",
+   "amendmentNumber": "HB0001H2007",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": "OAKLEY",
+   "excusedVotesCount": 1,
+   "noVotes": "BEAR, BURT, CLIFFORD, CONNOLLY, CRAGO, FLITNER, FORTNER, GRAY, HAROLDSON, HEINER, HUNT, JENNINGS, KINNER, KNAPP, LARSEN, L, LAURSEN, D, MARTINEZ, NEIMAN, NICHOLAS, OTTMAN, PROVENZA, SOMMERS, STITH, STYVAR, WHARFF, WILLIAMS, WINTER, YIN",
+   "noVotesCount": 28,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-10T14:42:34",
+   "voteID": 5148,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "ANDREW, BAKER, BANKS, BLACKBURN, BROWN, BURKHART, CLAUSEN, DUNCAN, EKLUND, EYRE, GREEAR, HALLINAN, HARSHMAN, HENDERSON, BARLOW, MACGUIRE, NEWSOME, OBERMUELLER, O'HEARN, OLSEN, PAXTON, ROSCOE, SCHWARTZ, SHERWOOD, SIMPSON, SWEENEY, WALTERS, WASHUT, WESTERN, WILSON, ZWONITZER",
+   "yesVotesCount": 31
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment failed 12-47-1-0-0",
+   "amendmentNumber": "HB0001H2038",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": "SWEENEY",
+   "excusedVotesCount": 1,
+   "noVotes": "BANKS, BROWN, BURKHART, CLAUSEN, CLIFFORD, CONNOLLY, CRAGO, DUNCAN, EKLUND, EYRE, FLITNER, GREEAR, HALLINAN, HARSHMAN, HEINER, HENDERSON, HUNT, KINNER, BARLOW, KNAPP, LARSEN, L, MACGUIRE, MARTINEZ, NEIMAN, NEWSOME, NICHOLAS, OAKLEY, OBERMUELLER, O'HEARN, OLSEN, OTTMAN, PAXTON, PROVENZA, ROSCOE, SCHWARTZ, SHERWOOD, SIMPSON, SOMMERS, STITH, WALTERS, WASHUT, WESTERN, WHARFF, WILSON, WINTER, YIN, ZWONITZER",
+   "noVotesCount": 47,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-10T15:32:07",
+   "voteID": 5149,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "ANDREW, BAKER, BEAR, BLACKBURN, BURT, FORTNER, GRAY, HAROLDSON, JENNINGS, LAURSEN, D, STYVAR, WILLIAMS",
+   "yesVotesCount": 12
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment failed 25-35-0-0-0",
+   "amendmentNumber": "HB0001H2032",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": null,
+   "excusedVotesCount": 0,
+   "noVotes": "BANKS, BROWN, BURKHART, CLIFFORD, CONNOLLY, CRAGO, DUNCAN, EKLUND, FLITNER, GREEAR, HARSHMAN, HENDERSON, KINNER, BARLOW, LARSEN, L, MACGUIRE, MARTINEZ, NEWSOME, NICHOLAS, OAKLEY, OBERMUELLER, O'HEARN, OLSEN, PAXTON, PROVENZA, ROSCOE, SCHWARTZ, SHERWOOD, SOMMERS, STITH, SWEENEY, WALTERS, WILSON, YIN, ZWONITZER",
+   "noVotesCount": 35,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-10T16:54:59",
+   "voteID": 5150,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "STYVAR, WASHUT, WESTERN, WHARFF, WILLIAMS, WINTER, ANDREW, BAKER, BEAR, BLACKBURN, BURT, CLAUSEN, EYRE, FORTNER, GRAY, HALLINAN, HAROLDSON, HEINER, HUNT, JENNINGS, KNAPP, LAURSEN, D, NEIMAN, OTTMAN, SIMPSON",
+   "yesVotesCount": 25
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 51-9-0-0-0",
+   "amendmentNumber": "HB0001H2035",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": null,
+   "excusedVotesCount": 0,
+   "noVotes": "BEAR, GRAY, JENNINGS, LAURSEN, D, NEIMAN, OTTMAN, STYVAR, WILLIAMS, WINTER",
+   "noVotesCount": 9,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-10T17:25:06",
+   "voteID": 5151,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "ANDREW, BAKER, BANKS, BLACKBURN, BROWN, BURKHART, BURT, CLAUSEN, CLIFFORD, CONNOLLY, CRAGO, DUNCAN, EKLUND, EYRE, FLITNER, FORTNER, GREEAR, HALLINAN, HAROLDSON, HARSHMAN, HEINER, HENDERSON, HUNT, KINNER, BARLOW, KNAPP, LARSEN, L, MACGUIRE, MARTINEZ, NEWSOME, NICHOLAS, OAKLEY, OBERMUELLER, O'HEARN, OLSEN, PAXTON, PROVENZA, ROSCOE, SCHWARTZ, SHERWOOD, SIMPSON, SOMMERS, STITH, SWEENEY, WALTERS, WASHUT, WESTERN, WHARFF, WILSON, YIN, ZWONITZER",
+   "yesVotesCount": 51
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 42-18-0-0-0",
+   "amendmentNumber": "HB0001H2009",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": null,
+   "excusedVotesCount": 0,
+   "noVotes": "BAKER, BEAR, BLACKBURN, BURT, FORTNER, GRAY, HALLINAN, HAROLDSON, JENNINGS, KNAPP, LAURSEN, D, NEIMAN, OTTMAN, STYVAR, WHARFF, WILLIAMS, WILSON, WINTER",
+   "noVotesCount": 18,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-10T17:25:24",
+   "voteID": 5152,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "ANDREW, BANKS, BROWN, BURKHART, CLAUSEN, CLIFFORD, CONNOLLY, CRAGO, DUNCAN, EKLUND, EYRE, FLITNER, GREEAR, HARSHMAN, HEINER, HENDERSON, HUNT, KINNER, BARLOW, LARSEN, L, MACGUIRE, MARTINEZ, NEWSOME, NICHOLAS, OAKLEY, OBERMUELLER, O'HEARN, OLSEN, PAXTON, PROVENZA, ROSCOE, SCHWARTZ, SHERWOOD, SIMPSON, SOMMERS, STITH, SWEENEY, WALTERS, WASHUT, WESTERN, YIN, ZWONITZER",
+   "yesVotesCount": 42
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment failed 28-32-0-0-0",
+   "amendmentNumber": "HB0001H2036",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": null,
+   "excusedVotesCount": 0,
+   "noVotes": "ANDREW, BAKER, BEAR, BLACKBURN, BROWN, BURT, CLAUSEN, CRAGO, DUNCAN, EKLUND, EYRE, FORTNER, GRAY, GREEAR, HALLINAN, HAROLDSON, HEINER, JENNINGS, KINNER, KNAPP, LAURSEN, D, NEIMAN, NEWSOME, OTTMAN, SIMPSON, STITH, STYVAR, WASHUT, WESTERN, WHARFF, WILLIAMS, WINTER",
+   "noVotesCount": 32,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-10T17:39:54",
+   "voteID": 5153,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "BANKS, BURKHART, CLIFFORD, CONNOLLY, FLITNER, HARSHMAN, HENDERSON, HUNT, BARLOW, LARSEN, L, MACGUIRE, MARTINEZ, NICHOLAS, OAKLEY, OBERMUELLER, O'HEARN, OLSEN, PAXTON, PROVENZA, ROSCOE, SCHWARTZ, SHERWOOD, SOMMERS, SWEENEY, WALTERS, WILSON, YIN, ZWONITZER",
+   "yesVotesCount": 28
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 38-22-0-0-0",
+   "amendmentNumber": "HB0001H2039",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": null,
+   "excusedVotesCount": 0,
+   "noVotes": "ANDREW, BAKER, BEAR, BLACKBURN, BURT, CLAUSEN, FORTNER, GRAY, GREEAR, HALLINAN, HAROLDSON, HEINER, HUNT, JENNINGS, KNAPP, LAURSEN, D, NEIMAN, OTTMAN, STYVAR, WHARFF, WILLIAMS, WINTER",
+   "noVotesCount": 22,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-10T18:02:42",
+   "voteID": 5154,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "BANKS, BROWN, BURKHART, CLIFFORD, CONNOLLY, CRAGO, DUNCAN, EKLUND, EYRE, FLITNER, HARSHMAN, HENDERSON, KINNER, BARLOW, LARSEN, L, MACGUIRE, MARTINEZ, NEWSOME, NICHOLAS, OAKLEY, OBERMUELLER, O'HEARN, OLSEN, PAXTON, PROVENZA, ROSCOE, SCHWARTZ, SHERWOOD, SIMPSON, SOMMERS, STITH, SWEENEY, WALTERS, WASHUT, WESTERN, WILSON, YIN, ZWONITZER",
+   "yesVotesCount": 38
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 33-27-0-0-0",
+   "amendmentNumber": "HB0001H2012.01",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": null,
+   "excusedVotesCount": 0,
+   "noVotes": "ANDREW, BAKER, BEAR, BLACKBURN, BURT, EYRE, GRAY, HALLINAN, HAROLDSON, HEINER, JENNINGS, KNAPP, LARSEN, L, NEIMAN, OAKLEY, OLSEN, OTTMAN, SIMPSON, STITH, STYVAR, WALTERS, WASHUT, WESTERN, WHARFF, WILLIAMS, WILSON, WINTER",
+   "noVotesCount": 27,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-10T19:02:15",
+   "voteID": 5155,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "BANKS, BROWN, BURKHART, CLAUSEN, CLIFFORD, CONNOLLY, CRAGO, DUNCAN, EKLUND, FLITNER, FORTNER, GREEAR, HARSHMAN, HENDERSON, HUNT, KINNER, BARLOW, LAURSEN, D, MACGUIRE, MARTINEZ, NEWSOME, NICHOLAS, OBERMUELLER, O'HEARN, PAXTON, PROVENZA, ROSCOE, SCHWARTZ, SHERWOOD, SOMMERS, SWEENEY, YIN, ZWONITZER",
+   "yesVotesCount": 33
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 35-25-0-0-0",
+   "amendmentNumber": "HB0001H2017",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": null,
+   "excusedVotesCount": 0,
+   "noVotes": "ANDREW, BAKER, BEAR, BLACKBURN, BURT, EYRE, FORTNER, GRAY, GREEAR, HALLINAN, HAROLDSON, HEINER, HUNT, JENNINGS, KNAPP, LAURSEN, D, NEIMAN, PROVENZA, SOMMERS, STYVAR, WESTERN, WHARFF, WILLIAMS, WINTER, ZWONITZER",
+   "noVotesCount": 25,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-10T19:15:13",
+   "voteID": 5156,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "BANKS, BROWN, BURKHART, CLAUSEN, CLIFFORD, CONNOLLY, CRAGO, DUNCAN, EKLUND, FLITNER, HARSHMAN, HENDERSON, KINNER, BARLOW, LARSEN, L, MACGUIRE, MARTINEZ, NEWSOME, NICHOLAS, OAKLEY, OBERMUELLER, O'HEARN, OLSEN, OTTMAN, PAXTON, ROSCOE, SCHWARTZ, SHERWOOD, SIMPSON, STITH, SWEENEY, WALTERS, WASHUT, WILSON, YIN",
+   "yesVotesCount": 35
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 48-12-0-0-0",
+   "amendmentNumber": "HB0001H2023",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": null,
+   "excusedVotesCount": 0,
+   "noVotes": "ANDREW, CLIFFORD, CONNOLLY, FORTNER, GRAY, LAURSEN, D, PROVENZA, ROSCOE, SCHWARTZ, SHERWOOD, WHARFF, YIN",
+   "noVotesCount": 12,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-10T20:26:40",
+   "voteID": 5157,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "BAKER, BANKS, BEAR, BLACKBURN, BROWN, BURKHART, BURT, CLAUSEN, CRAGO, DUNCAN, EKLUND, EYRE, FLITNER, GREEAR, HALLINAN, HAROLDSON, HARSHMAN, HEINER, HENDERSON, HUNT, JENNINGS, KINNER, BARLOW, KNAPP, LARSEN, L, MACGUIRE, MARTINEZ, NEIMAN, NEWSOME, NICHOLAS, OAKLEY, OBERMUELLER, O'HEARN, OLSEN, OTTMAN, PAXTON, SIMPSON, SOMMERS, STITH, STYVAR, SWEENEY, WALTERS, WASHUT, WESTERN, WILLIAMS, WILSON, WINTER, ZWONITZER",
+   "yesVotesCount": 48
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 39-21-0-0-0",
+   "amendmentNumber": "HB0001H3001",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": null,
+   "excusedVotesCount": 0,
+   "noVotes": "BEAR, BLACKBURN, BURKHART, FORTNER, GRAY, GREEAR, HALLINAN, HAROLDSON, JENNINGS, KNAPP, LAURSEN, D, NEIMAN, OAKLEY, OTTMAN, SIMPSON, STITH, STYVAR, SWEENEY, WALTERS, WILLIAMS, WINTER",
+   "noVotesCount": 21,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-12T11:02:13",
+   "voteID": 5169,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "ANDREW, BAKER, BANKS, BROWN, BURT, CLAUSEN, CLIFFORD, CONNOLLY, CRAGO, DUNCAN, EKLUND, EYRE, FLITNER, HARSHMAN, HEINER, HENDERSON, HUNT, KINNER, BARLOW, LARSEN, L, MACGUIRE, MARTINEZ, NEWSOME, NICHOLAS, OBERMUELLER, O'HEARN, OLSEN, PAXTON, PROVENZA, ROSCOE, SCHWARTZ, SHERWOOD, SOMMERS, WASHUT, WESTERN, WHARFF, WILSON, YIN, ZWONITZER",
+   "yesVotesCount": 39
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 31-29-0-0-0",
+   "amendmentNumber": "HB0001H3014",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": null,
+   "excusedVotesCount": 0,
+   "noVotes": "EKLUND, EYRE, FLITNER, FORTNER, HALLINAN, HAROLDSON, HEINER, HUNT, JENNINGS, KNAPP, LAURSEN, D, NEIMAN, NEWSOME, OBERMUELLER, OTTMAN, PAXTON, SIMPSON, SOMMERS, STYVAR, WHARFF, WILLIAMS, WILSON, WINTER, BURT, CLAUSEN, CRAGO, DUNCAN, BEAR, BLACKBURN",
+   "noVotesCount": 29,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-12T12:01:18",
+   "voteID": 5170,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "ANDREW, BAKER, BANKS, BROWN, BURKHART, CLIFFORD, CONNOLLY, GRAY, GREEAR, HARSHMAN, HENDERSON, KINNER, BARLOW, LARSEN, L, MACGUIRE, MARTINEZ, NICHOLAS, OAKLEY, O'HEARN, OLSEN, PROVENZA, ROSCOE, SCHWARTZ, SHERWOOD, STITH, SWEENEY, WALTERS, WASHUT, WESTERN, YIN, ZWONITZER",
+   "yesVotesCount": 31
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 32-27-1-0-0",
+   "amendmentNumber": "HB0001H3026",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": "WHARFF",
+   "excusedVotesCount": 1,
+   "noVotes": "ANDREW, BAKER, BANKS, BEAR, BLACKBURN, CLAUSEN, CLIFFORD, DUNCAN, EYRE, FORTNER, GRAY, HALLINAN, HAROLDSON, HEINER, HUNT, JENNINGS, KNAPP, LAURSEN, D, MACGUIRE, NEWSOME, OTTMAN, PROVENZA, SHERWOOD, STYVAR, WASHUT, WILLIAMS, WINTER",
+   "noVotesCount": 27,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-12T15:10:10",
+   "voteID": 5171,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "BROWN, BURKHART, BURT, CONNOLLY, CRAGO, EKLUND, FLITNER, GREEAR, HARSHMAN, HENDERSON, KINNER, BARLOW, LARSEN, L, MARTINEZ, NEIMAN, NICHOLAS, OAKLEY, OBERMUELLER, O'HEARN, OLSEN, PAXTON, ROSCOE, SCHWARTZ, SIMPSON, SOMMERS, STITH, SWEENEY, WALTERS, WESTERN, WILSON, YIN, ZWONITZER",
+   "yesVotesCount": 32
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 36-23-1-0-0",
+   "amendmentNumber": "HB0001H3009",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": "WHARFF",
+   "excusedVotesCount": 1,
+   "noVotes": "BEAR, BURKHART, CLAUSEN, CRAGO, FORTNER, GRAY, HALLINAN, HEINER, HENDERSON, HUNT, JENNINGS, KNAPP, LAURSEN, D, MACGUIRE, NEIMAN, NICHOLAS, OTTMAN, SIMPSON, STITH, STYVAR, WASHUT, WILLIAMS, WINTER",
+   "noVotesCount": 23,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-12T15:23:46",
+   "voteID": 5172,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "ANDREW, BAKER, BANKS, BLACKBURN, BROWN, BURT, CLIFFORD, CONNOLLY, DUNCAN, EKLUND, EYRE, FLITNER, GREEAR, HAROLDSON, HARSHMAN, KINNER, BARLOW, LARSEN, L, MARTINEZ, NEWSOME, OAKLEY, OBERMUELLER, O'HEARN, OLSEN, PAXTON, PROVENZA, ROSCOE, SCHWARTZ, SHERWOOD, SOMMERS, SWEENEY, WALTERS, WESTERN, WILSON, YIN, ZWONITZER",
+   "yesVotesCount": 36
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "H 3rd Reading:Passed 49-10-1-0-0",
+   "amendmentNumber": "",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": "WHARFF",
+   "excusedVotesCount": 1,
+   "noVotes": "ANDREW, BANKS, BURT, CLIFFORD, CONNOLLY, HEINER, LAURSEN, D, PROVENZA, SHERWOOD, YIN",
+   "noVotesCount": 10,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-12T17:04:04",
+   "voteID": 5173,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "BAKER, BEAR, BLACKBURN, BROWN, BURKHART, CLAUSEN, CRAGO, DUNCAN, EKLUND, EYRE, FLITNER, FORTNER, GRAY, GREEAR, HALLINAN, HAROLDSON, HARSHMAN, HENDERSON, HUNT, JENNINGS, KINNER, BARLOW, KNAPP, LARSEN, L, MACGUIRE, MARTINEZ, NEIMAN, NEWSOME, NICHOLAS, OAKLEY, OBERMUELLER, O'HEARN, OLSEN, OTTMAN, PAXTON, ROSCOE, SCHWARTZ, SIMPSON, SOMMERS, STITH, STYVAR, SWEENEY, WALTERS, WASHUT, WESTERN, WILLIAMS, WILSON, WINTER, ZWONITZER",
+   "yesVotesCount": 49
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "S Adopted HB0001JC001: 26-3-1-0-0",
+   "amendmentNumber": "HB0001JC001",
+   "billNumber": "HB0001",
+   "chamber": "S",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": "DRISKILL",
+   "excusedVotesCount": 1,
+   "noVotes": "CASE, ROTHFUSS, SCOTT",
+   "noVotesCount": 3,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-29T11:56:20",
+   "voteID": 397,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "ANDERSON, BALDWIN, BITEMAN, BONER, BOUCHARD, COOPER, DOCKSTADER, ELLIS, FRENCH, FURPHY, GIERAU, HICKS, HUTCHINGS, JAMES, KINSKEY, KOLB, KOST, LANDEN, MCKEOWN, NETHERCOTT, PAPPAS, PERKINS, SALAZAR, SCHULER, STEINMETZ, WASSERBURGER",
+   "yesVotesCount": 26
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "H Adopted HB0001JC001: 52-7-1-0-0",
+   "amendmentNumber": "HB0001JC001",
+   "billNumber": "HB0001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": "HARSHMAN",
+   "excusedVotesCount": 1,
+   "noVotes": "BANKS, CLIFFORD, CONNOLLY, HALLINAN, PROVENZA, SHERWOOD, YIN",
+   "noVotesCount": 7,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-03-29T16:19:07",
+   "voteID": 5294,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "ANDREW, BAKER, BEAR, BLACKBURN, BROWN, BURKHART, BURT, CLAUSEN, CRAGO, DUNCAN, EKLUND, EYRE, FLITNER, FORTNER, GRAY, GREEAR, HAROLDSON, HEINER, HENDERSON, HUNT, JENNINGS, KINNER, BARLOW, KNAPP, LARSEN, L, LAURSEN, D, MACGUIRE, MARTINEZ, NEIMAN, NEWSOME, NICHOLAS, OAKLEY, OBERMUELLER, O'HEARN, OLSEN, OTTMAN, PAXTON, ROSCOE, SCHWARTZ, SIMPSON, SOMMERS, STITH, STYVAR, SWEENEY, WALTERS, WASHUT, WESTERN, WHARFF, WILLIAMS, WILSON, WINTER, ZWONITZER",
+   "yesVotesCount": 52
+  }
+ ],
+ "scheduledActions": [],
+ "showPDF": true,
+ "signedDate": "4/1/2021",
+ "specialSessionValue": null,
+ "sponsor": "Appropriations",
+ "sponsorStringHouse": "",
+ "sponsorStringSenate": "",
+ "sponsors": [
+  {
+   "house": null,
+   "name": "Appropriations",
+   "primarySponsor": true,
+   "sponsorTitle": null
+  }
+ ],
+ "substitute": null,
+ "substituteBills": [],
+ "summary": "2021/Summaries/HB0001.pdf",
+ "summaryHTML": null,
+ "veto": null,
+ "vetoLinkText": null,
+ "vetoes": [
+  {
+   "billInformationID": 0,
+   "customEnrolledLinkText": null,
+   "customEnrolledPath": null,
+   "id": 0,
+   "linkType": "Veto",
+   "sortOrder": 10,
+   "vetoLinkPath": "2021/Veto/HB0001.pdf",
+   "vetoLinkText": "Governor's Veto Message"
+  },
+  {
+   "billInformationID": 0,
+   "customEnrolledLinkText": null,
+   "customEnrolledPath": null,
+   "id": 0,
+   "linkType": "Veto",
+   "sortOrder": 15,
+   "vetoLinkPath": "2021/Veto/Ch69.pdf",
+   "vetoLinkText": "Chaptered Law with Final Veto Actions"
+  }
+ ],
+ "year": 2021
+}

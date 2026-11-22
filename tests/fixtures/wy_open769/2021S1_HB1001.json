@@ -1,0 +1,1169 @@
+{
+ "amendments": [
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H2001",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "001",
+   "sponsor": "Representative Bear",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H2002",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "002",
+   "sponsor": "Representative Sherwood",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H2003",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "003",
+   "sponsor": "Representative Yin",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H2004",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "004",
+   "sponsor": "Representative Nicholas",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H2005",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "005",
+   "sponsor": "Representative Nicholas",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H2006",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "006",
+   "sponsor": "Representative Olsen",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H2007",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "007",
+   "sponsor": "Representative Crago",
+   "status": "Corrected, Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H2008",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "008",
+   "sponsor": "Representative Larsen",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H2009",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "009",
+   "sponsor": "Representative Sherwood",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H2010",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "010",
+   "sponsor": "Representative Heiner",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H2011",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "011",
+   "sponsor": "Representative Haroldson",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H2012",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "012",
+   "sponsor": "Representative Provenza",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H2013",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "013",
+   "sponsor": "Representative Haroldson",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H2014",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "014",
+   "sponsor": "Representative Jennings",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H2015",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "015",
+   "sponsor": "Representative Gray",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H2016",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "016",
+   "sponsor": "Representative Hallinan",
+   "status": "Corrected, Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H2017",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "017",
+   "sponsor": "Representative Bear",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H2018",
+   "house": "H",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "018",
+   "sponsor": "Representative Bear",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H3001",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "001",
+   "sponsor": "Representative Sherwood",
+   "status": "Corrected, Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H3002",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "002",
+   "sponsor": "Representative Wilson",
+   "status": "Corrected, Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H3003",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "003",
+   "sponsor": "Representative Larsen",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H3004",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "004",
+   "sponsor": "Representative Walters",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H3005",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "005",
+   "sponsor": "Representative Yin",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H3006",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "006",
+   "sponsor": "Representative Bear",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H3007",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "007",
+   "sponsor": "Representative Brown",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H3008",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "008",
+   "sponsor": "Representative Washut",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H3009",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "009",
+   "sponsor": "Representative Laursen",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H3010",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "010",
+   "sponsor": "Representative Zwonitzer",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H3011",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "011",
+   "sponsor": "Representative Haroldson",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001H3012",
+   "house": "H",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "012",
+   "sponsor": "Representative Sherwood",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001HS001",
+   "house": "H",
+   "id": 0,
+   "order": "Standing Committee",
+   "sequence": "001",
+   "sponsor": "House Minerals, Business and Economic Development ",
+   "status": "Divided"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001HS001.01",
+   "house": "H",
+   "id": 0,
+   "order": "Standing Committee",
+   "sequence": "001",
+   "sponsor": "House Minerals, Business and Economic Development ",
+   "status": "Corrected, Corrected, Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001HS001.02",
+   "house": "H",
+   "id": 0,
+   "order": "Standing Committee",
+   "sequence": "001",
+   "sponsor": "House Minerals, Business and Economic Development ",
+   "status": "Corrected, Corrected, Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001HS002",
+   "house": "H",
+   "id": 0,
+   "order": "Standing Committee",
+   "sequence": "002",
+   "sponsor": "House Appropriations Committee",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001HW001",
+   "house": "H",
+   "id": 0,
+   "order": "Committee of the Whole",
+   "sequence": "001",
+   "sponsor": "Representative Larsen",
+   "status": "Corrected, Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001HW002",
+   "house": "H",
+   "id": 0,
+   "order": "Committee of the Whole",
+   "sequence": "002",
+   "sponsor": "Representative Zwonitzer",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001HW003",
+   "house": "H",
+   "id": 0,
+   "order": "Committee of the Whole",
+   "sequence": "003",
+   "sponsor": "Representative Larsen",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001HW004",
+   "house": "H",
+   "id": 0,
+   "order": "Committee of the Whole",
+   "sequence": "004",
+   "sponsor": "Representative Nicholas",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001HW005",
+   "house": "H",
+   "id": 0,
+   "order": "Committee of the Whole",
+   "sequence": "005",
+   "sponsor": "Representative Zwonitzer",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001HW006",
+   "house": "H",
+   "id": 0,
+   "order": "Committee of the Whole",
+   "sequence": "006",
+   "sponsor": "Representative Larsen",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001S2001",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "001",
+   "sponsor": "Senator Steinmetz",
+   "status": "Corrected, Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001S2002",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "002",
+   "sponsor": "Senator Steinmetz",
+   "status": "Corrected, Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001S2003",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "003",
+   "sponsor": "Senator Schuler",
+   "status": "Corrected, Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001S2004",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "004",
+   "sponsor": "Senator Baldwin",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001S2005",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "005",
+   "sponsor": "Senator Steinmetz",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001S2006",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "006",
+   "sponsor": "Senator Hicks",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001S2007",
+   "house": "S",
+   "id": 0,
+   "order": "2nd reading",
+   "sequence": "007",
+   "sponsor": "Senator Hutchings",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001S3001",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "001",
+   "sponsor": "Senator Hicks",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001S3002",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "002",
+   "sponsor": "Senator Hicks",
+   "status": "Corrected, Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001S3003",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "003",
+   "sponsor": "Senator Hutchings",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001S3004",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "004",
+   "sponsor": "Senator Hutchings",
+   "status": "Withdrawn"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001S3005",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "005",
+   "sponsor": "Senator Biteman",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001S3006",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "006",
+   "sponsor": "Senator Biteman",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001S3007",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "007",
+   "sponsor": "Senator Perkins",
+   "status": "Failed"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "HB1001SS001",
+   "house": "S",
+   "id": 0,
+   "order": "Standing Committee",
+   "sequence": "001",
+   "sponsor": "Senate Appropriations Committee",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "PROPHB1001S1103",
+   "house": "",
+   "id": 0,
+   "order": "",
+   "sequence": "01S",
+   "sponsor": "Senator Hicks",
+   "status": "Corrected"
+  }
+ ],
+ "bill": "HB1001",
+ "billActions": [
+  {
+   "billInformationID": 10414,
+   "location": "Senate",
+   "statusDate": "2021-11-03T13:13:59",
+   "statusMessage": "S 3rd Reading:Failed 14-13-3-0-0",
+   "voteId": "638"
+  },
+  {
+   "billInformationID": 10414,
+   "location": "Senate",
+   "statusDate": "2021-11-03T13:13:49",
+   "statusMessage": "S 3rd Reading:Bill Reconsideration Motion Passed by Roll Call 15-13-2-0-0",
+   "voteId": "637"
+  },
+  {
+   "billInformationID": 10414,
+   "location": "Senate",
+   "statusDate": "2021-11-03T13:13:29",
+   "statusMessage": "S 3rd Reading:Failed 15-13-2-0-0",
+   "voteId": "636"
+  },
+  {
+   "billInformationID": 10414,
+   "location": "Senate",
+   "statusDate": "2021-11-02T11:17:14",
+   "statusMessage": "S 2nd Reading:Passed",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10414,
+   "location": "Senate",
+   "statusDate": "2021-11-01T18:33:07",
+   "statusMessage": "S COW:Passed",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10414,
+   "location": "Senate",
+   "statusDate": "2021-11-01T16:54:51",
+   "statusMessage": "S Placed on General File",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10414,
+   "location": "Senate",
+   "statusDate": "2021-11-01T16:54:43",
+   "statusMessage": "S02 - Appropriations:Recommend Amend and Do Pass 3-2-0-0-0",
+   "voteId": "-26"
+  },
+  {
+   "billInformationID": 10414,
+   "location": "Senate",
+   "statusDate": "2021-11-01T07:12:00",
+   "statusMessage": "S Introduced and Referred to S02 - Appropriations",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10414,
+   "location": "Senate",
+   "statusDate": "2021-11-01T07:06:02",
+   "statusMessage": "S Received for Introduction",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10414,
+   "location": "House",
+   "statusDate": "2021-10-29T13:33:13",
+   "statusMessage": "H 3rd Reading:Passed 38-20-2-0-0",
+   "voteId": "6010"
+  },
+  {
+   "billInformationID": 10414,
+   "location": "House",
+   "statusDate": "2021-10-28T15:12:46",
+   "statusMessage": "H 2nd Reading:Passed",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10414,
+   "location": "House",
+   "statusDate": "2021-10-27T14:42:30",
+   "statusMessage": "H COW:Passed",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10414,
+   "location": "House",
+   "statusDate": "2021-10-27T09:15:00",
+   "statusMessage": "H Placed on General File",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10414,
+   "location": "House",
+   "statusDate": "2021-10-27T09:14:00",
+   "statusMessage": "H02 - Appropriations:Recommend Do Pass 6-1-0-0-0",
+   "voteId": "-14"
+  },
+  {
+   "billInformationID": 10414,
+   "location": "House",
+   "statusDate": "2021-10-27T09:12:39",
+   "statusMessage": "H09 - Minerals:Recommend Amend and Do Pass 7-1-1-0-0",
+   "voteId": "-22"
+  },
+  {
+   "billInformationID": 10414,
+   "location": "House",
+   "statusDate": "2021-10-26T15:22:23",
+   "statusMessage": "Pursuant to HR 16 Referred to H02 - Appropriations",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10414,
+   "location": "House",
+   "statusDate": "2021-10-26T15:17:14",
+   "statusMessage": "H Introduced and Referred to H09 - Minerals",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10414,
+   "location": "House",
+   "statusDate": "2021-10-22T13:22:50",
+   "statusMessage": "H Received for Introduction",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 10414,
+   "location": "LSO",
+   "statusDate": "2021-10-21T15:07:01",
+   "statusMessage": "Bill Number Assigned",
+   "voteId": ""
+  }
+ ],
+ "billStatus": "inactive",
+ "billTitle": "AN ACT relating to labor and employment; prohibiting employers in Wyoming from requiring COVID-19 vaccinations with emergency use authorizations or a COVID-19 vaccination as a condition of employment except as specified; providing for exemptions; providing for reasonable alternative measures for employees unable or unwilling to receive a COVID-19 vaccine; authorizing rulemaking; providing conditional sunset dates; providing applicability; providing an appropriation; authorizing a position; and providing for an effective date.",
+ "billType": "HB",
+ "catchTitle": "COVID-19 vaccine employer mandates.",
+ "chapter": "",
+ "concurrenceLink": null,
+ "currentBillHTML": null,
+ "customEnrolledLinkText": null,
+ "customEnrolledPath": null,
+ "digest": "2021Sp1/Digest/HB1001.pdf",
+ "digestHTML": null,
+ "effectiveDate": "3/1/2021",
+ "engrossedVersion": "2021Sp1/Engross/HB1001.pdf",
+ "enrolledAct": null,
+ "enrolledNumber": "",
+ "fiscalNote": "2021Sp1/Fiscal/HB1001.pdf",
+ "fiscalNoteHTML": null,
+ "id": 10414,
+ "introduced": "2021Sp1/Introduced/HB1001.pdf",
+ "isEngrossed": false,
+ "isPublic": null,
+ "lastAction": "S 3rd Reading:Failed 14-13-3-0-0",
+ "lastActionDate": "2021-11-03T00:00:00",
+ "lsoNumber": null,
+ "rollCalls": [
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "H09 - Minerals:Recommend Amend and Do Pass 7-1-1-0-0",
+   "amendmentNumber": null,
+   "billNumber": "HB1001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": "BURKHART, JR",
+   "excusedVotesCount": 1,
+   "noVotes": "SHERWOOD",
+   "noVotesCount": 1,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-10-27T09:12:39",
+   "voteID": -22,
+   "voteType": "C",
+   "year": 2021,
+   "yesVotes": "BEAR, DUNCAN, EYRE, GRAY, HEINER, WESTERN, GREEAR, BONER, CASE, NETHERCOTT, SCOTT, DRISKILL",
+   "yesVotesCount": 7
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "H02 - Appropriations:Recommend Do Pass 6-1-0-0-0",
+   "amendmentNumber": null,
+   "billNumber": "HB1001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": null,
+   "excusedVotesCount": 0,
+   "noVotes": "SCHWARTZ",
+   "noVotesCount": 1,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-10-27T09:14:00",
+   "voteID": -14,
+   "voteType": "C",
+   "year": 2021,
+   "yesVotes": "KINNER, LARSEN, SIMPSON, STITH, WALTERS, NICHOLAS, BAKER, BROWN, BURT, HENDERSON, MACGUIRE, O'HEARN, OBERMUELLER, STYVAR, BURKHART, JR",
+   "yesVotesCount": 6
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment failed 18-40-2-0-0",
+   "amendmentNumber": "HB1001H2015",
+   "billNumber": "HB1001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": "NEWSOME, WHARFF",
+   "excusedVotesCount": 2,
+   "noVotes": "BANKS, BARLOW, BROWN, BURKHART, BURT, CLAUSEN, CONNOLLY, CRAGO, DUNCAN, EKLUND, EYRE, FLITNER, GREEAR, HARSHMAN, HENDERSON, KINNER, LARSEN, L, LEBEAU, MACGUIRE, NICHOLAS, OAKLEY, OBERMUELLER, O'HEARN, OLSEN, PAXTON, PROVENZA, ROMERO-MARTINEZ, ROSCOE, SCHWARTZ, SHERWOOD, SIMPSON, SOMMERS, STITH, SWEENEY, WALTERS, WASHUT, WESTERN, WILSON, YIN, ZWONITZER",
+   "noVotesCount": 40,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-10-28T14:52:58",
+   "voteID": 6007,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "KNAPP, LAURSEN, D, NEIMAN, OTTMAN, RODRIG-WILLIAMS, STYVAR, WILLIAMS, WINTER, ANDREW, BAKER, BEAR, BLACKBURN, FORTNER, GRAY, HALLINAN, HAROLDSON, HEINER, JENNINGS",
+   "yesVotesCount": 18
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "H 3rd Reading:Passed 38-20-2-0-0",
+   "amendmentNumber": "",
+   "billNumber": "HB1001",
+   "chamber": "H",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": "HARSHMAN, NEWSOME",
+   "excusedVotesCount": 2,
+   "noVotes": "MACGUIRE, NICHOLAS, OBERMUELLER, PROVENZA, ROSCOE, SCHWARTZ, SHERWOOD, SWEENEY, WALTERS, YIN, BANKS, BROWN, BURT, CONNOLLY, EYRE, FLITNER, HENDERSON, KINNER, LARSEN, L, LEBEAU",
+   "noVotesCount": 20,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-10-29T13:33:13",
+   "voteID": 6010,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "WHARFF, WILLIAMS, WILSON, WINTER, ZWONITZER, ANDREW, BAKER, BARLOW, BEAR, BLACKBURN, BURKHART, CLAUSEN, CRAGO, DUNCAN, EKLUND, FORTNER, GRAY, GREEAR, HALLINAN, HAROLDSON, HEINER, JENNINGS, KNAPP, LAURSEN, D, NEIMAN, OAKLEY, O'HEARN, OLSEN, OTTMAN, PAXTON, RODRIG-WILLIAMS, ROMERO-MARTINEZ, SIMPSON, SOMMERS, STITH, STYVAR, WASHUT, WESTERN",
+   "yesVotesCount": 38
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "S02 - Appropriations:Recommend Amend and Do Pass 3-2-0-0-0",
+   "amendmentNumber": null,
+   "billNumber": "HB1001",
+   "chamber": "S",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": null,
+   "excusedVotesCount": 0,
+   "noVotes": "GIERAU, PERKINS, JENNINGS",
+   "noVotesCount": 2,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-11-01T16:54:43",
+   "voteID": -26,
+   "voteType": "C",
+   "year": 2021,
+   "yesVotes": "HICKS, KINSKEY, STEINMETZ, BANKS, HAROLDSON, HUNT, KNAPP, NEWSOME, SWEENEY, WINTER, FLITNER",
+   "yesVotesCount": 3
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 15-11-4-0-0",
+   "amendmentNumber": "HB1001S2002",
+   "billNumber": "HB1001",
+   "chamber": "S",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": "PAPPAS, PERKINS, SCOTT, WASSERBURGER",
+   "excusedVotesCount": 4,
+   "noVotes": "ANDERSON, BALDWIN, CASE, ELLIS, FURPHY, GIERAU, KINSKEY, KOST, LANDEN, NETHERCOTT, ROTHFUSS",
+   "noVotesCount": 11,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-11-02T10:36:43",
+   "voteID": 628,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "BITEMAN, BONER, BOUCHARD, COOPER, DOCKSTADER, DRISKILL, FRENCH, HICKS, HUTCHINGS, JAMES, KOLB, MCKEOWN, SALAZAR, SCHULER, STEINMETZ",
+   "yesVotesCount": 15
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment failed 9-17-4-0-0",
+   "amendmentNumber": "HB1001S2004",
+   "billNumber": "HB1001",
+   "chamber": "S",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": "PAPPAS, PERKINS, SCOTT, WASSERBURGER",
+   "excusedVotesCount": 4,
+   "noVotes": "BITEMAN, BONER, BOUCHARD, CASE, COOPER, DOCKSTADER, DRISKILL, ELLIS, FRENCH, HICKS, HUTCHINGS, JAMES, KOLB, MCKEOWN, SALAZAR, SCHULER, STEINMETZ",
+   "noVotesCount": 17,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-11-02T11:02:29",
+   "voteID": 629,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "ANDERSON, BALDWIN, FURPHY, GIERAU, KINSKEY, KOST, LANDEN, NETHERCOTT, ROTHFUSS",
+   "yesVotesCount": 9
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 16-10-4-0-0",
+   "amendmentNumber": "HB1001S2007",
+   "billNumber": "HB1001",
+   "chamber": "S",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": "PAPPAS, PERKINS, SCOTT, WASSERBURGER",
+   "excusedVotesCount": 4,
+   "noVotes": "BITEMAN, BONER, BOUCHARD, DOCKSTADER, HICKS, JAMES, KOLB, MCKEOWN, SALAZAR, STEINMETZ",
+   "noVotesCount": 10,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-11-02T11:16:55",
+   "voteID": 630,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "ANDERSON, BALDWIN, CASE, COOPER, DRISKILL, ELLIS, FRENCH, FURPHY, GIERAU, HUTCHINGS, KINSKEY, KOST, LANDEN, NETHERCOTT, ROTHFUSS, SCHULER",
+   "yesVotesCount": 16
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 17-10-2-0-1",
+   "amendmentNumber": "HB1001S3005",
+   "billNumber": "HB1001",
+   "chamber": "S",
+   "conflictVotes": "LANDEN",
+   "conflictVotesCount": 1,
+   "excusedVotes": "PAPPAS, SCOTT",
+   "excusedVotesCount": 2,
+   "noVotes": "ANDERSON, BALDWIN, CASE, FURPHY, GIERAU, HUTCHINGS, KINSKEY, PERKINS, ROTHFUSS, WASSERBURGER",
+   "noVotesCount": 10,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-11-03T11:16:34",
+   "voteID": 633,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "BITEMAN, BONER, BOUCHARD, COOPER, DOCKSTADER, DRISKILL, ELLIS, FRENCH, HICKS, JAMES, KOLB, KOST, MCKEOWN, NETHERCOTT, SALAZAR, SCHULER, STEINMETZ",
+   "yesVotesCount": 17
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment adopted 18-9-2-0-1",
+   "amendmentNumber": "HB1001S3006",
+   "billNumber": "HB1001",
+   "chamber": "S",
+   "conflictVotes": "LANDEN",
+   "conflictVotesCount": 1,
+   "excusedVotes": "PAPPAS, SCOTT",
+   "excusedVotesCount": 2,
+   "noVotes": "ANDERSON, BALDWIN, CASE, FURPHY, GIERAU, KOST, PERKINS, ROTHFUSS, WASSERBURGER",
+   "noVotesCount": 9,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-11-03T11:26:58",
+   "voteID": 634,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "BITEMAN, BONER, BOUCHARD, COOPER, DOCKSTADER, DRISKILL, ELLIS, FRENCH, HICKS, HUTCHINGS, JAMES, KINSKEY, KOLB, MCKEOWN, NETHERCOTT, SALAZAR, SCHULER, STEINMETZ",
+   "yesVotesCount": 18
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "Amendment failed 9-19-2-0-0",
+   "amendmentNumber": "HB1001S3007",
+   "billNumber": "HB1001",
+   "chamber": "S",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": "PAPPAS, SCOTT",
+   "excusedVotesCount": 2,
+   "noVotes": "BALDWIN, BITEMAN, BONER, BOUCHARD, CASE, COOPER, DOCKSTADER, FRENCH, GIERAU, JAMES, LANDEN, MCKEOWN, NETHERCOTT, PERKINS, ROTHFUSS, SALAZAR, SCHULER, STEINMETZ, WASSERBURGER",
+   "noVotesCount": 19,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-11-03T11:56:39",
+   "voteID": 635,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "ANDERSON, DRISKILL, ELLIS, FURPHY, HICKS, HUTCHINGS, KINSKEY, KOLB, KOST",
+   "yesVotesCount": 9
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "S 3rd Reading:Failed 15-13-2-0-0",
+   "amendmentNumber": "",
+   "billNumber": "HB1001",
+   "chamber": "S",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": "PAPPAS, SCOTT",
+   "excusedVotesCount": 2,
+   "noVotes": "ANDERSON, BALDWIN, CASE, ELLIS, FURPHY, GIERAU, KINSKEY, KOST, LANDEN, NETHERCOTT, PERKINS, ROTHFUSS, WASSERBURGER",
+   "noVotesCount": 13,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-11-03T13:13:29",
+   "voteID": 636,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "BITEMAN, BONER, BOUCHARD, COOPER, DOCKSTADER, DRISKILL, FRENCH, HICKS, HUTCHINGS, JAMES, KOLB, MCKEOWN, SALAZAR, SCHULER, STEINMETZ",
+   "yesVotesCount": 15
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "S 3rd Reading:Bill Reconsideration Motion Passed by Roll Call 15-13-2-0-0",
+   "amendmentNumber": "",
+   "billNumber": "HB1001",
+   "chamber": "S",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": "PAPPAS, SCOTT",
+   "excusedVotesCount": 2,
+   "noVotes": "ANDERSON, BALDWIN, CASE, ELLIS, FURPHY, GIERAU, KINSKEY, KOST, LANDEN, NETHERCOTT, PERKINS, ROTHFUSS, WASSERBURGER",
+   "noVotesCount": 13,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-11-03T13:13:49",
+   "voteID": 637,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "BITEMAN, BONER, BOUCHARD, COOPER, DOCKSTADER, DRISKILL, FRENCH, HICKS, HUTCHINGS, JAMES, KOLB, MCKEOWN, SALAZAR, SCHULER, STEINMETZ",
+   "yesVotesCount": 15
+  },
+  {
+   "absentVotes": null,
+   "absentVotesCount": 0,
+   "action": "S 3rd Reading:Failed 14-13-3-0-0",
+   "amendmentNumber": "",
+   "billNumber": "HB1001",
+   "chamber": "S",
+   "conflictVotes": null,
+   "conflictVotesCount": 0,
+   "excusedVotes": "BONER, PAPPAS, SCOTT",
+   "excusedVotesCount": 3,
+   "noVotes": "ANDERSON, BALDWIN, CASE, ELLIS, FURPHY, GIERAU, KINSKEY, KOST, LANDEN, NETHERCOTT, PERKINS, ROTHFUSS, WASSERBURGER",
+   "noVotesCount": 13,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2021-11-03T13:13:59",
+   "voteID": 638,
+   "voteType": "F",
+   "year": 2021,
+   "yesVotes": "BITEMAN, BOUCHARD, COOPER, DOCKSTADER, DRISKILL, FRENCH, HICKS, HUTCHINGS, JAMES, KOLB, MCKEOWN, SALAZAR, SCHULER, STEINMETZ",
+   "yesVotesCount": 14
+  }
+ ],
+ "scheduledActions": [],
+ "showPDF": false,
+ "signedDate": "",
+ "specialSessionValue": 1,
+ "sponsor": "Representative Greear",
+ "sponsorStringHouse": "Representative(s) Barlow, Bear, Burkhart, Duncan, Heiner, Oakley, Olsen, Sommers, Western, Wilson",
+ "sponsorStringSenate": "Senator(s) Boner, Cooper, Dockstader, Driskill, Hicks, Hutchings, Kinskey, Kolb, Kost, Salazar, Steinmetz",
+ "sponsors": [
+  {
+   "house": "H",
+   "name": "Barlow",
+   "primarySponsor": false,
+   "sponsorTitle": "Representative"
+  },
+  {
+   "house": "H",
+   "name": "Bear",
+   "primarySponsor": false,
+   "sponsorTitle": "Representative"
+  },
+  {
+   "house": "H",
+   "name": "Burkhart",
+   "primarySponsor": false,
+   "sponsorTitle": "Representative"
+  },
+  {
+   "house": "H",
+   "name": "Duncan",
+   "primarySponsor": false,
+   "sponsorTitle": "Representative"
+  },
+  {
+   "house": "H",
+   "name": "Greear",
+   "primarySponsor": true,
+   "sponsorTitle": "Representative"
+  },
+  {
+   "house": "H",
+   "name": "Heiner",
+   "primarySponsor": false,
+   "sponsorTitle": "Representative"
+  },
+  {
+   "house": "H",
+   "name": "Oakley",
+   "primarySponsor": false,
+   "sponsorTitle": "Representative"
+  },
+  {
+   "house": "H",
+   "name": "Olsen",
+   "primarySponsor": false,
+   "sponsorTitle": "Representative"
+  },
+  {
+   "house": "H",
+   "name": "Sommers",
+   "primarySponsor": false,
+   "sponsorTitle": "Representative"
+  },
+  {
+   "house": "H",
+   "name": "Western",
+   "primarySponsor": false,
+   "sponsorTitle": "Representative"
+  },
+  {
+   "house": "H",
+   "name": "Wilson",
+   "primarySponsor": false,
+   "sponsorTitle": "Representative"
+  },
+  {
+   "house": "S",
+   "name": "Boner",
+   "primarySponsor": false,
+   "sponsorTitle": "Senator"
+  },
+  {
+   "house": "S",
+   "name": "Cooper",
+   "primarySponsor": false,
+   "sponsorTitle": "Senator"
+  },
+  {
+   "house": "S",
+   "name": "Dockstader",
+   "primarySponsor": false,
+   "sponsorTitle": "Senator"
+  },
+  {
+   "house": "S",
+   "name": "Driskill",
+   "primarySponsor": false,
+   "sponsorTitle": "Senator"
+  },
+  {
+   "house": "S",
+   "name": "Hicks",
+   "primarySponsor": false,
+   "sponsorTitle": "Senator"
+  },
+  {
+   "house": "S",
+   "name": "Hutchings",
+   "primarySponsor": false,
+   "sponsorTitle": "Senator"
+  },
+  {
+   "house": "S",
+   "name": "Kinskey",
+   "primarySponsor": false,
+   "sponsorTitle": "Senator"
+  },
+  {
+   "house": "S",
+   "name": "Kolb",
+   "primarySponsor": false,
+   "sponsorTitle": "Senator"
+  },
+  {
+   "house": "S",
+   "name": "Kost",
+   "primarySponsor": false,
+   "sponsorTitle": "Senator"
+  },
+  {
+   "house": "S",
+   "name": "Salazar",
+   "primarySponsor": false,
+   "sponsorTitle": "Senator"
+  },
+  {
+   "house": "S",
+   "name": "Steinmetz",
+   "primarySponsor": false,
+   "sponsorTitle": "Senator"
+  }
+ ],
+ "substitute": null,
+ "substituteBills": [],
+ "summary": null,
+ "summaryHTML": null,
+ "veto": null,
+ "vetoLinkText": null,
+ "vetoes": [],
+ "year": 2021
+}
