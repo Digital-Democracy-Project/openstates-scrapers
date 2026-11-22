@@ -225,7 +225,11 @@ class BillList(JsonPage):
                     .strip()
                 )
                 modal_id = vote_modal.xpath("../..")[0].attrib["id"]
-                dedupe_key = f"{modal_id}{motion_text}"
+                # OPEN-757: the modal id is the site's roll-call id ("vote-modal-202501S01000": session,
+                # chamber, roll-call number), so it is the vote's dedupe_key, with the page URL (assembly,
+                # bill). Without a key the importer matches on motion text + time + chamber, and HB 1015's
+                # two Senate division roll calls (04/22/2025 01:47 PM) collided and stopped the load.
+                dedupe_key = f"{action_url}#{modal_id}"
                 if dedupe_key in votes_seen_for_bill:
                     # at least one ND bill has duplicate votes
                     # so skip if we have seen this vote already
@@ -263,6 +267,7 @@ class BillList(JsonPage):
                     bill=bill_id,
                     bill_chamber="lower" if bill_id[0] == "H" else "upper",
                 )
+                vote.dedupe_key = dedupe_key
                 vote.add_source(action_url)
                 yes_count = (
                     vote_modal.xpath(

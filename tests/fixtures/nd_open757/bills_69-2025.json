@@ -1,0 +1,1124 @@
+{
+ "bills": {
+  "1015": {
+   "name": "HB 1015",
+   "number": "1015",
+   "summary": "Relating to a state facility maintenance fund; to amend and reenact subsection\u00a01 of section 10\u201130.5\u201102 of the North Dakota Century Code and section\u00a09 of House Bill No.\u00a01012, as approved by the sixty-ninth Legislative Assembly, relating to the North Dakota development fund and infant and toddler care provider support payments; to repeal section 11\u201138\u201108 of the North Dakota Century Code, relating to county achievement days; to provide for a transfer; to authorize a line of credit; to provide an exemption; to provide for a report; and to declare an emergency.",
+   "title": "AN ACT to provide an appropriation for defraying the expenses of the various divisions under the supervision of the director of the office of management and budget; to create and enact a new section to chapter 54-44 of the North Dakota Century Code, relating to a state facility maintenance fund; to amend and reenact subsection 1 of section 10-30.5-02 of the North Dakota Century Code and section 9 of House Bill No. 1012, as approved by the sixty-ninth Legislative Assembly, relating to the North Dakota development fund and infant and toddler care provider support payments; to repeal section 11-38-08 of the North Dakota Century Code, relating to county achievement days; to provide for a transfer; to authorize a line of credit; to provide an exemption; to provide for a report; and to declare an emergency.",
+   "chamber": "House",
+   "session_id": "202501",
+   "session_name": "2025 Regular Session",
+   "url": "https://ndlegis.gov/assembly/69-2025/regular/bill-overview/bo1015.html",
+   "versions_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-index/bi1015.html",
+   "actions_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-actions/ba1015.html",
+   "video_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-video/bv1015.html",
+   "hearing_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-hearings/bh1015.html",
+   "testimony_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-testimony/bt1015.html",
+   "current_status": "Governor signed",
+   "last_action": "Filed with Secretary Of State 05/12",
+   "passed": true,
+   "agency": null,
+   "sponsors": [
+    {
+     "id": 1948,
+     "name": "House Appropriations",
+     "type": "committee",
+     "chamber": "House",
+     "primary": true
+    }
+   ],
+   "actions": [
+    {
+     "id": 469345,
+     "description": "Introduced, first reading, referred Appropriations Committee",
+     "date": "2025-01-07T23:59:59",
+     "category": "Introduced",
+     "chamber": "House",
+     "bill_version": "25.0159.01000",
+     "roll_call": {}
+    },
+    {
+     "id": 469218,
+     "description": "Committee Hearing 02:00",
+     "date": "2025-01-16T14:00:00",
+     "category": "Committee hearing",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 470516,
+     "description": "Committee Hearing 10:15",
+     "date": "2025-01-22T10:15:00",
+     "category": "Committee hearing",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 471687,
+     "description": "Committee Hearing 02:00",
+     "date": "2025-01-28T14:00:00",
+     "category": "Committee hearing",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 472714,
+     "description": "Committee Hearing 02:00",
+     "date": "2025-02-05T14:00:00",
+     "category": "Committee hearing",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 476661,
+     "description": "Reported back amended, do pass, amendment placed on calendar 21 1 1",
+     "date": "2025-02-25T23:59:59",
+     "category": "Committee report",
+     "chamber": "House",
+     "bill_version": "25.0159.01005",
+     "roll_call": {}
+    },
+    {
+     "id": 476662,
+     "description": "Amendment adopted, placed on calendar",
+     "date": "2025-02-25T23:59:59",
+     "category": "Amendment adopted",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 476663,
+     "description": "Second reading, passed, yeas 83 nays 6, Emergency clause carried",
+     "date": "2025-02-25T23:59:59",
+     "category": "Passed",
+     "chamber": "House",
+     "bill_version": "25.0159.02000",
+     "roll_call": {
+      "id": "202501H00671",
+      "chamber": "House",
+      "date": "2025-02-25T22:13:41",
+      "description": "Final Passage",
+      "division": null,
+      "passed": true,
+      "total_yeas": 83,
+      "total_nays": 6,
+      "total_absent": 4
+     }
+    },
+    {
+     "id": 476664,
+     "description": "Received from House",
+     "date": "2025-02-25T23:59:59",
+     "category": "Received from House",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 477262,
+     "description": "Introduced, first reading, (emergency), referred Appropriations Committee",
+     "date": "2025-03-07T23:59:59",
+     "category": "Introduced (emergency)",
+     "chamber": "Senate",
+     "bill_version": "25.0159.02000",
+     "roll_call": {}
+    },
+    {
+     "id": 477174,
+     "description": "Committee Hearing 02:00",
+     "date": "2025-03-12T14:00:00",
+     "category": "Committee hearing",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 483653,
+     "description": "Reported back amended, do pass, amendment placed on calendar 13 3 0",
+     "date": "2025-04-22T23:59:59",
+     "category": "Committee report",
+     "chamber": "Senate",
+     "bill_version": "25.0159.02012",
+     "roll_call": {}
+    },
+    {
+     "id": 483654,
+     "description": "Division of amendment",
+     "date": "2025-04-22T23:59:59",
+     "category": "Division of amendment",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 483655,
+     "description": "Division A lost",
+     "date": "2025-04-22T23:59:59",
+     "category": "Division * lost",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {
+      "id": "202501S01000",
+      "chamber": "Senate",
+      "date": "2025-04-22T13:47:01",
+      "description": "Consideration of Amendments",
+      "division": "A",
+      "passed": false,
+      "total_yeas": 23,
+      "total_nays": 24,
+      "total_absent": 0
+     }
+    },
+    {
+     "id": 483656,
+     "description": "Division B adopted",
+     "date": "2025-04-22T23:59:59",
+     "category": "Division * adopted",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {
+      "id": "202501S01001",
+      "chamber": "Senate",
+      "date": "2025-04-22T13:47:46",
+      "description": "Consideration of Amendments",
+      "division": "B",
+      "passed": true,
+      "total_yeas": 32,
+      "total_nays": 15,
+      "total_absent": 0
+     }
+    },
+    {
+     "id": 483657,
+     "description": "Amendment adopted, placed on calendar",
+     "date": "2025-04-22T23:59:59",
+     "category": "Amendment adopted",
+     "chamber": "Senate",
+     "bill_version": "25.0159.02017",
+     "roll_call": {}
+    },
+    {
+     "id": 483658,
+     "description": "Second reading, passed as amended, yeas 31 nays 16",
+     "date": "2025-04-22T23:59:59",
+     "category": "Passed",
+     "chamber": "Senate",
+     "bill_version": "25.0159.04000",
+     "roll_call": {
+      "id": "202501S01002",
+      "chamber": "Senate",
+      "date": "2025-04-22T14:04:38",
+      "description": "Final Passage",
+      "division": null,
+      "passed": true,
+      "total_yeas": 31,
+      "total_nays": 16,
+      "total_absent": 0
+     }
+    },
+    {
+     "id": 483795,
+     "description": "Returned to House (12)",
+     "date": "2025-04-23T23:59:59",
+     "category": "Returned to House",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 484104,
+     "description": "Refused to concur",
+     "date": "2025-04-25T23:59:59",
+     "category": "Not concurred",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 484105,
+     "description": "Conference committee appointed Vigesaa Bosch Weisz",
+     "date": "2025-04-25T23:59:59",
+     "category": "Conference committee",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 484106,
+     "description": "Conference committee appointed Bekkedahl Wanzek Hogue",
+     "date": "2025-04-25T23:59:59",
+     "category": "Conference committee",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 484268,
+     "description": "Appoint Rep. Lefor to replace Rep. Bosch on conference committee",
+     "date": "2025-04-28T23:59:59",
+     "category": "Miscellaneous",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 484786,
+     "description": "Reported back from conference committee, in place of, placed on calendar",
+     "date": "2025-05-02T23:59:59",
+     "category": "Committee report",
+     "chamber": "House",
+     "bill_version": "25.0159.02028",
+     "roll_call": {}
+    },
+    {
+     "id": 484787,
+     "description": "Conference committee report adopted",
+     "date": "2025-05-02T23:59:59",
+     "category": "Committee report",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 484788,
+     "description": "Second reading, passed, yeas 76 nays 9, Emergency clause carried",
+     "date": "2025-05-02T23:59:59",
+     "category": "Passed",
+     "chamber": "House",
+     "bill_version": "25.0159.05000",
+     "roll_call": {}
+    },
+    {
+     "id": 484789,
+     "description": "Reported back from conference committee, in place of, placed on calendar",
+     "date": "2025-05-02T23:59:59",
+     "category": "Committee report",
+     "chamber": "Senate",
+     "bill_version": "25.0159.02028",
+     "roll_call": {}
+    },
+    {
+     "id": 484790,
+     "description": "Conference committee report adopted",
+     "date": "2025-05-02T23:59:59",
+     "category": "Committee report",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 484791,
+     "description": "Second reading, passed as amended, yeas 40 nays 6",
+     "date": "2025-05-02T23:59:59",
+     "category": "Passed",
+     "chamber": "Senate",
+     "bill_version": "25.0159.05000",
+     "roll_call": {}
+    },
+    {
+     "id": 484792,
+     "description": "Emergency clause carried",
+     "date": "2025-05-02T23:59:59",
+     "category": "Emergency clause carried",
+     "chamber": "Senate",
+     "bill_version": "25.0159.05000",
+     "roll_call": {}
+    },
+    {
+     "id": 484984,
+     "description": "Signed by President",
+     "date": "2025-05-17T23:59:59",
+     "category": "President signed",
+     "chamber": "Senate",
+     "bill_version": "25.0159.06000",
+     "roll_call": {}
+    },
+    {
+     "id": 484982,
+     "description": "Signed by Speaker",
+     "date": "2025-05-17T23:59:59",
+     "category": "Speaker signed",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 484983,
+     "description": "Sent to Governor",
+     "date": "2025-05-17T23:59:59",
+     "category": "Delivered to Governor",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 484985,
+     "description": "Signed by Governor 05/12",
+     "date": "2025-05-17T23:59:59",
+     "category": "Governor signed",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 485020,
+     "description": "Filed with Secretary Of State 05/12",
+     "date": "2025-06-11T09:40:46",
+     "category": "Filed with Secretary of State",
+     "chamber": null,
+     "bill_version": null,
+     "roll_call": {}
+    }
+   ],
+   "versions": [
+    {
+     "lc_number": "25.0159.01000",
+     "description": "INTRODUCED",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0159-01000.pdf"
+    },
+    {
+     "lc_number": "25.0159.01005",
+     "description": "Prepared by the Legislative Council staff for House Appropriations - Government Operations Division Committee",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0159-01005m.pdf"
+    },
+    {
+     "lc_number": "25.0159.02000",
+     "description": "FIRST ENGROSSMENT",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0159-02000.pdf"
+    },
+    {
+     "lc_number": "25.0159.02012",
+     "description": "Prepared by the Legislative Council staff for Senate Appropriations Committee",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0159-02012m.pdf"
+    },
+    {
+     "lc_number": "25.0159.02017",
+     "description": "Prepared by the Legislative Council staff for Senate Chamber",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0159-02017m.pdf"
+    },
+    {
+     "lc_number": "25.0159.04000",
+     "description": "FIRST ENGROSSMENT with Senate Amendments",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0159-04000.pdf"
+    },
+    {
+     "lc_number": "25.0159.02028",
+     "description": "Prepared by the Legislative Council staff for Conference Committee",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0159-02028m.pdf"
+    },
+    {
+     "lc_number": "25.0159.05000",
+     "description": "FIRST ENGROSSMENT with Conference Committee Amendments",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0159-05000.pdf"
+    },
+    {
+     "lc_number": "25.0159.06000",
+     "description": "Enrollment",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0159-06000.pdf"
+    }
+   ],
+   "hearings": [
+    {
+     "id": 39309,
+     "description": "A BILL for an Act to provide an appropriation for defraying the expenses of the various divisions under the supervision of the director of the office of management and budget",
+     "type": "Bill Hearing",
+     "date": "2025-01-16T14:00:00",
+     "committee": {
+      "id": 1949,
+      "name": "House Appropriations - Government Operations Division"
+     },
+     "room": "Brynhild Haugland"
+    },
+    {
+     "id": 39710,
+     "description": "A BILL for an Act to provide an appropriation for defraying the expenses of the various divisions under the supervision of the director of the office of management and budget; and to provide an exemption.",
+     "type": "Bill Hearing",
+     "date": "2025-01-22T10:15:00",
+     "committee": {
+      "id": 1949,
+      "name": "House Appropriations - Government Operations Division"
+     },
+     "room": "Brynhild Haugland"
+    },
+    {
+     "id": 40103,
+     "description": "A BILL for an Act to provide an appropriation for defraying the expenses of the various divisions under the supervision of the director of the office of management and budget; and to provide an exemption.",
+     "type": "Bill Hearing",
+     "date": "2025-01-28T14:00:00",
+     "committee": {
+      "id": 1949,
+      "name": "House Appropriations - Government Operations Division"
+     },
+     "room": "Brynhild Haugland"
+    },
+    {
+     "id": 40677,
+     "description": "A BILL for an Act to provide an appropriation for defraying the expenses of the various divisions under the supervision of the director of the office of management and budget;",
+     "type": "Bill Hearing",
+     "date": "2025-02-05T14:00:00",
+     "committee": {
+      "id": 1949,
+      "name": "House Appropriations - Government Operations Division"
+     },
+     "room": "Brynhild Haugland"
+    },
+    {
+     "id": 41683,
+     "description": "Committee Work: A BILL for an Act to provide an appropriation for defraying the expenses of the various divisions under the supervision of the director of the office of management and budget",
+     "type": "Committee Work",
+     "date": "2025-02-14T10:00:00",
+     "committee": {
+      "id": 1949,
+      "name": "House Appropriations - Government Operations Division"
+     },
+     "room": "Brynhild Haugland"
+    },
+    {
+     "id": 41988,
+     "description": "Committee Work: A BILL for an Act to provide an appropriation for defraying the expenses of the various divisions under the supervision of the director of the office of management and budget;",
+     "type": "Committee Work",
+     "date": "2025-02-18T08:30:00",
+     "committee": {
+      "id": 1949,
+      "name": "House Appropriations - Government Operations Division"
+     },
+     "room": "Brynhild Haugland"
+    },
+    {
+     "id": 42238,
+     "description": "Committee Work: A BILL for an Act to provide an appropriation for defraying the expenses of the various divisions under the supervision of the director of the office of management and budget;",
+     "type": "Committee Work",
+     "date": "2025-02-19T08:30:00",
+     "committee": {
+      "id": 1949,
+      "name": "House Appropriations - Government Operations Division"
+     },
+     "room": "Brynhild Haugland"
+    },
+    {
+     "id": 42265,
+     "description": "Committee Work: A BILL for an Act to provide an appropriation for defraying the expenses of the various divisions under the supervision of the director of the office of management and budget;",
+     "type": "Committee Work",
+     "date": "2025-02-20T08:30:00",
+     "committee": {
+      "id": 1949,
+      "name": "House Appropriations - Government Operations Division"
+     },
+     "room": "Brynhild Haugland"
+    },
+    {
+     "id": 42266,
+     "description": "Committee Work: CANCELED",
+     "type": "Committee Work",
+     "date": "2025-02-21T09:30:00",
+     "committee": {
+      "id": 1949,
+      "name": "House Appropriations - Government Operations Division"
+     },
+     "room": "Brynhild Haugland"
+    },
+    {
+     "id": 42508,
+     "description": "Committee Work: A BILL for an Act to provide an appropriation for defraying the expenses of the various divisions under the supervision of the director of the office of management and budget;",
+     "type": "Committee Work",
+     "date": "2025-02-24T09:00:00",
+     "committee": {
+      "id": 1949,
+      "name": "House Appropriations - Government Operations Division"
+     },
+     "room": "Brynhild Haugland"
+    },
+    {
+     "id": 42538,
+     "description": "Committee Work: A BILL for an Act to provide an appropriation for defraying the expenses of the various divisions under the supervision of the director of the office of management and budget; and to provide an exemption.",
+     "type": "Committee Work",
+     "date": "2025-02-25T12:30:00",
+     "committee": {
+      "id": 1948,
+      "name": "House Appropriations"
+     },
+     "room": "Roughrider"
+    },
+    {
+     "id": 43023,
+     "description": "Relating to the state share of oil and gas tax revenue allocations; relating to county achievement days; to provide a transfer; to provide an exemption; to provide a report; and to declare an emergency.",
+     "type": "Bill Hearing",
+     "date": "2025-03-12T14:00:00",
+     "committee": {
+      "id": 1960,
+      "name": "Senate Appropriations - Government Operations Division"
+     },
+     "room": "Red River"
+    },
+    {
+     "id": 43385,
+     "description": "Committee Work: Title\tRelating to the state share of oil and gas tax revenue allocations.",
+     "type": "Committee Work",
+     "date": "2025-03-19T14:00:00",
+     "committee": {
+      "id": 1960,
+      "name": "Senate Appropriations - Government Operations Division"
+     },
+     "room": "Red River"
+    },
+    {
+     "id": 44189,
+     "description": "Committee Work: Relating to the state share of oil and gas tax revenue allocations.",
+     "type": "Committee Work",
+     "date": "2025-04-03T14:00:00",
+     "committee": {
+      "id": 1960,
+      "name": "Senate Appropriations - Government Operations Division"
+     },
+     "room": "Red River"
+    },
+    {
+     "id": 44511,
+     "description": "Committee Work: Relating to the state share of oil and gas tax revenue allocations.",
+     "type": "Committee Work",
+     "date": "2025-04-08T09:30:00",
+     "committee": {
+      "id": 1960,
+      "name": "Senate Appropriations - Government Operations Division"
+     },
+     "room": "Red River"
+    },
+    {
+     "id": 44665,
+     "description": "Committee Work: Relating to the state share of oil and gas tax revenue allocations.",
+     "type": "Committee Work",
+     "date": "2025-04-10T11:00:00",
+     "committee": {
+      "id": 1960,
+      "name": "Senate Appropriations - Government Operations Division"
+     },
+     "room": "Red River"
+    },
+    {
+     "id": 44713,
+     "description": "Committee Work: Relating to the state share of oil and gas tax revenue allocations.",
+     "type": "Committee Work",
+     "date": "2025-04-14T14:30:00",
+     "committee": {
+      "id": 1960,
+      "name": "Senate Appropriations - Government Operations Division"
+     },
+     "room": "Red River"
+    },
+    {
+     "id": 44815,
+     "description": "Committee Work: Relating to the state share of oil and gas tax revenue allocations.",
+     "type": "Committee Work",
+     "date": "2025-04-16T14:30:00",
+     "committee": {
+      "id": 1960,
+      "name": "Senate Appropriations - Government Operations Division"
+     },
+     "room": "Red River"
+    },
+    {
+     "id": 44837,
+     "description": "Committee Work: Relating to the state share of oil and gas tax revenue allocations & relating to county achievement days.",
+     "type": "Committee Work",
+     "date": "2025-04-17T14:30:00",
+     "committee": {
+      "id": 1971,
+      "name": "Senate Appropriations"
+     },
+     "room": "Harvest"
+    },
+    {
+     "id": 44840,
+     "description": "Committee Work: Relating to the state share of oil and gas tax revenue allocations & relating to county achievement days; to provide a transfer.",
+     "type": "Committee Work",
+     "date": "2025-04-18T08:00:00",
+     "committee": {
+      "id": 1971,
+      "name": "Senate Appropriations"
+     },
+     "room": "Harvest"
+    },
+    {
+     "id": 44841,
+     "description": "Committee Work: Committee Work - Relating to the state share of oil and gas tax revenue allocations & relating to county achievement days.",
+     "type": "Committee Work",
+     "date": "2025-04-21T09:00:00",
+     "committee": {
+      "id": 1971,
+      "name": "Senate Appropriations"
+     },
+     "room": "Harvest"
+    },
+    {
+     "id": 1412,
+     "description": "Representatives Vigesaa (R) (Chair); Weisz (R); Lefor (R); \nSenators Bekkedahl (R); Wanzek (R); Hogue (R); ",
+     "type": "Conference Committee",
+     "date": "2025-04-26T13:30:00",
+     "committee": {
+      "id": 1949,
+      "name": "House Appropriations - Government Operations Division"
+     },
+     "room": "Brynhild Haugland"
+    },
+    {
+     "id": 1425,
+     "description": "Representatives Vigesaa (R) (Chair); Lefor (R); Weisz (R); \nSenators Bekkedahl (R); Wanzek (R); Hogue (R); ",
+     "type": "Conference Committee",
+     "date": "2025-04-29T13:30:00",
+     "committee": {
+      "id": 1949,
+      "name": "House Appropriations - Government Operations Division"
+     },
+     "room": "Brynhild Haugland"
+    },
+    {
+     "id": 1483,
+     "description": "Representatives Vigesaa (R) (Chair); Lefor (R); Weisz (R); \nSenators Bekkedahl (R); Wanzek (R); Hogue (R); ",
+     "type": "Conference Committee",
+     "date": "2025-04-30T14:00:00",
+     "committee": {
+      "id": 1949,
+      "name": "House Appropriations - Government Operations Division"
+     },
+     "room": "Brynhild Haugland"
+    },
+    {
+     "id": 1499,
+     "description": "Representatives Vigesaa (R) (Chair); Lefor (R); Weisz (R); \nSenators Bekkedahl (R); Wanzek (R); Hogue (R); ",
+     "type": "Conference Committee",
+     "date": "2025-05-01T16:00:00",
+     "committee": {
+      "id": 1949,
+      "name": "House Appropriations - Government Operations Division"
+     },
+     "room": "Brynhild Haugland"
+    },
+    {
+     "id": 1533,
+     "description": "Representatives Vigesaa (R) (Chair); Lefor (R); Weisz (R); \nSenators Bekkedahl (R); Wanzek (R); Hogue (R); ",
+     "type": "Conference Committee",
+     "date": "2025-05-02T22:30:00",
+     "committee": {
+      "id": 1949,
+      "name": "House Appropriations - Government Operations Division"
+     },
+     "room": "Brynhild Haugland"
+    }
+   ]
+  },
+  "2400": {
+   "name": "SB 2400",
+   "number": "2400",
+   "summary": "Relating to the creation of a criminal offense for the misuse of education savings account funds and the establishment of the education savings account program; to amend and reenact section 15.1\u201120\u201102 of the North Dakota Century Code, relating to exceptions to compulsory school attendance; to provide a penalty; to provide an appropriation; and to provide a continuing appropriation.",
+   "title": "A BILL for an Act to create and enact a new section to chapter 12.1-23 and chapter 15.1-27.1 of the North Dakota Century Code, relating to the creation of a criminal offense for the misuse of education savings account funds and the establishment of the education savings account program; to amend and reenact section 15.1-20-02 of the North Dakota Century Code, relating to exceptions to compulsory school attendance; to provide a penalty; to provide an appropriation; and to provide a continuing appropriation.",
+   "chamber": "Senate",
+   "session_id": "202501",
+   "session_name": "2025 Regular Session",
+   "url": "https://ndlegis.gov/assembly/69-2025/regular/bill-overview/bo2400.html",
+   "versions_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-index/bi2400.html",
+   "actions_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-actions/ba2400.html",
+   "video_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-video/bv2400.html",
+   "hearing_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-hearings/bh2400.html",
+   "testimony_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-testimony/bt2400.html",
+   "current_status": "Failed in House",
+   "last_action": "Second reading, failed to pass, yeas 14 nays 78",
+   "passed": false,
+   "agency": null,
+   "sponsors": [
+    {
+     "id": 3438,
+     "name": "Sen. Axtman, Michelle",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": true
+    },
+    {
+     "id": 3321,
+     "name": "Rep. Bosch, Glenn",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    },
+    {
+     "id": 3338,
+     "name": "Sen. Hogue, David",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    },
+    {
+     "id": 3345,
+     "name": "Sen. Myrdal, Janne",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    },
+    {
+     "id": 3364,
+     "name": "Rep. Ruby, Matthew",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    },
+    {
+     "id": 3398,
+     "name": "Sen. Sickler, Jonathan",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    }
+   ],
+   "actions": [
+    {
+     "id": 472624,
+     "description": "Introduced, first reading, referred Education Committee",
+     "date": "2025-01-29T23:59:59",
+     "category": "Introduced",
+     "chamber": "Senate",
+     "bill_version": "25.1334.02000",
+     "roll_call": {}
+    },
+    {
+     "id": 472707,
+     "description": "Committee Hearing 10:00",
+     "date": "2025-02-05T10:00:00",
+     "category": "Committee hearing",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 474343,
+     "description": "Reported back amended, do pass, amendment placed on calendar 4 2 0",
+     "date": "2025-02-11T23:59:59",
+     "category": "Committee report",
+     "chamber": "Senate",
+     "bill_version": "25.1334.02005",
+     "roll_call": {}
+    },
+    {
+     "id": 474510,
+     "description": "Amendment adopted",
+     "date": "2025-02-12T23:59:59",
+     "category": "Amendment adopted",
+     "chamber": "Senate",
+     "bill_version": "25.1334.03000",
+     "roll_call": {}
+    },
+    {
+     "id": 474511,
+     "description": "Rereferred to Appropriations",
+     "date": "2025-02-12T23:59:59",
+     "category": "Rereferred",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 476007,
+     "description": "Reported back amended, do pass, amendment placed on calendar 12 4 0",
+     "date": "2025-02-20T23:59:59",
+     "category": "Committee report",
+     "chamber": "Senate",
+     "bill_version": "25.1334.03001",
+     "roll_call": {}
+    },
+    {
+     "id": 476215,
+     "description": "Amendment adopted, placed on calendar",
+     "date": "2025-02-21T23:59:59",
+     "category": "Amendment adopted",
+     "chamber": "Senate",
+     "bill_version": "25.1334.04000",
+     "roll_call": {
+      "id": "202501S00396",
+      "chamber": "Senate",
+      "date": "2025-02-21T14:29:51",
+      "description": "Final Passage",
+      "division": null,
+      "passed": true,
+      "total_yeas": 25,
+      "total_nays": 22,
+      "total_absent": 0
+     }
+    },
+    {
+     "id": 476212,
+     "description": "Amendment proposed on floor",
+     "date": "2025-02-21T23:59:59",
+     "category": "Amended on floor",
+     "chamber": "Senate",
+     "bill_version": "25.1334.03004",
+     "roll_call": {}
+    },
+    {
+     "id": 476213,
+     "description": "Amendment failed",
+     "date": "2025-02-21T23:59:59",
+     "category": "Amendment failed",
+     "chamber": "Senate",
+     "bill_version": "25.1334.05000",
+     "roll_call": {}
+    },
+    {
+     "id": 476214,
+     "description": "Second reading, passed, yeas 25 nays 22",
+     "date": "2025-02-21T23:59:59",
+     "category": "Passed",
+     "chamber": "Senate",
+     "bill_version": "25.1334.04000",
+     "roll_call": {
+      "id": "202501S00396",
+      "chamber": "Senate",
+      "date": "2025-02-21T14:29:51",
+      "description": "Final Passage",
+      "division": null,
+      "passed": true,
+      "total_yeas": 25,
+      "total_nays": 22,
+      "total_absent": 0
+     }
+    },
+    {
+     "id": 476441,
+     "description": "Received from Senate",
+     "date": "2025-02-24T23:59:59",
+     "category": "Received from Senate",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 477623,
+     "description": "Introduced, first reading, referred Education Committee",
+     "date": "2025-03-07T23:59:59",
+     "category": "Introduced",
+     "chamber": "House",
+     "bill_version": "25.1334.04000",
+     "roll_call": {}
+    },
+    {
+     "id": 478268,
+     "description": "Committee Hearing 09:00",
+     "date": "2025-03-18T09:00:00",
+     "category": "Committee hearing",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 483647,
+     "description": "Reported back amended, do not pass, placed on calendar 11 3 0",
+     "date": "2025-04-21T23:59:59",
+     "category": "Committee report",
+     "chamber": "House",
+     "bill_version": "25.1334.04007",
+     "roll_call": {}
+    },
+    {
+     "id": 483788,
+     "description": "Amendment adopted, placed on calendar",
+     "date": "2025-04-22T23:59:59",
+     "category": "Amendment adopted",
+     "chamber": "House",
+     "bill_version": "25.1334.06000",
+     "roll_call": {}
+    },
+    {
+     "id": 484075,
+     "description": "Second reading, failed to pass, yeas 14 nays 78",
+     "date": "2025-04-24T23:59:59",
+     "category": "Failed",
+     "chamber": "House",
+     "bill_version": "25.1334.06000",
+     "roll_call": {
+      "id": "202501H01162",
+      "chamber": "House",
+      "date": "2025-04-24T19:45:24",
+      "description": "Final Passage",
+      "division": null,
+      "passed": false,
+      "total_yeas": 14,
+      "total_nays": 78,
+      "total_absent": 2
+     }
+    }
+   ],
+   "versions": [
+    {
+     "lc_number": "25.1334.02000",
+     "description": "INTRODUCED",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1334-02000.pdf"
+    },
+    {
+     "lc_number": "25.1334.02005",
+     "description": "Adopted by the Senate Education Committee",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1334-02005m.pdf"
+    },
+    {
+     "lc_number": "25.1334.03000",
+     "description": "FIRST ENGROSSMENT",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1334-03000.pdf"
+    },
+    {
+     "lc_number": "25.1334.03001",
+     "description": "Prepared by the Legislative Council staff for Senator Schaible",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1334-03001m.pdf"
+    },
+    {
+     "lc_number": "25.1334.04000",
+     "description": "SECOND ENGROSSMENT",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1334-04000.pdf"
+    },
+    {
+     "lc_number": "25.1334.03004",
+     "description": "Prepared by the Legislative Council staff for Senator Mathern",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1334-03004m.pdf"
+    },
+    {
+     "lc_number": "25.1334.05000",
+     "description": "SECOND ENGROSSMENT - NOT ADOPTED",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1334-05000.pdf"
+    },
+    {
+     "lc_number": "25.1334.04007",
+     "description": "Adopted by the House Education Committee",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1334-04007m.pdf"
+    },
+    {
+     "lc_number": "25.1334.06000",
+     "description": "SECOND ENGROSSMENT with House Amendments",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1334-06000.pdf"
+    }
+   ],
+   "hearings": [
+    {
+     "id": 40656,
+     "description": "Relating to the establishment of the education savings account program; to provide a continuing appropriation; and to provide an appropriation.",
+     "type": "Bill Hearing",
+     "date": "2025-02-05T10:00:00",
+     "committee": {
+      "id": 1972,
+      "name": "Senate Education"
+     },
+     "room": "216"
+    },
+    {
+     "id": 41571,
+     "description": "Committee Work: ",
+     "type": "Committee Work",
+     "date": "2025-02-10T11:05:00",
+     "committee": {
+      "id": 1972,
+      "name": "Senate Education"
+     },
+     "room": "216"
+    },
+    {
+     "id": 41595,
+     "description": "Committee Work: ",
+     "type": "Committee Work",
+     "date": "2025-02-10T15:05:00",
+     "committee": {
+      "id": 1972,
+      "name": "Senate Education"
+     },
+     "room": "216"
+    },
+    {
+     "id": 41748,
+     "description": "Committee Work: Relating to the establishment of the education savings account program; to provide a continuing appropriation; and to provide an appropriation.  Committee Work",
+     "type": "Committee Work",
+     "date": "2025-02-14T09:15:00",
+     "committee": {
+      "id": 1959,
+      "name": "Senate Appropriations - Education and Environment Division"
+     },
+     "room": "Sakakawea"
+    },
+    {
+     "id": 41883,
+     "description": "Committee Work: Relating to the establishment of the education savings account program; to provide a continuing appropriation; and to provide an appropriation.  Committee Work",
+     "type": "Committee Work",
+     "date": "2025-02-18T14:30:00",
+     "committee": {
+      "id": 1959,
+      "name": "Senate Appropriations - Education and Environment Division"
+     },
+     "room": "Sakakawea"
+    },
+    {
+     "id": 42272,
+     "description": "Committee Work: Relating to the establishment of the education savings account program; to provide a continuing appropriation; and to provide an appropriation.",
+     "type": "Committee Work",
+     "date": "2025-02-19T11:49:00",
+     "committee": {
+      "id": 1971,
+      "name": "Senate Appropriations"
+     },
+     "room": "Harvest"
+    },
+    {
+     "id": 42226,
+     "description": "Committee Work: Committee Work 2400 - (10AM) completed at 11AM) Relating to the establishment of the education savings account program; to provide a continuing appropriation; and to provide an appropriation.",
+     "type": "Committee Work",
+     "date": "2025-02-19T14:02:00",
+     "committee": {
+      "id": 1971,
+      "name": "Senate Appropriations"
+     },
+     "room": "Harvest"
+    },
+    {
+     "id": 43327,
+     "description": "Relating to the establishment of the education savings account program; and to provide an appropriation.",
+     "type": "Bill Hearing",
+     "date": "2025-03-18T09:00:00",
+     "committee": {
+      "id": 1950,
+      "name": "House Education"
+     },
+     "room": "Coteau AB"
+    },
+    {
+     "id": 44303,
+     "description": "Committee Work: Relating to the establishment of the education savings account program; to provide a continuing appropriation; and to provide an appropriation.",
+     "type": "Committee Work",
+     "date": "2025-04-01T09:45:00",
+     "committee": {
+      "id": 1950,
+      "name": "House Education"
+     },
+     "room": "Coteau AB"
+    },
+    {
+     "id": 44354,
+     "description": "Committee Work: Relating to the establishment of the education savings account program; to provide a continuing appropriation; and to provide an appropriation.",
+     "type": "Committee Work",
+     "date": "2025-04-02T15:57:00",
+     "committee": {
+      "id": 1950,
+      "name": "House Education"
+     },
+     "room": "Coteau AB"
+    },
+    {
+     "id": 44839,
+     "description": "Committee Work: Committee Work - relating to exceptions to compulsory school attendance; to provide a penalty; to provide an appropriation; and to provide a continuing appropriation.",
+     "type": "Committee Work",
+     "date": "2025-04-21T15:00:00",
+     "committee": {
+      "id": 1950,
+      "name": "House Education"
+     },
+     "room": "Coteau AB"
+    }
+   ]
+  }
+ }
+}
