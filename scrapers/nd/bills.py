@@ -28,6 +28,19 @@ def vote_classification(motion):
     return []
 
 
+def site_session(session):
+    """OPEN-746: the Legislative Assembly whose bill list holds a session's bills on ndlegis.gov
+    ("69-2025") and the tag the site gives each of that session's bills (`session_id`, "202502"
+    for the Special Session of January 2026). A special session names both in its `extras`; a
+    regular session's are its identifier and start year ("69-2025", "202501")."""
+    extras = session.get("extras", {})
+    year = session["start_date"][:4]
+    return (
+        extras.get("assembly", f"{session['identifier']}-{year}"),
+        extras.get("site_session_id", f"{year}01"),
+    )
+
+
 class BillList(JsonPage):
     categorizer = NDCategorizer()
     member_name_re = re.compile(r"^(Sen\.|Rep\.)\s*(.+),\s(.+)")
@@ -45,15 +58,11 @@ class BillList(JsonPage):
 
     def create_source_url(self):
         """
-        Retrieves year for specified session.
-
-        Returns proper url path to API endpoint.
+        Returns the API URL of the bill list of the session's Legislative Assembly.
         """
-        assembly_session_id = self.input.get("assembly_id")
-        year = self.input.get("session_year")
         return (
             f"https://ndlegis.gov/api/assembly/"  # noqa: E231
-            f"{assembly_session_id}-{year}/data/bills.json"
+            f"{self.input.get('assembly')}/data/bills.json"
         )
 
     def get_voter_name_from_url_request(self, url: str) -> str:
@@ -96,6 +105,11 @@ class BillList(JsonPage):
         for bill_key in bills.keys():
             bill_data = bills[bill_key]
             bill_id = bill_data["name"]
+            # OPEN-746: the assembly's list holds its regular session's bills and its special
+            # sessions'; keep only this session's, by the site's own tag on the bill. Its roll
+            # calls, read from its own bill-actions page below, go with it.
+            if bill_data.get("session_id") != self.input.get("site_session_id"):
+                continue
 
             bill_type_abbr = bill_id[0:3].strip()
             bill_type = "bill"
@@ -108,7 +122,7 @@ class BillList(JsonPage):
 
             bill = Bill(
                 identifier=bill_id,
-                legislative_session=self.input.get("assembly_id"),
+                legislative_session=self.input.get("session"),
                 title=bill_data["title"],
                 chamber="lower" if bill_data["chamber"] == "House" else "upper",
                 classification=bill_type,
@@ -244,7 +258,7 @@ class BillList(JsonPage):
                     start_date=start_date,
                     motion_text=motion,
                     result=status,
-                    legislative_session=self.input.get("assembly_id"),
+                    legislative_session=self.input.get("session"),
                     classification=vote_classification(motion),
                     bill=bill_id,
                     bill_chamber="lower" if bill_id[0] == "H" else "upper",
@@ -302,9 +316,18 @@ class BillList(JsonPage):
 
 class NDBillScraper(Scraper):
     def scrape(self, session=None):
-        for i in self.jurisdiction.legislative_sessions:
-            if i["identifier"] == session:
-                session_year = i["start_date"][:4]
+        (found,) = [
+            i
+            for i in self.jurisdiction.legislative_sessions
+            if i["identifier"] == session
+        ]
+        assembly, site_session_id = site_session(found)
         logging.getLogger("scrapelib").setLevel(logging.WARNING)
-        bill_list = BillList({"assembly_id": session, "session_year": session_year})
+        bill_list = BillList(
+            {
+                "session": session,
+                "assembly": assembly,
+                "site_session_id": site_session_id,
+            }
+        )
         yield from bill_list.do_scrape()

@@ -1,0 +1,482 @@
+{
+ "assembly": 64,
+ "assembly_name": "64th Legislative Assembly",
+ "biennium_start": 2015,
+ "biennium_end": 2017,
+ "last_updated": "2026-11-19T09:50:14",
+ "bills": {
+  "2378": {
+   "name": "SB 2378",
+   "number": "2378",
+   "summary": "Relating to local community incentive fund grants and tax credits; to amend and reenact subsection 9 of section 57‑38‑57 of the North Dakota Century Code, relating to confidentiality of tax information; and to provide an effective date.for an Act to create and enact a new section to chapter 57‑38 and a new subdivision to subsection 7 of section 57‑38‑30.3 of the North Dakota Century Code, relating to an income tax credit for contributions to qualified community of life projects; to provide an effective date; and to provide an expiration date.",
+   "title": "A BILL for an Act to create and enact a new section to chapter 57-38 and a new subdivision to subsection 7 of section 57-38-30.3 of the North Dakota Century Code, relating to an income tax credit for contributions to qualified community of life projects; to provide an effective date; and to provide an expiration date.",
+   "chamber": "Senate",
+   "session_id": "201501",
+   "session_name": "2015 Regular Session",
+   "url": "https://ndlegis.gov/assembly/64-2015/regular/bill-overview/bo2378.html",
+   "versions_url": "https://ndlegis.gov/assembly/64-2015/regular/bill-index/bi2378.html",
+   "actions_url": "https://ndlegis.gov/assembly/64-2015/regular/bill-actions/ba2378.html",
+   "video_url": "https://ndlegis.gov/assembly/64-2015/regular/bill-video/bv2378.html",
+   "hearing_url": "https://ndlegis.gov/assembly/64-2015/regular/bill-hearings/bh2378.html",
+   "testimony_url": "https://ndlegis.gov/assembly/64-2015/regular/bill-testimony/bt2378.html",
+   "current_status": "Failed in House",
+   "last_action": "Second reading, failed to pass, yeas 21 nays 67",
+   "passed": false,
+   "agency": null,
+   "sponsors": [
+    {
+     "id": 2694,
+     "name": "Sen. Unruh, Jessica",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": true
+    },
+    {
+     "id": 2680,
+     "name": "Sen. Dever, Dick",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    },
+    {
+     "id": 2653,
+     "name": "Sen. Laffen, Lonnie J.",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    },
+    {
+     "id": 2740,
+     "name": "Sen. Poolman, Nicole",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    }
+   ],
+   "actions": [
+    {
+     "id": 410693,
+     "description": "Introduced, first reading, referred Finance and Taxation Committee",
+     "date": "2015-01-25T18:00:00",
+     "category": "Introduced",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410694,
+     "description": "Committee Hearing 10:15",
+     "date": "2015-02-02T18:00:00",
+     "category": "Committee hearing",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410695,
+     "description": "Reported back amended, do pass, amendment placed on calendar 7 0 0",
+     "date": "2015-02-19T18:00:00",
+     "category": "Committee report",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410696,
+     "description": "Amendment adopted, placed on calendar",
+     "date": "2015-02-22T18:00:00",
+     "category": "Amendment adopted",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410697,
+     "description": "Second reading, passed, yeas 43 nays 3",
+     "date": "2015-02-22T18:00:00",
+     "category": "Passed",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410698,
+     "description": "Received from Senate",
+     "date": "2015-02-23T18:00:00",
+     "category": "Received from Senate",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410699,
+     "description": "Introduced, first reading, referred Finance and Taxation Committee",
+     "date": "2015-02-24T18:00:00",
+     "category": "Introduced",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410700,
+     "description": "Committee Hearing 10:15",
+     "date": "2015-03-09T19:00:00",
+     "category": "Committee hearing",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410701,
+     "description": "Reported back, do not pass, placed on calendar 10 4 0",
+     "date": "2015-03-16T19:00:00",
+     "category": "Committee report",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410702,
+     "description": "Second reading, failed to pass, yeas 21 nays 67",
+     "date": "2015-03-22T19:00:00",
+     "category": "Failed",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    }
+   ],
+   "versions": [
+    {
+     "lc_number": "15.0998.03000",
+     "description": "INTRODUCED",
+     "document_url": "https://ndlegis.gov/assembly/64-2015/regular/documents/15-0998-03000.pdf"
+    },
+    {
+     "lc_number": "15.0998.03002",
+     "description": "Prepared by the Legislative Council staff for Senator Unruh",
+     "document_url": "https://ndlegis.gov/assembly/64-2015/regular/documents/15-0998-03002a.pdf"
+    },
+    {
+     "lc_number": "15.0998.04000",
+     "description": "FIRST ENGROSSMENT",
+     "document_url": "https://ndlegis.gov/assembly/64-2015/regular/documents/15-0998-04000.pdf"
+    }
+   ],
+   "hearings": [
+    {
+     "id": 12491,
+     "description": "Relating to local community incentive fund grants and tax credits.",
+     "type": "Bill Hearing",
+     "date": "2015-02-03T10:15:00",
+     "committee": {
+      "id": 179,
+      "name": "Senate Finance and Taxation"
+     },
+     "room": null
+    },
+    {
+     "id": 11281,
+     "description": "Relating to an income tax credit for contributions to qualified community of life projects.",
+     "type": "Bill Hearing",
+     "date": "2015-03-10T10:15:00",
+     "committee": {
+      "id": 194,
+      "name": "House Finance and Taxation"
+     },
+     "room": null
+    }
+   ]
+  },
+  "2379": {
+   "name": "SB 2379",
+   "number": "2379",
+   "summary": "",
+   "title": "AN ACT to provide for the reduction of general fund appropriation authority; to authorize transfers from the budget stabilization fund and the Bank of North Dakota; to provide appropriations for the department of human services and the department of corrections and rehabilitation; to provide for reports; to provide legislative intent; and to provide an effective date.",
+   "chamber": "Senate",
+   "session_id": "201502",
+   "session_name": "2015 Special Session",
+   "url": "https://ndlegis.gov/assembly/64-2015/special/bill-overview/bo2379.html",
+   "versions_url": "https://ndlegis.gov/assembly/64-2015/special/bill-index/bi2379.html",
+   "actions_url": "https://ndlegis.gov/assembly/64-2015/special/bill-actions/ba2379.html",
+   "video_url": "https://ndlegis.gov/assembly/64-2015/special/bill-video/bv2379.html",
+   "hearing_url": "https://ndlegis.gov/assembly/64-2015/special/bill-hearings/bh2379.html",
+   "testimony_url": "https://ndlegis.gov/assembly/64-2015/special/bill-testimony/bt2379.html",
+   "current_status": "Governor signed",
+   "last_action": "Filed with Secretary Of State 08/04",
+   "passed": true,
+   "agency": null,
+   "sponsors": [
+    {
+     "id": 357,
+     "name": "Sen. Wardner, Rich",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": true
+    },
+    {
+     "id": 2755,
+     "name": "Sen. Holmberg, Ray",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    },
+    {
+     "id": 422,
+     "name": "Rep. Carlson, Al",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    },
+    {
+     "id": 2674,
+     "name": "Rep. Delzer, Jeff",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    }
+   ],
+   "actions": [
+    {
+     "id": 410703,
+     "description": "Introduced, first reading, referred Appropriations Committee",
+     "date": "2015-08-01T19:00:00",
+     "category": "Introduced",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410704,
+     "description": "Committee Hearing 01:00",
+     "date": "2015-08-01T19:00:00",
+     "category": "Committee hearing",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410705,
+     "description": "Committee Hearing 01:00",
+     "date": "2015-08-01T19:00:00",
+     "category": "Committee hearing",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410706,
+     "description": "Reported back, do pass, place on calendar 9 4 0",
+     "date": "2015-08-01T19:00:00",
+     "category": "Committee report",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410707,
+     "description": "Amendment proposed on floor",
+     "date": "2015-08-02T19:00:00",
+     "category": "Amended on floor",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410708,
+     "description": "Amendment failed",
+     "date": "2015-08-02T19:00:00",
+     "category": "Amendment failed",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410709,
+     "description": "Amendment proposed on floor",
+     "date": "2015-08-02T19:00:00",
+     "category": "Amended on floor",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410710,
+     "description": "Amendment failed",
+     "date": "2015-08-02T19:00:00",
+     "category": "Amendment failed",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410711,
+     "description": "Amendment proposed on floor",
+     "date": "2015-08-02T19:00:00",
+     "category": "Amended on floor",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410712,
+     "description": "Amendment failed",
+     "date": "2015-08-02T19:00:00",
+     "category": "Amendment failed",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410713,
+     "description": "Second reading, passed, yeas 46 nays 0",
+     "date": "2015-08-02T19:00:00",
+     "category": "Passed",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410714,
+     "description": "Received from Senate",
+     "date": "2015-08-02T19:00:00",
+     "category": "Received from Senate",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410715,
+     "description": "Introduced, first reading, referred Appropriations Committee",
+     "date": "2015-08-02T19:00:00",
+     "category": "Introduced",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410716,
+     "description": "Reported back, do pass, place on calendar 16 4 3",
+     "date": "2015-08-02T19:00:00",
+     "category": "Committee report",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410717,
+     "description": "Second reading, passed, yeas 82 nays 8",
+     "date": "2015-08-03T19:00:00",
+     "category": "Passed",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410718,
+     "description": "Returned to Senate",
+     "date": "2015-08-03T19:00:00",
+     "category": "Returned to Senate",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410719,
+     "description": "Signed by Speaker",
+     "date": "2015-08-03T19:00:00",
+     "category": "Speaker signed",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410720,
+     "description": "Signed by President",
+     "date": "2015-08-03T19:00:00",
+     "category": "President signed",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410721,
+     "description": "Sent to Governor",
+     "date": "2015-08-03T19:00:00",
+     "category": "Delivered to Governor",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410722,
+     "description": "Signed by Governor 08/04",
+     "date": "2015-08-03T19:00:00",
+     "category": "Governor signed",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 410723,
+     "description": "Filed with Secretary Of State 08/04",
+     "date": "2015-08-04T19:00:00",
+     "category": "Filed with Secretary of State",
+     "chamber": "",
+     "bill_version": null,
+     "roll_call": {}
+    }
+   ],
+   "versions": [
+    {
+     "lc_number": "15.1041.02000",
+     "description": "INTRODUCED",
+     "document_url": "https://ndlegis.gov/assembly/64-2015/special/documents/15-1041-02000.pdf"
+    },
+    {
+     "lc_number": "15.1041.02001",
+     "description": "Prepared by the Legislative Council staff for Senator Mathern",
+     "document_url": "https://ndlegis.gov/assembly/64-2015/special/documents/15-1041-02001a.pdf"
+    },
+    {
+     "lc_number": "15.1041.02004",
+     "description": "Prepared by the Legislative Council staff for Senator Dotzenrod",
+     "document_url": "https://ndlegis.gov/assembly/64-2015/special/documents/15-1041-02004a.pdf"
+    },
+    {
+     "lc_number": "15.1041.02005",
+     "description": "Prepared by the Legislative Council staff for Senator Axness",
+     "document_url": "https://ndlegis.gov/assembly/64-2015/special/documents/15-1041-02005a.pdf"
+    },
+    {
+     "lc_number": "15.1041.03000",
+     "description": "Enrollment",
+     "document_url": "https://ndlegis.gov/assembly/64-2015/special/documents/15-1041-03000.pdf"
+    }
+   ],
+   "hearings": [
+    {
+     "id": 13107,
+     "description": "Hearing Location: Brynhild Haugland Room --- Joint hearing with House Appropriation Committee on SB 2379",
+     "type": "Bill Hearing",
+     "date": "2015-08-02T13:00:00",
+     "committee": {
+      "id": 193,
+      "name": "Senate Appropriations"
+     },
+     "room": null
+    },
+    {
+     "id": 13105,
+     "description": "Hearing Location: Brynhild Haugland Room --- Joint hearing with Senate Appropriation Committee on SB 2379",
+     "type": "Bill Hearing",
+     "date": "2015-08-02T13:00:00",
+     "committee": {
+      "id": 186,
+      "name": "House Appropriations"
+     },
+     "room": null
+    }
+   ]
+  }
+ }
+}

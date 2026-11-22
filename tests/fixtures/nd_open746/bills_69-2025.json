@@ -1,0 +1,648 @@
+{
+ "assembly": 69,
+ "assembly_name": "69th Legislative Assembly",
+ "biennium_start": 2025,
+ "biennium_end": 2027,
+ "last_updated": "2026-11-20T17:32:35",
+ "bills": {
+  "1620": {
+   "name": "HB 1620",
+   "number": "1620",
+   "summary": "Relating to the creation of a state fiscal transparency online portal.",
+   "title": "A BILL for an Act to create and enact a new section to chapter 54-11 of the North Dakota Century Code, relating to the creation of a state fiscal transparency online portal.",
+   "chamber": "House",
+   "session_id": "202501",
+   "session_name": "2025 Regular Session",
+   "url": "https://ndlegis.gov/assembly/69-2025/regular/bill-overview/bo1620.html",
+   "versions_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-index/bi1620.html",
+   "actions_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-actions/ba1620.html",
+   "video_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-video/bv1620.html",
+   "hearing_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-hearings/bh1620.html",
+   "testimony_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-testimony/bt1620.html",
+   "current_status": "Failed in House",
+   "last_action": "Second reading, failed to pass, yeas 1 nays 88",
+   "passed": false,
+   "agency": null,
+   "sponsors": [
+    {
+     "id": 3468,
+     "name": "Rep. Osowski, Doug",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": true
+    }
+   ],
+   "actions": [
+    {
+     "id": 471202,
+     "description": "Introduced, first reading, referred Political Subdivisions Committee",
+     "date": "2025-01-20T23:59:59",
+     "category": "Introduced",
+     "chamber": "House",
+     "bill_version": "25.1328.01000",
+     "roll_call": {}
+    },
+    {
+     "id": 472994,
+     "description": "Committee Hearing 04:30",
+     "date": "2025-02-06T16:30:00",
+     "category": "Committee hearing",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 474833,
+     "description": "Reported back, do not pass, placed on consent calendar 10 0 3",
+     "date": "2025-02-13T23:59:59",
+     "category": "Committee report",
+     "chamber": "House",
+     "bill_version": "25.1328.01000",
+     "roll_call": {}
+    },
+    {
+     "id": 475739,
+     "description": "Second reading, failed to pass, yeas 1 nays 88",
+     "date": "2025-02-19T23:59:59",
+     "category": "Failed",
+     "chamber": "House",
+     "bill_version": "25.1328.01000",
+     "roll_call": {
+      "id": "202501H0052B",
+      "chamber": "House",
+      "date": "2025-02-19T16:28:23",
+      "description": "Final Passage",
+      "division": null,
+      "passed": false,
+      "total_yeas": 1,
+      "total_nays": 88,
+      "total_absent": 4
+     }
+    }
+   ],
+   "versions": [
+    {
+     "lc_number": "25.1328.01000",
+     "description": "INTRODUCED",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1328-01000.pdf"
+    }
+   ],
+   "hearings": [
+    {
+     "id": 40881,
+     "description": "Relating to the creation of a state fiscal transparency online portal.",
+     "type": "Bill Hearing",
+     "date": "2025-02-06T16:30:00",
+     "committee": {
+      "id": 1957,
+      "name": "House Political Subdivisions"
+     },
+     "room": "327B"
+    },
+    {
+     "id": 41765,
+     "description": "Committee Work: Relating to the creation of a state fiscal transparency online portal.",
+     "type": "Committee Work",
+     "date": "2025-02-13T09:46:00",
+     "committee": {
+      "id": 1957,
+      "name": "House Political Subdivisions"
+     },
+     "room": "327B"
+    }
+   ]
+  },
+  "1621": {
+   "name": "HB 1621",
+   "number": "1621",
+   "summary": "Relating to requiring the presidential physical fitness test in physical education courses in elementary, middle, and high schools and providing exceptions to the test; and to provide an effective date.",
+   "title": "AN ACT to amend and reenact subsection 1 of section 15.1-21-01 and section 15.1-21-02 of the North Dakota Century Code, relating to requiring the presidential physical fitness test in physical education courses in elementary, middle, and high schools and providing exceptions to the test; and to provide an effective date.",
+   "chamber": "House",
+   "session_id": "202502",
+   "session_name": "Special Session - Jan 2026",
+   "url": "https://ndlegis.gov/assembly/69-2025/special/bill-overview/bo1621.html",
+   "versions_url": "https://ndlegis.gov/assembly/69-2025/special/bill-index/bi1621.html",
+   "actions_url": "https://ndlegis.gov/assembly/69-2025/special/bill-actions/ba1621.html",
+   "video_url": "https://ndlegis.gov/assembly/69-2025/special/bill-video/bv1621.html",
+   "hearing_url": "https://ndlegis.gov/assembly/69-2025/special/bill-hearings/bh1621.html",
+   "testimony_url": "https://ndlegis.gov/assembly/69-2025/special/bill-testimony/bt1621.html",
+   "current_status": "Governor signed",
+   "last_action": "Filed with Secretary Of State 01/23",
+   "passed": true,
+   "agency": null,
+   "sponsors": [
+    {
+     "id": 1982,
+     "name": "Legislative Management",
+     "type": "committee",
+     "chamber": null,
+     "primary": true
+    }
+   ],
+   "actions": [
+    {
+     "id": 485117,
+     "description": "Introduced, first reading, referred Joint Policy Committee",
+     "date": "2026-01-21T01:00:00",
+     "category": "Introduced",
+     "chamber": "House",
+     "bill_version": "25.1383.01000",
+     "roll_call": {}
+    },
+    {
+     "id": 485100,
+     "description": "Committee Hearing 11:00",
+     "date": "2026-01-21T11:00:00",
+     "category": "Committee hearing",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 485113,
+     "description": "Committee Hearing 01:00",
+     "date": "2026-01-21T13:00:00",
+     "category": "Committee hearing",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 485116,
+     "description": "Reported back amended, do pass, amendment placed on calendar 12 1 1",
+     "date": "2026-01-21T23:59:59",
+     "category": "Committee report",
+     "chamber": "House",
+     "bill_version": "25.1383.01004",
+     "roll_call": {}
+    },
+    {
+     "id": 485139,
+     "description": "Amendment adopted, placed on calendar",
+     "date": "2026-01-22T23:59:59",
+     "category": "Amendment adopted",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 485140,
+     "description": "Second reading, passed, yeas 90 nays 2",
+     "date": "2026-01-22T23:59:59",
+     "category": "Passed",
+     "chamber": "House",
+     "bill_version": "25.1383.03000",
+     "roll_call": {
+      "id": "202502H00004",
+      "chamber": "House",
+      "date": "2026-01-22T08:48:27",
+      "description": "Final Passage",
+      "division": null,
+      "passed": true,
+      "total_yeas": 90,
+      "total_nays": 2,
+      "total_absent": 2
+     }
+    },
+    {
+     "id": 485141,
+     "description": "Received from House",
+     "date": "2026-01-22T23:59:59",
+     "category": "Received from House",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 485142,
+     "description": "Introduced, first reading, referred Joint Policy Committee",
+     "date": "2026-01-22T23:59:59",
+     "category": "Introduced",
+     "chamber": "Senate",
+     "bill_version": "25.1383.03000",
+     "roll_call": {}
+    },
+    {
+     "id": 485143,
+     "description": "Engrossment placed on calendar 12 2 0",
+     "date": "2026-01-22T23:59:59",
+     "category": "Committee report",
+     "chamber": "Senate",
+     "bill_version": "25.1383.01004",
+     "roll_call": {}
+    },
+    {
+     "id": 485194,
+     "description": "Second reading, passed, yeas 43 nays 3",
+     "date": "2026-01-23T23:59:59",
+     "category": "Passed",
+     "chamber": "Senate",
+     "bill_version": "25.1383.03000",
+     "roll_call": {
+      "id": "202502S00009",
+      "chamber": "Senate",
+      "date": "2026-01-23T08:39:19",
+      "description": "Final Passage",
+      "division": null,
+      "passed": true,
+      "total_yeas": 43,
+      "total_nays": 3,
+      "total_absent": 1
+     }
+    },
+    {
+     "id": 485195,
+     "description": "Returned to House",
+     "date": "2026-01-23T23:59:59",
+     "category": "Returned to House",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 485199,
+     "description": "Signed by President",
+     "date": "2026-01-23T23:59:59",
+     "category": "President signed",
+     "chamber": "Senate",
+     "bill_version": "25.1383.04000",
+     "roll_call": {}
+    },
+    {
+     "id": 485196,
+     "description": "Signed by Speaker",
+     "date": "2026-01-23T23:59:59",
+     "category": "Speaker signed",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 485197,
+     "description": "Sent to Governor",
+     "date": "2026-01-23T23:59:59",
+     "category": "Delivered to Governor",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 485198,
+     "description": "Signed by Governor 01/23",
+     "date": "2026-01-23T23:59:59",
+     "category": "Governor signed",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 485200,
+     "description": "Filed with Secretary Of State 01/23",
+     "date": "2026-01-28T08:47:24",
+     "category": "Filed with Secretary of State",
+     "chamber": null,
+     "bill_version": null,
+     "roll_call": {}
+    }
+   ],
+   "versions": [
+    {
+     "lc_number": "25.1383.01000",
+     "description": "INTRODUCED",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/special/documents/25-1383-01000.pdf"
+    },
+    {
+     "lc_number": "25.1383.01004",
+     "description": "Adopted by the House Joint Policy Committee",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/special/documents/25-1383-01004m.pdf"
+    },
+    {
+     "lc_number": "25.1383.03000",
+     "description": "FIRST ENGROSSMENT",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/special/documents/25-1383-03000.pdf"
+    },
+    {
+     "lc_number": "25.1383.04000",
+     "description": "Enrollment",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/special/documents/25-1383-04000.pdf"
+    }
+   ],
+   "hearings": [
+    {
+     "id": 44872,
+     "description": "Presidential physical fitness test",
+     "type": "Bill Hearing",
+     "date": "2026-01-21T11:00:00",
+     "committee": {
+      "id": 2036,
+      "name": "Joint Policy"
+     },
+     "room": "Pioneer"
+    },
+    {
+     "id": 44884,
+     "description": "Relating to requiring the presidential physical fitness test in physical education courses in elementary, middle, and high schools; and to provide an effective date",
+     "type": "Bill Hearing",
+     "date": "2026-01-21T13:00:00",
+     "committee": {
+      "id": 2036,
+      "name": "Joint Policy"
+     },
+     "room": "Pioneer"
+    }
+   ]
+  },
+  "2405": {
+   "name": "SB 2405",
+   "number": "2405",
+   "summary": "Relating to the order of application of the primary residence credit and discount for early payment of tax; and to provide an effective date.",
+   "title": "A BILL for an Act to amend and reenact subsection 1 of section 57-02-08.9, section 57-20-09, and subsection 1 of section 57-55-03 of the North Dakota Century Code, relating to the order of application of the primary residence credit and discount for early payment of tax; and to provide an effective date.",
+   "chamber": "Senate",
+   "session_id": "202503",
+   "session_name": "Special Session - Sep 2026",
+   "url": "https://ndlegis.gov/assembly/69-2025/special-2/bill-overview/bo2405.html",
+   "versions_url": "https://ndlegis.gov/assembly/69-2025/special-2/bill-index/bi2405.html",
+   "actions_url": "https://ndlegis.gov/assembly/69-2025/special-2/bill-actions/ba2405.html",
+   "video_url": "https://ndlegis.gov/assembly/69-2025/special-2/bill-video/bv2405.html",
+   "hearing_url": "https://ndlegis.gov/assembly/69-2025/special-2/bill-hearings/bh2405.html",
+   "testimony_url": "https://ndlegis.gov/assembly/69-2025/special-2/bill-testimony/bt2405.html",
+   "current_status": "Failed in House",
+   "last_action": "Second reading, failed to pass, yeas 0 nays 93",
+   "passed": false,
+   "agency": null,
+   "sponsors": [
+    {
+     "id": 3441,
+     "name": "Sen. Rummel, Dean",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": true
+    },
+    {
+     "id": 3407,
+     "name": "Rep. Dockter, Jason",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    },
+    {
+     "id": 3311,
+     "name": "Rep. Headland, Craig",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    },
+    {
+     "id": 3347,
+     "name": "Sen. Patten, Dale",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    }
+   ],
+   "actions": [
+    {
+     "id": 485277,
+     "description": "Introduced, first reading, referred Joint Policy Committee",
+     "date": "2026-09-02T23:59:59",
+     "category": "Introduced",
+     "chamber": "Senate",
+     "bill_version": "25.1447.02000",
+     "roll_call": {}
+    },
+    {
+     "id": 485276,
+     "description": "Committee Hearing 10:30",
+     "date": "2026-09-02T23:59:59",
+     "category": "Committee hearing",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 485278,
+     "description": "Reported back without recommendation 8 0 0",
+     "date": "2026-09-02T23:59:59",
+     "category": "Committee report",
+     "chamber": "Senate",
+     "bill_version": "25.1447.02000",
+     "roll_call": {}
+    },
+    {
+     "id": 485294,
+     "description": "Second reading, passed, yeas 27 nays 20",
+     "date": "2026-09-03T23:59:59",
+     "category": "Passed",
+     "chamber": "Senate",
+     "bill_version": "25.1447.02000",
+     "roll_call": {
+      "id": "202503S00004",
+      "chamber": "Senate",
+      "date": "2026-09-03T08:53:54",
+      "description": "Final Passage",
+      "division": null,
+      "passed": true,
+      "total_yeas": 27,
+      "total_nays": 20,
+      "total_absent": 0
+     }
+    },
+    {
+     "id": 485295,
+     "description": "Received from Senate",
+     "date": "2026-09-03T23:59:59",
+     "category": "Received from Senate",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 485296,
+     "description": "Introduced, first reading, referred Joint Policy Committee",
+     "date": "2026-09-03T23:59:59",
+     "category": "Introduced",
+     "chamber": "House",
+     "bill_version": "25.1447.02000",
+     "roll_call": {}
+    },
+    {
+     "id": 485297,
+     "description": "Reported back without recommendation 9 1 0",
+     "date": "2026-09-03T23:59:59",
+     "category": "Committee report",
+     "chamber": "House",
+     "bill_version": "25.1447.02000",
+     "roll_call": {}
+    },
+    {
+     "id": 485321,
+     "description": "Second reading, failed to pass, yeas 0 nays 93",
+     "date": "2026-09-04T23:59:59",
+     "category": "Failed",
+     "chamber": "House",
+     "bill_version": "25.1447.02000",
+     "roll_call": {
+      "id": "202503H00010",
+      "chamber": "House",
+      "date": "2026-09-04T09:16:20",
+      "description": "Final Passage",
+      "division": null,
+      "passed": false,
+      "total_yeas": 0,
+      "total_nays": 93,
+      "total_absent": 1
+     }
+    }
+   ],
+   "versions": [
+    {
+     "lc_number": "25.1447.02000",
+     "description": "INTRODUCED",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/special-2/documents/25-1447-02000.pdf"
+    }
+   ],
+   "hearings": [
+    {
+     "id": 44894,
+     "description": "Relating to the order of application of the primary residence credit and discount for early payment of tax; and to provide an effective date.",
+     "type": "Bill Hearing",
+     "date": "2026-09-01T10:05:00",
+     "committee": {
+      "id": 2044,
+      "name": "Special Ad Hoc Policy Committee"
+     },
+     "room": "Roughrider"
+    },
+    {
+     "id": 44891,
+     "description": "Relating to the order of application of the primary residence credit and discount for early payment of tax.",
+     "type": "Bill Hearing",
+     "date": "2026-09-02T10:30:00",
+     "committee": {
+      "id": 2036,
+      "name": "Joint Policy"
+     },
+     "room": "Pioneer"
+    }
+   ]
+  },
+  "4029": {
+   "name": "SCR 4029",
+   "number": "4029",
+   "summary": "",
+   "title": "A concurrent resolution directing the Legislative Management to consider studying the costs and effects of planting and tending to sterile monoculture invasive plants and native plants within the state.",
+   "chamber": "Senate",
+   "session_id": "202501",
+   "session_name": "2025 Regular Session",
+   "url": "https://ndlegis.gov/assembly/69-2025/regular/bill-overview/bo4029.html",
+   "versions_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-index/bi4029.html",
+   "actions_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-actions/ba4029.html",
+   "video_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-video/bv4029.html",
+   "hearing_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-hearings/bh4029.html",
+   "testimony_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-testimony/bt4029.html",
+   "current_status": "Failed in Senate",
+   "last_action": "Second reading, failed to adopt",
+   "passed": false,
+   "agency": null,
+   "sponsors": [
+    {
+     "id": 3447,
+     "name": "Sen. Magrum, Jeffery J.",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": true
+    },
+    {
+     "id": 3413,
+     "name": "Rep. Holle, Dawson",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    },
+    {
+     "id": 3437,
+     "name": "Rep. Olson, SuAnn",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    },
+    {
+     "id": 3462,
+     "name": "Sen. van Oosting, Desiree",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    }
+   ],
+   "actions": [
+    {
+     "id": 477633,
+     "description": "Introduced, first reading, referred Energy and Natural Resources Committee",
+     "date": "2025-03-07T23:59:59",
+     "category": "Introduced",
+     "chamber": "Senate",
+     "bill_version": "25.3105.01000",
+     "roll_call": {}
+    },
+    {
+     "id": 477029,
+     "description": "Committee Hearing 09:00",
+     "date": "2025-03-13T09:00:00",
+     "category": "Committee hearing",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 478550,
+     "description": "Reported back, do not pass, placed on calendar 6 1 0",
+     "date": "2025-03-13T23:59:59",
+     "category": "Committee report",
+     "chamber": "Senate",
+     "bill_version": "25.3105.01000",
+     "roll_call": {}
+    },
+    {
+     "id": 478840,
+     "description": "Second reading, failed to adopt",
+     "date": "2025-03-14T23:59:59",
+     "category": "Failed",
+     "chamber": "Senate",
+     "bill_version": "25.3105.01000",
+     "roll_call": {}
+    }
+   ],
+   "versions": [
+    {
+     "lc_number": "25.3105.01000",
+     "description": "INTRODUCED",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-3105-01000.pdf"
+    }
+   ],
+   "hearings": [
+    {
+     "id": 42765,
+     "description": "A concurrent resolution directing the Legislative Management to consider studying the costs and effects of planting and tending to sterile monoculture invasive plants and native plants within the state",
+     "type": "Bill Hearing",
+     "date": "2025-03-13T09:00:00",
+     "committee": {
+      "id": 1961,
+      "name": "Senate Energy and Natural Resources"
+     },
+     "room": "Peace Garden"
+    },
+    {
+     "id": 43209,
+     "description": "Committee Work: A concurrent resolution directing the Legislative Management to consider studying the costs and effects of planting and tending to sterile monoculture invasive plants and native plants within the state.",
+     "type": "Committee Work",
+     "date": "2025-03-13T10:07:00",
+     "committee": {
+      "id": 1961,
+      "name": "Senate Energy and Natural Resources"
+     },
+     "room": "Peace Garden"
+    }
+   ]
+  }
+ }
+}

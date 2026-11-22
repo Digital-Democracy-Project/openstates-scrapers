@@ -51,8 +51,10 @@ read on 2026-11-17:
   in that span, 20172 ("November Special Session"), is in ignored_scraped_sessions, so every
   session in the list is regular.
 * North Dakota (OPEN-721, read 2026-11-20): ndlegis.gov/assembly/ lists only two-year Legislative
-  Assemblies, which are regular sessions; it keeps later special sessions inside their assembly,
-  so only 67S1 (November 2021) is special.
+  Assemblies, which are regular sessions; it keeps later special sessions inside their assembly.
+  Since OPEN-746 (read 2026-11-21) each special session is a session of its own, as the
+  legislature's own session pages and journals name it: 62S1 (Nov 2011), 64S1 (Aug 2016), 67S1
+  (Nov 2021), 68S1 (Oct 2023), 69S1 (Jan 2026) and 69S2 (Sep 2026).
 * Oklahoma (OPEN-727, read 2026-11-21): the session menu on webapps.oklegislature.gov
   (WebApplication3/WebForm1.aspx, the page get_session_list reads) names each session "Regular
   Session" or "... Special Session"; the twelve special ones are below, every other is regular.
@@ -102,7 +104,7 @@ SPECIAL = {
     },
     "mo": {"2019S1", "2020S1", "2020S2", "2021S1", "2022S1", "2025S1", "2025S2"},
     "mt": set(),
-    "nd": {"67S1"},
+    "nd": {"62S1", "64S1", "67S1", "68S1", "69S1", "69S2"},
     "ok": {
         "2012SS1",
         "2013SS1",
