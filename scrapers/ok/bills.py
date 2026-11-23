@@ -14,6 +14,7 @@ from .actions import Categorizer
 from .sessions import listing_session, session_for_day
 
 from classify_motion import classify_motion
+from utils import presiding_officers
 
 # Matches one legislator name in a vote roll line: a word, optionally
 # followed by a parenthetical disambiguator ("West (T)"), or the special
@@ -43,6 +44,10 @@ def vote_classification(motion, committee):
 # OPEN-704: the House page states each roll call's outcome on its own line above the
 # counts ("THIRD PASSED", "FAILED" for an emergency clause); the Senate page does not.
 STATED_RESULT = re.compile(r"\b(PASSED|FAILED)$")
+
+# OPEN-790: House roll calls print the presiding Speaker as "Mr. Speaker"; who that is comes
+# from the manifest (utils/presiding_officers.py). The Senate prints no title.
+PRESIDING_OFFICERS = {"Mr. Speaker": ("lower", "house_speaker_by_session")}
 
 # Members elected to each chamber, which the constitution's supermajorities count from.
 CHAMBER_SIZE = {"lower": 101, "upper": 48}
@@ -586,28 +591,43 @@ class OKBillScraper(Scraper):
             )
             vote.set_count("yes", counts["yes"])
             for name in votes["yes"]:
-                vote.yes(name)
+                self.add_voter(vote, "yes", name, chamber, bill.legislative_session)
             vote.set_count("no", counts["no"])
             for name in votes["no"]:
                 if ":" in name:
                     raise Exception(name)
-                vote.no(name)
-            if "excused" in counts:
-                vote.set_count("excused", counts["excused"])
-                for name in votes["excused"]:
-                    vote.vote("excused", name)
-            if "not voting" in counts:
-                vote.set_count("not voting", counts["not voting"])
-                for name in votes["not voting"]:
-                    vote.vote("not voting", name)
+                self.add_voter(vote, "no", name, chamber, bill.legislative_session)
+            for option in ("excused", "not voting"):
+                if option in counts:
+                    vote.set_count(option, counts[option])
+                    for name in votes[option]:
+                        self.add_voter(
+                            vote, option, name, chamber, bill.legislative_session
+                        )
             vote.set_count("other", counts["other"])
             for name in votes["other"]:
-                vote.vote("other", name)
+                self.add_voter(vote, "other", name, chamber, bill.legislative_session)
             vote.dedupe_key = url + "#" + rcs
 
             vote.add_source(url)
 
             yield vote
+
+    def add_voter(self, vote, option, name, chamber, session):
+        """Record `name`'s vote; "Mr. Speaker" on a House roll call gets the session's Speaker
+        from the manifest (OPEN-790), else stays as printed with one warning per session."""
+        unnamed = presiding_officers.add_voter(
+            vote, option, name, chamber, session, "ok", PRESIDING_OFFICERS
+        )
+        warned = self.__dict__.setdefault("_warned_officers", set())
+        if unnamed and (unnamed, session) not in warned:
+            warned.add((unnamed, session))
+            self.warning(
+                "OPEN-790: manifest ok.votes.%s has no %s; %r left as printed",
+                unnamed,
+                session,
+                name,
+            )
 
     def scrape_subjects(self, chamber, session):
         form_url = "https://webapps.oklegislature.gov/WebApplication3/WebForm1.aspx"
