@@ -80,6 +80,39 @@ def amended_into_links(bill_identifier, history_text):
     return links
 
 
+def add_missing_reverse_links(bills):
+    """OPEN-794 follow-up (Ramon, 2026-11-23: show a one-sided "amended into" line on both bills): when only one bill's
+    history names a pair (LB 958 names LB 1033 as carried into it; LB 1033's own history doesn't), the other bill of the
+    session gets the matching link too. `bills` is every Bill of one session's walk; a bill named but not among them is
+    left alone."""
+
+    def key(identifier):
+        return re.sub(r"\s+", "", identifier).upper()
+
+    reverse = {CARRIED_LABEL: CARRYING_LABEL, CARRYING_LABEL: CARRIED_LABEL}
+    by_key = {key(bill.identifier): bill for bill in bills}
+    added = 0
+    for bill in bills:
+        for link in list(bill.related_bills):
+            label = link.get("ddp_relation_label")
+            other = by_key.get(key(link["identifier"]))
+            if label not in reverse or other is None or other is bill:
+                continue
+            want = (key(bill.identifier), reverse[label])
+            if want not in {
+                (key(r["identifier"]), r.get("ddp_relation_label"))
+                for r in other.related_bills
+            }:
+                other.add_related_bill(
+                    bill.identifier,
+                    other.legislative_session,
+                    "related",
+                    label=reverse[label],
+                )
+                added += 1
+    return added
+
+
 class NEBillScraper(Scraper, LXMLMixin):
     priority_bills = {}
     # SSL bad as of 2024-11-18
@@ -105,6 +138,9 @@ class NEBillScraper(Scraper, LXMLMixin):
                 None,
             )
 
+        yield from self.with_reverse_links(self.scrape_session(session))
+
+    def scrape_session(self, session):
         if session["classification"] == "special":
             start = dateutil.parser.parse(session["start_date"])
             yield from self.scrape_special(session["identifier"], start)
@@ -115,6 +151,29 @@ class NEBillScraper(Scraper, LXMLMixin):
             yield from self.scrape_year(session["identifier"], start_year)
             if start_year != end_year:
                 yield from self.scrape_year(session["identifier"], end_year)
+
+    def with_reverse_links(self, items):
+        """OPEN-794 follow-up: the session's bills are held until the walk ends, so a pair named on only one bill's page can
+        be added to the other bill too (add_missing_reverse_links). Votes go out as they come (a vote points at its bill
+        by id, so the order of saving does not matter)."""
+        bills = []
+        try:
+            for item in items:
+                if isinstance(item, Bill):
+                    bills.append(item)
+                else:
+                    yield item
+        except Exception:
+            # a walk that fails part way still hands over the bills it read (as before this step), without the reverse
+            # links, so no vote is ever left without its bill in a partial output
+            yield from bills
+            raise
+        added = add_missing_reverse_links(bills)
+        if added:
+            self.info(
+                "OPEN-794: %d amended-into link(s) added to the other bill", added
+            )
+        yield from bills
 
     def scrape_priorities(self):
         priority_url = "https://nebraskalegislature.gov/session/priority.php"

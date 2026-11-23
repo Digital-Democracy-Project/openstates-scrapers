@@ -15,7 +15,11 @@ import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
 
-from ne.bills import NEBillScraper, amended_into_links  # noqa: E402
+from ne.bills import (  # noqa: E402
+    NEBillScraper,
+    add_missing_reverse_links,
+    amended_into_links,
+)
 from openstates.scrape import Bill  # noqa: E402
 
 FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures", "ne_open794")
@@ -128,3 +132,93 @@ def test_a_repeated_line_is_stored_once():
     assert [(r["identifier"], r["ddp_relation_label"]) for r in bill.related_bills] == [
         ("LB 890", "provisions amended in")
     ]
+
+
+# OPEN-794 follow-up (Ramon, 2026-11-23): a one-sided "amended into" line is shown on both bills.
+
+
+def scraped(*names):
+    """Each named fixture page through scrape_actions, as the walk would hold them before add_missing_reverse_links."""
+    bills = []
+    for name in names:
+        with open(os.path.join(FIXTURES, f"{name}.html"), encoding="utf-8") as f:
+            page = lxml.html.fromstring(f.read())
+        bill = Bill(name, "109", "A bill", classification="bill")
+        NEBillScraper(jurisdiction="x", datadir="/tmp").scrape_actions(bill, page)
+        bills.append(bill)
+    return bills
+
+
+def links_of(bill):
+    return sorted(
+        (r["identifier"], r["relation_type"], r["ddp_relation_label"])
+        for r in bill.related_bills
+    )
+
+
+def test_lb1033_gets_the_link_only_lb958s_page_names():
+    lb958, lb1033 = scraped("LB958", "LB1033")
+    assert links_of(lb1033) == []  # its own page has no such line
+    assert add_missing_reverse_links([lb958, lb1033]) == 1
+    assert links_of(lb1033) == [("LB 958", "related", "amended into")]
+    # LB 958 already had it; nothing is added there
+    assert ("LB 1033", "related", "provisions amended in") in links_of(lb958)
+    assert len(links_of(lb958)) == 4
+
+
+def test_a_pair_already_on_both_bills_adds_nothing_and_a_second_pass_adds_nothing():
+    lb890, lb901 = scraped("LB890", "LB901")
+    before = (links_of(lb890), links_of(lb901))
+    assert add_missing_reverse_links([lb890, lb901]) == 0
+    assert (links_of(lb890), links_of(lb901)) == before
+    lb958, lb1033 = scraped("LB958", "LB1033")
+    add_missing_reverse_links([lb958, lb1033])
+    assert add_missing_reverse_links([lb958, lb1033]) == 0
+
+
+def test_a_bill_named_but_not_in_the_walk_is_left_alone():
+    (lb958,) = scraped("LB958")
+    assert add_missing_reverse_links([lb958]) == 0
+
+
+def test_the_walk_holds_bills_until_the_end_and_passes_votes_through():
+    lb958, lb1033 = scraped("LB958", "LB1033")
+    vote = object()
+    scraper = NEBillScraper(jurisdiction="x", datadir="/tmp")
+    out = list(scraper.with_reverse_links(iter([lb1033, vote, lb958])))
+    assert out[0] is vote and out[1:] == [lb1033, lb958]
+    assert links_of(lb1033) == [("LB 958", "related", "amended into")]
+
+
+def test_a_session_scrape_goes_through_the_reverse_links_step():
+    from unittest import mock
+
+    from ne import Nebraska
+
+    lb958, lb1033 = scraped("LB958", "LB1033")
+    scraper = NEBillScraper(Nebraska(), "/tmp")
+    with mock.patch.object(
+        NEBillScraper, "scrape_session", return_value=iter([lb1033, lb958])
+    ):
+        out = list(scraper.scrape(session="109"))
+    assert out == [lb1033, lb958]
+    assert links_of(lb1033) == [("LB 958", "related", "amended into")]
+
+
+def test_a_walk_that_fails_part_way_still_hands_over_the_bills_it_read():
+    lb958, lb1033 = scraped("LB958", "LB1033")
+    vote = object()
+
+    def walk():
+        yield lb1033
+        yield lb958
+        yield vote
+        raise RuntimeError("site went away")
+
+    scraper = NEBillScraper(jurisdiction="x", datadir="/tmp")
+    out = []
+    with pytest.raises(RuntimeError):
+        for item in scraper.with_reverse_links(walk()):
+            out.append(item)
+    assert out == [vote, lb1033, lb958]
+    assert links_of(lb1033) == []  # the reverse step did not run on a failed walk
