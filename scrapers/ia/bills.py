@@ -36,14 +36,27 @@ def first_action_date(page):
     return min(dates, default=None)
 
 
-# FYI: as of 2025 this should be run with --http-resilience
+# OPEN-797: www.legis.iowa.gov sometimes stops answering for minutes at a time (a page read
+# timed out after 60 s and ended a whole session's collection). Upstream's answer is
+# --http-resilience, which DDP does not use: it sends made-up browser user-agents, and it
+# wraps a second retry loop around scrapelib's own. Instead Iowa gets a bigger budget on
+# scrapelib's per-request retry, which every self.get() already goes through: 5 retries,
+# waiting 10, 20, 40, 80 and 160 s (SCRAPELIB_RETRY_WAIT_SECONDS doubled each time), each
+# logged as a "got ... sleeping for N seconds before retry" warning, with the scraper's own
+# user-agent. About 10 minutes from the first timeout to the last try, longer than the
+# 7-minute rest this scraper already gives the site below.
+RETRY_ATTEMPTS = 5
+
+
 class IABillScraper(Scraper):
     categorizer = Categorizer()
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.retry_attempts = RETRY_ATTEMPTS
+
     def scrape(self, session=None, chamber=None, prefiles=None):
         self.http_resilience_headers = {"X-Requested-With": "XMLHttpRequest"}
-        req_session = requests.Session()
-        req_session.headers.update({"X-Requested-With": "XMLHttpRequest"})
         # openstates/issues#252 - IA continues to prefile after session starts
         # so we'll continue scraping both
         # (filed under the newest regular session switched on, not under an extraordinary
@@ -56,7 +69,11 @@ class IABillScraper(Scraper):
 
         session_id = self.get_session_id(session)
         url = f"https://www.legis.iowa.gov/legislation/findLegislation/allbills?ga={session_id}"
-        page = lxml.html.fromstring(req_session.get(url).text)
+        # OPEN-797: through self.get (timeout, retries) rather than a bare requests.Session,
+        # which had neither
+        page = lxml.html.fromstring(
+            self.get(url, headers={"X-Requested-With": "XMLHttpRequest"}).text
+        )
         start_time = time.time()
         for option in page.xpath("//*[@id='sortableTable']/tbody/tr"):
             bill_id = option.xpath("td[2]/a/text()")[0]

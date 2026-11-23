@@ -175,28 +175,23 @@ def test_the_journals_record_a_one_day_extraordinary_session(
 class OfflineBills(IABillScraper):
     """Serves the saved bill lists through the real scrape(); records each bill."""
 
-    def __init__(self, monkeypatch):
+    def __init__(self):
         self.jurisdiction = ia.Iowa()
         self.requested = []
         self.bills = []
-
-        def fake_get(_session, url, **kw):
-            self.requested.append(url)
-            ga = url.rsplit("ga=", 1)[1]
-            name = "allbills_{}.html".format(ga)
-            if os.path.exists(os.path.join(FIXTURES, name)):
-                return _FakeResponse(read(name))
-            return _FakeResponse("<table id='sortableTable'><tbody></tbody></table>")
-
-        monkeypatch.setattr(requests.Session, "get", fake_get)
 
     def scrape_prefiles(self, session):
         # the pre-filed list is one page for all sessions, not addressed by session
         return iter(())
 
     def get(self, url, **kwargs):
-        # the BillBook page, read for its HSB/SSB study bills; none in the saved lists
         self.requested.append(url)
+        if "/findLegislation/allbills?" in url:
+            name = "allbills_{}.html".format(url.rsplit("ga=", 1)[1])
+            if os.path.exists(os.path.join(FIXTURES, name)):
+                return _FakeResponse(read(name))
+            return _FakeResponse("<table id='sortableTable'><tbody></tbody></table>")
+        # the BillBook page, read for its HSB/SSB study bills; none in the saved lists
         return _FakeResponse("<html></html>")
 
     def scrape_bill(self, chamber, session, session_id, bill_id, url, *args, **kwargs):
@@ -206,9 +201,9 @@ class OfflineBills(IABillScraper):
 
 @pytest.mark.parametrize("identifier,ga,sub,day,bills,assembly", EXTRAORDINARY, ids=IDS)
 def test_the_bills_scraper_reads_the_extraordinary_sessions_bills(
-    monkeypatch, identifier, ga, sub, day, bills, assembly
+    identifier, ga, sub, day, bills, assembly
 ):
-    scraper = OfflineBills(monkeypatch)
+    scraper = OfflineBills()
     list(scraper.scrape(session=identifier))
     assert scraper.requested == [
         "https://www.legis.iowa.gov/legislation/findLegislation/allbills?ga=" + ga,
@@ -279,9 +274,9 @@ def test_the_votes_scraper_reads_the_extraordinary_sessions_journal(
 
 
 @pytest.mark.parametrize("identifier", ["2027", "2028"])
-def test_general_assembly_92s_years_are_addressed_as_ga_92(monkeypatch, identifier):
+def test_general_assembly_92s_years_are_addressed_as_ga_92(identifier):
     # both scrapers can address them when they are switched on
-    scraper = OfflineBills(monkeypatch)
+    scraper = OfflineBills()
     list(scraper.scrape(session=identifier))
     assert scraper.requested[0].endswith("/findLegislation/allbills?ga=92")
     votes = OfflineVotes()
