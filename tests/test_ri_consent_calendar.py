@@ -56,7 +56,8 @@ def _scraper(bills, journal=None):
     """A scraper whose journal fetch returns this fixture's text (or nothing)."""
     scraper = object.__new__(RIBillScraper)
     scraper.warnings = []
-    scraper.warning = lambda *a, **k: scraper.warnings.append(a)
+    # the OPEN-785 presiding-officer warning (no manifest here) is tested in test_ri_presiding_officers.py
+    scraper.warning = lambda *a, **k: "OPEN-785" in a[0] or scraper.warnings.append(a)
     scraper._bill_id_by_type = dict(bills)
     scraper._tz = types.SimpleNamespace(localize=lambda d: d)
     scraper.journal_dates = []

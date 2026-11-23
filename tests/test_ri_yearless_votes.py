@@ -37,7 +37,8 @@ def _page(name):
 def _scraper(bills=BILLS):
     scraper = object.__new__(RIBillScraper)
     scraper.warnings = []
-    scraper.warning = lambda *a, **k: scraper.warnings.append(a)
+    # the OPEN-785 presiding-officer warning (no manifest here) is tested in test_ri_presiding_officers.py
+    scraper.warning = lambda *a, **k: "OPEN-785" in a[0] or scraper.warnings.append(a)
     scraper._bill_id_by_type = dict(bills)
     scraper._tz = types.SimpleNamespace(localize=lambda d: d)
     return scraper

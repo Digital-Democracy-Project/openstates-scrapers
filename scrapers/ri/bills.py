@@ -16,7 +16,7 @@ from .consent import (
 )
 
 from classify_motion import classify_motion
-from utils import url_xpath
+from utils import presiding_officers, url_xpath
 
 subjects = None
 bill_subjects = None
@@ -25,6 +25,24 @@ bill_subjects = None
 # server, not even helping with that. Sheesh.
 MAXQUERY = 250
 RI_URL_BASE = "https://webserver.rilegislature.gov"
+
+# OPEN-785: the vote reports print each chamber's presiding officer by title ("Mr. Speaker",
+# "Madam President"); who that is comes from the manifest (utils/presiding_officers.py)
+PRESIDING_OFFICERS = {
+    "Mr. Speaker": ("lower", "house_speaker_by_session"),
+    "Madam Speaker": ("lower", "house_speaker_by_session"),
+    "Mr. President": ("upper", "senate_president_by_session"),
+    "Madam President": ("upper", "senate_president_by_session"),
+}
+
+
+def add_voter(vote, option, name, chamber, session, day):
+    """Record `name`'s vote; a presiding-officer title gets the officer in office on `day`
+    ('YYYY-MM-DD'). Returns the manifest field with no name for it, else None."""
+    return presiding_officers.add_voter(
+        vote, option, name, chamber, session, "ri", PRESIDING_OFFICERS, day
+    )
+
 
 # OPEN-683: a roll call's header ends with the motion, one to three lines under the
 # bill's title: House "PASSAGE" / "AS AMENDED" / "PASSAGE OF AMENDMENT", Senate
@@ -452,9 +470,21 @@ class RIBillScraper(Scraper):
         v.add_source(vote["source"])
         v.dedupe_key = dedupe_key
 
+        day = vote["time"].date().isoformat()
+        # (manifest field, session) pairs already warned about in this run, one warning each
+        warned = self.__dict__.setdefault("_warned_officers", set())
         for vt in vote["votes"]:
             key = {"Y": "yes", "N": "no"}.get(vt["vote"], "other")
-            v.vote(key, vt["name"])
+            unnamed = add_voter(v, key, vt["name"], chamber, session, day)
+            if unnamed and (unnamed, session) not in warned:
+                warned.add((unnamed, session))
+                self.warning(
+                    "OPEN-785: manifest ri.votes.%s has no %s on %s; %r left as printed",
+                    unnamed,
+                    session,
+                    day,
+                    vt["name"],
+                )
         return v
 
     def consent_vote_events(self, date, session, roll_calls):
