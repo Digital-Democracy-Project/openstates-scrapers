@@ -1,7 +1,15 @@
+from datetime import date
+
 from openstates.scrape import State
 from .util import get_client, backoff
 from .bills import GABillScraper
 from .events import GAEventScraper
+
+# OPEN-605, as Arizona's OPEN-632: 2027_28 becomes the active session on its start date; until then
+# 2026_ss stays the only active one. Read once per run, so the first run on or after 2027-01-11
+# scrapes 2027_28.
+SESSION_2027_28_START = "2027-01-11"
+SESSION_2027_28_STARTED = date.today() >= date.fromisoformat(SESSION_2027_28_START)
 
 
 class Georgia(State):
@@ -125,8 +133,25 @@ class Georgia(State):
             "identifier": "2026_ss",
             "name": "2026 Special Session",
             "start_date": "2026-06-17",
-            "end_date": "2026-12-13",  # TODO real end date
-            "active": True,
+            # OPEN-605: the legislature's last day; both chambers' final actions are 06-23
+            # (the Governor signed Act 1EX on 06-25)
+            "end_date": "2026-06-23",
+            "active": not SESSION_2027_28_STARTED,
+        },
+        {
+            # OPEN-605 (Ramon, 2026-11-16: "add 2027" ourselves). Georgia does not list it yet
+            # (GetSessions, 2026-11-23); bills.py reads its site id from Georgia's list once it does.
+            # Start: the second Monday in January, our reading of the state constitution (OPEN-605;
+            # not yet on Georgia's site): recheck when Georgia lists the session. End: PROVISIONAL,
+            # later than any recent close (2022-04-04, 2024-04-02, 2026-04-02); replace with
+            # Georgia's sine die once it is set.
+            "_scraped_name": "2027-2028 Regular Session",
+            "classification": "primary",
+            "identifier": "2027_28",
+            "name": "2027-2028 Regular Session",
+            "start_date": SESSION_2027_28_START,
+            "end_date": "2028-04-30",
+            "active": SESSION_2027_28_STARTED,
         },
     ]
     ignored_scraped_sessions = [

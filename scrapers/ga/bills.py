@@ -13,6 +13,7 @@ from .util import (
     get_url,
     backoff,
     get_token,
+    published_session_id,
     SESSION_SITE_IDS,
     SPECIAL_SESSION_SITE_URL_PARTS,
 )
@@ -403,7 +404,21 @@ class GABillScraper(Scraper):
             "STH": None,
             "HTS": None,
         }
-        sid = SESSION_SITE_IDS[session]
+        sid = SESSION_SITE_IDS.get(session)
+        if sid is None:
+            # OPEN-605: a session we list before Georgia publishes it (2027_28): its id comes from
+            # Georgia's own session list; until Georgia lists it there are no bills to read yet.
+            name = next(
+                s["_scraped_name"]
+                for s in self.jurisdiction.legislative_sessions
+                if s["identifier"] == session
+            )
+            sid = published_session_id(name)
+            if sid is None:
+                self.warning(
+                    "GA OPEN-605: Georgia does not list %r yet; no bills to read", name
+                )
+                raise EmptyScrape
 
         legislation = backoff(self.lservice.GetLegislationForSession, sid)[
             "LegislationIndex"

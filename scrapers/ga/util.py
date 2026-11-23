@@ -78,6 +78,16 @@ SPECIAL_SESSION_SITE_URL_PARTS = {
 }
 
 
+def published_session_id(name):
+    """OPEN-605: the site id Georgia's own session list (GetSessions) gives the session it calls `name`
+    ("2027-2028 Regular Session"), or None while Georgia does not list it yet. For a session listed in
+    our scraper before Georgia publishes it; its id goes into SESSION_SITE_IDS once known."""
+    for session in backoff(get_client("Session").service.GetSessions)["Session"]:
+        if session["Description"].strip() == name:
+            return session["Id"]
+    return None
+
+
 def get_key(timestamp):
     # this comes out of Georgia's javascript
     # 1) part1 (and the overall format) comes from
