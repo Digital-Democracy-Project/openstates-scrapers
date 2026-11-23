@@ -16,9 +16,13 @@ from .sessions import listing_session, session_for_day
 from classify_motion import classify_motion
 
 # Matches one legislator name in a vote roll line: a word, optionally
-# followed by a parenthetical disambiguator ("West (T)"), or the special
-# "Mr. Speaker" entry (which spans two words).
-NAME_RE = re.compile(r"Mr\.\s+Speaker|[A-Za-z][\w'\-]*(?:\s+\([^)]+\))?")
+# followed by a parenthetical disambiguator ("West (T)"), or one of the two entries
+# that span two words: "Mr. Speaker" and Rep. Denise Crosswhite Hader's surname
+# (OPEN-789: split in two, "Hader" was a second, unmatched vote of hers and pushed the
+# section's last real voter past the declared count).
+NAME_RE = re.compile(
+    r"Mr\.\s+Speaker|Crosswhite\s+Hader|[A-Za-z][\w'\-]*(?:\s+\([^)]+\))?"
+)
 
 # OPEN-687: a floor amendment roll call ("Adopt Amendment", "Table Amendment"), labelled
 # here because config/motion_classification.yaml only decides passage.
