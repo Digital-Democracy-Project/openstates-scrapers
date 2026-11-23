@@ -6,16 +6,20 @@ introduction-vote tallies and voters; only the chamber, action and amendment num
 Senate introduction votes ("S Introduced and Referred to ...", 31 votes: the Senate's size) come back with
 chamber "H"; the action's "S " prefix names the chamber that voted.
 """
+import json
 import os
 import sys
+import types
 
 import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
 
-from openstates.scrape import Bill  # noqa: E402
+from openstates.scrape import Bill, VoteEvent  # noqa: E402
 from wy import Wyoming  # noqa: E402
 from wy.bills import WYBillScraper, voting_chamber  # noqa: E402
+
+FIXTURES_778 = os.path.join(os.path.dirname(__file__), "fixtures", "wy_open778")
 
 SENATORS_SF10 = (
     "Anderson, Barlow, Boner, Brennan, Case, Cooper, Crago, Crum, Driskill, Dockstader, French, Gierau, Hicks, "
@@ -91,6 +95,32 @@ REAL_ROLL_CALLS = [
     ),  # HB 10 committee
     ("S", "Amendment failed 3-28-0-0-0", "SF0002S2001", "upper"),  # SF 2
     ("H", "Amendment failed 22-38-2-0-0", "SF0004H2001", "lower"),  # SF 4
+    # OPEN-778: no prefix, but the action names the chamber's own rule.
+    (
+        "H",
+        "Recalled from Committee Pursuant to Senate Rule 5-5: 29-2-0-0-0",
+        None,
+        "upper",
+    ),  # SF 50, SF 56: the API's chamber is wrong
+    (
+        "S",
+        "Recalled from Committee Pursuant to Senate Rule 5-5: 29-2-0-0-0",
+        None,
+        "upper",
+    ),  # SF 84
+    (
+        "H",
+        ":Recalled from Committee Pursuant to House Rule 5-6: 32-29-1-0-0",
+        None,
+        "lower",
+    ),  # HB 178
+    # The prefix still comes first: "HR 12-9" is not "House Rule", and the prefix names the House anyway.
+    (
+        "H",
+        "H COW:H Pursuant to HR 12-9 Passed by Roll Call 46-11-5-0-0",
+        None,
+        "lower",
+    ),  # HB 141
 ]
 
 
@@ -129,6 +159,56 @@ def test_house_prefix_wins_over_a_senate_api_chamber():
     """Synthetic (no real case seen in 2026): the rule is the prefix in both directions, not a Senate-only patch."""
     rc = roll_call("S", "H Introduced and Referred to H01 - Judiciary 46-16-0-0-0")
     assert voting_chamber(rc) == "H"
+
+
+def test_house_rule_wins_over_a_senate_api_chamber():
+    """Synthetic (HB 178's real recall, with the API's chamber flipped): a named rule decides in both directions."""
+    rc = roll_call(
+        "S", ":Recalled from Committee Pursuant to House Rule 5-6: 32-29-1-0-0"
+    )
+    assert voting_chamber(rc) == "H"
+
+
+def test_senate_rule_recall_on_sf50_and_sf56_is_a_senate_vote():
+    """OPEN-778, on the real API answers (tests/fixtures/wy_open778, read 2026-11-23, *HTML text fields emptied):
+    SF 50's and SF 56's "Recalled from Committee Pursuant to Senate Rule 5-5" roll calls come back with chamber "H",
+    31 voters and a Senate floor vote number (299, 300). They are stored as Senate votes; the House's own votes on
+    the same Senate files stay House votes, and every other roll call keeps the API's chamber."""
+    for bill, recall_id in (("SF0050", 299), ("SF0056", 300)):
+        with open(
+            os.path.join(FIXTURES_778, f"2026_{bill}.json"), encoding="utf-8"
+        ) as f:
+            data = json.load(f)
+        scraper = WYBillScraper(Wyoming(), "/tmp/")
+        body = json.dumps(data).encode("utf-8")
+        scraper.get = lambda url, *a, **k: types.SimpleNamespace(content=body)
+        votes = [
+            v for v in scraper.scrape_bill(bill, "2026") if isinstance(v, VoteEvent)
+        ]
+        assert len(votes) == len(data["rollCalls"])
+        for vote, rc in zip(votes, data["rollCalls"]):
+            if rc["voteID"] == recall_id:
+                assert rc["chamber"] == "H"
+                assert vote.organization == '~{"classification": "upper"}'
+                assert len(vote.votes) == 31
+                # key, motion, label and result as main stores them (OPEN-769, OPEN-677, OPEN-684)
+                assert vote.dedupe_key == (
+                    "https://lso.wyoleg.gov/Legislation/2026/%s#%d" % (bill, recall_id)
+                )
+                assert vote.motion_text == (
+                    "Recalled from Committee Pursuant to Senate Rule 5-5: 29-2-0-0-0"
+                )
+                assert vote.motion_classification == []
+                assert vote.result == "pass"
+            else:
+                expected = {"S": "upper", "H": "lower"}[rc["chamber"]]
+                assert vote.organization == '~{"classification": "%s"}' % expected
+        house = [
+            v.motion_text
+            for v in votes
+            if v.organization == '~{"classification": "lower"}'
+        ]
+        assert any(m.startswith("H 3rd Reading:Passed") for m in house)
 
 
 # OPEN-677: every kind of roll call in the 2026 probe sample (107 roll calls), one real text each, with the label the

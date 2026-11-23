@@ -1,0 +1,450 @@
+{
+ "amendments": [
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "SF0050S3001",
+   "house": "S",
+   "id": 0,
+   "order": "3rd reading",
+   "sequence": "001",
+   "sponsor": "Senator Crago",
+   "status": "Adopted"
+  },
+  {
+   "amendmentBudgetSections": [],
+   "amendmentNumber": "SF0050SS001",
+   "house": "S",
+   "id": 0,
+   "order": "Standing Committee",
+   "sequence": "001",
+   "sponsor": "Senate Agriculture, State and Public Lands & Water Resources Committee",
+   "status": "Adopted"
+  }
+ ],
+ "bill": "SF0050",
+ "billActions": [
+  {
+   "billInformationID": 13113,
+   "location": "LSO",
+   "statusDate": "2026-03-06T16:29:21",
+   "statusMessage": "Assigned Chapter Number 70",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13113,
+   "location": "Governor",
+   "statusDate": "2026-03-06T16:28:57",
+   "statusMessage": "Governor Signed SEA No. 0047 ",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13113,
+   "location": "House",
+   "statusDate": "2026-03-05T17:28:25",
+   "statusMessage": "H Speaker Signed SEA No. 0047",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13113,
+   "location": "Senate",
+   "statusDate": "2026-03-05T11:01:08",
+   "statusMessage": "S President Signed SEA No. 0047",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13113,
+   "location": "LSO",
+   "statusDate": "2026-03-04T16:06:33",
+   "statusMessage": "Assigned Number SEA No. 0047",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13113,
+   "location": "House",
+   "statusDate": "2026-03-04T15:44:56",
+   "statusMessage": "H 3rd Reading:Passed 60-0-2-0-0",
+   "voteId": "5488"
+  },
+  {
+   "billInformationID": 13113,
+   "location": "House",
+   "statusDate": "2026-03-03T10:20:48",
+   "statusMessage": "H 2nd Reading:Passed",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13113,
+   "location": "House",
+   "statusDate": "2026-03-02T17:45:33",
+   "statusMessage": "H COW:Passed",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13113,
+   "location": "House",
+   "statusDate": "2026-02-27T10:48:20",
+   "statusMessage": "H Placed on General File",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13113,
+   "location": "House",
+   "statusDate": "2026-02-27T10:48:13",
+   "statusMessage": "H02 - Appropriations:Recommend Do Pass 5-2-0-0-0",
+   "voteId": "-346"
+  },
+  {
+   "billInformationID": 13113,
+   "location": "House",
+   "statusDate": "2026-02-26T14:21:18",
+   "statusMessage": ":Rerefer to H02 - Appropriations",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13113,
+   "location": "House",
+   "statusDate": "2026-02-26T14:21:10",
+   "statusMessage": "H05 - Agriculture:Recommend Do Pass 9-0-0-0-0",
+   "voteId": "-320"
+  },
+  {
+   "billInformationID": 13113,
+   "location": "House",
+   "statusDate": "2026-02-24T10:45:01",
+   "statusMessage": "H Introduced and Referred to H05 - Agriculture",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13113,
+   "location": "House",
+   "statusDate": "2026-02-24T09:15:47",
+   "statusMessage": "H Received for Introduction",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13113,
+   "location": "Senate",
+   "statusDate": "2026-02-23T14:51:07",
+   "statusMessage": "S 3rd Reading:Passed 29-1-1-0-0",
+   "voteId": "378"
+  },
+  {
+   "billInformationID": 13113,
+   "location": "Senate",
+   "statusDate": "2026-02-20T10:27:30",
+   "statusMessage": "S 2nd Reading:Passed",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13113,
+   "location": "Senate",
+   "statusDate": "2026-02-19T18:32:07",
+   "statusMessage": "S COW:Passed",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13113,
+   "location": "Senate",
+   "statusDate": "2026-02-19T12:24:53",
+   "statusMessage": "Recalled from Committee Pursuant to Senate Rule 5-5: 29-2-0-0-0",
+   "voteId": "299"
+  },
+  {
+   "billInformationID": 13113,
+   "location": "Senate",
+   "statusDate": "2026-02-17T14:24:33",
+   "statusMessage": ":Rerefer to S02 - Appropriations",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13113,
+   "location": "Senate",
+   "statusDate": "2026-02-17T14:20:08",
+   "statusMessage": "S05 - Agriculture:Recommend Amend and Do Pass 4-1-0-0-0",
+   "voteId": "-159"
+  },
+  {
+   "billInformationID": 13113,
+   "location": "Senate",
+   "statusDate": "2026-02-10T11:06:13",
+   "statusMessage": "S Introduced and Referred to S05 - Agriculture 25-5-1-0-0",
+   "voteId": "168"
+  },
+  {
+   "billInformationID": 13113,
+   "location": "Senate",
+   "statusDate": "2026-01-29T09:38:51",
+   "statusMessage": "S Received for Introduction",
+   "voteId": ""
+  },
+  {
+   "billInformationID": 13113,
+   "location": "LSO",
+   "statusDate": "2026-01-21T11:46:08",
+   "statusMessage": "Bill Number Assigned",
+   "voteId": ""
+  }
+ ],
+ "billStatus": "enrolled",
+ "billTitle": "AN ACT relating to water; requiring the state engineer to conduct a groundwater study in control areas as specified; requiring reports; providing an appropriation; and providing for an effective date.",
+ "billType": "SF",
+ "catchTitle": "State engineer-surface and ground water study.",
+ "chapter": "CH0070",
+ "concurrenceLink": null,
+ "currentBillHTML": null,
+ "customEnrolledLinkText": null,
+ "customEnrolledPath": null,
+ "digest": "2026/Digest/SF0050.pdf",
+ "digestHTML": null,
+ "effectiveDate": "7/1/2026",
+ "engrossedVersion": "2026/Engross/SF0050.pdf",
+ "enrolledAct": "2026/Enroll/SF0050.pdf",
+ "enrolledNumber": "SEA0047",
+ "fiscalNote": "2026/Fiscal/SF0050.pdf",
+ "fiscalNoteHTML": null,
+ "id": 13113,
+ "introduced": "2026/Introduced/SF0050.pdf",
+ "isEngrossed": false,
+ "isPublic": null,
+ "lastAction": "Assigned Chapter Number 70",
+ "lastActionDate": "2026-03-06T00:00:00",
+ "lsoNumber": null,
+ "rollCalls": [
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "S Introduced and Referred to S05 - Agriculture 25-5-1-0-0",
+   "amendmentNumber": null,
+   "billNumber": "SF0050",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Pappas",
+   "excusedVotesCount": 1,
+   "noVotes": "French, Ide, Laursen, McKeown, Salazar",
+   "noVotesCount": 5,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-10T11:06:13",
+   "voteID": 168,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Case, Cooper, Crago, Crum, Dockstader, Driskill, Gierau, Hicks, Hutchings, Jones, Kolb, Landen, Love, Nethercott, Pearson, Olsen, Rothfuss, Steinmetz, Schuler, Scott, Biteman",
+   "yesVotesCount": 25
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "S05 - Agriculture:Recommend Amend and Do Pass 4-1-0-0-0",
+   "amendmentNumber": null,
+   "billNumber": "SF0050",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "IDE",
+   "noVotesCount": 1,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-17T14:20:08",
+   "voteID": -159,
+   "voteType": "C",
+   "year": 2026,
+   "yesVotes": "CRAGO, LOVE, MCKEOWN, PEARSON",
+   "yesVotesCount": 4
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "Recalled from Committee Pursuant to Senate Rule 5-5: 29-2-0-0-0",
+   "amendmentNumber": null,
+   "billNumber": "SF0050",
+   "chamber": "H",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "Case, French",
+   "noVotesCount": 2,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-19T12:24:53",
+   "voteID": 299,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Cooper, Crago, Crum, Dockstader, Driskill, Gierau, Hicks, Ide, Hutchings, Jones, Kolb, Landen, Laursen, Love, McKeown, Pappas, Nethercott, Olsen, Pearson, Rothfuss, Salazar, Schuler, Steinmetz, Scott, Biteman",
+   "yesVotesCount": 29
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "S 3rd Reading:Passed 29-1-1-0-0",
+   "amendmentNumber": null,
+   "billNumber": "SF0050",
+   "chamber": "S",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Hutchings",
+   "excusedVotesCount": 1,
+   "noVotes": "Ide",
+   "noVotesCount": 1,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-23T14:51:07",
+   "voteID": 378,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Anderson, Barlow, Boner, Brennan, Case, Cooper, Crago, Dockstader, Crum, Driskill, Gierau, French, Hicks, Jones, Landen, Kolb, Laursen, McKeown, Love, Nethercott, Olsen, Pappas, Pearson, Rothfuss, Schuler, Salazar, Steinmetz, Scott, Biteman",
+   "yesVotesCount": 29
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "H05 - Agriculture:Recommend Do Pass 9-0-0-0-0",
+   "amendmentNumber": null,
+   "billNumber": "SF0050",
+   "chamber": "H",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "",
+   "noVotesCount": 0,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-26T14:21:10",
+   "voteID": -320,
+   "voteType": "C",
+   "year": 2026,
+   "yesVotes": "BANKS, DAVIS, FORNSTROM, JOHNSON, OTTMAN, PROVENZA, SCHMID, STROCK, WINTER",
+   "yesVotesCount": 9
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "H02 - Appropriations:Recommend Do Pass 5-2-0-0-0",
+   "amendmentNumber": null,
+   "billNumber": "SF0050",
+   "chamber": "H",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "",
+   "excusedVotesCount": 0,
+   "noVotes": "ANGELOS, BEAR",
+   "noVotesCount": 2,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-02-27T10:48:13",
+   "voteID": -346,
+   "voteType": "C",
+   "year": 2026,
+   "yesVotes": "ALLEMAND, HAROLDSON, PENDERGRAFT, SHERWOOD, SMITH, S",
+   "yesVotesCount": 5
+  },
+  {
+   "absentVotes": "",
+   "absentVotesCount": 0,
+   "action": "H 3rd Reading:Passed 60-0-2-0-0",
+   "amendmentNumber": null,
+   "billNumber": "SF0050",
+   "chamber": "H",
+   "conflictVotes": "",
+   "conflictVotesCount": 0,
+   "excusedVotes": "Kelly, Posey",
+   "excusedVotesCount": 2,
+   "noVotes": "",
+   "noVotesCount": 0,
+   "rollCallLegVoteDtos": null,
+   "voteDate": "2026-03-04T15:44:56",
+   "voteID": 5488,
+   "voteType": "F",
+   "year": 2026,
+   "yesVotes": "Allemand, Andrew, Angelos, Banks, Bear, Brady, Bratten, Brown, L, Brown, G, Byron, Campbell, E, Campbell, K, Chestek, Connolly, Clouston, Davis, Erickson, Filer, Fornstrom, Geringer, Guggenmos, Harshman, Haroldson, Heiner, Hoeft, Jarvis, Johnson, Knapp, Larsen, L, Larson, JT, Lawley, Lien, McCann, Locke, Nicholas, Lucas, Ottman, Pendergraft, Riggins, Provenza, Rodriguez-Williams, Sherwood, Schmid, Smith, Singh, Storer, Strock, Styvar, Tarver, Thayer, Washut, Webb, Wasserburger, Wharff, Webber, Williams, Winter, Wylie, Yin, Neiman",
+   "yesVotesCount": 60
+  }
+ ],
+ "scheduledActions": [],
+ "showPDF": false,
+ "signedDate": "3/6/2026",
+ "specialSessionValue": null,
+ "sponsor": "Senator Love",
+ "sponsorStringHouse": "Representative(s) Davis, Filer, Fornstrom, Geringer, Johnson, Provenza, Winter",
+ "sponsorStringSenate": "Senator(s) Crago, Hutchings, Nethercott, Steinmetz",
+ "sponsors": [
+  {
+   "house": "H",
+   "name": "Davis",
+   "primarySponsor": false,
+   "sponsorTitle": "Representative"
+  },
+  {
+   "house": "H",
+   "name": "Filer",
+   "primarySponsor": false,
+   "sponsorTitle": "Representative"
+  },
+  {
+   "house": "H",
+   "name": "Fornstrom",
+   "primarySponsor": false,
+   "sponsorTitle": "Representative"
+  },
+  {
+   "house": "H",
+   "name": "Geringer",
+   "primarySponsor": false,
+   "sponsorTitle": "Representative"
+  },
+  {
+   "house": "H",
+   "name": "Johnson",
+   "primarySponsor": false,
+   "sponsorTitle": "Representative"
+  },
+  {
+   "house": "H",
+   "name": "Provenza",
+   "primarySponsor": false,
+   "sponsorTitle": "Representative"
+  },
+  {
+   "house": "H",
+   "name": "Winter",
+   "primarySponsor": false,
+   "sponsorTitle": "Representative"
+  },
+  {
+   "house": "S",
+   "name": "Crago",
+   "primarySponsor": false,
+   "sponsorTitle": "Senator"
+  },
+  {
+   "house": "S",
+   "name": "Hutchings",
+   "primarySponsor": false,
+   "sponsorTitle": "Senator"
+  },
+  {
+   "house": "S",
+   "name": "Love",
+   "primarySponsor": true,
+   "sponsorTitle": "Senator"
+  },
+  {
+   "house": "S",
+   "name": "Nethercott",
+   "primarySponsor": false,
+   "sponsorTitle": "Senator"
+  },
+  {
+   "house": "S",
+   "name": "Steinmetz",
+   "primarySponsor": false,
+   "sponsorTitle": "Senator"
+  }
+ ],
+ "substitute": null,
+ "substituteBills": [],
+ "summary": "2026/Summaries/SF0050.pdf",
+ "summaryHTML": null,
+ "veto": null,
+ "vetoLinkText": null,
+ "vetoes": [],
+ "year": 2026
+}
