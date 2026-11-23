@@ -164,7 +164,8 @@ def test_sb1_lands_in_its_special_session_with_its_passage_roll_calls():
     assert bill.identifier == "SB1"
     assert bill.title == "RELATING TO EQUAL RIGHTS."
     assert [s["name"] for s in bill.sponsorships] == ["Galuteria"]
-    assert [v["note"] for v in bill.versions] == ["SB1", "SB1_HD1"]
+    # OPEN-804: named by stage, as the regular bills
+    assert [v["note"] for v in bill.versions] == ["Introduced", "House Draft 1"]
     actions = [(a["date"], a["description"]) for a in bill.actions]
     for expected in [
         ("2013-10-28", "Introduced and Passed First Reading"),
@@ -266,7 +267,7 @@ def test_a_house_bill_and_resolutions():
     assert [s["name"] for s in hb3.sponsorships] == [
         "Souki"
     ]  # "Representative Souki, by request"
-    assert [v["note"] for v in hb3.versions] == ["HB3", "HB3_HD1"]
+    assert [v["note"] for v in hb3.versions] == ["Introduced", "House Draft 1"]
     # "passed Third Reading by a vote of 47 ayes, with Representatives Awana, Choy, Ito and Yamane
     # being excused." (House, October 31); the Senate's roll call of November 5 prints
     # "Ayes, 20; Ayes with Reservations (Thielen). Noes, 1 (Slom). Excused, 4 (...)"

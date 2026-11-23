@@ -210,6 +210,50 @@ def split_specific_votes(voters):
     return merged
 
 
+# OPEN-804: the bill page's "All Versions of this Measure" names each text by its file ("HB1163", "HB1163_HD1",
+# "HB1163_CD1"), which has no stage. What each is, from the Legislative Reference Bureau's Advocate's Guide, Part 1
+# (lrb.hawaii.gov/par, 2026), "Bill Numbers", and the texts' own headers (read 2026-11-23):
+#   the bill number alone: the bill as introduced ("H.B. NO. 1163").
+#   HD<N> / SD<N>: House Draft N / Senate Draft N, a committee's amended text ("If the bill is revised or amended, it
+#   will be indicated by a new draft number (e.g., HD 1, SD 1, etc.)"); the bill's own chamber's drafts come first,
+#   then the other chamber's after crossover ("SB145 SD2 HD1"). The file carries only the newest draft number.
+#   CD<N>: Conference Draft N, the text the conference committee agreed ("SB145 SD2 HD1 CD1"); a CD2 follows when
+#   both chambers floor-amend the CD1 (2026 HB 1334).
+#   _PROPOSED: a committee's proposed draft, posted for its hearing before it decides ("S.D. 1 ... Proposed"; the
+#   guide: "Keep an eye out for 'proposed drafts'"). Not a text the bill took: a document.
+#   _HFA<N> / _SFA<N>: a House / Senate floor amendment to the draft named before it ("HOUSE AMENDMENT TO: H.B. No.
+#   1334, H.D. 3, S.D. 2, C.D. 1"; "SENATE FLOOR AMENDMENT"): a document.
+# A GM (governor's message) is a letter to the Legislature (an appointment, a bill signed into law, ...; the guide's
+# "Governor's Messages (GM)"), not a bill: its file is a document. A trailing "_" or ".pdf" in the link text is the
+# file name showing through ("HB900_HD1.pdf" is House Draft 1). Any other shape keeps its own name as a version.
+VERSION_FILE_RE = re.compile(
+    r"(?P<measure>[A-Z]+)\d+(?:_(?P<draft>[HSC]D)(?P<number>\d+))?"
+    r"(?:_(?:(?P<proposed>PROPOSED)|(?P<floor>[HS])FA(?P<amendment>\d+)))?_?(?:\.pdf)?",
+    re.IGNORECASE,
+)
+DRAFT_NAMES = {"HD": "House Draft", "SD": "Senate Draft", "CD": "Conference Draft"}
+
+
+def version_name(link_text):
+    """(name, is_version) for a link of the bill page's "All Versions of this Measure" (OPEN-804, see above)."""
+    link_text = link_text.strip()
+    m = VERSION_FILE_RE.fullmatch(link_text)
+    if not m:
+        return link_text, True
+    if m["measure"].upper() == "GM":
+        return "Governor's Message", False
+    draft = (
+        f"{DRAFT_NAMES[m['draft'].upper()]} {int(m['number'])}" if m["draft"] else None
+    )
+    if m["proposed"]:
+        return (f"Proposed {draft}" if draft else link_text), False
+    if m["floor"]:
+        chamber = {"H": "House", "S": "Senate"}[m["floor"].upper()]
+        name = f"{chamber} Floor Amendment {int(m['amendment'])}"
+        return (f"{name} to {draft}" if draft else name), False
+    return (draft or "Introduced"), True
+
+
 class HIBillScraper(Scraper):
     categorizer = Categorizer()
     bill_types = ["HB", "HR", "HCR", "SB", "SR", "SCR", "GM"]
@@ -434,7 +478,10 @@ class HIBillScraper(Scraper):
 
             if version.xpath("./a"):
                 http_href = td.attrib["href"]
-                name = td.text_content().strip()
+                name, is_version = version_name(td.text_content())
+                add_link = (
+                    bill.add_version_link if is_version else bill.add_document_link
+                )
 
                 if not http_href.startswith("http"):
                     http_link = f"{HI_URL_BASE}{http_href}"
@@ -444,12 +491,12 @@ class HIBillScraper(Scraper):
 
                 # some bills (and GMs) swap the order or double-link to the same format
                 # so detect the type, and ignore dupes
-                bill.add_version_link(
+                add_link(
                     name,
                     make_data_url(http_link),
                     media_type=self.classify_media(http_link),
                 )
-                bill.add_version_link(
+                add_link(
                     name,
                     make_data_url(pdf_link),
                     media_type=self.classify_media(pdf_link),
@@ -622,6 +669,8 @@ class HIBillScraper(Scraper):
         if (
             bill_page.xpath("//input[@id='MainContent_ImageButtonPDF']")
             and len(b.versions) == 0
+            # OPEN-804: a GM's file is a document, so a GM has no version
+            and not bill_id.upper().startswith("GM")
         ):
             self.parse_bill_header_versions(b, bill_id, session, bill_page)
 
@@ -665,7 +714,7 @@ class HIBillScraper(Scraper):
     def parse_bill_header_versions(self, bill, bill_id, session, page):
         pdf_link = f"https://capitol.hawaii.gov/session/session{session[0:4]}/bills/{bill_id}_.PDF"
         bill.add_version_link(
-            bill_id,
+            "Introduced",
             pdf_link,
             media_type="application/pdf",
             on_duplicate="ignore",
@@ -833,8 +882,10 @@ class HIBillScraper(Scraper):
             bill.add_sponsorship(name, "primary", "person", True)
         if not bill.sponsorships:
             self.warning(f"{session} {bill_id}: no introducer read from the journal")
+        # folder_measures gives only the introduced text and HD/SD/CD drafts as versions (its floor
+        # amendments and committee reports are already documents), so each is a version here
         for name, url in measure["versions"]:
-            version = name if name == bill_id else f"{bill_id}_{name}"
+            version, _ = version_name(name if name == bill_id else f"{bill_id}_{name}")
             bill.add_version_link(version, url, media_type="application/pdf")
         for name, url in measure["documents"]:
             bill.add_document_link(name, url, media_type="application/pdf")
