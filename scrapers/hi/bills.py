@@ -882,6 +882,8 @@ class HIBillScraper(Scraper):
             bill.add_sponsorship(name, "primary", "person", True)
         if not bill.sponsorships:
             self.warning(f"{session} {bill_id}: no introducer read from the journal")
+        # folder_measures gives only the introduced text and HD/SD/CD drafts as versions (its floor
+        # amendments and committee reports are already documents), so each is a version here
         for name, url in measure["versions"]:
             version, _ = version_name(name if name == bill_id else f"{bill_id}_{name}")
             bill.add_version_link(version, url, media_type="application/pdf")
