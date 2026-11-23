@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="../../dtds_xslts/history.xslt"?>
+ 
+<!DOCTYPE HISTORY SYSTEM "../../dtds_xslts/history.dtd">
+ 
+<HISTORY>
+	<YEAR>2026</YEAR>
+	<SESSION>Regular Session</SESSION>
+	<SHORTTITLE>Wesley Todd Freeman, Ridgeland, Mississippi, State Board of Cosmetology and Barbering, six year term effective August 1, 2026 and ending July 31, 2032.</SHORTTITLE>
+	<DATETIMELASTCHG>03/27/26 at 12:27</DATETIMELASTCHG>
+ 
+	<MEASURE>
+		<MSR_HS>S</MSR_HS>
+		<MSR_TYPE>N</MSR_TYPE>
+		<MSR_NUM>  10</MSR_NUM>
+		<FORMAT_MSRID>Senate Nomination   10</FORMAT_MSRID>
+		<SHORT_MSRID>SN 10</SHORT_MSRID>
+		<OWNER>S</OWNER>
+	</MEASURE>
+ 
+	<BACKGROUND>
+		<DISPOSITION>Confirmed</DISPOSITION>
+		<DEADLINE>None</DEADLINE>
+		<REVENUE>No</REVENUE>
+		<VOTETYPE>Majority</VOTETYPE>
+	</BACKGROUND>
+	<COMMITTEES>
+		<SENATE>
+			<S_NAME>Public Health and Welfare</S_NAME>
+			<S_INCMTE>F</S_INCMTE>
+			<S_LINK>../../Senate_cmtes/PH.xml</S_LINK>
+		</SENATE>
+	</COMMITTEES>
+	<AUTHORS>
+		<PRINCIPAL>
+			<P_NAME>GOVERNOR</P_NAME>
+		</PRINCIPAL>
+	</AUTHORS>
+	<ACTION>
+		<ACT_NUMBER> 1</ACT_NUMBER>
+		<ACT_DESC>01/07 (S) Referred To Public Health and Welfare</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 2</ACT_NUMBER>
+		<ACT_DESC>03/24 (S) Do Advise and Consent</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 3</ACT_NUMBER>
+		<ACT_DESC>03/26 (S) Appointment Confirmed</ACT_DESC>
+		<ACT_VOTE>../../../../2026/pdf/votes/senate/0800020.pdf</ACT_VOTE>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 4</ACT_NUMBER>
+		<ACT_DESC>03/27 (S) Notified of Approval</ACT_DESC>
+	</ACTION>
+</HISTORY>

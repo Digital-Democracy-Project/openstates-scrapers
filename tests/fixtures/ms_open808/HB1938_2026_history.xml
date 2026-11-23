@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="../../dtds_xslts/history.xslt"?>
+ 
+<!DOCTYPE HISTORY SYSTEM "../../dtds_xslts/history.dtd">
+ 
+<HISTORY>
+	<YEAR>2026</YEAR>
+	<SESSION>Regular Session</SESSION>
+	<SHORTTITLE>Appropriation; Transportation, Department of.</SHORTTITLE>
+	<LONGTITLE>AN ACT MAKING AN APPROPRIATION FROM SPECIAL FUNDS IN THE STATE TREASURY FOR THE PURPOSE OF DEFRAYING THE EXPENSES OF THE MISSISSIPPI DEPARTMENT OF TRANSPORTATION, FOR THE FISCAL YEAR 2027; AND FOR RELATED PURPOSES.</LONGTITLE>
+	<DATETIMELASTCHG>06/05/26 at 09:27</DATETIMELASTCHG>
+ 
+	<MEASURE>
+		<MSR_HS>H</MSR_HS>
+		<MSR_TYPE>B</MSR_TYPE>
+		<MSR_NUM>1938</MSR_NUM>
+		<FORMAT_MSRID>House Bill 1938</FORMAT_MSRID>
+		<SHORT_MSRID>HB 1938</SHORT_MSRID>
+		<OWNER>H</OWNER>
+	</MEASURE>
+ 
+	<BACKGROUND>
+		<DISPOSITION>Law</DISPOSITION>
+		<DEADLINE>Appropriation</DEADLINE>
+		<REVENUE>No</REVENUE>
+		<VOTETYPE>Majority</VOTETYPE>
+		<EFFECTIVEDATE>July 1, 2026</EFFECTIVEDATE>
+		<CHAPNUM>  66</CHAPNUM>
+	</BACKGROUND>
+	<COMMITTEES>
+		<HOUSE>
+			<H_NAME>Appropriations E</H_NAME>
+			<H_INCMTE>F</H_INCMTE>
+			<H_LINK>../../House_cmtes/A4.xml</H_LINK>
+		</HOUSE>
+		<HOUSE>
+			<H_NAME>Appropriations A</H_NAME>
+			<H_INCMTE>F</H_INCMTE>
+			<H_LINK>../../House_cmtes/AP.xml</H_LINK>
+		</HOUSE>
+		<SENATE>
+			<S_NAME>Appropriations</S_NAME>
+			<S_INCMTE>F</S_INCMTE>
+			<S_LINK>../../Senate_cmtes/AP.xml</S_LINK>
+		</SENATE>
+	</COMMITTEES>
+	<AUTHORS>
+		<PRINCIPAL>
+			<P_NAME>Oliver</P_NAME>
+			<P_LINK>../../House_authors/Oliver.xml</P_LINK>
+		</PRINCIPAL>
+		<ADDITIONAL>
+			<CO_NAME>Read</CO_NAME>
+			<CO_LINK>../../House_authors/Read.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Arnold</CO_NAME>
+			<CO_LINK>../../House_authors/Arnold.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Boyd (19th)</CO_NAME>
+			<CO_LINK>../../House_authors/Boyd_(19th).xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Hines</CO_NAME>
+			<CO_LINK>../../House_authors/Hines.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Mangold</CO_NAME>
+			<CO_LINK>../../House_authors/Mangold.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Massengill</CO_NAME>
+			<CO_LINK>../../House_authors/Massengill.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Roberson</CO_NAME>
+			<CO_LINK>../../House_authors/Roberson.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Scoggin</CO_NAME>
+			<CO_LINK>../../House_authors/Scoggin.xml</CO_LINK>
+	</ADDITIONAL>
+	</AUTHORS>
+	<ACTION>
+		<ACT_NUMBER> 1</ACT_NUMBER>
+		<ACT_DESC>02/16 (H) Referred To Appropriations E;Appropriations A</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 2</ACT_NUMBER>
+		<ACT_DESC>02/17 (H) DR - TSDP: A4 To AP</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 3</ACT_NUMBER>
+		<ACT_DESC>02/18 (H) DR - TSDP: AP To A4</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 4</ACT_NUMBER>
+		<ACT_DESC>02/18 (H) Title Suff Do Pass</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 5</ACT_NUMBER>
+		<ACT_DESC>02/19 (H) Passed</ACT_DESC>
+		<ACT_VOTE>../../../../2026/pdf/votes/house/0450051.pdf</ACT_VOTE>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 6</ACT_NUMBER>
+		<ACT_DESC>02/20 (H) Transmitted To Senate</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 7</ACT_NUMBER>
+		<ACT_DESC>02/27 (S) Referred To Appropriations</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 8</ACT_NUMBER>
+		<ACT_DESC>03/12 (S) Title Suff Do Pass As Amended</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 9</ACT_NUMBER>
+		<ACT_DESC>03/12 (S) Amended</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>10</ACT_NUMBER>
+		<ACT_DESC>03/12 (S) Passed As Amended</ACT_DESC>
+		<ACT_VOTE>../../../../2026/pdf/votes/senate/0660025.pdf</ACT_VOTE>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>11</ACT_NUMBER>
+		<ACT_DESC>03/13 (S) Returned For Concurrence</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>12</ACT_NUMBER>
+		<ACT_DESC>03/18 (H) Decline to Concur/Invite Conf</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>13</ACT_NUMBER>
+		<ACT_DESC>03/19 (H) Conferees Named Oliver,Cockerham,Massengill</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>14</ACT_NUMBER>
+		<ACT_DESC>03/19 (S) Conferees Named Hopson,Thompson,Williams</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>15</ACT_NUMBER>
+		<ACT_DESC>03/27 (H) Conference Report Filed</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>16</ACT_NUMBER>
+		<ACT_DESC>03/27 (S) Conference Report Filed</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>17</ACT_NUMBER>
+		<ACT_DESC>03/29 (H) Conference Report Adopted</ACT_DESC>
+		<ACT_VOTE>../../../../2026/pdf/votes/house/0830043.pdf</ACT_VOTE>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>18</ACT_NUMBER>
+		<ACT_DESC>03/29 (S) Conference Report Adopted</ACT_DESC>
+		<ACT_VOTE>../../../../2026/pdf/votes/senate/0830030.pdf</ACT_VOTE>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>19</ACT_NUMBER>
+		<ACT_DESC>03/31 (H) Enrolled Bill Signed</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>20</ACT_NUMBER>
+		<ACT_DESC>03/31 (S) Enrolled Bill Signed</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER>21</ACT_NUMBER>
+		<ACT_DESC>04/06 Approved by Governor</ACT_DESC>
+	</ACTION>
+	<DOCUMENTS>
+		<CURRENT>
+			<CURRENT_PDF>../../../../documents/2026/pdf/HB/1900-1999/HB1938SG.pdf</CURRENT_PDF>
+			<CURRENT_OTHER>../../../../documents/2026/html/HB/1900-1999/HB1938SG.htm</CURRENT_OTHER>
+		</CURRENT>
+		<INTRO>
+			<INTRO_PDF>../../../../documents/2026/pdf/HB/1900-1999/HB1938IN.pdf</INTRO_PDF>
+			<INTRO_OTHER>../../../../documents/2026/html/HB/1900-1999/HB1938IN.htm</INTRO_OTHER>
+		</INTRO>
+		<PASSED>
+			<PASSED_PDF>../../../../documents/2026/pdf/HB/1900-1999/HB1938PS.pdf</PASSED_PDF>
+			<PASSED_OTHER>../../../../documents/2026/html/HB/1900-1999/HB1938PS.htm</PASSED_OTHER>
+		</PASSED>
+		<ASG>
+			<ASG_PDF>../../../../documents/2026/pdf/HB/1900-1999/HB1938SG.pdf</ASG_PDF>
+			<ASG_OTHER>../../../../documents/2026/html/HB/1900-1999/HB1938SG.htm</ASG_OTHER>
+		</ASG>
+		<CONFRPTS>
+			<CR_PDF>../../../../documents/2026/pdf/cr/HB1938CR.pdf</CR_PDF>
+			<CR_OTHER>../../../../documents/2026/html/cr/HB1938CR.htm</CR_OTHER>
+			<CR_DESC>Conference Report</CR_DESC>
+		</CONFRPTS>
+		<AMENDMENTS>
+			<AMRPT>
+				<AMRPT_DESC>Amendment Report for House Bill No. 1938</AMRPT_DESC>
+				<AMRPT_PDF>../../../../documents/2026/pdf/sam/Amendment_Report_for_HB1938.pdf</AMRPT_PDF>
+				<AMRPT_OTHER>../../../../../documents/2026/html/sam/Amendment_Report_for_HB1938.htm</AMRPT_OTHER>
+			</AMRPT>
+			<SAM>
+				<SAM_DESC>Committee Amendment No 1</SAM_DESC>
+				<SAM_DISP>Adopted</SAM_DISP>
+				<SAM_PDF>../../../../documents/2026/pdf/sam/HB1938_S_Cmte_Amend_01.pdf</SAM_PDF>
+				<SAM_OTHER>../../../../../documents/2026/html/sam/HB1938_S_Cmte_Amend_01.htm</SAM_OTHER>
+				<SAM_VDESC>Voice Vote</SAM_VDESC>
+			</SAM>
+			<SAM>
+				<SAM_DESC>Amendment No 1 to Committee Amendment No 1</SAM_DESC>
+				<SAM_DISP>Adopted</SAM_DISP>
+				<SAM_PDF>../../../../documents/2026/pdf/sam/HB1938_S_Amend_01_to_Cmte_Amend_01.pdf</SAM_PDF>
+				<SAM_OTHER>../../../../../documents/2026/html/sam/HB1938_S_Amend_01_to_Cmte_Amend_01.htm</SAM_OTHER>
+				<SAM_VDESC>Voice Vote</SAM_VDESC>
+			</SAM>
+		</AMENDMENTS>
+		<FISCALNOTE>
+			<FISCALNOTEFLAG>N</FISCALNOTEFLAG>
+			<FISCALNOTEPATH>../../../../documents/2026/pdf/fiscalnotes/HB1938.pdf</FISCALNOTEPATH>
+		</FISCALNOTE>
+	</DOCUMENTS>
+</HISTORY>
