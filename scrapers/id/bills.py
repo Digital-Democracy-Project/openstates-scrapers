@@ -324,7 +324,7 @@ class IDBillScraper(Scraper):
                         )
         yield bill
 
-    def get_names(self, name_text):
+    def get_names(self, name_text, chamber):
         """both of these are unicode non-breaking spaces"""
         if name_text:
             name_text = name_text.replace("\xa0--\xa0", "")
@@ -335,9 +335,21 @@ class IDBillScraper(Scraper):
                 if name
             ]
             # keep district numbers like "Crane(12)" that tell same-surname
-            # members apart; drop other parentheticals like "Erickson(Larsen)"
+            # members apart. OPEN-781: keep a Senate acting senator as printed,
+            # "Acting(Senator)" ("Bjerke(Bjerke)", "Bjerke(Keyser)"): the bare
+            # surname would match a sitting senator; the printed form matches
+            # only the acting senator's dated other name in the people data.
+            # Drop other parentheticals, like the House's "Hall(Stone)".
             name_list = [
-                name if re.search(r"\(\d+\)$", name) else name.split("(")[0]
+                (
+                    name
+                    if re.search(r"\(\d+\)$", name)
+                    else (
+                        re.sub(r"\s+\(", "(", name)
+                        if chamber == "upper" and re.search(r"\(\D+\)$", name)
+                        else name.split("(")[0]
+                    )
+                )
                 for name in name_list
             ]
             return name_list
@@ -374,11 +386,11 @@ class IDBillScraper(Scraper):
         for span in spans[1:]:
             label = span.text_content()
             if label.startswith("AYES"):
-                yes_votes = self.get_names(span.tail)
+                yes_votes = self.get_names(span.tail, actor)
             elif label.startswith("NAYS"):
-                no_votes = self.get_names(span.tail)
+                no_votes = self.get_names(span.tail, actor)
             elif label.startswith(("Absent", "Excused")):
-                other_votes += self.get_names(span.tail)
+                other_votes += self.get_names(span.tail, actor)
         for key, val in {"adopted": "pass", "passed": "pass", "failed": "fail"}.items():
             if key in passed.lower():
                 passed = val
