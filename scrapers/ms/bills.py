@@ -165,25 +165,6 @@ class MSBillScraper(Scraper):
                         primary=False,
                     )
             # Versions
-            curr_version = details_root.xpath("string(//CURRENT_OTHER" ")").replace(
-                "../../../../", ""
-            )
-            if curr_version != "":
-                curr_version_url = "http://billstatus.ls.state.ms.us/" + curr_version
-                bill.add_version_link(
-                    "Current version",
-                    curr_version_url,
-                    on_duplicate="ignore",
-                    media_type="text/html",
-                )
-                curr_pdf_url = re.sub("html?", "pdf", curr_version_url)
-                bill.add_version_link(
-                    "Current version",
-                    curr_pdf_url,
-                    on_duplicate="ignore",
-                    media_type="application/pdf",
-                )
-
             intro_version = details_root.xpath("string(//INTRO_OTHER)").replace(
                 "../../../../", ""
             )
@@ -259,6 +240,30 @@ class MSBillScraper(Scraper):
                 bill.add_version_link(
                     "Approved by the Governor",
                     asg_pdf_url,
+                    on_duplicate="ignore",
+                    media_type="application/pdf",
+                )
+
+            # OPEN-807: "Current version" (CURRENT_OTHER) is the file of the newest of the
+            # texts above (IN, CS, PS or SG: 4,014 of 4,124 bills in 2026 and 20261E name the
+            # same file under INTRO/CMTESUB/PASSED/ASG), so it comes after them: the same URL is
+            # then ignored and the text keeps its stage name. Added first, it took the URL and
+            # the stage-named link was ignored, leaving "Current version" with no stage.
+            curr_version = details_root.xpath("string(//CURRENT_OTHER" ")").replace(
+                "../../../../", ""
+            )
+            if curr_version != "":
+                curr_version_url = "http://billstatus.ls.state.ms.us/" + curr_version
+                bill.add_version_link(
+                    "Current version",
+                    curr_version_url,
+                    on_duplicate="ignore",
+                    media_type="text/html",
+                )
+                curr_pdf_url = re.sub("html?", "pdf", curr_version_url)
+                bill.add_version_link(
+                    "Current version",
+                    curr_pdf_url,
                     on_duplicate="ignore",
                     media_type="application/pdf",
                 )

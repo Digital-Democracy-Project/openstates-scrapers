@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="../../dtds_xslts/history.xslt"?>
+ 
+<!DOCTYPE HISTORY SYSTEM "../../dtds_xslts/history.dtd">
+ 
+<HISTORY>
+	<YEAR>2026</YEAR>
+	<SESSION>Regular Session</SESSION>
+	<SHORTTITLE>School teachers, assistant teachers, and college faculty; raise pay of.</SHORTTITLE>
+	<LONGTITLE>AN ACT TO AMEND SECTION 37-19-7, MISSISSIPPI CODE OF 1972, TO PROVIDE FOR AN INCREASE TO THE MINIMUM TEACHER SALARY SCALE; TO AMEND SECTION 37-21-7, MISSISSIPPI CODE OF 1972, TO PROVIDE THAT NO SCHOOL DISTRICT SHALL REDUCE THE LOCAL SUPPLEMENT OR PAY AN INDIVIDUAL ASSISTANT TEACHER LESS THAN THE STATE MINIMUM SALARY IN A YEAR IN WHICH THE STATE MINIMUM SALARY IS INCREASED; TO PROVIDE FOR A REDUCTION IN FUNDS FOR DISTRICTS THAT VIOLATE THIS SECTION; TO PROVIDE THAT NO DISTRICT SHALL PAY ANY ASSISTANT TEACHER LESS THAN THE STATE MINIMUM SALARY UNLESS DONE SO BY A PRO RATA DAILY AMOUNT WHERE THERE HAS BEEN A REDUCTION IN ADEQUATE EDUCATION PROGRAM ALLOCATIONS FOR SUCH DISTRICT IN SUCH YEAR OR IN THE AMOUNT OF FEDERAL FUNDS TO SUCH DISTRICT FROM THE PREVIOUS YEAR; TO PROVIDE FOR AN INCREASE TO THE MINIMUM BASE SALARY FOR ASSISTANT TEACHERS; TO EXPRESS THE LEGISLATURE'S INTENT THAT EACH FULL-TIME PROFESSOR OR INSTRUCTOR AT A STATE INSTITUTION OF HIGHER LEARNING OR COMMUNITY OR JUNIOR COLLEGE RECEIVE A SALARY INCREASE ABOVE EXISTING PAY; TO EXPRESS THE INTENT OF THE LEGISLATURE THAT ALL FULL-TIME PROFESSORS, ASSOCIATE PROFESSORS, ASSISTANT PROFESSORS AND COURSE INSTRUCTORS OF ANY INSTITUTION OF HIGHER LEARNING OR COMMUNITY OR JUNIOR COLLEGE RECEIVE A SALARY INCREASE OF $2,000.00 ABOVE THEIR CURRENT SALARIES; AND FOR RELATED PURPOSES.</LONGTITLE>
+	<DATETIMELASTCHG>03/03/26 at 19:00</DATETIMELASTCHG>
+ 
+	<MEASURE>
+		<MSR_HS>S</MSR_HS>
+		<MSR_TYPE>B</MSR_TYPE>
+		<MSR_NUM>2001</MSR_NUM>
+		<FORMAT_MSRID>Senate Bill 2001</FORMAT_MSRID>
+		<SHORT_MSRID>SB 2001</SHORT_MSRID>
+		<OWNER>S</OWNER>
+	</MEASURE>
+ 
+	<BACKGROUND>
+		<DISPOSITION>Dead</DISPOSITION>
+		<DEADLINE>General Bill/Constitutional Amendment</DEADLINE>
+		<REVENUE>No</REVENUE>
+		<VOTETYPE>Majority</VOTETYPE>
+		<EFFECTIVEDATE>July 1, 2026</EFFECTIVEDATE>
+	</BACKGROUND>
+	<COMMITTEES>
+		<HOUSE>
+			<H_NAME>Education</H_NAME>
+			<H_INCMTE>T</H_INCMTE>
+			<H_LINK>../../House_cmtes/ED.xml</H_LINK>
+		</HOUSE>
+		<HOUSE>
+			<H_NAME>Appropriations A</H_NAME>
+			<H_INCMTE>F</H_INCMTE>
+			<H_LINK>../../House_cmtes/AP.xml</H_LINK>
+		</HOUSE>
+		<SENATE>
+			<S_NAME>Education</S_NAME>
+			<S_INCMTE>F</S_INCMTE>
+			<S_LINK>../../Senate_cmtes/ED.xml</S_LINK>
+		</SENATE>
+	</COMMITTEES>
+	<AUTHORS>
+		<PRINCIPAL>
+			<P_NAME>DeBar</P_NAME>
+			<P_LINK>../../Senate_authors/DeBar.xml</P_LINK>
+		</PRINCIPAL>
+		<ADDITIONAL>
+			<CO_NAME>Hopson</CO_NAME>
+			<CO_LINK>../../Senate_authors/Hopson.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Boyd</CO_NAME>
+			<CO_LINK>../../Senate_authors/Boyd.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Barnett</CO_NAME>
+			<CO_LINK>../../Senate_authors/Barnett.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Blackmon</CO_NAME>
+			<CO_LINK>../../Senate_authors/Blackmon.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Blackwell</CO_NAME>
+			<CO_LINK>../../Senate_authors/Blackwell.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Blount</CO_NAME>
+			<CO_LINK>../../Senate_authors/Blount.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Brumfield</CO_NAME>
+			<CO_LINK>../../Senate_authors/Brumfield.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Butler</CO_NAME>
+			<CO_LINK>../../Senate_authors/Butler.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Chism</CO_NAME>
+			<CO_LINK>../../Senate_authors/Chism.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>DuPree</CO_NAME>
+			<CO_LINK>../../Senate_authors/DuPree.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Fillingane</CO_NAME>
+			<CO_LINK>../../Senate_authors/Fillingane.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Frazier</CO_NAME>
+			<CO_LINK>../../Senate_authors/Frazier.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Gillespie Isom</CO_NAME>
+			<CO_LINK>../../Senate_authors/Gillespie_Isom.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Harkins</CO_NAME>
+			<CO_LINK>../../Senate_authors/Harkins.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Hickman</CO_NAME>
+			<CO_LINK>../../Senate_authors/Hickman.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Jackson</CO_NAME>
+			<CO_LINK>../../Senate_authors/Jackson.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Ladner</CO_NAME>
+			<CO_LINK>../../Senate_authors/Ladner.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>McCaughn</CO_NAME>
+			<CO_LINK>../../Senate_authors/McCaughn.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>McLendon</CO_NAME>
+			<CO_LINK>../../Senate_authors/McLendon.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>McMahan</CO_NAME>
+			<CO_LINK>../../Senate_authors/McMahan.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Michel</CO_NAME>
+			<CO_LINK>../../Senate_authors/Michel.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Mumford</CO_NAME>
+			<CO_LINK>../../Senate_authors/Mumford.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Norwood</CO_NAME>
+			<CO_LINK>../../Senate_authors/Norwood.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Pope</CO_NAME>
+			<CO_LINK>../../Senate_authors/Pope.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Simmons (12th)</CO_NAME>
+			<CO_LINK>../../Senate_authors/Simmons_(12th).xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Simmons (13th)</CO_NAME>
+			<CO_LINK>../../Senate_authors/Simmons_(13th).xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Sparks</CO_NAME>
+			<CO_LINK>../../Senate_authors/Sparks.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Suber</CO_NAME>
+			<CO_LINK>../../Senate_authors/Suber.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Thomas</CO_NAME>
+			<CO_LINK>../../Senate_authors/Thomas.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Wiggins</CO_NAME>
+			<CO_LINK>../../Senate_authors/Wiggins.xml</CO_LINK>
+	</ADDITIONAL>
+	</AUTHORS>
+	<CODESECTIONS>
+		<AFFECT>A</AFFECT>
+		<SECTION>037-0019-0007</SECTION>
+		<SECTIONLINK>../../code_sections/037/00190007.xml</SECTIONLINK>
+	</CODESECTIONS>
+	<CODESECTIONS>
+		<AFFECT>A</AFFECT>
+		<SECTION>037-0021-0007</SECTION>
+		<SECTIONLINK>../../code_sections/037/00210007.xml</SECTIONLINK>
+	</CODESECTIONS>
+	<ACTION>
+		<ACT_NUMBER> 1</ACT_NUMBER>
+		<ACT_DESC>01/06 (S) Referred To Education</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 2</ACT_NUMBER>
+		<ACT_DESC>01/06 (S) Title Suff Do Pass</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 3</ACT_NUMBER>
+		<ACT_DESC>01/07 (S) Passed</ACT_DESC>
+		<ACT_VOTE>../../../../2026/pdf/votes/senate/0020003.pdf</ACT_VOTE>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 4</ACT_NUMBER>
+		<ACT_DESC>01/08 (S) Transmitted To House</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 5</ACT_NUMBER>
+		<ACT_DESC>02/06 (H) Referred To Education;Appropriations A</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 6</ACT_NUMBER>
+		<ACT_DESC>03/03 (H) Died In Committee</ACT_DESC>
+	</ACTION>
+	<DOCUMENTS>
+		<CURRENT>
+			<CURRENT_PDF>../../../../documents/2026/pdf/SB/2001-2099/SB2001PS.pdf</CURRENT_PDF>
+			<CURRENT_PDF_DT>../../../../documents/2026/dt/SB/2001-2099/SB2001PS.pdf</CURRENT_PDF_DT>
+			<CURRENT_OTHER>../../../../documents/2026/html/SB/2001-2099/SB2001PS.htm</CURRENT_OTHER>
+		</CURRENT>
+		<INTRO>
+			<INTRO_PDF>../../../../documents/2026/pdf/SB/2001-2099/SB2001IN.pdf</INTRO_PDF>
+			<INTRO_PDF_DT>../../../../documents/2026/dt/SB/2001-2099/SB2001IN.pdf</INTRO_PDF_DT>
+			<INTRO_OTHER>../../../../documents/2026/html/SB/2001-2099/SB2001IN.htm</INTRO_OTHER>
+		</INTRO>
+		<PASSED>
+			<PASSED_PDF>../../../../documents/2026/pdf/SB/2001-2099/SB2001PS.pdf</PASSED_PDF>
+			<PASSED_PDF_DT>../../../../documents/2026/dt/SB/2001-2099/SB2001PS.pdf</PASSED_PDF_DT>
+			<PASSED_OTHER>../../../../documents/2026/html/SB/2001-2099/SB2001PS.htm</PASSED_OTHER>
+		</PASSED>
+		<FISCALNOTE>
+			<FISCALNOTEFLAG>N</FISCALNOTEFLAG>
+			<FISCALNOTEPATH>../../../../documents/2026/pdf/fiscalnotes/SB2001.pdf</FISCALNOTEPATH>
+		</FISCALNOTE>
+	</DOCUMENTS>
+</HISTORY>

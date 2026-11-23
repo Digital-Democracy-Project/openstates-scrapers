@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="../../dtds_xslts/history.xslt"?>
+ 
+<!DOCTYPE HISTORY SYSTEM "../../dtds_xslts/history.dtd">
+ 
+<HISTORY>
+	<YEAR>2026</YEAR>
+	<SESSION>Regular Session</SESSION>
+	<SHORTTITLE>Elections; allow individuals to vote by affidavit if they register after 30-day cut off but before election day.</SHORTTITLE>
+	<LONGTITLE>AN ACT TO AMEND SECTION 23-15-573, MISSISSIPPI CODE OF 1972, TO AUTHORIZE AN INDIVIDUAL TO VOTE BY AFFIDAVIT ON ELECTION DAY IF THE INDIVIDUAL REGISTERED AFTER THE THIRTY-DAY QUALIFYING CUTOFF BUT BEFORE ELECTION DAY; AND FOR RELATED PURPOSES.</LONGTITLE>
+	<DATETIMELASTCHG>02/03/26 at 19:06</DATETIMELASTCHG>
+ 
+	<MEASURE>
+		<MSR_HS>H</MSR_HS>
+		<MSR_TYPE>B</MSR_TYPE>
+		<MSR_NUM>1001</MSR_NUM>
+		<FORMAT_MSRID>House Bill 1001</FORMAT_MSRID>
+		<SHORT_MSRID>HB 1001</SHORT_MSRID>
+		<OWNER>H</OWNER>
+	</MEASURE>
+ 
+	<BACKGROUND>
+		<DISPOSITION>Dead</DISPOSITION>
+		<DEADLINE>General Bill/Constitutional Amendment</DEADLINE>
+		<REVENUE>No</REVENUE>
+		<VOTETYPE>Majority</VOTETYPE>
+		<EFFECTIVEDATE>July 1, 2026</EFFECTIVEDATE>
+	</BACKGROUND>
+	<COMMITTEES>
+		<HOUSE>
+			<H_NAME>Apportionment and Elections</H_NAME>
+			<H_INCMTE>T</H_INCMTE>
+			<H_LINK>../../House_cmtes/AE.xml</H_LINK>
+		</HOUSE>
+	</COMMITTEES>
+	<AUTHORS>
+		<PRINCIPAL>
+			<P_NAME>Butler-Washington</P_NAME>
+			<P_LINK>../../House_authors/Butler-Washington.xml</P_LINK>
+		</PRINCIPAL>
+		<ADDITIONAL>
+			<CO_NAME>James-Jones</CO_NAME>
+			<CO_LINK>../../House_authors/James-Jones.xml</CO_LINK>
+	</ADDITIONAL>
+		<ADDITIONAL>
+			<CO_NAME>Gibbs (72nd)</CO_NAME>
+			<CO_LINK>../../House_authors/Gibbs_(72nd).xml</CO_LINK>
+	</ADDITIONAL>
+	</AUTHORS>
+	<CODESECTIONS>
+		<AFFECT>A</AFFECT>
+		<SECTION>023-0015-0573</SECTION>
+		<SECTIONLINK>../../code_sections/023/00150573.xml</SECTIONLINK>
+	</CODESECTIONS>
+	<ACTION>
+		<ACT_NUMBER> 1</ACT_NUMBER>
+		<ACT_DESC>01/16 (H) Referred To Apportionment and Elections</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 2</ACT_NUMBER>
+		<ACT_DESC>02/03 (H) Died In Committee</ACT_DESC>
+	</ACTION>
+	<DOCUMENTS>
+		<CURRENT>
+			<CURRENT_PDF>../../../../documents/2026/pdf/HB/1000-1099/HB1001IN.pdf</CURRENT_PDF>
+			<CURRENT_PDF_DT>../../../../documents/2026/dt/HB/1000-1099/HB1001IN.pdf</CURRENT_PDF_DT>
+			<CURRENT_OTHER>../../../../documents/2026/html/HB/1000-1099/HB1001IN.htm</CURRENT_OTHER>
+		</CURRENT>
+		<INTRO>
+			<INTRO_PDF>../../../../documents/2026/pdf/HB/1000-1099/HB1001IN.pdf</INTRO_PDF>
+			<INTRO_PDF_DT>../../../../documents/2026/dt/HB/1000-1099/HB1001IN.pdf</INTRO_PDF_DT>
+			<INTRO_OTHER>../../../../documents/2026/html/HB/1000-1099/HB1001IN.htm</INTRO_OTHER>
+		</INTRO>
+		<FISCALNOTE>
+			<FISCALNOTEFLAG>N</FISCALNOTEFLAG>
+			<FISCALNOTEPATH>../../../../documents/2026/pdf/fiscalnotes/HB1001.pdf</FISCALNOTEPATH>
+		</FISCALNOTE>
+	</DOCUMENTS>
+</HISTORY>
