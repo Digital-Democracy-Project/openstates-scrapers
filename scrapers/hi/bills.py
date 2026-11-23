@@ -669,9 +669,8 @@ class HIBillScraper(Scraper):
         if (
             bill_page.xpath("//input[@id='MainContent_ImageButtonPDF']")
             and len(b.versions) == 0
-            and not bill_id.upper().startswith(
-                "GM"
-            )  # OPEN-804: a GM's file is a document
+            # OPEN-804: a GM's file is a document, so a GM has no version
+            and not bill_id.upper().startswith("GM")
         ):
             self.parse_bill_header_versions(b, bill_id, session, bill_page)
 
