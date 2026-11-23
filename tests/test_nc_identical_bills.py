@@ -32,9 +32,11 @@ class _Response:
         self.content = read(name, "rb")
 
 
-def companions(session, nc_id, bill_type, stored_ids):
+def companions(session, nc_id, bill_type, stored_ids, warnings=None):
     scraper = NCBillScraper(jurisdiction="nc", datadir="/tmp")
     scraper._stored_ids = stored_ids
+    if warnings is not None:
+        scraper.warning = warnings.append
     scraper.get = lambda url, **kwargs: _Response(f"BillLookUp_{session}_{nc_id}.html")
     scraper.scrape_actions = lambda bill, doc: None
     scraper.scrape_votes = lambda bill, doc: iter(())
@@ -101,7 +103,12 @@ def test_no_mark_no_link_and_the_navigation_arrows_are_not_read():
 
 
 def test_a_bill_missing_from_the_lists_is_not_guessed():
-    assert companions("2025", "H133", "B", {"H133": "HB 133"}) == []
+    warnings = []
+    assert companions("2025", "H133", "B", {"H133": "HB 133"}, warnings) == []
+    # pm-review: it is reported, naming both bills, not dropped in silence
+    assert warnings == [
+        "HB 133: identical bill 'S504' is not in the session's bill lists"
+    ]
 
 
 def test_the_stored_id_keeps_each_kind_of_instrument():
