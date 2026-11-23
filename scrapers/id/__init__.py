@@ -193,7 +193,35 @@ class Idaho(State):
     ]
 
     def get_session_list(self):
-        return url_xpath(
-            "https://legislature.idaho.gov/sessioninfo/",
-            '//select[@id="ddlsessions"]/option/text()',
+        return session_names(
+            url_xpath(
+                "https://legislature.idaho.gov/sessioninfo/",
+                '//article[contains(@class, "session-card")]',
+            )
         )
+
+
+# OPEN-798: the redesigned sessioninfo page (2026-11-23) lists each session as a "session-card" (the year in
+# its header, "2nd Regular Session" or "1st Extraordinary Session" in its details) instead of the old
+# <select id="ddlsessions">. The names are rebuilt the way the old menu printed them ("2026 Session",
+# "2022  First Extraordinary Session", two spaces), so _scraped_name and ignored_scraped_sessions still match.
+_ORDINALS = {"1st": "First", "2nd": "Second", "3rd": "Third"}
+
+
+def session_names(cards):
+    names = []
+    for card in cards:
+        year = card.xpath('string(.//div[contains(@class, "session-header")]/h2)')
+        details = card.xpath('.//div[contains(@class, "session-details")]/p/text()')
+        kind = details[-1].strip() if details else ""
+        if kind.endswith("Regular Session"):
+            names.append(f"{year.strip()} Session")
+        elif kind.endswith("Extraordinary Session"):
+            ordinal = kind.split()[0]
+            names.append(
+                f"{year.strip()}  {_ORDINALS.get(ordinal, ordinal)} Extraordinary Session"
+            )
+        else:
+            # a kind of session the old menu never had: left as printed, so the session check names it
+            names.append(f"{year.strip()} {kind}".strip())
+    return names
