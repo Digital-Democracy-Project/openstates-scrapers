@@ -50,6 +50,36 @@ def vote_passed(motion_text):
     return bool(VOTE_PASSED.search(motion_text))
 
 
+# OPEN-794 (PLAN-companion-lineage §5.3.1, Ramon 2026-11-23 "Store all three"): Nebraska names another bill only in a
+# history line like "Provisions/portions of LB890 amended into LB901 by AM2406" (also "LB77A ... by rules suspension"), on
+# both bills' histories. A bill carried in another is not a companion (D2): stored as related, the label saying which way.
+AMENDED_INTO = re.compile(
+    r"Provisions/portions of (LB\s*\d+A?) amended into (LB\s*\d+A?)\b", re.I
+)
+CARRIED_LABEL = "amended into"  # on the bill whose provisions moved
+CARRYING_LABEL = "provisions amended in"  # on the bill that took them in
+
+
+def amended_into_links(bill_identifier, history_text):
+    """[(other bill, label)] for one history line of `bill_identifier`: the bill it was amended into, or the bill whose
+    provisions it took in. A line naming the same bill twice, or two other bills, gives none."""
+
+    def key(identifier):
+        return re.sub(r"\s+", "", identifier).upper()
+
+    own = key(bill_identifier)
+    links = []
+    for m in AMENDED_INTO.finditer(history_text):
+        carried, carrying = key(m.group(1)), key(m.group(2))
+        if carried == carrying:
+            continue
+        if own == carried:
+            links.append((carrying, CARRIED_LABEL))
+        elif own == carrying:
+            links.append((carried, CARRYING_LABEL))
+    return links
+
+
 class NEBillScraper(Scraper, LXMLMixin):
     priority_bills = {}
     # SSL bad as of 2024-11-18
@@ -313,6 +343,17 @@ class NEBillScraper(Scraper, LXMLMixin):
                 chamber=actor,
                 classification=action_type,
             )
+
+            # OPEN-794: a bill carried in another, or carrying one; each other bill once per bill
+            for other, label in amended_into_links(bill.identifier, action):
+                if other not in {
+                    re.sub(r"\s+", "", r["identifier"]).upper()
+                    for r in bill.related_bills
+                    if r["ddp_relation_label"] == label
+                }:
+                    bill.add_related_bill(
+                        other, bill.legislative_session, "related", label=label
+                    )
 
             if "Notice of hearing for" in action:
                 ref_date = action.replace("Notice of hearing for", "").strip()
