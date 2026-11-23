@@ -169,15 +169,17 @@ class MSBillScraper(Scraper):
                 )
 
             for author in details_root.xpath("//AUTHORS/ADDITIONAL"):
+                co_link = author.xpath("string(CO_LINK)").replace(" ", "_")
                 co_name, co_chamber = author_name_and_chamber(
-                    author.xpath("string(CO_NAME)"), author.xpath("string(CO_LINK)")
+                    author.xpath("string(CO_NAME)"), co_link
                 )
                 leg = co_name.replace(" ", "_")
                 if leg:
-                    leg_url = (
-                        "http://billstatus.ls.state.ms.us/%s/"
-                        "pdf/House_authors/%s.xml"
-                    ) % (session, leg)
+                    # OPEN-808: the author's own page, a Senate author's under Senate_authors
+                    leg_url = ("http://billstatus.ls.state.ms.us/%s/pdf/%s") % (
+                        session,
+                        co_link.strip("../"),
+                    )
                     type = "cosponsor"
                     bill.add_source(leg_url)
                     bill.add_sponsorship(

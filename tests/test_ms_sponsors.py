@@ -33,8 +33,8 @@ class FakeResponse:
         self.content = content
 
 
-def sponsors(monkeypatch, measure, chamber):
-    """(name, primary, pseudo id) of each author of one real bill, as scrape_bills() makes them."""
+def scrape_bill(monkeypatch, measure, chamber):
+    """The Bill scrape_bills() makes from one real history XML (its roll calls are not read)."""
     scraper = MSBillScraper.__new__(MSBillScraper)
     history = open(os.path.join(FIXTURES, measure + "_2026_history.xml"), "rb").read()
 
@@ -48,6 +48,12 @@ def sponsors(monkeypatch, measure, chamber):
         scraper, "scrape_votes", lambda *a, **k: iter(()), raising=False
     )
     (bill,) = [o for o in scraper.scrape_bills(chamber, "2026") if isinstance(o, Bill)]
+    return bill
+
+
+def sponsors(monkeypatch, measure, chamber):
+    """(name, primary, pseudo id) of each author of one real bill, as scrape_bills() makes them."""
+    bill = scrape_bill(monkeypatch, measure, chamber)
     return [
         (s["name"], s["primary"], get_pseudo_id(s["person_id"]))
         for s in bill.sponsorships
@@ -118,3 +124,15 @@ def test_real_authors_keep_name_and_chamber(monkeypatch, measure, chamber, expec
 )
 def test_author_name_and_chamber(name, link, expected):
     assert author_name_and_chamber(name, link) == expected
+
+
+@pytest.mark.parametrize(
+    "measure,chamber,page",
+    [
+        ("SB2001", "upper", "Senate_authors/Boyd.xml"),
+        ("HB1938", "lower", "House_authors/Boyd_(19th).xml"),
+    ],
+)
+def test_co_author_source_is_their_own_page(monkeypatch, measure, chamber, page):
+    sources = [s["url"] for s in scrape_bill(monkeypatch, measure, chamber).sources]
+    assert "http://billstatus.ls.state.ms.us/2026/pdf/" + page in sources
