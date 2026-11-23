@@ -219,11 +219,12 @@ class HIBillScraper(Scraper):
         def _sponsor_interceptor(line):
             # OPEN-805: the page writes a member who shares a surname as "SURNAME, I." ("LEE, C.",
             # "LEE, M."), in the same comma-separated list, so an initial after a comma belongs to
-            # the name before it, as split_specific_votes rejoins them for roll calls
+            # the name before it, as split_specific_votes rejoins them for roll calls. The list can
+            # end in " (Introduced by request of another party)", removed in scrape_bill.
             names = []
             for guy in line.split(","):
                 guy = guy.strip()
-                if MIDDLE_INITIAL_RE.match(guy) and names:
+                if MIDDLE_INITIAL_RE.match(guy.split(" (", 1)[0]) and names:
                     names[-1] = f"{names[-1]}, {guy}"
                 else:
                     names.append(guy)

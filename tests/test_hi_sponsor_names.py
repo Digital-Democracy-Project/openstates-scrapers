@@ -114,6 +114,10 @@ def test_a_governors_message_is_sponsored_by_the_governors_office():
         ("ZEBEDEE, Q., ZEBEDEE, X.", ["ZEBEDEE, Q.", "ZEBEDEE, X."]),
         ("Quoll, Zebedee, X.", ["Quoll", "Zebedee, X."]),
         ("ZEBEDEE, Q", ["ZEBEDEE, Q"]),
+        (
+            "QUOLL, ZEBEDEE, Q. (Introduced by request of another party)",
+            ["QUOLL", "ZEBEDEE, Q. (Introduced by request of another party)"],
+        ),
         # a surname, even a short one, is not an initial
         ("QUOLL, OI, WOMBAT", ["QUOLL", "OI", "WOMBAT"]),
         ("QUOLL", ["QUOLL"]),
