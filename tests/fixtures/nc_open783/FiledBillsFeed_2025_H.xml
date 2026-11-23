@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='utf-8'?>
+<rss version="2.0">
+  <channel>
+    <title>Filed Bills</title>
+    <link>http://www.ncleg.gov/</link>
+    <description>North Carolina General Assembly Filed Bills</description>
+    <language>en-us</language>
+    <item>
+      <description/>
+      <bill>H1248</bill>
+      <guid>H-1248-0</guid>
+      <fileddate>11/16/2026</fileddate>
+      <shorttitle>Appoint Richard Worf.</shorttitle>
+      <primarysponsors>Bell</primarysponsors>
+      <longtitle>A JOINT RESOLUTION CONFIRMING THE GOVERNOR'S APPOINTMENT OF RICHARD WORF AS A SPECIAL SUPERIOR COURT JUDGE.</longtitle>
+      <billtype>JR</billtype>
+      <localpublic>P</localpublic>
+      <appropriations>0</appropriations>
+      <fiscalimpact>0</fiscalimpact>
+      <constitution>0</constitution>
+      <studies>0</studies>
+      <rollcall>0</rollcall>
+      <appropriation>1</appropriation>
+    </item>
+    <item>
+      <description/>
+      <bill>H1245</bill>
+      <guid>H-1245-0</guid>
+      <fileddate>07/30/2026</fileddate>
+      <shorttitle>Honor 250th Anniversary and NC's Role.</shorttitle>
+      <primarysponsors>Bell</primarysponsors>
+      <longtitle>A HOUSE RESOLUTION HONORING THE 250TH ANNIVERSARY OF THE UNITED STATES OF AMERICA AND CELEBRATING THE CONTRIBUTIONS OF THE STATE OF NORTH CAROLINA.</longtitle>
+      <billtype>R</billtype>
+      <localpublic>P</localpublic>
+      <appropriations>0</appropriations>
+      <fiscalimpact>0</fiscalimpact>
+      <constitution>0</constitution>
+      <studies>0</studies>
+      <rollcall>0</rollcall>
+      <appropriation>1</appropriation>
+    </item>
+    <item>
+      <description/>
+      <bill>H632</bill>
+      <guid>H-632-0</guid>
+      <fileddate>03/31/2025</fileddate>
+      <shorttitle>Amend Hazing Laws.</shorttitle>
+      <primarysponsors>Ross, Riddell, White, Davis</primarysponsors>
+      <longtitle>AN ACT TO REVISE THE CRIMINAL OFFENSE OF HAZING AND TO REQUIRE EDUCATION ENTITIES TO ESTABLISH POLICIES AND PROCEDURES TO PREVENT HAZING.</longtitle>
+      <billtype>B</billtype>
+      <localpublic>P</localpublic>
+      <appropriations>0</appropriations>
+      <fiscalimpact>0</fiscalimpact>
+      <constitution>0</constitution>
+      <studies>0</studies>
+      <rollcall>0</rollcall>
+      <appropriation>1</appropriation>
+    </item>
+    <item>
+      <description/>
+      <bill>H133</bill>
+      <guid>H-133-0</guid>
+      <fileddate>02/17/2025</fileddate>
+      <shorttitle>NC Farmland and Military Protection Act.</shorttitle>
+      <primarysponsors>Balkcom, N. Jackson, Zenger, Bell</primarysponsors>
+      <longtitle>AN ACT TO PROHIBIT THE ACQUISITION OF AGRICULTURAL AND OTHER LANDS CRITICAL TO THE SAFETY AND SECURITY OF THE STATE BY CERTAIN FOREIGN GOVERNMENTS DESIGNATED AS ADVERSARIAL BY THE UNITED STATES DEPARTMENT OF STATE.</longtitle>
+      <billtype>B</billtype>
+      <localpublic>P</localpublic>
+      <appropriations>0</appropriations>
+      <fiscalimpact>0</fiscalimpact>
+      <constitution>0</constitution>
+      <studies>0</studies>
+      <rollcall>0</rollcall>
+      <appropriation>1</appropriation>
+    </item>
+    <item>
+      <description/>
+      <bill>H58</bill>
+      <guid>H-58-0</guid>
+      <fileddate>02/04/2025</fileddate>
+      <shorttitle>Various Local Elections.</shorttitle>
+      <primarysponsors>Winslow</primarysponsors>
+      <longtitle>AN ACT TO EXTEND THE TERMS OF THE MAYOR AND MEMBERS OF THE BOARD OF COMMISSIONERS FOR THE TOWN OF KITTRELL FROM TWO TO FOUR YEARS.</longtitle>
+      <billtype>B</billtype>
+      <localpublic>L</localpublic>
+      <appropriations>0</appropriations>
+      <fiscalimpact>0</fiscalimpact>
+      <constitution>0</constitution>
+      <studies>0</studies>
+      <rollcall>0</rollcall>
+      <appropriation>1</appropriation>
+    </item>
+    </channel>
+</rss>

@@ -4,7 +4,10 @@ from nc.bills import NCBillScraper
 
 
 def make_scraper():
-    return NCBillScraper(jurisdiction="nc", datadir="/tmp")
+    scraper = NCBillScraper(jurisdiction="nc", datadir="/tmp")
+    # OPEN-783: scrape() reads both chambers' bill lists first; no request leaves these tests
+    scraper.filed_bills_feed = lambda session, chamber_abbr: []
+    return scraper
 
 
 def test_scrape_accepts_the_start_argument_both_runners_pass_on_every_incremental_run():
