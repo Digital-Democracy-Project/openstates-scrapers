@@ -14,6 +14,12 @@ Idaho's House vote lists print two kinds of names that match no one by name:
   votes.house_speaker_by_session (as Massachusetts does, scrapers/ma/voter_names.py).
   There is no built-in table: for a session the manifest does not list, the name is left
   as printed, so it stays visibly unmatched rather than going to the wrong person.
+
+OPEN-781: a Senate acting (substitute) senator arrives here as printed, "Bjerke(Bjerke)" or
+"Bjerke(Keyser)" (acting senator, then the senator whose seat they hold; bills.py `get_names`
+keeps the form on Senate rows only). It takes the plain-name path below: the people data
+gives each acting senator that form as an other name dated to their days, so it matches
+the acting senator and never a sitting senator with the same surname.
 """
 import re
 
