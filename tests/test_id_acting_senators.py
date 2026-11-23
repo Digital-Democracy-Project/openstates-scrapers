@@ -125,9 +125,17 @@ def test_same_name_acting_senator_leaves_no_bare_surname(scraper):
         ("s1242_2026", "S 1242", "2026-02-18", {"Brooks(Lakey)", "Hawkins(Anthon)"}),
         ("s1232_2026", "S 1232", "2026-02-19", {"Hawkins(Anthon)", "Merrell(Lakey)"}),
         ("s1300_2026", "S 1300", "2026-03-02", {"Bruner(Adams)", "Bjerke(Bjerke)"}),
+        # OPEN-681's acting senators
+        (
+            "s1224_2026",
+            "S 1224",
+            "2026-03-09",
+            {"Coho(Lenney)", "Rundhaug(Carlson)", "Bjerke(Bjerke)"},
+        ),
+        ("s1227_2026", "S 1227", "2026-03-17", {"Woller(Rabe)", "Bjerke(Bjerke)"}),
     ],
 )
-def test_open779_acting_senators_are_printed_the_same_way(
+def test_earlier_acting_senators_are_printed_the_same_way(
     scraper, name, bill_id, date, printed
 ):
     voters = names(roll_call(scraper, name, bill_id, "upper", date))
