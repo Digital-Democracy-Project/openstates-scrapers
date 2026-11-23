@@ -109,8 +109,8 @@ def test_two_roll_calls_with_the_same_motion_and_day_get_their_own_keys(scraper)
     page = read(H760_2026)
     start, end = senate_row(page)
     row = page[start:end]
-    # the earlier roll call, without the real row's closing "Ret'd to House" (the scraper reads that as the bill
-    # moving to the House, so a roll call after it is put on the House)
+    # the earlier roll call, without the real row's closing "Ret'd to House" (a roll call's own closing text no
+    # longer moves the bill since OPEN-770; dropping it keeps the copy a plain earlier Senate roll call)
     first = row.replace(SENATE_TALLY, "FAILED&#160;-&#160;16-18-1").replace(
         "Ret&#8217;d&#160;to&#160;House", ""
     )

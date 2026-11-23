@@ -16,6 +16,11 @@ BILL_URL = "https://legislature.idaho.gov/sessioninfo/%s/legislation/%s/"
 
 _CHAMBERS = {"upper": "Senate", "lower": "House"}
 _OTHER_CHAMBERS = {"upper": "lower", "lower": "upper"}
+_CHAMBER_BY_NAME = {name: chamber for chamber, name in _CHAMBERS.items()}
+# OPEN-770: the row that records a chamber receiving the bill from the other one
+_ARRIVAL_RE = re.compile(
+    r"(?:Received|Returned) from (?:the )?(House|Senate)\b", re.IGNORECASE
+)
 
 _BILL_TYPES = {
     "CR": "concurrent resolution",
@@ -234,6 +239,11 @@ class IDBillScraper(Scraper):
                 actor = "lower"
             elif action.startswith("Senate"):
                 actor = "upper"
+            # OPEN-770: the other chamber has the bill once the page says it received it ("Received from the House
+            # passed", "Returned from Senate Passed"); see the roll-call move below
+            arrived_from = _ARRIVAL_RE.match(action.replace("\xa0", " "))
+            if arrived_from:
+                actor = _OTHER_CHAMBERS[_CHAMBER_BY_NAME[arrived_from.group(1).title()]]
 
             # votes
             is_vote = "AYES" in action or "NAYS" in action
@@ -279,7 +289,13 @@ class IDBillScraper(Scraper):
             bill.add_action(action, date, chamber=actor, classification=atype)
             # after voice vote/roll call and some actions the bill is sent
             # 'to House' or 'to Senate'
-            if "to House" in action:
+            # OPEN-770: not on a roll call's own closing "Title apvd - to Senate" / "Ret'd to House": the bill is in
+            # the other chamber from that chamber's arrival row (above). A Senate roll call that failed and was
+            # "Ret'd to House" can still be reconsidered in the Senate (2026 H 760, 03/24-03/25); moving the bill on
+            # that text put the Senate's re-vote (15-20-0) on the House.
+            if is_vote:
+                pass
+            elif "to House" in action:
                 actor = "lower"
             elif "to Senate" in action:
                 actor = "upper"
