@@ -100,8 +100,6 @@ class KYBillScraper(Scraper, LXMLMixin):
     _subjects = defaultdict(list)
     _is_post_2016 = False
 
-    verify = False
-
     _action_classifiers = [
         ("introduced in", "introduction"),
         ("signed by Governor", ["executive-signature"]),
@@ -364,7 +362,7 @@ class KYBillScraper(Scraper, LXMLMixin):
     def scrape_votes(self, vote_url, bill, chamber):
 
         try:
-            filename, response = self.urlretrieve(vote_url, verify=False)
+            filename, response = self.urlretrieve(vote_url)
         except scrapelib.HTTPError:
             self.logger.warning("PDF not posted or available")
             return

@@ -5,6 +5,7 @@ import lxml
 import pytz
 import re
 import requests
+from utils import checked_requests
 import xml.etree.ElementTree as ET
 
 from openstates.exceptions import EmptyScrape
@@ -847,7 +848,7 @@ class USBillScraper(Scraper):
                         "https": os.environ.get("HTTPS_PROXY_SELECTIVE"),
                         "http": os.environ.get("HTTP_PROXY_SELECTIVE"),
                     }
-                    content = requests.get(url, proxies=proxies, verify=False).content
+                    content = checked_requests.get(url, proxies=proxies).content
                 else:
                     content = requests.get(url).content
 

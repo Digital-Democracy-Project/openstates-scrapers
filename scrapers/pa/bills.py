@@ -36,7 +36,6 @@ def _utcnow():
 # FYI: as of 2025 this should be run with --http-resilience
 class PABillScraper(Scraper):
     session_year: str = ""
-    verify = False
 
     def scrape(self, chamber=None, session=None, start=None):
         chambers = [chamber] if chamber is not None else ["upper", "lower"]
@@ -79,7 +78,7 @@ class PABillScraper(Scraper):
         """The Bill History export's XML, or None (with a warning) if it cannot be read."""
         url = utils.bill_history_url(session, special)
         try:
-            response = self.get(url, verify=False)
+            response = self.get(url)
             with zipfile.ZipFile(io.BytesIO(response.content)) as archive:
                 names = [n for n in archive.namelist() if n.lower().endswith(".xml")]
                 return archive.read(names[0])
@@ -439,7 +438,7 @@ class PABillScraper(Scraper):
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
         }
-        html = self.get(url, verify=False, headers=headers).text
+        html = self.get(url, headers=headers).text
         page = lxml.html.fromstring(html)
         page.make_links_absolute(url)
         return page

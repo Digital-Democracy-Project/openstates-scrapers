@@ -11,7 +11,6 @@ from utils import LXMLMixin
 class MAEventScraper(Scraper, LXMLMixin):
     _TZ = pytz.timezone("US/Eastern")
     date_format = "%m/%d/%Y"
-    verify = False
     non_session_count = 0
 
     def scrape(self, chamber=None, start=None, end=None):
@@ -48,7 +47,7 @@ class MAEventScraper(Scraper, LXMLMixin):
             f"{month_end.month}-{month_end.day}-{month_end.year}/"
         )
 
-        html_page = self.get(html_page_url, verify=False)
+        html_page = self.get(html_page_url)
         html_doc = lxml.html.fromstring(html_page.content)
         verification_token = html_doc.xpath(
             "string(//input[@name='__RequestVerificationToken']/@value)"
@@ -68,7 +67,7 @@ class MAEventScraper(Scraper, LXMLMixin):
             "X-Requested-With": "XMLHttpRequest",
         }
 
-        page = self.post(url, params, headers=headers, verify=False)
+        page = self.post(url, params, headers=headers)
         page = lxml.html.fromstring(page.content)
         page.make_links_absolute("https://malegislature.gov/")
 

@@ -16,8 +16,6 @@ re_span = re.compile(r"<span.*?</span>|<div.*?>|</div>")
 
 class NEEventScraper(Scraper):
     _tz = pytz.timezone("US/Central")
-    # SSL bad as of 2024-11-18
-    verify = False
 
     # usage: PYTHONPATH=scrapers poetry run os-update ne
     # events --scrape start=2020-02-02 end=2020-03-02
@@ -45,7 +43,7 @@ class NEEventScraper(Scraper):
             "endDay": end.strftime("%d"),
             "endYear": end.strftime("%Y"),
         }
-        page = self.post(LIST_URL, args, verify=False).content
+        page = self.post(LIST_URL, args).content
 
         yield from self.scrape_events(page)
 

@@ -89,7 +89,7 @@ class NHBillScraper(Scraper):
         avoid double-fetching.
         """
         url = f"https://gc.nh.gov/bill_Status/billinfo.aspx?id={version_id}&inflect=2"
-        response = self.get(url, verify=False)
+        response = self.get(url)
         return lxml.html.fromstring(response.content)
 
     def scrape_versions_from_web_2026(self, bill, bill_page):
@@ -135,7 +135,6 @@ class NHBillScraper(Scraper):
                 self.logger.info(f"Retrying fetch of docket page, try number {try_num}")
             docket_content = self.get(
                 docket_url,
-                verify=False,
                 allow_redirects=True,
                 headers={
                     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -258,7 +257,7 @@ class NHBillScraper(Scraper):
         bills = {}
 
         url = f"https://gc.nh.gov/rssFeeds/rssQueryResults.aspx?&sortoption=&txtsessionyear={session}"
-        feed = self.get(url, verify=False).content
+        feed = self.get(url).content
         feed = feedparser.parse(feed)
 
         for item in feed.entries:
@@ -387,7 +386,6 @@ class NHBillScraper(Scraper):
             # fails loudly rather than silently emitting an empty scrape.
             lsrs_content = self.get(
                 f"https://gc.nh.gov/dynamicdatadump/LSRs.txt?x={self.cachebreaker}",
-                verify=False,
             ).content.decode("utf-8")
             # A healthy LSRs.txt is hundreds of KB. Anything under 1 KB is effectively empty.
             if len(lsrs_content.strip()) < 1024:
@@ -496,7 +494,6 @@ class NHBillScraper(Scraper):
                 "https://gc.nh.gov/dynamicdatadump/legislators.txt?x={}".format(
                     self.cachebreaker
                 ),
-                verify=False,
             )
             .content.decode("utf-8")
             .split("\n")
@@ -533,7 +530,6 @@ class NHBillScraper(Scraper):
         for line in (
             self.get(
                 f"https://gc.nh.gov/dynamicdatadump/LsrSponsors.txt?x={self.cachebreaker}",
-                verify=False,
             )
             .content.decode("utf-8")
             .split("\n")
@@ -573,7 +569,6 @@ class NHBillScraper(Scraper):
         action_lines = (
             self.get(
                 f"https://gc.nh.gov/dynamicdatadump/Docket.txt?x={self.cachebreaker}",
-                verify=False,
             )
             .content.decode("utf-8")
             .split("\n")
@@ -626,7 +621,6 @@ class NHBillScraper(Scraper):
                 "https://gc.nh.gov/dynamicdatadump/LsrsOnly.txt?x={}".format(
                     self.cachebreaker
                 ),
-                verify=False,
             )
             .content.decode("utf-8")
             .split("\n")
@@ -649,7 +643,6 @@ class NHBillScraper(Scraper):
                 "https://gc.nh.gov/dynamicdatadump/Docket.txt?x={}".format(
                     self.cachebreaker
                 ),
-                verify=False,
             )
             .content.decode("utf-8")
             .split("\n")
@@ -679,9 +672,7 @@ class NHBillScraper(Scraper):
         # current and past member by the member id in RollCallHistory.txt.
         member_names = {}
         members_page = lxml.html.fromstring(
-            self.get(
-                "https://gc.nh.gov/bill_Status/byAnyMember.aspx", verify=False
-            ).content
+            self.get("https://gc.nh.gov/bill_Status/byAnyMember.aspx").content
         )
         for option in members_page.xpath(
             "//select[@name='ctl00$pageBody$lstMembers']/option"
@@ -689,7 +680,7 @@ class NHBillScraper(Scraper):
             match = re.match(r"(?:Rep|Sen)\. (.+?), (.+?)\(", option.text_content())
             if match:
                 member_names[option.get("value")] = f"{match[2]} {match[1]}"
-        lines = self.get(vote_url, verify=False).content.decode("utf-8").splitlines()
+        lines = self.get(vote_url).content.decode("utf-8").splitlines()
 
         for line in lines:
 
@@ -745,7 +736,6 @@ class NHBillScraper(Scraper):
         for line in (
             self.get(
                 f"https://gc.nh.gov/dynamicdatadump/RollCallHistory.txt?x={self.cachebreaker}",
-                verify=False,
             )
             .content.decode("utf-8")
             .splitlines()

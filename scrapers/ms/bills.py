@@ -78,7 +78,7 @@ class MSBillScraper(Scraper):
             % session
         )
 
-        bill_dir_page = self.get(url, verify=False)
+        bill_dir_page = self.get(url)
         root = lxml.etree.fromstring(bill_dir_page.content)
         for mr in root.xpath("//LASTACTION/MSRGROUP"):
             bill_id = mr.xpath("string(MEASURE)").replace(" ", "")
@@ -106,7 +106,7 @@ class MSBillScraper(Scraper):
                 link,
             )
             try:
-                details_page = self.get(bill_details_url, verify=False)
+                details_page = self.get(bill_details_url)
             except scrapelib.HTTPError:
                 self.warning("Bill page not loading for {}; skipping".format(bill_id))
                 continue
@@ -406,7 +406,7 @@ class MSBillScraper(Scraper):
 
     def scrape_votes(self, url, motion, date, chamber, bill, line_item_veto=False):
         try:
-            vote_pdf, resp = self.urlretrieve(url, verify=False)
+            vote_pdf, resp = self.urlretrieve(url)
         except scrapelib.HTTPError:
             self.warning("Can't find vote file {}, skipping".format(url))
             return

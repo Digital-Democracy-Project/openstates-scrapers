@@ -19,9 +19,7 @@ class HIEventScraper(Scraper):
         ret = []
         try:
             self.info(f"GET {make_data_url(href)}")
-            page = lxml.html.fromstring(
-                self.get(make_data_url(href), verify=False).content
-            )
+            page = lxml.html.fromstring(self.get(make_data_url(href)).content)
         except HTTPError:
             return ret
 
@@ -49,7 +47,7 @@ class HIEventScraper(Scraper):
 
         get_short_codes(self)
         self.info(f"GET {make_data_url(URL)}")
-        page = self.get(make_data_url(URL), verify=False).content
+        page = self.get(make_data_url(URL)).content
         page = lxml.html.fromstring(page)
 
         if page.xpath("//td[contains(string(.),'No Hearings')]"):

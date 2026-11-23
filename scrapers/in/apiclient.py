@@ -3,7 +3,7 @@ import re
 import time
 from urllib.parse import urljoin
 import functools
-import requests
+from utils import checked_requests
 
 """
 API key must be passed as a header. You need the following headers to get JSON:
@@ -81,9 +81,7 @@ class ApiClient(object):
         self.scraper = scraper
         self.apikey = os.environ["INDIANA_API_KEY"]
         self.user_agent = os.getenv("USER_AGENT", "openstates")
-        # On 2025-06-12 IN TLS certificate expired, so we need to use verify=False
-        # If this is fixed in the future, this can be changed to True here and in __init__
-        self.verify = False
+        # OPEN-803: certificates are checked (core's per-host rule), not switched off here.
 
     def get_session_no(self, session):
         session_no = ""
@@ -93,7 +91,7 @@ class ApiClient(object):
         headers["User-Agent"] = self.user_agent
         url = urljoin(self.root, f"/{session}")
 
-        resp = requests.get(url, headers=headers, verify=self.verify).json()
+        resp = checked_requests.get(url, headers=headers).json()
         if "message" in resp:
             raise Exception(resp["message"])
         session_no_regex = re.search(r"Session\s+(\d+).+", resp["name"])
@@ -110,9 +108,7 @@ class ApiClient(object):
         headers["Accept"] = "application/pdf"
         headers["User-Agent"] = self.user_agent
         url = urljoin(self.root, url)
-        resp = requests.get(
-            url, headers=headers, allow_redirects=False, verify=self.verify
-        )
+        resp = checked_requests.get(url, headers=headers, allow_redirects=False)
         if "Location" in resp.headers:
             return resp.headers["Location"]
 
@@ -144,9 +140,7 @@ class ApiClient(object):
         headers["x-api-key"] = self.apikey
         headers["Accept"] = "application/json"
         headers["User-Agent"] = self.user_agent
-        response = requests.get(
-            url, headers=headers, allow_redirects=False, verify=self.verify
-        )
+        response = checked_requests.get(url, headers=headers, allow_redirects=False)
         if response.status_code in (301, 302):
             return response.headers["Location"]
         else:
@@ -181,9 +175,7 @@ class ApiClient(object):
         resp = None
         tries = 0
         while resp is None and tries < num_bad_packets_allowed:
-            resp = self.scraper.get(
-                url, *requests_args, verify=self.verify, **requests_kwargs
-            )
+            resp = self.scraper.get(url, *requests_args, **requests_kwargs)
         return resp
 
     def unpaginate(self, result):

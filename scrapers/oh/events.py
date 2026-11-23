@@ -81,7 +81,7 @@ class OHEventScraper(Scraper):
 
         url = f"{self.base_url}calendar-data?start={start}&end={end}"
         self.info(f"Fetching {url}")
-        result = self.get(url, verify=False)
+        result = self.get(url)
         result = result.content
         data = json.loads(result)
 
@@ -109,7 +109,7 @@ class OHEventScraper(Scraper):
 
             url = f"{self.base_url}{item['url']}"
 
-            page = self.get(url, verify=False).content
+            page = self.get(url).content
             page = lxml.html.fromstring(page)
 
             if "Internal Server Error" in page.text_content():

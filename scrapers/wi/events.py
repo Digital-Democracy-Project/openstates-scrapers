@@ -21,7 +21,7 @@ class WIEventScraper(Scraper, LXMLMixin):
             "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36",
         }
 
-        html = self.get(calurl, headers=headers, verify=False).text
+        html = self.get(calurl, headers=headers).text
         # events here are inline in the html as JS variables
         event_regex = r"({[\n\s]*title(.*?)}),\/\/end event object"
         event_rows = re.findall(event_regex, html, flags=re.MULTILINE | re.DOTALL)

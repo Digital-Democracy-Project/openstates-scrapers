@@ -14,7 +14,7 @@ def get_short_codes(scraper):
     }
 
     try:
-        list_html = scraper.get(SHORT_CODES, verify=False).text
+        list_html = scraper.get(SHORT_CODES).text
         list_page = lxml.html.fromstring(list_html)
         rows = list_page.xpath("//table[contains(@id, 'MainContent_GridView1')]//tr")
         for row in rows:

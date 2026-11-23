@@ -1,6 +1,6 @@
 # encoding=utf-8
 import os
-import requests
+from utils import checked_requests
 from openstates.scrape import State
 from .bills import IlBillScraper
 from .events import IlEventScraper
@@ -194,10 +194,9 @@ class Illinois(State):
         # User-agent "openstates.org" and "python-requests/2.32.3" are blocked as of 10/6/26
         useragent = os.getenv("USER_AGENT", "openstates")
         headers = {"User-Agent": useragent}
-        response = requests.get(
+        response = checked_requests.get(
             "https://ilga.gov/API/Legislation/GetGeneralAssemblies",
             headers=headers,
-            verify=False,
         )
 
         response.raise_for_status()

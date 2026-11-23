@@ -95,7 +95,6 @@ class PRBillScraper(Scraper):
                 cuatrienio_id
             ),
             headers=headers,
-            verify=False,
         )
         page = lxml.html.fromstring(resp.text)
         pagelist = page.xpath(
@@ -108,7 +107,6 @@ class PRBillScraper(Scraper):
                     cuatrienio_id, number
                 ),
                 headers=headers,
-                verify=False,
             )
             pagehtml = lxml.html.fromstring(resps.text)
 
@@ -286,7 +284,7 @@ class PRBillScraper(Scraper):
         # depends on the legislator
         legislator = authurl.rsplit("-", 1)[0]
         if legislator not in self.author_names:
-            html = self.get(authurl, headers=headers, verify=False).text
+            html = self.get(authurl, headers=headers).text
             page = lxml.html.fromstring(html)
             name = page.xpath("//title/text()")[0].strip()
             # site renders titles like "Jane  Doe - Sistema Único de Trámite Legislativo"
@@ -365,7 +363,7 @@ class PRBillScraper(Scraper):
             "upgrade-insecure-requests": "1",
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
         }
-        html = self.get(url, headers=headers, verify=False).text
+        html = self.get(url, headers=headers).text
         page = lxml.html.fromstring(html)
 
         page_header_elems = page.xpath(

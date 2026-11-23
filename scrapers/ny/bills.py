@@ -480,7 +480,7 @@ class NYBillScraper(Scraper):
         # default_fld=/leg_video= removes bill summary table from content
         url = assembly_url + "&Floor%26nbspVotes=Y&default_fld=&leg_video="
 
-        data = self.get(url, verify=False).text
+        data = self.get(url).text
         doc = lxml.html.fromstring(data)
         doc.make_links_absolute(url)
 

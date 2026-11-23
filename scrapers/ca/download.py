@@ -19,7 +19,7 @@ from os.path import join, split
 from functools import partial
 from collections import namedtuple
 
-import requests
+from utils import checked_requests
 import MySQLdb
 
 
@@ -261,7 +261,7 @@ def db_create():
 
 def get_contents():
     resp = {}
-    html = requests.get(BASE_URL, verify=False).text
+    html = checked_requests.get(BASE_URL).text
     doc = lxml.html.fromstring(html)
     # doc.make_links_absolute(BASE_URL)
     rows = doc.xpath("//table/tr")

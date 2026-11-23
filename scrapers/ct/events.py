@@ -54,7 +54,7 @@ class CTEventScraper(Scraper):
             f"comm_code={code}"
         )
         event_objects = set()
-        events_data = self.get(events_url, verify=False).text
+        events_data = self.get(events_url).text
 
         if not events_data:
             # commevents.php returns an empty body for some committees (e.g. FIN).
@@ -64,7 +64,7 @@ class CTEventScraper(Scraper):
                 f"comm_code={code}"
             )
             self.info(f"No events from {code} from normal source, trying {events_url}")
-            events_data = self.get(events_url, verify=False).text
+            events_data = self.get(events_url).text
             if not events_data:
                 self.info(f"No events from {code}")
                 return
@@ -110,7 +110,7 @@ class CTEventScraper(Scraper):
             agenda_url = info["url"]
             if agenda_url:
                 full_url = f"https://www.cga.ct.gov{agenda_url}"
-                agenda = Agenda(source=URL(full_url, verify=False))
+                agenda = Agenda(source=URL(full_url))
                 for bill in agenda.do_scrape(scraper=self):
                     event.add_bill(bill)
 

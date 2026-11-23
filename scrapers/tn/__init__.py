@@ -184,7 +184,6 @@ class Tennessee(State):
             for x in url_xpath(
                 "https://www.capitol.tn.gov/legislation/archives.html",
                 '//h2[text()="Bills and Resolutions"]/following-sibling::ul/li/text()',
-                verify=False,
             )
             if x.strip()
         ]
@@ -195,7 +194,6 @@ class Tennessee(State):
             for x in url_xpath(
                 "https://wapp.capitol.tn.gov/apps/Indexes/BillsByIndex",
                 '//select[@id="ssDropdown"]/option/text()',
-                verify=False,
             )
         ]
         current_special_sessions = [

@@ -506,7 +506,7 @@ class HIBillScraper(Scraper):
             bill.add_document_link(name, filename, media_type=media_type)
 
     def scrape_bill(self, session, chamber, bill_type, url):
-        bill_html = self.get(make_data_url(url), verify=False).text
+        bill_html = self.get(make_data_url(url)).text
         bill_page = lxml.html.fromstring(bill_html)
         bill_page.make_links_absolute(url)
 
@@ -654,9 +654,7 @@ class HIBillScraper(Scraper):
         )
         if not hrefs:
             return None
-        page = lxml.html.fromstring(
-            self.get(make_data_url(hrefs[0]), verify=False).text
-        )
+        page = lxml.html.fromstring(self.get(make_data_url(hrefs[0])).text)
         tables = page.xpath('//div[contains(@id, "UpdatePanel1")]//table[1]')
         return first_action_date(tables[0]) if tables else None
 
@@ -723,7 +721,7 @@ class HIBillScraper(Scraper):
                 yield from self.scrape_bill(session, chamber, billtype_map, bill_url)
 
     def report_links(self, report_page_url):
-        list_html = self.get(make_data_url(report_page_url), verify=False).text
+        list_html = self.get(make_data_url(report_page_url)).text
         return lxml.html.fromstring(list_html).xpath("//a[@class='report']")
 
     @staticmethod
@@ -879,7 +877,7 @@ class HIBillScraper(Scraper):
     def scrape_xml(self, session, day):
         url = "https://www.capitol.hawaii.gov/sessions/session2024/rss/"
         self.info(f"fetching url {url}")
-        page = self.get(make_data_url(url), verify=False).text
+        page = self.get(make_data_url(url)).text
         # this content isn't amenable to lxml, but it's machine generated so regex should be ok
         bill_re = r"(?P<date>\d+\/\d+\/\d+)\s+(?P<time>.*?)\s+\d+\s\<a href=\"(?P<url>.*?)\">(?P<filename>.*?)\.xml<\/a>"
         for match in re.finditer(bill_re, page, flags=re.IGNORECASE):

@@ -348,7 +348,6 @@ def categorize_action(action: str) -> str:
 
 class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
     headers = {}
-    verify = False
 
     # convert from MI's redirector to a bill permalink
     def make_bill_url(self, url: str) -> str:
@@ -456,7 +455,6 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
                 search_url,
                 headers={"User-Agent": user_agent},
                 cookies=cookies,
-                verify=False,
             )
         ).content
         page = lxml.html.fromstring(page)
@@ -725,7 +723,6 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
                     url,
                     headers={"User-Agent": user_agent},
                     cookies=cookies,
-                    verify=False,
                 )
             ).content
         except WafBlockDetected as e:
@@ -982,7 +979,6 @@ class MIBillScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
                     url,
                     headers={"User-Agent": user_agent},
                     cookies=cookies,
-                    verify=False,
                 )
             )
         except (scrapelib.HTTPError, WafBlockDetected) as e:

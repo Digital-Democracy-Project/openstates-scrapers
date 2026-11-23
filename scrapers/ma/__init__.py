@@ -1,6 +1,7 @@
 import re
 import logging
 import requests
+from utils import checked_requests
 import lxml.html
 from openstates.scrape import State
 from .bills import MABillScraper
@@ -134,7 +135,7 @@ class Massachusetts(State):
     def get_session_list(self):
         url = "https://malegislature.gov/Bills/Search"
         try:
-            response = requests.get(url, verify=False)
+            response = checked_requests.get(url)
             if response.status_code == 500:
                 sessions = get_fallback_hardcoded_sessions(url)
             else:

@@ -15,7 +15,6 @@ from .bills import mi_waf_get, MIResilientScraperMixin
 class MIEventScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper):
     _tz = pytz.timezone("US/Eastern")
     current_page = None
-    verify = False
 
     def scrape(self):
         url = "https://legislature.mi.gov/Committees/Meetings?sortBy=Calendar"
@@ -30,7 +29,6 @@ class MIEventScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper)
                     url,
                     headers={"User-Agent": user_agent},
                     cookies=cookies,
-                    verify=False,
                 )
             ).content
         except WafBlockDetected as e:
@@ -61,7 +59,6 @@ class MIEventScraper(MIResilientScraperMixin, MIWafCircuitBreakerMixin, Scraper)
                     url,
                     headers={"User-Agent": user_agent},
                     cookies=cookies,
-                    verify=False,
                 )
             ).content
         except WafBlockDetected as e:

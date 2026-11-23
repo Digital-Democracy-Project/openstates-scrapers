@@ -504,7 +504,6 @@ class Utah(State):
                 sessions = url_xpath(
                     "https://le.utah.gov/bills/billSearch.jsp",
                     "//select[@id='sess']/option/text()",
-                    verify=False,
                     user_agent=get_random_user_agent(),
                 )
             except Exception as e:

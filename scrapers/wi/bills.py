@@ -39,7 +39,7 @@ class WIBillScraper(Scraper):
         # that we use to scrape the data
 
         while last_url != next_url:
-            html = self.get(next_url, verify=False).text
+            html = self.get(next_url).text
             doc = lxml.html.fromstring(html)
             doc.make_links_absolute(next_url)
 
@@ -109,7 +109,7 @@ class WIBillScraper(Scraper):
             bill_type = "bill"
 
         try:
-            data = self.get(url, verify=False).text
+            data = self.get(url).text
         except scrapelib.HTTPError:
             self.warning("skipping URL %s" % url)
             return
@@ -141,7 +141,7 @@ class WIBillScraper(Scraper):
 
     def scrape_bill_history(self, bill, url, chamber):
         seen_votes = set()
-        body = self.get(url, verify=False).text
+        body = self.get(url).text
         doc = lxml.html.fromstring(body)
         doc.make_links_absolute(url)
 
@@ -184,9 +184,7 @@ class WIBillScraper(Scraper):
                 "Record of Committee Proceedings",
             ):
                 extra_doc_url = a.get("href")
-                extra_doc = lxml.html.fromstring(
-                    self.get(extra_doc_url, verify=False).text
-                )
+                extra_doc = lxml.html.fromstring(self.get(extra_doc_url).text)
                 extra_doc.make_links_absolute(extra_doc_url)
                 for extra_a in extra_doc.xpath('//ul[@class="docLinks"]/li//a'):
                     if extra_a.text:
@@ -357,7 +355,7 @@ class WIBillScraper(Scraper):
 
     def add_senate_votes(self, vote, url):
         try:
-            html = self.get(url, verify=False).text
+            html = self.get(url).text
         except scrapelib.HTTPError:
             self.warning("No Senate Votes found for %s" % url)
             return
@@ -396,7 +394,7 @@ class WIBillScraper(Scraper):
 
     def add_house_votes(self, vote, url):
         try:
-            html = self.get(url, verify=False).content
+            html = self.get(url).content
         except scrapelib.HTTPError:
             self.warning("No House Votes found for %s" % url)
             return

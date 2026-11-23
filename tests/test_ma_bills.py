@@ -41,7 +41,7 @@ def test_get_as_ajax_returns_none_on_request_exception(monkeypatch):
     fake_session = mock.Mock()
     fake_session.get.side_effect = requests.exceptions.ConnectionError("boom")
     monkeypatch.setattr(
-        "ma.bills.requests.Session", mock.Mock(return_value=fake_session)
+        "ma.bills.checked_requests.Session", mock.Mock(return_value=fake_session)
     )
 
     result = scraper.get_as_ajax("https://malegislature.gov/Bills/194/S1/CoSponsor")
@@ -55,7 +55,7 @@ def test_get_as_ajax_returns_response_on_success(monkeypatch):
     fake_session = mock.Mock()
     fake_session.get.return_value = fake_response
     monkeypatch.setattr(
-        "ma.bills.requests.Session", mock.Mock(return_value=fake_session)
+        "ma.bills.checked_requests.Session", mock.Mock(return_value=fake_session)
     )
 
     result = scraper.get_as_ajax("https://malegislature.gov/Bills/194/S1/CoSponsor")

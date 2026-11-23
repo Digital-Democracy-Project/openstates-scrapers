@@ -25,8 +25,6 @@ def get_bill_ids(text):
 
 
 class MNEventScraper(Scraper, LXMLMixin):
-    # bad SSL as of August 2017
-    verify = False
     _tz = pytz.timezone("US/Central")
 
     def scrape(self):
@@ -146,7 +144,7 @@ class MNEventScraper(Scraper, LXMLMixin):
 
     def scrape_upper(self):
         url = "https://www.senate.mn/api/schedule/upcoming"
-        data = self.get(url, verify=False).json()
+        data = self.get(url).json()
 
         for row in data["events"]:
             com = row["committee"]["committee_name"]

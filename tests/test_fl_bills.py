@@ -668,7 +668,7 @@ class _FakeSubjectPDF:
         self.subjects = collections.defaultdict(set)
         type(self).instances.append(self)
 
-    def do_scrape(self):
+    def do_scrape(self, scraper=None):
         return iter([self.subjects])
 
 
@@ -678,7 +678,7 @@ class _FakeBillIdList:
     def __init__(self, page_input):
         self.page_input = page_input
 
-    def do_scrape(self):
+    def do_scrape(self, scraper=None):
         return iter(self.identifiers)
 
 
@@ -983,7 +983,7 @@ def test_scrape_fails_clearly_when_the_subjects_pdf_yields_nothing(monkeypatch):
         def __init__(self, page_input):
             pass
 
-        def do_scrape(self):
+        def do_scrape(self, scraper=None):
             return iter(())
 
     scraper, _ = _make_scraper_for_scrape(monkeypatch, lambda bill_list: iter(()))

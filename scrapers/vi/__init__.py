@@ -3,7 +3,7 @@ from openstates.scrape import State
 
 from .bills import VIBillScraper
 from .events import VIEventScraper
-import requests
+from utils import checked_requests
 
 
 class VirginIslands(State):
@@ -75,8 +75,8 @@ class VirginIslands(State):
 
     def get_session_list(self):
         sessions = []
-        listing = requests.get(
-            "https://billtracking.legvi.org:8082/legislatures", verify=False
+        listing = checked_requests.get(
+            "https://billtracking.legvi.org:8082/legislatures"
         ).json()
         for row in listing["recordset"]:
             sessions.append(row["U_LegiNum"])

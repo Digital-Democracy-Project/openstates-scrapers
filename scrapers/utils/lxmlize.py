@@ -1,21 +1,19 @@
-import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 import lxml.html
 import logging
-import os
+
+from . import checked_requests
 
 
-def url_xpath(url, path, verify=None, user_agent=None):
+def url_xpath(url, path, user_agent=None):
     headers = {"user-agent": user_agent} if user_agent else None
 
-    if verify is None:
-        verify = os.getenv("VERIFY_CERTS", "True").lower() == "true"
-
-    # retry transient connection/TLS errors, like scrapelib does for self.get()
-    session = requests.Session()
+    # retry transient connection/TLS errors, like scrapelib does for self.get();
+    # certificates checked by core's per-host rule (OPEN-803)
+    session = checked_requests.Session()
     session.mount("https://", HTTPAdapter(max_retries=Retry(total=3, backoff_factor=2)))
-    res = session.get(url, verify=verify, headers=headers)
+    res = session.get(url, headers=headers)
     try:
         res.raise_for_status()
         doc = lxml.html.fromstring(res.text)
@@ -32,7 +30,7 @@ def url_xpath(url, path, verify=None, user_agent=None):
 class LXMLMixin(object):
     """Mixin for adding LXML helper functions to Open States code."""
 
-    def lxmlize(self, url, raise_exceptions=False, verify=None, headers=None):
+    def lxmlize(self, url, raise_exceptions=False, headers=None):
         """Parses document into an LXML object and makes links absolute.
 
         Args:
@@ -40,19 +38,10 @@ class LXMLMixin(object):
         Returns:
             Element: Document node representing the page.
         """
-        if verify is None:
-            verify = os.getenv("VERIFY_CERTS", "True").lower() == "true"
-
-        try:
-            # This class is always mixed into subclasses of `Scraper`,
-            # which have a `get` method defined.
-            response = self.get(url, verify=verify, headers=headers)
-        except requests.exceptions.SSLError:
-            self.warning(
-                "`self.lxmlize()` failed due to SSL error, trying "
-                "an unverified `self.get()` (i.e. `requests.get()`)"
-            )
-            response = self.get(url, verify=False, headers=headers)
+        # This class is always mixed into subclasses of `Scraper`, which have a `get`
+        # method defined; core checks the certificate (OPEN-800/OPEN-803), and an SSL
+        # error is no longer retried unverified.
+        response = self.get(url, headers=headers)
 
         if raise_exceptions:
             response.raise_for_status()
