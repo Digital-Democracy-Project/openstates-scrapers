@@ -346,13 +346,17 @@ class WYBillScraper(Scraper, LXMLMixin):
     def _split_voter_names(raw):
         """Split WY's comma-joined voter list, re-merging a bare initial
         (e.g. "Brown, G, Brown, L, Campbell, E") back onto the preceding
-        surname instead of treating it as its own voter."""
+        surname instead of treating it as its own voter.
+
+        OPEN-782: initials can be two letters ("Larson, JT"), which were split off as a voter "JT" on 498 stored roll calls
+        of 2026. Every surname the source prints has three letters or more ("Ide", "YIN"), upper case lists
+        included, so one or two capitals are always initials."""
         names = []
         for token in (raw or "").split(","):
             token = token.strip()
             if not token:
                 continue
-            if names and re.match(r"^[A-Z]\.?$", token):
+            if names and re.match(r"^(?:[A-Z]\.?){1,2}$", token):
                 names[-1] = "{}, {}".format(names[-1], token)
             else:
                 names.append(token)
