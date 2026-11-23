@@ -217,7 +217,17 @@ class HIBillScraper(Scraper):
 
     def parse_bill_metainf_table(self, metainf_table):
         def _sponsor_interceptor(line):
-            return [guy.strip() for guy in line.split(",")]
+            # OPEN-805: the page writes a member who shares a surname as "SURNAME, I." ("LEE, C.",
+            # "LEE, M."), in the same comma-separated list, so an initial after a comma belongs to
+            # the name before it, as split_specific_votes rejoins them for roll calls
+            names = []
+            for guy in line.split(","):
+                guy = guy.strip()
+                if MIDDLE_INITIAL_RE.match(guy) and names:
+                    names[-1] = f"{names[-1]}, {guy}"
+                else:
+                    names.append(guy)
+            return names
 
         interceptors = {"Introducer(s)": _sponsor_interceptor}
 
@@ -613,7 +623,10 @@ class HIBillScraper(Scraper):
                 )
 
         if "gm" in bill_id.lower():
-            b.add_sponsorship("governor", "primary", "person", True)
+            # OPEN-805: a governor's message comes from the Governor, so its sponsor is Hawaii's
+            # executive organization (core's metadata executive_name), as Massachusetts names its
+            # governor's bills; "governor" as a person matched no one
+            b.add_sponsorship("Office of the Governor", "primary", "organization", True)
 
         self.parse_bill_versions_table(b, bill_page)
         self.parse_testimony(b, bill_page)
