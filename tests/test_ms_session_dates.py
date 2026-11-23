@@ -19,6 +19,14 @@ House calendar's "1st LEGISLATIVE DAY", so it ends 2009-07-10, the last day the 
 (Ramon 2026-11-22, "Fix it to last action"). The Senate President's 07/13 signing of HB 1 and
 HB 2 is not counted as a sitting.
 
+OPEN-792 (read 2026-11-23): 20261E, the 2026 First Extraordinary Session, was stored as starting
+"2026-07-14", the day Governor Reeves issued the call, not the day the Legislature met under
+it. The call convened it "tomorrow, July 15, at 3pm" (the Governor's statement of 2026-07-14, as reported by
+WLBT/WLOX that day). The legislature's own record agrees: the first Daily Action Report
+(20261E/pdf/list_dar.htm, 07152026.xml) carries the House and Senate roll calls of 07/15/2026,
+there is no report for 07/14, and the House and Senate calendars for July 16
+(20261E/pdf/misc/h_cal.htm, s_cal.htm) call it the "2nd CALENDAR DAY". The end stays 2026-07-17.
+
 The session list is read from the package's source, as test_session_classification.py does:
 importing the ms package needs DDP's openstates-core.
 """
@@ -72,3 +80,8 @@ def test_2026_regular_session_dates_are_the_legislatures():
 def test_2009_third_extraordinary_session_ends_on_its_last_floor_day():
     session = next(s for s in SESSIONS if s["identifier"] == "20093E")
     assert (session["start_date"], session["end_date"]) == ("2009-07-10", "2009-07-10")
+
+
+def test_2026_first_extraordinary_session_starts_the_day_it_convened():
+    session = next(s for s in SESSIONS if s["identifier"] == "20261E")
+    assert (session["start_date"], session["end_date"]) == ("2026-07-15", "2026-07-17")

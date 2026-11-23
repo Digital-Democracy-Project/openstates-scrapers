@@ -328,7 +328,8 @@ class Mississippi(State):
             "classification": "special",
             "identifier": "20261E",
             "name": "2026 1st Extraordinary Session",
-            "start_date": "2026-07-14",
+            # OPEN-792: convened 07-15 under the Governor's call issued 07-14
+            "start_date": "2026-07-15",
             "end_date": "2026-07-17",
             "active": True,
         },
