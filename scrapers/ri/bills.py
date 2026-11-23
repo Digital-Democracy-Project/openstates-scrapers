@@ -141,12 +141,32 @@ BILL_STRING_FLAGS = {
 
 BILL_TITLE_RE = re.compile(r"ENTITLED,\s+([^(]+)(\(.+\))?")
 
+# OPEN-784: the search page links only a bill's current text, named by its number ("7603",
+# "7532  SUB B as amended"), a name with no stage. The legislature's text index for each
+# chamber and year (BillText26/HouseText26/HouseText26.html) lists every text of every bill,
+# in the order they were printed (H7532, H7532A, H7532Aaa, H7532B, H7532Baa), and each text's
+# own header names it by its file's ending: none (the introduced text), "aa" AS AMENDED, "A"
+# SUBSTITUTE A, "Aaa" SUBSTITUTE A AS AMENDED (read 2026-11-23).
+TEXT_FILE = re.compile(r"\A(?P<bill>[HS]\d+)(?P<sub>[A-Z])?(?P<amended>aa)?\Z")
+
+
+def text_name(text):
+    """A text's name from its file name (TEXT_FILE match): "Introduced", "As Amended",
+    "Substitute A", "Substitute A As Amended"."""
+    sub, amended = text.group("sub"), text.group("amended")
+    if not sub and not amended:
+        return "Introduced"
+    name = f"Substitute {sub}" if sub else ""
+    return f"{name} As Amended".strip() if amended else name
+
 
 class RIBillScraper(Scraper):
     # when scraping votes we only get 'S101' so we can't tie them to their parent bill
     # so we keep a dict of (chamber, number) -> bill_id from the bill scrape to be used in the
     # vote scrape
     _bill_id_by_type = {}
+    # OPEN-784: text index URL -> {bill: [TEXT_FILE matches, oldest first]}, new each run
+    _text_index = {}
     categorizer = Categorizer()
     _tz = pytz.timezone("US/Eastern")
 
@@ -277,6 +297,38 @@ class RIBillScraper(Scraper):
         self.warning("XXX: Bill type fallthrough. This ain't great.")
         return "bill"
 
+    def bill_texts(self, url):
+        """OPEN-784: (name, url) of each text of the bill whose current text is `url`, oldest
+        first: the texts its chamber's text index lists, up to and including the current one.
+        A text printed after the current one is left out (S2048's index lists a Substitute A
+        after the "as amended" text the status page shows as current: 1 of 3,011 bills in
+        2026; the other 3,010 end on their current text). Just the current text if the index
+        can't be read or does not list it; None if `url` is not a text file of this shape."""
+        folder, _, filename = url.rpartition("/")
+        stem, _, ext = filename.rpartition(".")
+        current = TEXT_FILE.match(stem) if ext.lower() == "pdf" else None
+        if not current:
+            return None
+        index_url = f"{folder}/{folder.rpartition('/')[2]}.html"
+        if index_url not in self._text_index:
+            try:
+                page = lxml.html.fromstring(self.get(index_url).text)
+                names = page.xpath("//td[@class='bill_col1']/text()")
+            except (scrapelib.HTTPError, lxml.etree.ParserError):
+                self.warning(f"text index {index_url} unreadable: current texts only")
+                names = []
+            by_bill = {}
+            for text in filter(None, (TEXT_FILE.match(n.strip()) for n in names)):
+                by_bill.setdefault(text.group("bill"), []).append(text)
+            self._text_index[index_url] = by_bill
+        texts = self._text_index[index_url].get(current.group("bill"), [])
+        files = [t.group(0) for t in texts]
+        if current.group(0) in files:
+            texts = texts[: files.index(current.group(0)) + 1]
+        else:
+            texts = [current]
+        return [(text_name(t), f"{folder}/{t.group(0)}.pdf") for t in texts]
+
     def scrape_bills(self, chamber, session, subjects):
         idexes = bill_start_numbers(session)[chamber]
         FROM = "ctl00$rilinContent$txtBillFrom"
@@ -352,9 +404,12 @@ class RIBillScraper(Scraper):
                     sponsors = [s.strip() for s in sponsors]
 
                     for href in bill["bill_id_hrefs"]:
-                        b.add_version_link(
-                            href.text, href.attrib["href"], media_type="application/pdf"
-                        )
+                        url = href.attrib["href"]
+                        texts = self.bill_texts(url) or [(href.text, url)]
+                        for name, text_url in texts:
+                            b.add_version_link(
+                                name, text_url, media_type="application/pdf"
+                            )
 
                     for sponsor in sponsors:
                         b.add_sponsorship(
@@ -376,6 +431,7 @@ class RIBillScraper(Scraper):
         # possibly restore this later.
         # subjects = self.get_subject_bill_dict(session)
         subjects = {}
+        self._text_index = {}
 
         # OPEN-701: every chamber's bills before any votes, so a Senate roll call on a
         # House bill (and the reverse) finds its bill
