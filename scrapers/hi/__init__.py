@@ -69,7 +69,8 @@ class Hawaii(State):
             "identifier": "2013 Regular Session",
             "name": "2013 Regular Session",
             "start_date": "2013-01-16",
-            "end_date": "2013-05-03",
+            # OPEN-793: both journals' 60th day, Thursday, May 2, 2013: adjourned sine die
+            "end_date": "2013-05-02",
         },
         {
             # "Special Session of 2013": convened 2013-08-05, adjourned 2013-08-06 (Senate journal)
@@ -99,7 +100,8 @@ class Hawaii(State):
             "identifier": "2014 Regular Session",
             "name": "2014 Regular Session",
             "start_date": "2014-01-15",
-            "end_date": "2014-05-02",
+            # OPEN-793: both journals' 60th day, Thursday, May 1, 2014: adjourned sine die
+            "end_date": "2014-05-01",
         },
         {
             # "Special Session of 2014": convened 2014-10-22, adjourned 2014-10-23 (Senate journal)
@@ -218,7 +220,8 @@ class Hawaii(State):
             "classification": "primary",
             "identifier": "2018 Regular Session",
             "name": "2018 Regular Session",
-            "start_date": "2018-01-18",
+            # OPEN-793: both journals' first day, Wednesday, January 17, 2018
+            "start_date": "2018-01-17",
             "end_date": "2018-05-03",
         },
         {
@@ -424,7 +427,8 @@ class Hawaii(State):
             "identifier": "2024",
             "name": "2024 Regular Session",
             "start_date": "2024-01-17",
-            "end_date": "2024-05-02",
+            # OPEN-793: both journals' 60th day, Friday, May 3, 2024: adjourned sine die
+            "end_date": "2024-05-03",
             "active": False,
         },
         {
@@ -443,7 +447,8 @@ class Hawaii(State):
             "classification": "primary",
             "identifier": "2025",
             "name": "2025 Regular Session",
-            "start_date": "2025-01-17",
+            # OPEN-793: both journals' first day, Wednesday, January 15, 2025
+            "start_date": "2025-01-15",
             "end_date": "2025-05-02",
             "active": False,
         },
