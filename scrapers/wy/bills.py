@@ -180,7 +180,9 @@ class WYBillScraper(Scraper, LXMLMixin):
 
         bill.add_source(source_url)
 
-        for action_json in bill_json["billActions"]:
+        # lsoservice.wyoleg.gov lists a bill's actions newest first; they are read oldest first, so a day with several
+        # actions ends on its last one and that becomes the latest action (OPEN-780, Alabama's OPEN-528)
+        for action_json in bill_json["billActions"][::-1]:
             utc_action_date = self.parse_local_date(action_json["statusDate"])
 
             actor = None
