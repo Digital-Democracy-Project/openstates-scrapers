@@ -17,9 +17,12 @@ import os
 import sys
 
 import pytest
+import requests
+import scrapelib
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
 
+import md  # noqa: E402
 import md.votes  # noqa: E402
 from md.votes import MDVoteScraper, final_vote_only, vote_classification  # noqa: E402
 from openstates.scrape import VoteEvent  # noqa: E402
@@ -328,3 +331,70 @@ def test_walk_reads_at_most_five_special_sessions():
     list(site.scrape_special_session_overrides("lower", "2026"))
     codes = [u.rsplit("?ys=", 1)[1] for u in site.requested if "?ys=" in u]
     assert codes == ["2026s1", "2026s2", "2026s3", "2026s4", "2026s5"]
+
+
+# OPEN-799: the site answers an index for a special session that never met with HTTP 500
+# (?ys=2026s2, ?ys=2027s1; checked 2026-11-23), not an empty page. scrapelib raised, and
+# Maryland's first scrape failed with nothing loaded.
+def _one_override_day(code):
+    return (
+        "<html><body><table><tbody><tr><td></td><td></td><td>"
+        f'<a href="/mgawebsite/FloorActions/Media/house-1-?year={code.upper()}">1</a>'
+        "</td></tr></tbody></table></body></html>"
+    )
+
+
+class _SiteWith500(_Site):
+    """`_Site`, with HTTP 500 (or `status`) for every index in `errors`, as scrapelib raises it."""
+
+    def __init__(self, answer, errors, status=500):
+        super().__init__(answer)
+        self.errors = errors
+        self.status = status
+        self.jurisdiction = md.Maryland()
+        self.logged = []
+
+    def get(self, url, **kwargs):
+        if url.rsplit("?ys=", 1)[-1] in self.errors:
+            self.requested.append(url)
+            response = requests.Response()
+            response.status_code = self.status
+            response.url = url
+            raise scrapelib.HTTPError(response)
+        return super().get(url, **kwargs)
+
+    def info(self, msg, *args):
+        self.logged.append(msg)
+
+
+@pytest.mark.parametrize("status", [500, 404])
+def test_unknown_special_session_answering_500_ends_the_walk(status):
+    site = _SiteWith500(_one_override_day, errors={"2026s2"}, status=status)
+    # 2026s1's roll call is still collected, and the scrape goes on
+    assert list(site.scrape_special_session_overrides("lower", "2026")) == [
+        "http://mgaleg.maryland.gov/2026S1/votes/house/0001.pdf"
+    ]
+    codes = [u.rsplit("?ys=", 1)[1] for u in site.requested if "?ys=" in u]
+    assert codes == ["2026s1", "2026s2"]
+    assert len(site.logged) == 1 and "2026s2" in site.logged[0]
+
+
+def test_year_without_a_special_session_answering_500_reads_nothing():
+    # 2027s1 is not in the scraper's list: the 2027 run must not fail on it
+    site = _SiteWith500(_one_override_day, errors={"2027s1"})
+    assert list(site.scrape_special_session_overrides("lower", "2027")) == []
+    assert len(site.logged) == 1
+
+
+def test_listed_special_session_answering_500_still_fails():
+    # 2026s1 is in the scraper's own list: a 500 there is an outage, not a missing session
+    site = _SiteWith500(_one_override_day, errors={"2026s1"})
+    with pytest.raises(scrapelib.HTTPError):
+        list(site.scrape_special_session_overrides("lower", "2026"))
+    assert site.logged == []
+
+
+def test_regular_session_answering_500_still_fails():
+    site = _SiteWith500(_one_override_day, errors={"2026rs"})
+    with pytest.raises(scrapelib.HTTPError):
+        list(site.scrape_chamber("lower", "2026"))

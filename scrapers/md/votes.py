@@ -2,6 +2,7 @@ import re
 import datetime
 from collections import defaultdict
 from urllib.parse import parse_qs, urlparse
+import scrapelib
 from utils import LXMLMixin
 from utils.votes import check_counts
 from openstates.scrape import Scraper, VoteEvent
@@ -117,8 +118,21 @@ class MDVoteScraper(Scraper, LXMLMixin):
             return
         # Maryland has never held more than one special session in a year; 5 bounds the walk
         for n in range(1, 6):
+            code = f"{session}s{n}"
+            try:
+                urls = list(self.vote_urls(chamber, code))
+            except scrapelib.HTTPError as e:
+                # OPEN-799: the site answers a special session that never met with HTTP 500
+                # (?ys=2026s2, 2027s1). A session in our own list still fails loudly.
+                listed = {
+                    s["identifier"].lower()
+                    for s in self.jurisdiction.legislative_sessions
+                }
+                if code in listed:
+                    raise
+                self.info(f"no special session {code} ({e}); override walk ends")
+                return
             # an index for a special session that never met lists no session days of its own
-            urls = list(self.vote_urls(chamber, f"{session}s{n}"))
             if not urls:
                 return
             for vote_url in urls:
