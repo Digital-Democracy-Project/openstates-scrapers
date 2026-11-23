@@ -15,6 +15,51 @@ from .actions import Categorizer
 from .voter_names import add_voter
 
 
+# OPEN-795 (PLAN-companion-lineage §5.3.1, Ramon 2026-11-23 "Store all three"): a committee substitute's two history lines.
+# The original says where it went ("Becomes HB 1257.", "Title of substitute read and adopted; becomes Senate Bill No. 426.");
+# the substitute names the bill it replaces ("... substitute for HB No. 123 reported by ...", "Substitute for Senate Bill
+# No. 168."). "Becomes Act No. 5" is a law number, not a bill. A substitute replaces its bill: never a companion (D2).
+_SUBSTITUTE_TYPES = {
+    ("house", "bill"): "HB",
+    ("senate", "bill"): "SB",
+    ("house", "resolution"): "HR",
+    ("senate", "resolution"): "SR",
+    ("house", "concurrent resolution"): "HCR",
+    ("senate", "concurrent resolution"): "SCR",
+    ("house", "joint resolution"): "HJR",
+    ("senate", "joint resolution"): "SJR",
+}
+_SUBSTITUTE_BILL = (
+    r"(?:(HB|SB|HR|SR|HCR|SCR|HJR|SJR)\s*(?:No\.\s*)?(\d+)"
+    r"|(House|Senate)\s+(Bill|Resolution|Concurrent Resolution|Joint Resolution)\s+No\.\s*(\d+))\b"
+)
+_SUBSTITUTIONS = (
+    (re.compile(r"\bbecomes\s+" + _SUBSTITUTE_BILL, re.I), "replaced-by", "Becomes"),
+    (
+        re.compile(r"\bsubstitute\s+for\s+" + _SUBSTITUTE_BILL, re.I),
+        "replaces",
+        "substitute for",
+    ),
+)
+
+
+def substitution_links(text):
+    """[(bill identifier, relation_type, label)] named in one history line: the bill this one became (`replaced-by`,
+    "Becomes") or the bill it is a substitute for (`replaces`, "substitute for")."""
+    links = []
+    for pattern, relation_type, label in _SUBSTITUTIONS:
+        for m in pattern.finditer(text):
+            if m.group(1):
+                identifier = "{} {}".format(m.group(1).upper(), m.group(2))
+            else:
+                identifier = "{} {}".format(
+                    _SUBSTITUTE_TYPES[(m.group(3).lower(), m.group(4).lower())],
+                    m.group(5),
+                )
+            links.append((identifier, relation_type, label))
+    return links
+
+
 class LABillScraper(Scraper, LXMLMixin):
     categorizer = Categorizer()
 
@@ -423,3 +468,20 @@ class LABillScraper(Scraper, LXMLMixin):
                 chamber=chamber,
                 classification=attrs["classification"],
             )
+
+            # OPEN-795: a substitution names the other bill; stored once per bill, never as companion
+            for identifier, relation_type, label in substitution_links(text):
+                known = {
+                    (r["identifier"], r["relation_type"]) for r in bill.related_bills
+                }
+                if (
+                    identifier.replace(" ", "") != bill.identifier.replace(" ", "")
+                    and (
+                        identifier,
+                        relation_type,
+                    )
+                    not in known
+                ):
+                    bill.add_related_bill(
+                        identifier, bill.legislative_session, relation_type, label=label
+                    )
