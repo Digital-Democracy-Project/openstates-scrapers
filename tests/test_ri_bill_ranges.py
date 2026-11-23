@@ -61,6 +61,9 @@ def _scrape(monkeypatch, chamber="lower", session="2026"):
     scraper = object.__new__(RIBillScraper)
     scraper.info = scraper.warning = lambda *a, **k: None
     scraper.post = post
+    # OPEN-784: the text index lists none of these bills, so each keeps its current text
+    scraper.get = lambda url: _Response("<html><body></body></html>")
+    scraper._text_index = {}
     scraper._bill_id_by_type = {}
     return list(scraper.scrape_bills(chamber, session, {})), searched, scraper
 
@@ -102,7 +105,7 @@ def test_boundary_bill_keeps_its_version_actions_and_sponsors(monkeypatch):
     bills, _, scraper = _scrape(monkeypatch)
     (hb8500,) = [b for b in bills if b.identifier == "HB8500"]
     assert hb8500.title.endswith("OFFICE OF HEALTH AND HUMAN SERVICES")
-    assert [v["note"] for v in hb8500.versions] == ["8500"]
+    assert [v["note"] for v in hb8500.versions] == ["Introduced"]  # OPEN-784
     assert [a["date"] for a in hb8500.actions] == [
         "2026-05-01",
         "2026-05-22",
