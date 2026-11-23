@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="../../dtds_xslts/history.xslt"?>
+ 
+<!DOCTYPE HISTORY SYSTEM "../../dtds_xslts/history.dtd">
+ 
+<HISTORY>
+	<YEAR>2026</YEAR>
+	<SESSION>Regular Session</SESSION>
+	<SHORTTITLE>Commissioner of Education for Mississippi Delta School Districts; create position for.</SHORTTITLE>
+	<LONGTITLE>AN ACT TO CREATE THE COMMISSIONER OF EDUCATION FOR THE MISSISSIPPI DELTA ACT; TO PROVIDE CERTAIN DEFINITIONS; TO PROVIDE THE POWERS AND DUTIES OF THE COMMISSIONER; AND FOR RELATED PURPOSES.</LONGTITLE>
+	<DATETIMELASTCHG>02/03/26 at 19:06</DATETIMELASTCHG>
+ 
+	<MEASURE>
+		<MSR_HS>H</MSR_HS>
+		<MSR_TYPE>B</MSR_TYPE>
+		<MSR_NUM>1595</MSR_NUM>
+		<FORMAT_MSRID>House Bill 1595</FORMAT_MSRID>
+		<SHORT_MSRID>HB 1595</SHORT_MSRID>
+		<OWNER>H</OWNER>
+	</MEASURE>
+ 
+	<BACKGROUND>
+		<DISPOSITION>Dead</DISPOSITION>
+		<DEADLINE>General Bill/Constitutional Amendment</DEADLINE>
+		<REVENUE>No</REVENUE>
+		<VOTETYPE>Majority</VOTETYPE>
+		<EFFECTIVEDATE>July 1, 2026</EFFECTIVEDATE>
+	</BACKGROUND>
+	<COMMITTEES>
+		<HOUSE>
+			<H_NAME>Education</H_NAME>
+			<H_INCMTE>T</H_INCMTE>
+			<H_LINK>../../House_cmtes/ED.xml</H_LINK>
+		</HOUSE>
+		<HOUSE>
+			<H_NAME>Appropriations A</H_NAME>
+			<H_INCMTE>F</H_INCMTE>
+			<H_LINK>../../House_cmtes/AP.xml</H_LINK>
+		</HOUSE>
+	</COMMITTEES>
+	<AUTHORS>
+		<PRINCIPAL>
+			<P_NAME>Hines *</P_NAME>
+			<P_LINK>../../House_authors/Hines.xml</P_LINK>
+		</PRINCIPAL>
+	</AUTHORS>
+	<ACTION>
+		<ACT_NUMBER> 1</ACT_NUMBER>
+		<ACT_DESC>01/19 (H) Referred To Education;Appropriations A</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 2</ACT_NUMBER>
+		<ACT_DESC>02/03 (H) Died In Committee</ACT_DESC>
+	</ACTION>
+	<DOCUMENTS>
+		<CURRENT>
+			<CURRENT_PDF>../../../../documents/2026/pdf/HB/1500-1599/HB1595IN.pdf</CURRENT_PDF>
+			<CURRENT_OTHER>../../../../documents/2026/html/HB/1500-1599/HB1595IN.htm</CURRENT_OTHER>
+		</CURRENT>
+		<INTRO>
+			<INTRO_PDF>../../../../documents/2026/pdf/HB/1500-1599/HB1595IN.pdf</INTRO_PDF>
+			<INTRO_OTHER>../../../../documents/2026/html/HB/1500-1599/HB1595IN.htm</INTRO_OTHER>
+		</INTRO>
+		<FISCALNOTE>
+			<FISCALNOTEFLAG>N</FISCALNOTEFLAG>
+			<FISCALNOTEPATH>../../../../documents/2026/pdf/fiscalnotes/HB1595.pdf</FISCALNOTEPATH>
+		</FISCALNOTE>
+	</DOCUMENTS>
+</HISTORY>

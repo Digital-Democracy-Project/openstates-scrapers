@@ -12,6 +12,25 @@ import scrapelib
 from classify_motion import classify_motion
 
 
+# OPEN-808: where an author's page lives says the author's chamber
+# ("../../House_authors/Boyd_(19th).xml", "../../Senate_authors/Boyd.xml")
+_AUTHOR_CHAMBERS = {"House_authors": "lower", "Senate_authors": "upper"}
+
+
+def author_name_and_chamber(name, link):
+    """OPEN-808: an author as the bill's history XML prints it (P_NAME / CO_NAME) and the
+    chamber of their page (P_LINK / CO_LINK), or None when there is no member page (the
+    Governor and other appointing authorities on nominations). The name is kept whole: the
+    legislature prints a district or an initial when two members of a chamber share a
+    surname ("Simmons (12th)", "Boyd (19th)"), and a bare surname is unique within its
+    chamber, so the chamber is what tells "Blackwell" in the House from "Blackwell" in the
+    Senate. A trailing "*" marks a bill filed by request ("By: Representative Hines (By
+    Request)" on the bill) and is not part of the name."""
+    name = re.sub(r"\s*\*$", "", " ".join(name.split()))
+    match = re.search(r"\b(House_authors|Senate_authors)/", link)
+    return name, _AUTHOR_CHAMBERS[match.group(1)] if match else None
+
+
 def _combine_lines(lines):
     newlines = []
     lastline = "."
@@ -130,12 +149,11 @@ class MSBillScraper(Scraper):
             bill.extras["summary"] = longtitle
             bill.add_source(main_doc_url)
             # sponsors
-            main_sponsor = details_root.xpath("string(//P_NAME)").split()
+            main_sponsor_link = details_root.xpath("string(//P_LINK)").replace(" ", "_")
+            main_sponsor, main_chamber = author_name_and_chamber(
+                details_root.xpath("string(//P_NAME)"), main_sponsor_link
+            )
             if main_sponsor:
-                main_sponsor = main_sponsor[0]
-                main_sponsor_link = details_root.xpath("string(//P_LINK)").replace(
-                    " ", "_"
-                )
                 main_sponsor_url = ("http://billstatus.ls.state.ms.us/%s/" "pdf/%s") % (
                     session,
                     main_sponsor_link.strip("../"),
@@ -147,15 +165,21 @@ class MSBillScraper(Scraper):
                     classification=type,
                     entity_type="person",
                     primary=True,
+                    chamber=main_chamber,
                 )
 
             for author in details_root.xpath("//AUTHORS/ADDITIONAL"):
-                leg = author.xpath("string(CO_NAME)").replace(" ", "_")
+                co_link = author.xpath("string(CO_LINK)").replace(" ", "_")
+                co_name, co_chamber = author_name_and_chamber(
+                    author.xpath("string(CO_NAME)"), co_link
+                )
+                leg = co_name.replace(" ", "_")
                 if leg:
-                    leg_url = (
-                        "http://billstatus.ls.state.ms.us/%s/"
-                        "pdf/House_authors/%s.xml"
-                    ) % (session, leg)
+                    # OPEN-808: the author's own page, a Senate author's under Senate_authors
+                    leg_url = ("http://billstatus.ls.state.ms.us/%s/pdf/%s") % (
+                        session,
+                        co_link.strip("../"),
+                    )
                     type = "cosponsor"
                     bill.add_source(leg_url)
                     bill.add_sponsorship(
@@ -163,6 +187,7 @@ class MSBillScraper(Scraper):
                         classification=type,
                         entity_type="person",
                         primary=False,
+                        chamber=co_chamber,
                     )
             # Versions
             intro_version = details_root.xpath("string(//INTRO_OTHER)").replace(
