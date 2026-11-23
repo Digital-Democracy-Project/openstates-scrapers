@@ -36,15 +36,17 @@ _COMMITTEE_NAME_MAPPING = {
 # 31-0-0-0-0", "H 3rd Reading:Passed 55-2-5-0-0"), but the API's roll-call `chamber` can name the other one: in 2026
 # the Senate's introduction votes on Senate files (SF 2, SF 10, ...) come back with chamber "H", so all 31 senators
 # were stored on a House vote and none of them resolved. Committee votes ("S01 - ...") and amendment votes ("Amendment
-# adopted ...") carry no "S "/"H " prefix and keep the API's chamber.
-VOTE_CHAMBER_PREFIX_RE = re.compile(r"^([SH]) ")
+# adopted ...") carry no "S "/"H " prefix and keep the API's chamber. OPEN-778: an action with no prefix that names
+# a chamber's own rule was voted by that chamber: "Recalled from Committee Pursuant to Senate Rule 5-5: 29-2-0-0-0"
+# on SF 50 and SF 56 (2026, 31 voters) came back with chamber "H"; the same recall on SF 84 came back "S".
+VOTE_CHAMBER_RE = re.compile(r"^([SH]) |\b(S)enate Rule\b|\b(H)ouse Rule\b")
 
 
 def voting_chamber(vote_json):
-    """The chamber ("S"/"H") that cast a roll call: the action's "S "/"H " prefix where it has one, else the API's
-    own `chamber` field."""
-    match = VOTE_CHAMBER_PREFIX_RE.match(vote_json["action"] or "")
-    return match.group(1) if match else vote_json["chamber"]
+    """The chamber ("S"/"H") that cast a roll call: the action's "S "/"H " prefix where it has one, else the chamber
+    whose rule the action names ("Senate Rule 5-5"), else the API's own `chamber` field."""
+    match = VOTE_CHAMBER_RE.search(vote_json["action"] or "")
+    return next(g for g in match.groups() if g) if match else vote_json["chamber"]
 
 
 # OPEN-677: the kinds of roll call that are not passage, named for what they are. Which votes are passage (and
