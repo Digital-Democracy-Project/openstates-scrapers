@@ -35,6 +35,36 @@ def vote_classification(bill_action, motion=None):
     return []
 
 
+# OPEN-801: a version's name says its stage. The legislature names each text's file after the bill and its
+# version number ("HB0477_1.pdf" ... "HB0477_5.pdf", then "HB0477_X.pdf"), and the LC draft after its draft
+# number ("LC0382.pdf"). Read on 2025 and 2027 bills (api.legmt.gov and the texts themselves, 2026-11-23):
+# _1 is the text as introduced ("HB 477.1", "INTRODUCED BY ..."); each later number is the bill reprinted after
+# an amendment (SB 260's _2 after its Senate committee report, _3 after the House committee's, _4 after a House
+# 2nd reading amendment; of the 1,078 later numbers of 2025, 729 follow a committee report and 102 a 2nd reading),
+# or printed at enrolling as the text passed (154: SB 1's _3 is byte-identical to its _X), so they rank just
+# before it; _X (or _x before 2021) is the enrolled act ("AN ACT ..."). The LC file is the drafted
+# bill before introduction ("_____ BILL NO. _____"), the site's "LC Text". "SB0260_X(3).pdf" is a later upload
+# of the same version (the bill page lists it under "SB0260_X.pdf"), so it is another link of that version; it
+# can hold a later text (SB 116's newest _X upload carries the governor's amendments), and core reads a version's
+# last link by URL, which is its newest upload. Any other file keeps its own name.
+VERSION_FILE = re.compile(r"[A-Z]{2}\d{4}_([1-9]\d*|X)(?:\(\d+\))?\.pdf", re.I)
+LC_FILE = re.compile(r"LC\d{4}(?:\(\d+\))?\.pdf", re.I)
+
+
+def version_name(file_name: str) -> str:
+    if LC_FILE.fullmatch(file_name):
+        return "Bill Draft"
+    version = VERSION_FILE.fullmatch(file_name)
+    if not version:
+        return file_name
+    number = version.group(1).upper()
+    if number == "X":
+        return "Enrolled"
+    if number == "1":
+        return "Introduced"
+    return f"Amended Version {int(number)}"
+
+
 class MTBillScraper(Scraper):
     tz = pytz.timezone("America/Denver")
     results_per_page = 100
@@ -483,8 +513,18 @@ class MTBillScraper(Scraper):
             # GET url, but is that worth 5x the requests?
             for doc_row in page:
                 doc_url = f"https://api.legmt.gov/docs/v1/documents/getContent?documentId={str(doc_row['id'])}"
+                if endpoint != "Versions":
+                    # OPEN-801: amendments ("HB0313.001.001.pdf", "..._Amendments-in-Context_final-full.pdf") and
+                    # the governor's veto papers ("HB0217GovVeto.pdf") are not texts of the bill
+                    bill.add_document_link(
+                        doc_row["fileName"],
+                        doc_url,
+                        media_type="application/pdf",
+                        on_duplicate="ignore",
+                    )
+                    continue
                 bill.add_version_link(
-                    doc_row["fileName"],
+                    version_name(doc_row["fileName"]),
                     doc_url,
                     media_type="application/pdf",
                     on_duplicate="ignore",
@@ -504,7 +544,7 @@ class MTBillScraper(Scraper):
         for doc_row in response:
             doc_url = f"https://api.legmt.gov/docs/v1/documents/getContent?documentId={str(doc_row['id'])}"
             bill.add_version_link(
-                doc_row["fileName"],
+                version_name(doc_row["fileName"]),
                 doc_url,
                 media_type="application/pdf",
                 on_duplicate="ignore",

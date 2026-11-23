@@ -156,7 +156,8 @@ def test_2017_reaches_its_bill_text(monkeypatch):
     bills, asked = run_scraper(monkeypatch, "2017")
     (hb90,) = [b for b in bills if b.identifier == "HB 90"]
     (version,) = hb90.versions
-    assert version["note"] == "HB0090_1.pdf"
+    # OPEN-801: named by its stage, not its file name
+    assert version["note"] == "Introduced"
     assert version["links"][0]["url"] == (
         "https://api.legmt.gov/docs/v1/documents/getContent?documentId=52172"
     )
@@ -187,5 +188,6 @@ def test_2017_bill_text_urls_before_and_after(monkeypatch):
     bills, asked = run_scraper(monkeypatch, "2017")
     # seven numbered bills: versions, amendments and other for each, fiscal notes for three
     assert len(asked) == 7 * 3 + 3
-    assert len(version_urls(bills)) == 21
-    assert sum(len(b.documents) for b in bills) == 3
+    # OPEN-801: the 3 veto papers (getBillOther) are documents, not versions
+    assert len(version_urls(bills)) == 18
+    assert sum(len(b.documents) for b in bills) == 3 + 3

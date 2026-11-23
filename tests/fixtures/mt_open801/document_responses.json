@@ -1,0 +1,1457 @@
+{
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=69&sessionOrdinal=20251&billType=SB&billNumber=260": {
+  "status": 200,
+  "body": [
+   {
+    "id": 293748,
+    "fileName": "SB0260_1(1).pdf",
+    "date": "2025-03-12 12:35:48 -0600"
+   },
+   {
+    "id": 300570,
+    "fileName": "SB0260_1(2).pdf",
+    "date": "2025-03-28 16:37:18 -0600"
+   },
+   {
+    "id": 300571,
+    "fileName": "SB0260_1(3).pdf",
+    "date": "2025-03-28 16:37:20 -0600"
+   },
+   {
+    "id": 300572,
+    "fileName": "SB0260_1(4).pdf",
+    "date": "2025-03-28 16:37:23 -0600"
+   },
+   {
+    "id": 300573,
+    "fileName": "SB0260_1(5).pdf",
+    "date": "2025-03-28 16:37:26 -0600"
+   },
+   {
+    "id": 278503,
+    "fileName": "SB0260_1.pdf",
+    "date": "2025-02-03 15:06:05 -0700"
+   },
+   {
+    "id": 300575,
+    "fileName": "SB0260_2(1).pdf",
+    "date": "2025-03-28 16:37:33 -0600"
+   },
+   {
+    "id": 305982,
+    "fileName": "SB0260_2(10).pdf",
+    "date": "2025-04-07 16:06:29 -0600"
+   },
+   {
+    "id": 311362,
+    "fileName": "SB0260_2(11).pdf",
+    "date": "2025-04-15 17:07:02 -0600"
+   },
+   {
+    "id": 312061,
+    "fileName": "SB0260_2(12).pdf",
+    "date": "2025-04-16 13:55:24 -0600"
+   },
+   {
+    "id": 312062,
+    "fileName": "SB0260_2(13).pdf",
+    "date": "2025-04-16 13:55:29 -0600"
+   },
+   {
+    "id": 312063,
+    "fileName": "SB0260_2(14).pdf",
+    "date": "2025-04-16 13:55:33 -0600"
+   },
+   {
+    "id": 312064,
+    "fileName": "SB0260_2(15).pdf",
+    "date": "2025-04-16 13:55:37 -0600"
+   },
+   {
+    "id": 300576,
+    "fileName": "SB0260_2(2).pdf",
+    "date": "2025-03-28 16:37:58 -0600"
+   },
+   {
+    "id": 300577,
+    "fileName": "SB0260_2(3).pdf",
+    "date": "2025-03-28 16:38:00 -0600"
+   },
+   {
+    "id": 300587,
+    "fileName": "SB0260_2(4).pdf",
+    "date": "2025-03-28 16:43:57 -0600"
+   },
+   {
+    "id": 300588,
+    "fileName": "SB0260_2(5).pdf",
+    "date": "2025-03-28 16:45:45 -0600"
+   },
+   {
+    "id": 300595,
+    "fileName": "SB0260_2(6).pdf",
+    "date": "2025-03-28 16:53:47 -0600"
+   },
+   {
+    "id": 300596,
+    "fileName": "SB0260_2(7).pdf",
+    "date": "2025-03-28 16:54:17 -0600"
+   },
+   {
+    "id": 300603,
+    "fileName": "SB0260_2(8).pdf",
+    "date": "2025-03-28 17:00:38 -0600"
+   },
+   {
+    "id": 305387,
+    "fileName": "SB0260_2(9).pdf",
+    "date": "2025-04-05 10:51:23 -0600"
+   },
+   {
+    "id": 300574,
+    "fileName": "SB0260_2.pdf",
+    "date": "2025-03-28 16:37:29 -0600"
+   },
+   {
+    "id": 314659,
+    "fileName": "SB0260_3(1).pdf",
+    "date": "2025-04-22 19:04:54 -0600"
+   },
+   {
+    "id": 314660,
+    "fileName": "SB0260_3(2).pdf",
+    "date": "2025-04-22 19:04:56 -0600"
+   },
+   {
+    "id": 314661,
+    "fileName": "SB0260_3(3).pdf",
+    "date": "2025-04-22 19:04:58 -0600"
+   },
+   {
+    "id": 314662,
+    "fileName": "SB0260_3(4).pdf",
+    "date": "2025-04-22 19:05:02 -0600"
+   },
+   {
+    "id": 312073,
+    "fileName": "SB0260_3.pdf",
+    "date": "2025-04-16 14:13:40 -0600"
+   },
+   {
+    "id": 314664,
+    "fileName": "SB0260_4(1).pdf",
+    "date": "2025-04-22 19:05:11 -0600"
+   },
+   {
+    "id": 318835,
+    "fileName": "SB0260_4(10).pdf",
+    "date": "2025-04-29 13:33:02 -0600"
+   },
+   {
+    "id": 318840,
+    "fileName": "SB0260_4(11).pdf",
+    "date": "2025-04-29 13:34:24 -0600"
+   },
+   {
+    "id": 314665,
+    "fileName": "SB0260_4(2).pdf",
+    "date": "2025-04-22 19:05:33 -0600"
+   },
+   {
+    "id": 314704,
+    "fileName": "SB0260_4(3).pdf",
+    "date": "2025-04-22 21:46:14 -0600"
+   },
+   {
+    "id": 314705,
+    "fileName": "SB0260_4(4).pdf",
+    "date": "2025-04-22 21:48:38 -0600"
+   },
+   {
+    "id": 314706,
+    "fileName": "SB0260_4(5).pdf",
+    "date": "2025-04-22 21:50:21 -0600"
+   },
+   {
+    "id": 314707,
+    "fileName": "SB0260_4(6).pdf",
+    "date": "2025-04-22 21:51:04 -0600"
+   },
+   {
+    "id": 314711,
+    "fileName": "SB0260_4(7).pdf",
+    "date": "2025-04-22 21:54:52 -0600"
+   },
+   {
+    "id": 317642,
+    "fileName": "SB0260_4(8).pdf",
+    "date": "2025-04-24 18:01:05 -0600"
+   },
+   {
+    "id": 318833,
+    "fileName": "SB0260_4(9).pdf",
+    "date": "2025-04-29 13:32:57 -0600"
+   },
+   {
+    "id": 314663,
+    "fileName": "SB0260_4.pdf",
+    "date": "2025-04-22 19:05:05 -0600"
+   },
+   {
+    "id": 318844,
+    "fileName": "SB0260_X(1).pdf",
+    "date": "2025-04-29 13:35:29 -0600"
+   },
+   {
+    "id": 319415,
+    "fileName": "SB0260_X(10).pdf",
+    "date": "2025-04-30 13:25:33 -0600"
+   },
+   {
+    "id": 319416,
+    "fileName": "SB0260_X(11).pdf",
+    "date": "2025-04-30 13:25:37 -0600"
+   },
+   {
+    "id": 321049,
+    "fileName": "SB0260_X(12).pdf",
+    "date": "2025-05-06 15:41:34 -0600"
+   },
+   {
+    "id": 322731,
+    "fileName": "SB0260_X(13).pdf",
+    "date": "2025-05-22 08:38:13 -0600"
+   },
+   {
+    "id": 322732,
+    "fileName": "SB0260_X(14).pdf",
+    "date": "2025-05-22 08:38:15 -0600"
+   },
+   {
+    "id": 322733,
+    "fileName": "SB0260_X(15).pdf",
+    "date": "2025-05-22 08:38:37 -0600"
+   },
+   {
+    "id": 324969,
+    "fileName": "SB0260_X(16).pdf",
+    "date": "2025-06-11 09:32:09 -0600"
+   },
+   {
+    "id": 326806,
+    "fileName": "SB0260_X(17).pdf",
+    "date": "2025-07-16 12:00:01 -0600"
+   },
+   {
+    "id": 319366,
+    "fileName": "SB0260_X(2).pdf",
+    "date": "2025-04-30 12:53:13 -0600"
+   },
+   {
+    "id": 319374,
+    "fileName": "SB0260_X(3).pdf",
+    "date": "2025-04-30 12:57:26 -0600"
+   },
+   {
+    "id": 319375,
+    "fileName": "SB0260_X(4).pdf",
+    "date": "2025-04-30 13:00:14 -0600"
+   },
+   {
+    "id": 319377,
+    "fileName": "SB0260_X(5).pdf",
+    "date": "2025-04-30 13:04:20 -0600"
+   },
+   {
+    "id": 319389,
+    "fileName": "SB0260_X(6).pdf",
+    "date": "2025-04-30 13:12:40 -0600"
+   },
+   {
+    "id": 319405,
+    "fileName": "SB0260_X(7).pdf",
+    "date": "2025-04-30 13:21:30 -0600"
+   },
+   {
+    "id": 319408,
+    "fileName": "SB0260_X(8).pdf",
+    "date": "2025-04-30 13:22:14 -0600"
+   },
+   {
+    "id": 319410,
+    "fileName": "SB0260_X(9).pdf",
+    "date": "2025-04-30 13:22:17 -0600"
+   },
+   {
+    "id": 318842,
+    "fileName": "SB0260_X.pdf",
+    "date": "2025-04-29 13:34:53 -0600"
+   }
+  ]
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=69&sessionOrdinal=20251&billType=SB&billNumber=260": {
+  "status": 200,
+  "body": [
+   {
+    "id": 299731,
+    "fileName": "SB0260.001.001_Amendments-in-Context_final-full.pdf",
+    "date": "2025-03-30 17:59:56 -0600"
+   },
+   {
+    "id": 289605,
+    "fileName": "SB0260.001.002_Amendments-in-Context_final-full.pdf",
+    "date": "2025-02-28 07:50:15 -0700"
+   },
+   {
+    "id": 299896,
+    "fileName": "SB0260.001.004_Amendments-in-Context_final-full.pdf",
+    "date": "2025-03-28 07:34:33 -0600"
+   },
+   {
+    "id": 311137,
+    "fileName": "SB0260.002.001_Amendments-in-Context_final-condensed.pdf",
+    "date": "2025-04-15 14:23:34 -0600"
+   },
+   {
+    "id": 311131,
+    "fileName": "SB0260.002.001_Amendments-in-Context_final-full.pdf",
+    "date": "2025-04-15 14:22:11 -0600"
+   },
+   {
+    "id": 313618,
+    "fileName": "SB0260.003.001_Amendments-in-Context_final-condensed.pdf",
+    "date": "2025-04-19 09:58:28 -0600"
+   },
+   {
+    "id": 313617,
+    "fileName": "SB0260.003.001_Amendments-in-Context_final-full.pdf",
+    "date": "2025-04-19 09:57:30 -0600"
+   }
+  ]
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=69&sessionOrdinal=20251&billType=SB&billNumber=260": {
+  "status": 200,
+  "body": []
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=69&sessionOrdinal=20251&billType=HB&billNumber=477": {
+  "status": 200,
+  "body": [
+   {
+    "id": 282039,
+    "fileName": "HB0477_1(1).pdf",
+    "date": "2025-02-13 13:32:10 -0700"
+   },
+   {
+    "id": 290838,
+    "fileName": "HB0477_1(2).pdf",
+    "date": "2025-03-01 14:02:20 -0700"
+   },
+   {
+    "id": 290839,
+    "fileName": "HB0477_1(3).pdf",
+    "date": "2025-03-01 14:02:21 -0700"
+   },
+   {
+    "id": 290840,
+    "fileName": "HB0477_1(4).pdf",
+    "date": "2025-03-01 14:02:23 -0700"
+   },
+   {
+    "id": 290841,
+    "fileName": "HB0477_1(5).pdf",
+    "date": "2025-03-01 14:02:26 -0700"
+   },
+   {
+    "id": 281654,
+    "fileName": "HB0477_1.pdf",
+    "date": "2025-02-12 14:48:55 -0700"
+   },
+   {
+    "id": 290843,
+    "fileName": "HB0477_2(1).pdf",
+    "date": "2025-03-01 14:02:52 -0700"
+   },
+   {
+    "id": 296894,
+    "fileName": "HB0477_2(10).pdf",
+    "date": "2025-03-21 15:52:10 -0600"
+   },
+   {
+    "id": 290845,
+    "fileName": "HB0477_2(2).pdf",
+    "date": "2025-03-01 14:03:29 -0700"
+   },
+   {
+    "id": 290846,
+    "fileName": "HB0477_2(3).pdf",
+    "date": "2025-03-01 14:03:30 -0700"
+   },
+   {
+    "id": 290927,
+    "fileName": "HB0477_2(4).pdf",
+    "date": "2025-03-01 14:23:06 -0700"
+   },
+   {
+    "id": 290930,
+    "fileName": "HB0477_2(5).pdf",
+    "date": "2025-03-01 14:24:55 -0700"
+   },
+   {
+    "id": 291010,
+    "fileName": "HB0477_2(6).pdf",
+    "date": "2025-03-01 15:03:19 -0700"
+   },
+   {
+    "id": 296891,
+    "fileName": "HB0477_2(7).pdf",
+    "date": "2025-03-21 15:52:01 -0600"
+   },
+   {
+    "id": 296892,
+    "fileName": "HB0477_2(8).pdf",
+    "date": "2025-03-21 15:52:02 -0600"
+   },
+   {
+    "id": 296893,
+    "fileName": "HB0477_2(9).pdf",
+    "date": "2025-03-21 15:52:05 -0600"
+   },
+   {
+    "id": 290842,
+    "fileName": "HB0477_2.pdf",
+    "date": "2025-03-01 14:02:28 -0700"
+   },
+   {
+    "id": 296896,
+    "fileName": "HB0477_3(1).pdf",
+    "date": "2025-03-21 15:52:20 -0600"
+   },
+   {
+    "id": 298461,
+    "fileName": "HB0477_3(10).pdf",
+    "date": "2025-03-25 16:01:11 -0600"
+   },
+   {
+    "id": 307657,
+    "fileName": "HB0477_3(11).pdf",
+    "date": "2025-04-09 17:41:39 -0600"
+   },
+   {
+    "id": 307976,
+    "fileName": "HB0477_3(12).pdf",
+    "date": "2025-04-10 11:12:53 -0600"
+   },
+   {
+    "id": 307977,
+    "fileName": "HB0477_3(13).pdf",
+    "date": "2025-04-10 11:12:55 -0600"
+   },
+   {
+    "id": 307978,
+    "fileName": "HB0477_3(14).pdf",
+    "date": "2025-04-10 11:12:57 -0600"
+   },
+   {
+    "id": 307979,
+    "fileName": "HB0477_3(15).pdf",
+    "date": "2025-04-10 11:13:00 -0600"
+   },
+   {
+    "id": 296897,
+    "fileName": "HB0477_3(2).pdf",
+    "date": "2025-03-21 15:52:51 -0600"
+   },
+   {
+    "id": 296898,
+    "fileName": "HB0477_3(3).pdf",
+    "date": "2025-03-21 15:52:52 -0600"
+   },
+   {
+    "id": 296910,
+    "fileName": "HB0477_3(4).pdf",
+    "date": "2025-03-21 16:04:16 -0600"
+   },
+   {
+    "id": 296912,
+    "fileName": "HB0477_3(5).pdf",
+    "date": "2025-03-21 16:06:26 -0600"
+   },
+   {
+    "id": 296913,
+    "fileName": "HB0477_3(6).pdf",
+    "date": "2025-03-21 16:07:32 -0600"
+   },
+   {
+    "id": 296914,
+    "fileName": "HB0477_3(7).pdf",
+    "date": "2025-03-21 16:08:40 -0600"
+   },
+   {
+    "id": 296915,
+    "fileName": "HB0477_3(8).pdf",
+    "date": "2025-03-21 16:09:02 -0600"
+   },
+   {
+    "id": 296920,
+    "fileName": "HB0477_3(9).pdf",
+    "date": "2025-03-21 16:15:04 -0600"
+   },
+   {
+    "id": 296895,
+    "fileName": "HB0477_3.pdf",
+    "date": "2025-03-21 15:52:12 -0600"
+   },
+   {
+    "id": 308003,
+    "fileName": "HB0477_4(1).pdf",
+    "date": "2025-04-10 11:34:06 -0600"
+   },
+   {
+    "id": 308009,
+    "fileName": "HB0477_4(2).pdf",
+    "date": "2025-04-10 11:42:01 -0600"
+   },
+   {
+    "id": 309330,
+    "fileName": "HB0477_4(3).pdf",
+    "date": "2025-04-12 13:29:21 -0600"
+   },
+   {
+    "id": 309331,
+    "fileName": "HB0477_4(4).pdf",
+    "date": "2025-04-12 13:29:23 -0600"
+   },
+   {
+    "id": 309332,
+    "fileName": "HB0477_4(5).pdf",
+    "date": "2025-04-12 13:29:25 -0600"
+   },
+   {
+    "id": 309333,
+    "fileName": "HB0477_4(6).pdf",
+    "date": "2025-04-12 13:29:27 -0600"
+   },
+   {
+    "id": 308001,
+    "fileName": "HB0477_4.pdf",
+    "date": "2025-04-10 11:33:40 -0600"
+   },
+   {
+    "id": 309938,
+    "fileName": "HB0477_5(1).pdf",
+    "date": "2025-04-14 13:40:40 -0600"
+   },
+   {
+    "id": 310019,
+    "fileName": "HB0477_5(2).pdf",
+    "date": "2025-04-14 15:44:01 -0600"
+   },
+   {
+    "id": 310020,
+    "fileName": "HB0477_5(3).pdf",
+    "date": "2025-04-14 15:45:09 -0600"
+   },
+   {
+    "id": 309334,
+    "fileName": "HB0477_5.pdf",
+    "date": "2025-04-12 13:37:41 -0600"
+   },
+   {
+    "id": 311637,
+    "fileName": "HB0477_X(1).pdf",
+    "date": "2025-04-16 08:50:35 -0600"
+   },
+   {
+    "id": 324264,
+    "fileName": "HB0477_X(10).pdf",
+    "date": "2025-06-11 09:05:16 -0600"
+   },
+   {
+    "id": 326426,
+    "fileName": "HB0477_X(11).pdf",
+    "date": "2025-07-16 11:36:24 -0600"
+   },
+   {
+    "id": 311640,
+    "fileName": "HB0477_X(2).pdf",
+    "date": "2025-04-16 08:51:04 -0600"
+   },
+   {
+    "id": 311644,
+    "fileName": "HB0477_X(3).pdf",
+    "date": "2025-04-16 08:53:02 -0600"
+   },
+   {
+    "id": 311647,
+    "fileName": "HB0477_X(4).pdf",
+    "date": "2025-04-16 08:54:52 -0600"
+   },
+   {
+    "id": 311652,
+    "fileName": "HB0477_X(5).pdf",
+    "date": "2025-04-16 08:56:20 -0600"
+   },
+   {
+    "id": 311653,
+    "fileName": "HB0477_X(6).pdf",
+    "date": "2025-04-16 08:56:22 -0600"
+   },
+   {
+    "id": 311804,
+    "fileName": "HB0477_X(7).pdf",
+    "date": "2025-04-16 09:51:09 -0600"
+   },
+   {
+    "id": 317054,
+    "fileName": "HB0477_X(8).pdf",
+    "date": "2025-04-24 13:07:03 -0600"
+   },
+   {
+    "id": 320621,
+    "fileName": "HB0477_X(9).pdf",
+    "date": "2025-05-06 15:27:43 -0600"
+   },
+   {
+    "id": 311050,
+    "fileName": "HB0477_X.pdf",
+    "date": "2025-04-15 13:36:22 -0600"
+   }
+  ]
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=69&sessionOrdinal=20251&billType=HB&billNumber=477": {
+  "status": 200,
+  "body": [
+   {
+    "id": 289920,
+    "fileName": "HB0477.001.001_Amendments-in-Context_final-full.pdf",
+    "date": "2025-03-30 17:56:38 -0600"
+   },
+   {
+    "id": 296611,
+    "fileName": "HB0477.002.002_Amendments-in-Context_final-full.pdf",
+    "date": "2025-03-30 17:43:43 -0600"
+   },
+   {
+    "id": 296614,
+    "fileName": "HB0477.002.002_Amendments-in-Context_final-not condensed(1).pdf",
+    "date": "2025-03-21 11:56:19 -0600"
+   },
+   {
+    "id": 296612,
+    "fileName": "HB0477.002.002_Amendments-in-Context_final-not condensed.pdf",
+    "date": "2025-03-21 11:54:36 -0600"
+   },
+   {
+    "id": 296647,
+    "fileName": "HB0477.002.003_Amendments-in-Context_final-full.pdf",
+    "date": "2025-03-21 12:33:30 -0600"
+   },
+   {
+    "id": 296646,
+    "fileName": "HB0477.002.003_Amendments-in-Context_final-not condensed.pdf",
+    "date": "2025-03-21 12:33:07 -0600"
+   },
+   {
+    "id": 307105,
+    "fileName": "HB0477.003.001_Amendments-in-Context_final-condensed.pdf",
+    "date": "2025-04-09 11:42:33 -0600"
+   },
+   {
+    "id": 307104,
+    "fileName": "HB0477.003.001_Amendments-in-Context_final-full.pdf",
+    "date": "2025-04-09 11:41:56 -0600"
+   },
+   {
+    "id": 308267,
+    "fileName": "HB0477.004.001_Amendments-in-Context_final-condensed.pdf",
+    "date": "2025-04-10 15:53:32 -0600"
+   },
+   {
+    "id": 308265,
+    "fileName": "HB0477.004.001_Amendments-in-Context_final-full.pdf",
+    "date": "2025-04-10 15:53:21 -0600"
+   }
+  ]
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=69&sessionOrdinal=20251&billType=HB&billNumber=477": {
+  "status": 200,
+  "body": [
+   {
+    "id": 320121,
+    "fileName": "25.05.02 - Ltr. to Speaker Ler, President Regier - HB 477 (1).pdf",
+    "date": "2025-05-06 12:33:23 -0600"
+   },
+   {
+    "id": 325457,
+    "fileName": "HB0477GovVeto.pdf",
+    "date": "2025-06-26 13:32:40 -0600"
+   }
+  ]
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=69&sessionOrdinal=20251&billType=SB&billNumber=1": {
+  "status": 200,
+  "body": [
+   {
+    "id": 274355,
+    "fileName": "SB0001_1(1).pdf",
+    "date": "2025-01-24 15:00:52 -0700"
+   },
+   {
+    "id": 274356,
+    "fileName": "SB0001_1(2).pdf",
+    "date": "2025-01-24 15:00:53 -0700"
+   },
+   {
+    "id": 274357,
+    "fileName": "SB0001_1(3).pdf",
+    "date": "2025-01-24 15:00:56 -0700"
+   },
+   {
+    "id": 274358,
+    "fileName": "SB0001_1(4).pdf",
+    "date": "2025-01-24 15:01:00 -0700"
+   },
+   {
+    "id": 275562,
+    "fileName": "SB0001_1(5).pdf",
+    "date": "2025-01-27 20:34:56 -0700"
+   },
+   {
+    "id": 276603,
+    "fileName": "SB0001_1(6).pdf",
+    "date": "2025-01-28 22:32:38 -0700"
+   },
+   {
+    "id": 266353,
+    "fileName": "SB0001_1.pdf",
+    "date": "2024-11-26 14:09:59 -0700"
+   },
+   {
+    "id": 274360,
+    "fileName": "SB0001_2(1).pdf",
+    "date": "2025-01-24 15:01:06 -0700"
+   },
+   {
+    "id": 281286,
+    "fileName": "SB0001_2(10).pdf",
+    "date": "2025-02-12 10:38:52 -0700"
+   },
+   {
+    "id": 281892,
+    "fileName": "SB0001_2(11).pdf",
+    "date": "2025-02-13 09:56:13 -0700"
+   },
+   {
+    "id": 295304,
+    "fileName": "SB0001_2(12).pdf",
+    "date": "2025-03-19 10:06:10 -0600"
+   },
+   {
+    "id": 274361,
+    "fileName": "SB0001_2(2).pdf",
+    "date": "2025-01-24 15:02:11 -0700"
+   },
+   {
+    "id": 274371,
+    "fileName": "SB0001_2(3).pdf",
+    "date": "2025-01-24 15:15:50 -0700"
+   },
+   {
+    "id": 274372,
+    "fileName": "SB0001_2(4).pdf",
+    "date": "2025-01-24 15:16:39 -0700"
+   },
+   {
+    "id": 274373,
+    "fileName": "SB0001_2(5).pdf",
+    "date": "2025-01-24 15:16:40 -0700"
+   },
+   {
+    "id": 274376,
+    "fileName": "SB0001_2(6).pdf",
+    "date": "2025-01-24 15:18:10 -0700"
+   },
+   {
+    "id": 275566,
+    "fileName": "SB0001_2(7).pdf",
+    "date": "2025-01-27 20:35:10 -0700"
+   },
+   {
+    "id": 276069,
+    "fileName": "SB0001_2(8).pdf",
+    "date": "2025-01-28 16:13:21 -0700"
+   },
+   {
+    "id": 276756,
+    "fileName": "SB0001_2(9).pdf",
+    "date": "2025-01-28 22:42:39 -0700"
+   },
+   {
+    "id": 274359,
+    "fileName": "SB0001_2.pdf",
+    "date": "2025-01-24 15:01:01 -0700"
+   },
+   {
+    "id": 295303,
+    "fileName": "SB0001_3.pdf",
+    "date": "2025-03-19 10:06:09 -0600"
+   },
+   {
+    "id": 295306,
+    "fileName": "SB0001_X(1).pdf",
+    "date": "2025-03-19 10:06:37 -0600"
+   },
+   {
+    "id": 305166,
+    "fileName": "SB0001_X(10).pdf",
+    "date": "2025-04-04 18:32:40 -0600"
+   },
+   {
+    "id": 310726,
+    "fileName": "SB0001_X(11).pdf",
+    "date": "2025-04-15 13:27:01 -0600"
+   },
+   {
+    "id": 316664,
+    "fileName": "SB0001_X(12).pdf",
+    "date": "2025-04-24 12:55:33 -0600"
+   },
+   {
+    "id": 320249,
+    "fileName": "SB0001_X(13).pdf",
+    "date": "2025-05-06 15:17:35 -0600"
+   },
+   {
+    "id": 324117,
+    "fileName": "SB0001_X(14).pdf",
+    "date": "2025-06-11 08:59:43 -0600"
+   },
+   {
+    "id": 325587,
+    "fileName": "SB0001_X(15).pdf",
+    "date": "2025-07-16 10:47:40 -0600"
+   },
+   {
+    "id": 327238,
+    "fileName": "SB0001_X(16).pdf",
+    "date": "2025-08-05 18:32:03 -0600"
+   },
+   {
+    "id": 295390,
+    "fileName": "SB0001_X(2).pdf",
+    "date": "2025-03-19 11:12:51 -0600"
+   },
+   {
+    "id": 295428,
+    "fileName": "SB0001_X(3).pdf",
+    "date": "2025-03-19 12:08:30 -0600"
+   },
+   {
+    "id": 295429,
+    "fileName": "SB0001_X(4).pdf",
+    "date": "2025-03-19 12:08:51 -0600"
+   },
+   {
+    "id": 296088,
+    "fileName": "SB0001_X(5).pdf",
+    "date": "2025-03-20 14:28:22 -0600"
+   },
+   {
+    "id": 296089,
+    "fileName": "SB0001_X(6).pdf",
+    "date": "2025-03-20 14:28:23 -0600"
+   },
+   {
+    "id": 296129,
+    "fileName": "SB0001_X(7).pdf",
+    "date": "2025-03-20 15:08:48 -0600"
+   },
+   {
+    "id": 305164,
+    "fileName": "SB0001_X(8).pdf",
+    "date": "2025-04-04 18:32:37 -0600"
+   },
+   {
+    "id": 305165,
+    "fileName": "SB0001_X(9).pdf",
+    "date": "2025-04-04 18:32:39 -0600"
+   },
+   {
+    "id": 295305,
+    "fileName": "SB0001_X.pdf",
+    "date": "2025-03-19 10:06:12 -0600"
+   }
+  ]
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=69&sessionOrdinal=20251&billType=SB&billNumber=1": {
+  "status": 200,
+  "body": [
+   {
+    "id": 273396,
+    "fileName": "SB0001.001.003_Amendments-in-Context_final-full(1).pdf",
+    "date": "2025-01-22 07:34:57 -0700"
+   },
+   {
+    "id": 273394,
+    "fileName": "SB0001.001.003_Amendments-in-Context_final-full.pdf",
+    "date": "2025-01-22 07:33:53 -0700"
+   },
+   {
+    "id": 273789,
+    "fileName": "SB0001.001.005_Amendments-in-Context_final-full.pdf",
+    "date": "2025-03-30 17:48:20 -0600"
+   }
+  ]
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=69&sessionOrdinal=20251&billType=SB&billNumber=1": {
+  "status": 200,
+  "body": []
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=69&sessionOrdinal=20251&billType=SB&billNumber=116": {
+  "status": 200,
+  "body": [
+   {
+    "id": 272175,
+    "fileName": "SB0116_1(1).pdf",
+    "date": "2025-01-16 14:40:24 -0700"
+   },
+   {
+    "id": 319420,
+    "fileName": "SB0116_1(10).pdf",
+    "date": "2025-04-30 13:32:41 -0600"
+   },
+   {
+    "id": 275293,
+    "fileName": "SB0116_1(2).pdf",
+    "date": "2025-01-27 20:19:55 -0700"
+   },
+   {
+    "id": 276349,
+    "fileName": "SB0116_1(3).pdf",
+    "date": "2025-01-28 22:17:26 -0700"
+   },
+   {
+    "id": 282710,
+    "fileName": "SB0116_1(4).pdf",
+    "date": "2025-02-14 15:34:07 -0700"
+   },
+   {
+    "id": 282711,
+    "fileName": "SB0116_1(5).pdf",
+    "date": "2025-02-14 15:34:13 -0700"
+   },
+   {
+    "id": 282712,
+    "fileName": "SB0116_1(6).pdf",
+    "date": "2025-02-14 15:34:16 -0700"
+   },
+   {
+    "id": 282713,
+    "fileName": "SB0116_1(7).pdf",
+    "date": "2025-02-14 15:34:17 -0700"
+   },
+   {
+    "id": 319407,
+    "fileName": "SB0116_1(8).pdf",
+    "date": "2025-04-30 13:21:51 -0600"
+   },
+   {
+    "id": 319417,
+    "fileName": "SB0116_1(9).pdf",
+    "date": "2025-04-30 13:26:08 -0600"
+   },
+   {
+    "id": 270475,
+    "fileName": "SB0116_1.pdf",
+    "date": "2025-01-09 15:24:51 -0700"
+   },
+   {
+    "id": 282715,
+    "fileName": "SB0116_2(1).pdf",
+    "date": "2025-02-14 15:34:29 -0700"
+   },
+   {
+    "id": 299423,
+    "fileName": "SB0116_2(10).pdf",
+    "date": "2025-03-27 10:52:58 -0600"
+   },
+   {
+    "id": 303772,
+    "fileName": "SB0116_2(11).pdf",
+    "date": "2025-04-03 10:23:18 -0600"
+   },
+   {
+    "id": 303774,
+    "fileName": "SB0116_2(12).pdf",
+    "date": "2025-04-03 10:24:30 -0600"
+   },
+   {
+    "id": 282718,
+    "fileName": "SB0116_2(2).pdf",
+    "date": "2025-02-14 15:35:08 -0700"
+   },
+   {
+    "id": 282719,
+    "fileName": "SB0116_2(3).pdf",
+    "date": "2025-02-14 15:35:14 -0700"
+   },
+   {
+    "id": 282780,
+    "fileName": "SB0116_2(4).pdf",
+    "date": "2025-02-14 16:03:30 -0700"
+   },
+   {
+    "id": 282781,
+    "fileName": "SB0116_2(5).pdf",
+    "date": "2025-02-14 16:04:46 -0700"
+   },
+   {
+    "id": 282782,
+    "fileName": "SB0116_2(6).pdf",
+    "date": "2025-02-14 16:06:53 -0700"
+   },
+   {
+    "id": 285490,
+    "fileName": "SB0116_2(7).pdf",
+    "date": "2025-02-21 11:21:25 -0700"
+   },
+   {
+    "id": 285491,
+    "fileName": "SB0116_2(8).pdf",
+    "date": "2025-02-21 11:21:49 -0700"
+   },
+   {
+    "id": 285493,
+    "fileName": "SB0116_2(9).pdf",
+    "date": "2025-02-21 11:23:21 -0700"
+   },
+   {
+    "id": 282714,
+    "fileName": "SB0116_2.pdf",
+    "date": "2025-02-14 15:34:21 -0700"
+   },
+   {
+    "id": 319390,
+    "fileName": "SB0116_4(1).pdf",
+    "date": "2025-04-30 13:13:45 -0600"
+   },
+   {
+    "id": 319392,
+    "fileName": "SB0116_4(2).pdf",
+    "date": "2025-04-30 13:14:12 -0600"
+   },
+   {
+    "id": 319393,
+    "fileName": "SB0116_4(3).pdf",
+    "date": "2025-04-30 13:14:54 -0600"
+   },
+   {
+    "id": 319402,
+    "fileName": "SB0116_4(4).pdf",
+    "date": "2025-04-30 13:21:06 -0600"
+   },
+   {
+    "id": 319220,
+    "fileName": "SB0116_4.pdf",
+    "date": "2025-04-30 09:54:24 -0600"
+   },
+   {
+    "id": 319379,
+    "fileName": "SB0116_5(1).pdf",
+    "date": "2025-04-30 13:05:14 -0600"
+   },
+   {
+    "id": 319383,
+    "fileName": "SB0116_5(2).pdf",
+    "date": "2025-04-30 13:07:18 -0600"
+   },
+   {
+    "id": 319384,
+    "fileName": "SB0116_5(3).pdf",
+    "date": "2025-04-30 13:08:04 -0600"
+   },
+   {
+    "id": 319387,
+    "fileName": "SB0116_5(4).pdf",
+    "date": "2025-04-30 13:09:07 -0600"
+   },
+   {
+    "id": 319388,
+    "fileName": "SB0116_5(5).pdf",
+    "date": "2025-04-30 13:09:29 -0600"
+   },
+   {
+    "id": 319378,
+    "fileName": "SB0116_5.pdf",
+    "date": "2025-04-30 13:05:13 -0600"
+   },
+   {
+    "id": 303777,
+    "fileName": "SB0116_X(1).pdf",
+    "date": "2025-04-03 10:24:57 -0600"
+   },
+   {
+    "id": 318196,
+    "fileName": "SB0116_X(10).pdf",
+    "date": "2025-04-28 11:41:18 -0600"
+   },
+   {
+    "id": 318197,
+    "fileName": "SB0116_X(11).pdf",
+    "date": "2025-04-28 11:41:45 -0600"
+   },
+   {
+    "id": 318310,
+    "fileName": "SB0116_X(12).pdf",
+    "date": "2025-04-28 12:44:44 -0600"
+   },
+   {
+    "id": 318311,
+    "fileName": "SB0116_X(13).pdf",
+    "date": "2025-04-28 12:44:49 -0600"
+   },
+   {
+    "id": 318934,
+    "fileName": "SB0116_X(14).pdf",
+    "date": "2025-04-29 14:24:37 -0600"
+   },
+   {
+    "id": 319219,
+    "fileName": "SB0116_X(15).pdf",
+    "date": "2025-04-30 09:54:02 -0600"
+   },
+   {
+    "id": 319274,
+    "fileName": "SB0116_X(16).pdf",
+    "date": "2025-04-30 10:40:51 -0600"
+   },
+   {
+    "id": 319344,
+    "fileName": "SB0116_X(17).pdf",
+    "date": "2025-04-30 12:01:03 -0600"
+   },
+   {
+    "id": 319370,
+    "fileName": "SB0116_X(18).pdf",
+    "date": "2025-04-30 12:56:02 -0600"
+   },
+   {
+    "id": 319477,
+    "fileName": "SB0116_X(19).pdf",
+    "date": "2025-04-30 14:03:15 -0600"
+   },
+   {
+    "id": 303778,
+    "fileName": "SB0116_X(2).pdf",
+    "date": "2025-04-03 10:24:58 -0600"
+   },
+   {
+    "id": 319527,
+    "fileName": "SB0116_X(20).pdf",
+    "date": "2025-04-30 15:17:57 -0600"
+   },
+   {
+    "id": 319534,
+    "fileName": "SB0116_X(21).pdf",
+    "date": "2025-04-30 15:35:59 -0600"
+   },
+   {
+    "id": 319535,
+    "fileName": "SB0116_X(22).pdf",
+    "date": "2025-05-01 06:32:17 -0600"
+   },
+   {
+    "id": 319536,
+    "fileName": "SB0116_X(23).pdf",
+    "date": "2025-05-01 06:32:38 -0600"
+   },
+   {
+    "id": 321054,
+    "fileName": "SB0116_X(24).pdf",
+    "date": "2025-05-06 15:41:45 -0600"
+   },
+   {
+    "id": 324472,
+    "fileName": "SB0116_X(25).pdf",
+    "date": "2025-06-11 09:13:46 -0600"
+   },
+   {
+    "id": 325359,
+    "fileName": "SB0116_X(26).pdf",
+    "date": "2025-06-18 08:25:20 -0600"
+   },
+   {
+    "id": 325360,
+    "fileName": "SB0116_X(27).pdf",
+    "date": "2025-06-18 08:25:23 -0600"
+   },
+   {
+    "id": 325361,
+    "fileName": "SB0116_X(28).pdf",
+    "date": "2025-06-18 08:25:26 -0600"
+   },
+   {
+    "id": 325669,
+    "fileName": "SB0116_X(29).pdf",
+    "date": "2025-07-16 10:51:35 -0600"
+   },
+   {
+    "id": 303847,
+    "fileName": "SB0116_X(3).pdf",
+    "date": "2025-04-03 11:35:29 -0600"
+   },
+   {
+    "id": 327274,
+    "fileName": "SB0116_X(30).pdf",
+    "date": "2025-08-05 18:36:32 -0600"
+   },
+   {
+    "id": 303848,
+    "fileName": "SB0116_X(4).pdf",
+    "date": "2025-04-03 11:38:01 -0600"
+   },
+   {
+    "id": 303849,
+    "fileName": "SB0116_X(5).pdf",
+    "date": "2025-04-03 11:38:02 -0600"
+   },
+   {
+    "id": 303929,
+    "fileName": "SB0116_X(6).pdf",
+    "date": "2025-04-03 12:59:21 -0600"
+   },
+   {
+    "id": 303930,
+    "fileName": "SB0116_X(7).pdf",
+    "date": "2025-04-03 12:59:22 -0600"
+   },
+   {
+    "id": 310707,
+    "fileName": "SB0116_X(8).pdf",
+    "date": "2025-04-15 13:26:12 -0600"
+   },
+   {
+    "id": 316646,
+    "fileName": "SB0116_X(9).pdf",
+    "date": "2025-04-24 12:55:03 -0600"
+   },
+   {
+    "id": 303775,
+    "fileName": "SB0116_X.pdf",
+    "date": "2025-04-03 10:24:33 -0600"
+   }
+  ]
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=69&sessionOrdinal=20251&billType=SB&billNumber=116": {
+  "status": 200,
+  "body": [
+   {
+    "id": 274144,
+    "fileName": "SB0116.001.001_Amendments-in-Context_final-condensed.pdf",
+    "date": "2025-01-24 11:20:38 -0700"
+   },
+   {
+    "id": 274143,
+    "fileName": "SB0116.001.001_Amendments-in-Context_final-full.pdf",
+    "date": "2025-03-30 17:52:03 -0600"
+   },
+   {
+    "id": 280316,
+    "fileName": "SB0116.001.002_Amendments-in-Context_final-full(1).pdf",
+    "date": "2025-02-09 07:36:14 -0700"
+   },
+   {
+    "id": 282436,
+    "fileName": "SB0116.001.002_Amendments-in-Context_final-full(2).pdf",
+    "date": "2025-02-14 11:14:56 -0700"
+   },
+   {
+    "id": 280315,
+    "fileName": "SB0116.001.002_Amendments-in-Context_final-full.pdf",
+    "date": "2025-02-09 07:36:13 -0700"
+   },
+   {
+    "id": 292221,
+    "fileName": "SB0116.002.001_Amendments-in-Context_final-full(1).pdf",
+    "date": "2025-03-04 13:57:40 -0700"
+   },
+   {
+    "id": 284166,
+    "fileName": "SB0116.002.001_Amendments-in-Context_final-full.pdf",
+    "date": "2025-02-19 10:24:21 -0700"
+   },
+   {
+    "id": 284165,
+    "fileName": "SB0116.002.001_Amendments-in-Context_final-not condensed.pdf",
+    "date": "2025-02-19 10:23:31 -0700"
+   },
+   {
+    "id": 299221,
+    "fileName": "SB0116.002.002_Amendments-in-Context_final-condensed.pdf",
+    "date": "2025-03-26 19:42:46 -0600"
+   },
+   {
+    "id": 299220,
+    "fileName": "SB0116.002.002_Amendments-in-Context_final-full.pdf",
+    "date": "2025-03-26 19:41:42 -0600"
+   },
+   {
+    "id": 302025,
+    "fileName": "SB0116.002.005_Amendments-in-Context_final-condensed.pdf",
+    "date": "2025-04-01 09:22:58 -0600"
+   },
+   {
+    "id": 302024,
+    "fileName": "SB0116.002.005_Amendments-in-Context_final-full.pdf",
+    "date": "2025-04-01 09:22:23 -0600"
+   },
+   {
+    "id": 313359,
+    "fileName": "SB0116.003.001_Amendments-in-Context_final-full.pdf",
+    "date": "2025-04-18 11:51:48 -0600"
+   }
+  ]
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=69&sessionOrdinal=20251&billType=SB&billNumber=116": {
+  "status": 200,
+  "body": []
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=69&sessionOrdinal=20251&billType=HB&billNumber=2": {
+  "status": 200,
+  "body": [
+   {
+    "id": 300485,
+    "fileName": "HB0002.002.004.pdf",
+    "date": "2025-03-28 15:44:02 -0600"
+   },
+   {
+    "id": 304188,
+    "fileName": "HB0002.003.002.pdf",
+    "date": "2025-04-03 15:46:10 -0600"
+   },
+   {
+    "id": 310300,
+    "fileName": "HB0002.004.002.pdf",
+    "date": "2025-04-15 08:32:48 -0600"
+   },
+   {
+    "id": 314436,
+    "fileName": "HB0002.005.003.pdf",
+    "date": "2025-04-22 14:21:17 -0600"
+   },
+   {
+    "id": 294343,
+    "fileName": "HB0002.AP.003.pdf",
+    "date": "2025-03-17 07:06:48 -0600"
+   },
+   {
+    "id": 327209,
+    "fileName": "HB0002_0(1).pdf",
+    "date": "2025-08-05 18:27:46 -0600"
+   },
+   {
+    "id": 315354,
+    "fileName": "HB0002_0.pdf",
+    "date": "2025-04-23 17:16:18 -0600"
+   },
+   {
+    "id": 269366,
+    "fileName": "HB0002_1.pdf",
+    "date": "2024-12-20 12:43:17 -0700"
+   },
+   {
+    "id": 321354,
+    "fileName": "HB0002_X-pre_veto.pdf",
+    "date": "2025-05-08 15:19:34 -0600"
+   },
+   {
+    "id": 327081,
+    "fileName": "HB0002_X.pdf",
+    "date": "2025-08-05 10:12:48 -0600"
+   }
+  ]
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=69&sessionOrdinal=20251&billType=HB&billNumber=2": {
+  "status": 200,
+  "body": [
+   {
+    "id": 297227,
+    "fileName": "HB0002.002.001.A.001_Amendments-in-Context_final-full.pdf",
+    "date": "2025-04-22 15:03:48 -0600"
+   },
+   {
+    "id": 297193,
+    "fileName": "HB0002.002.001.A.002_Amendments-in-Context_final-full.pdf",
+    "date": "2025-04-22 15:00:38 -0600"
+   },
+   {
+    "id": 297236,
+    "fileName": "HB0002.002.001.A.003_Amendments-in-Context_final-full.pdf",
+    "date": "2025-04-22 15:00:28 -0600"
+   },
+   {
+    "id": 297186,
+    "fileName": "HB0002.002.001.A.004_Amendments-in-Context_final-full.pdf",
+    "date": "2025-04-22 15:00:35 -0600"
+   },
+   {
+    "id": 297235,
+    "fileName": "HB0002.002.001.A.005_Amendments-in-Context_final-full.pdf",
+    "date": "2025-04-22 15:00:25 -0600"
+   }
+  ]
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=69&sessionOrdinal=20251&billType=HB&billNumber=2": {
+  "status": 200,
+  "body": [
+   {
+    "id": 325401,
+    "fileName": "HB0002GovVeto(1).pdf",
+    "date": "2025-06-20 17:31:48 -0600"
+   },
+   {
+    "id": 325400,
+    "fileName": "HB0002GovVeto.pdf",
+    "date": "2025-06-20 17:31:39 -0600"
+   }
+  ]
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillVersions?legislatureOrdinal=70&sessionOrdinal=20271&billType=HB&billNumber=16": {
+  "status": 200,
+  "body": [
+   {
+    "id": 16809565,
+    "fileName": "HB0016_1.pdf",
+    "date": "2026-11-16 16:14:39 -0700"
+   }
+  ]
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillAmendments?legislatureOrdinal=70&sessionOrdinal=20271&billType=HB&billNumber=16": {
+  "status": 200,
+  "body": []
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillOther?legislatureOrdinal=70&sessionOrdinal=20271&billType=HB&billNumber=16": {
+  "status": 200,
+  "body": []
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillLcs?legislatureOrdinal=70&sessionOrdinal=20271&lcnumber=LC0382": {
+  "status": 200,
+  "body": [
+   {
+    "id": 16602072,
+    "fileName": "LC0382.pdf",
+    "date": "2026-11-16 16:14:40 -0700"
+   }
+  ]
+ },
+ "https://api.legmt.gov/docs/v1/documents/getBillLcs?legislatureOrdinal=69&sessionOrdinal=20251&lcnumber=LC3227": {
+  "status": 200,
+  "body": [
+   {
+    "id": 276884,
+    "fileName": "LC3227.pdf",
+    "date": "2025-05-22 08:39:02 -0600"
+   }
+  ]
+ }
+}
