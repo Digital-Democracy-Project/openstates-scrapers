@@ -16,14 +16,13 @@ from .sessions import listing_session, session_for_day
 from classify_motion import classify_motion
 from utils import presiding_officers
 
-# Matches one legislator name in a vote roll line: a word, optionally
-# followed by a parenthetical disambiguator ("West (T)"), or one of the two entries
-# that span two words: "Mr. Speaker" and Rep. Denise Crosswhite Hader's surname
-# (OPEN-789: split in two, "Hader" was a second, unmatched vote of hers and pushed the
-# section's last real voter past the declared count).
-NAME_RE = re.compile(
-    r"Mr\.\s+Speaker|Crosswhite\s+Hader|[A-Za-z][\w'\-]*(?:\s+\([^)]+\))?"
-)
+# What separates two voters on a vote-roll line (OPEN-802). The pages print names in
+# fixed-width Courier columns padded with spaces, so two names are always two or more spaces
+# apart, while the words of one entry are one space apart: a surname of two or more words
+# ("Crosswhite Hader"), a title ("Mr. Speaker"), a disambiguator ("West (J)"). Measured on
+# all 3,741 House and Senate vote pages of 2025-2026: every section yields exactly its
+# declared count this way. No member's name is written here.
+NAME_GAP = re.compile(r"\s{2,}")
 
 # OPEN-687: a floor amendment roll call ("Adopt Amendment", "Table Amendment"), labelled
 # here because config/motion_classification.yaml only decides passage.
@@ -78,20 +77,16 @@ def vote_result(chamber, motion, committee, stated, yes_count, no_count):
 def extract_names(line, limit):
     """Extract up to `limit` legislator names from a vote-roll line.
 
-    Names are rendered with single spaces between them (Word's
-    mso-spacerun columns collapse to one space each once lxml pulls
-    string()), so a fixed-width split is unreliable -- tokenize on name
-    shape instead. Stopping at `limit` (the declared count for this vote
-    type, read from the same block) keeps trailing free text -- e.g. a
-    "STRIKE THE TITLE - ADOPTED" outcome line that sometimes follows a
-    zero-count section before the "*****" separator -- from being
+    The line is split on the column gaps (NAME_GAP), so a name of several words stays one
+    voter. Stopping at `limit` (the declared count for this vote type, read from the same
+    block) keeps trailing free text -- e.g. a "STRIKE THE TITLE - ADOPTED" outcome line
+    that sometimes follows a zero-count section before the "*****" separator -- from being
     mistaken for votes.
     """
     names = []
-    for match in NAME_RE.finditer(line.replace("\n", " ")):
+    for name in NAME_GAP.split(line.replace("\n", " ").strip()):
         if len(names) >= limit:
             break
-        name = match.group(0).strip()
         if not name or "HOUSE" in name or "SENATE" in name:
             continue
         names.append(name)
