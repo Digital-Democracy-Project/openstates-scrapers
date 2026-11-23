@@ -10,6 +10,7 @@ from openstates.exceptions import EmptyScrape
 
 from classify_motion import classify_motion
 
+from .bills import RETRY_ATTEMPTS
 from .sessions import is_regular, of_general_assembly, ordinal, session_for_journal
 
 # OPEN-699: a roll call on an amendment ("Shall amendment H-1011 be adopted?", "Shall the rules be
@@ -46,6 +47,11 @@ def link_to_general_assembly(vote, sessions):
 
 
 class IAVoteScraper(Scraper):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # OPEN-797: the same site and the same retry budget as the bills (see bills.py)
+        self.retry_attempts = RETRY_ATTEMPTS
+
     def scrape(self, chamber=None, session=None):
         event_count = 0
         sessions = self.jurisdiction.legislative_sessions
