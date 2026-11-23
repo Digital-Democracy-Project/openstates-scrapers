@@ -29,6 +29,14 @@ def session_slug(session):
     )
 
 
+def bill_identifier(row):
+    """Our identifier for a Legislation row: chamber, type and number, no spaces ("HB2", "HJR1"). The database's own BillID
+    leaves the type out for bills ("H     2")."""
+    return "{}{}{}".format(row["Chamber"], row["LegType"], row["LegNo"]).replace(
+        " ", ""
+    )
+
+
 def url_session_slug(session):
     specials = {"2025S1": "25s", "2025S2": "25s2"}
     return specials.get(session, session[2:])
@@ -162,9 +170,7 @@ class NMBillScraper(Scraper):
             bill_key = data["BillID"].replace(" ", "")
 
             # remove spaces for consistency
-            bill_id = "{}{}{}".format(
-                data["Chamber"], data["LegType"], data["LegNo"]
-            ).replace(" ", "")
+            bill_id = bill_identifier(data)
             bill_type = bill_type_map[data["LegType"]]
             bills[bill_key] = bill = Bill(
                 bill_id,
@@ -291,6 +297,11 @@ class NMBillScraper(Scraper):
         com_location_map = {}
         for loc in self.access_to_csv("TblLocations"):
             com_location_map[loc["LocationCode"]] = loc["LocationDesc"]
+
+        # OPEN-796: a "Succeeding entries" action (7798) names, in its Succeeding column, the bill whose committee substitute
+        # carries this one on ("H 2": the database's BillID form, either chamber); read from the Legislation table the first
+        # time one is met (2025 and 2026 have three)
+        identifier_by_key = None
 
         # combination of tblActions and
         # http://www.nmlegis.gov/Legislation/Action_Abbreviations
@@ -531,6 +542,31 @@ class NMBillScraper(Scraper):
             bills[bill_key].add_action(
                 action_name, action_date, chamber=actor, classification=action_type
             )
+
+            # OPEN-796 (PLAN-companion-lineage §5.3.1, Ramon 2026-11-23 "Store all three"): the bill a "Succeeding entries"
+            # action names is stored as related, never companion. The glossary: "Succeeding entries will record the action on
+            # the committee substitute", so this bill is carried on in the other bill's substitute (D2: not a companion).
+            if action_code == "7798":
+                succeeding = (action.get("Succeeding") or "").replace(" ", "")
+                if succeeding and succeeding != bill_key:
+                    if identifier_by_key is None:
+                        identifier_by_key = {
+                            row["BillID"].replace(" ", ""): bill_identifier(row)
+                            for row in self.access_to_csv("Legislation")
+                        }
+                    if succeeding in identifier_by_key:
+                        bills[bill_key].add_related_bill(
+                            identifier_by_key[succeeding],
+                            bills[bill_key].legislative_session,
+                            "related",
+                            label="Succeeding entries",
+                        )
+                    else:
+                        self.warning(
+                            "succeeding entries on {} name unknown bill {}".format(
+                                bill_key, action["Succeeding"]
+                            )
+                        )
 
     def scrape_documents(self, session, doc_type, chamber, bills, chamber_name=None):
         """most document types (+ Votes) are in this common directory go
