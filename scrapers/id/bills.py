@@ -18,9 +18,7 @@ _CHAMBERS = {"upper": "Senate", "lower": "House"}
 _OTHER_CHAMBERS = {"upper": "lower", "lower": "upper"}
 _CHAMBER_BY_NAME = {name: chamber for chamber, name in _CHAMBERS.items()}
 # OPEN-770: the row that records a chamber receiving the bill from the other one
-_ARRIVAL_RE = re.compile(
-    r"(?:Received|Returned) from (?:the )?(House|Senate)\b", re.IGNORECASE
-)
+_ARRIVAL_RE = re.compile(r"(?:Received|Returned) from (?:the )?(House|Senate)\b")
 
 _BILL_TYPES = {
     "CR": "concurrent resolution",
@@ -211,15 +209,17 @@ class IDBillScraper(Scraper):
                                 primary=True,
                             )
 
+        # OPEN-770: the chamber that has the bill, followed only from what the rows say (the rows naming a chamber,
+        # the other chamber's arrival rows, the "to House"/"to Senate" moves); a committee report in the second
+        # chamber no longer flips it (that put 2025 S 1180's House vote, 45-24-1, on the Senate)
         actor = chamber
         last_date = None
-        # if a bill has passed a chamber or been 'received from'
-        # then the next committee passage is in the opposite chamber
-        has_moved_chambers = False
         # OPEN-682: the action row above a roll call, for a tally row printed without its own text
         previous_action = ""
         # OPEN-769: the roll-call rows already read on each day, for the votes' dedupe_keys
         roll_calls_by_day = defaultdict(list)
+        # OPEN-770: each roll call's result ("pass"/"fail"), by day and roll call
+        roll_call_results = {}
         for row in bill_tables[2]:
             # lots of empty rows
             if len(row) == 1:
@@ -240,10 +240,10 @@ class IDBillScraper(Scraper):
             elif action.startswith("Senate"):
                 actor = "upper"
             # OPEN-770: the other chamber has the bill once the page says it received it ("Received from the House
-            # passed", "Returned from Senate Passed"); see the roll-call move below
+            # passed", "Returned from Senate Failed")
             arrived_from = _ARRIVAL_RE.match(action.replace("\xa0", " "))
             if arrived_from:
-                actor = _OTHER_CHAMBERS[_CHAMBER_BY_NAME[arrived_from.group(1).title()]]
+                actor = _OTHER_CHAMBERS[_CHAMBER_BY_NAME[arrived_from.group(1)]]
 
             # votes
             is_vote = "AYES" in action or "NAYS" in action
@@ -261,7 +261,7 @@ class IDBillScraper(Scraper):
                 self.warning(f"Roll call printed twice on {date}: {url}")
             elif is_vote:
                 seen_today.append(roll_call)
-                yield from self.parse_vote(
+                for vote in self.parse_vote(
                     actor,
                     date,
                     row[2],
@@ -271,7 +271,9 @@ class IDBillScraper(Scraper):
                     url,
                     previous_action,
                     dedupe_key=f"{url}#{date}-{len(seen_today)}",
-                )
+                ):
+                    roll_call_results[date, roll_call] = vote.result
+                    yield vote
                 # bill.add_vote_event(vote)
             # some td's text is separated by br elements
             if len(row[2]):
@@ -280,20 +282,15 @@ class IDBillScraper(Scraper):
             previous_action = "" if is_vote else action
             attrs = self.categorizer.categorize(action)
             atype = attrs["classification"]
-            if atype and "passage" in atype:
-                has_moved_chambers = True
-
-            if atype and "committee-passage" in atype and has_moved_chambers:
-                actor = _OTHER_CHAMBERS[actor]
 
             bill.add_action(action, date, chamber=actor, classification=atype)
             # after voice vote/roll call and some actions the bill is sent
             # 'to House' or 'to Senate'
-            # OPEN-770: not on a roll call's own closing "Title apvd - to Senate" / "Ret'd to House": the bill is in
-            # the other chamber from that chamber's arrival row (above). A Senate roll call that failed and was
-            # "Ret'd to House" can still be reconsidered in the Senate (2026 H 760, 03/24-03/25); moving the bill on
-            # that text put the Senate's re-vote (15-20-0) on the House.
-            if is_vote:
+            # OPEN-770: but not on a failed roll call's "Ret'd to House": the Senate can still reconsider the bill
+            # (2026 H 760, failed 03/24, re-voted 15-20-0 on 03/25, which was stored as a House vote); the House has
+            # it from its "Returned from Senate Failed" row. A passed roll call's "Title apvd - to Senate" still
+            # moves it: on a same-day passage the other chamber may print no "Received from" row (2025 H 480).
+            if is_vote and roll_call_results.get((date, roll_call)) == "fail":
                 pass
             elif "to House" in action:
                 actor = "lower"
