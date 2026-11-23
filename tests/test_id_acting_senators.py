@@ -8,14 +8,13 @@ senator they replaced, and "Bjerke(Keyser)" (Garrett Bjerke for Sen. Josh Keyser
 for Sen. Codi Galloway) went to a different sitting senator, who then had two votes on one roll call. The printed form
 is now kept, and the people data gives each acting senator that form as a dated other name, so only they match it.
 
-House rows are unchanged: the House prints "Member(Substitute)" ("Hall(Stone)") and is outside this ticket.
+The House prints its substitutes the other way round, "Member(Substitute)": tests/test_id_house_substitutes.py (OPEN-787).
 
 The fixtures are legislature.idaho.gov's own 2026 bill pages, read 2026-11-23 (tests/fixtures/id_open781; S 1221
 from id_open770). Who sat for whom is from the 2026 Senate Final Journal's designation letters.
 """
 import json
 import os
-import re
 import sys
 import types
 from collections import Counter, defaultdict
@@ -143,18 +142,3 @@ def test_earlier_acting_senators_are_printed_the_same_way(
     assert acting == printed
     # their bare surnames are gone too (the people data gives them the printed form as an other name)
     assert not {p.split("(")[0] for p in printed} & set(voters)
-
-
-def test_house_rows_keep_dropping_the_parenthesis(scraper):
-    # the House prints "Hall(Stone)" (Rep. Hall, substitute Stone): unchanged, still read as "Hall"
-    house = [
-        v
-        for v in roll_calls(scraper, "s1240_2026", "S 1240")
-        if chamber_of(v) == "lower"
-    ]
-    assert house
-    for vote in house:
-        voters = names(vote)
-        # only OPEN-680's district numbers ("Crane(12)") keep a parenthesis
-        assert not [v for v in voters if re.search(r"\(\D+\)$", v)]
-        assert "Hall" in voters

@@ -119,9 +119,11 @@ def test_speaker_is_a_house_name_only(manifest):
 def test_every_other_name_is_unchanged(manifest):
     manifest("id: {}\n")
     voters = house_vote()
-    # 69 ayes + 1 absent, as the row prints them; "Hall(Stone)" is still read as "Hall"
+    # 69 ayes + 1 absent, as the row prints them; the substitutes keep their printed form
+    # (OPEN-787: "Hall(Stone)" is Grayson Stone, "Mathias(Carlson)" is Jeff Carlson)
     assert len(voters) == 70
-    assert "Hall" in voters and "Mathias" in voters
+    assert "Hall(Stone)" in voters and "Mathias(Carlson)" in voters
+    assert "Hall" not in voters and "Mathias" not in voters
     for name, spec in voters.items():
         if name not in DISTRICT_NAMES:
             assert spec == {"name": name}
