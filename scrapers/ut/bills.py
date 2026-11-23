@@ -79,6 +79,27 @@ def _normalize_bill_no(raw):
     return "{}{}".format(prefix.replace(".", ""), number)
 
 
+# OPEN-775 (Ramon, 2026-11-23, "Store as related"): le.utah.gov publishes no companion list; the only other bills a
+# bill names are in its summary's coordination clause, e.g. 2026 SB 153 "provides a coordination clause to merge
+# provisions of this bill with H.B. 209, Voting Amendments, and H.B. 361, Elections Provisions Amendments". Each named
+# bill is stored as related (never companion), labelled "coordination clause", as Virginia's "incorporates".
+COORDINATION_CLAUSE_BILL = re.compile(r"\b([HS])\.\s?(B|J\.\s?R|C\.\s?R|R)\.\s?0*(\d+)")
+
+
+def coordination_clause_bills(highlighted_provisions):
+    """The bills named in the summary's coordination-clause bullets (bullets are <hr>-separated), in order, each once,
+    written as stored ("HB 209")."""
+    named = []
+    for bullet in (highlighted_provisions or "").split("<hr>"):
+        if "coordination clause" not in bullet.lower():
+            continue
+        for chamber, kind, number in COORDINATION_CLAUSE_BILL.findall(bullet):
+            identifier = "{}{} {}".format(chamber, re.sub(r"[.\s]", "", kind), number)
+            if identifier not in named:
+                named.append(identifier)
+    return named
+
+
 class UTBillScraper(Scraper, LXMLMixin):
     categorizer = Categorizer()
     _TZ = pytz.timezone("America/Denver")
@@ -383,6 +404,16 @@ class UTBillScraper(Scraper, LXMLMixin):
                 primary=False,
                 chamber=floor_sponsor_chamber,
             )
+
+        # OPEN-775: the bills a coordination clause names, in this bill's own session
+        for identifier in coordination_clause_bills(data.get("highlightedProvisions")):
+            if identifier != bill.identifier:
+                bill.add_related_bill(
+                    identifier,
+                    bill.legislative_session,
+                    "related",
+                    label="coordination clause",
+                )
 
         # Versions, subjects, code citations
         subjects = set()
