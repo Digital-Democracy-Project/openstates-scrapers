@@ -75,6 +75,41 @@ def undated_version_name(name):
     return match.group(1) if match else name
 
 
+# OPEN-649 (PLAN-companion-lineage §5.3): azleg's own links between bills, the bill feed's NowPartOf, e.g. 2026 HB 2042
+# "Identical to SB 1278; See HBs 2125 and 2141; SBs 1098 and 1279". A clause that starts with a bill type continues the
+# kind before it ("SBs 1098 and 1279" are "See" bills). Only "Identical to" is a companion (Ramon, 2026-11-20, "Yes, same
+# rule": D1, as for Congress and Florida); "See" is related. The label is azleg's own words. The substitute pair
+# (SubstBill/SubstBill2) is not read: on every one of the 52 bills read for this (50 polled 2026 bills, HB 2042, SB 1278)
+# it is the "Identical to" pair again.
+NOW_PART_OF_KINDS = {"Identical to": "companion", "See": "related"}
+NOW_PART_OF_CLAUSE = re.compile(r"^(?:(Identical to|See)\s+)?([A-Z]+s?\s+\d.*)$")
+NOW_PART_OF_BILLS = re.compile(r"\b([A-Z]+)s?\s+(\d+(?:(?:\s*,\s*|\s+and\s+)\d+)*)")
+
+
+def now_part_of_links(now_part_of):
+    """(links, unread) for one bill's NowPartOf. links: [(identifier, relation_type, label)] in order, each bill once
+    (as a companion if "Identical to" names it anywhere, else the first kind). unread: the clauses in any other form,
+    for the scraper to log."""
+    links, unread, kind, seen = [], [], None, {}
+    for clause in filter(None, (c.strip() for c in (now_part_of or "").split(";"))):
+        match = NOW_PART_OF_CLAUSE.match(clause)
+        if not match or not (match.group(1) or kind):
+            unread.append(clause)
+            kind = None
+            continue
+        kind = match.group(1) or kind
+        for bill_type, numbers in NOW_PART_OF_BILLS.findall(match.group(2)):
+            for number in re.split(r"\s*,\s*|\s+and\s+", numbers):
+                identifier = f"{bill_type} {number}"
+                link = (identifier, NOW_PART_OF_KINDS[kind], kind)
+                if identifier not in seen:
+                    seen[identifier] = len(links)
+                    links.append(link)
+                elif link[1] == "companion":
+                    links[seen[identifier]] = link
+    return links, unread
+
+
 class AZBillScraper(Scraper):
     chamber_map = {"lower": "H", "upper": "S"}
     chamber_map_rev = {"H": "upper", "S": "lower", "G": "executive", "SS": "executive"}
@@ -130,6 +165,7 @@ class AZBillScraper(Scraper):
         )
 
         self.scrape_actions(bill, page, chamber)
+        self.scrape_related_bills(bill, page)
         self.scrape_versions_and_documents(bill, internal_id)
         self.scrape_sponsors(bill, internal_id)
         self.scrape_subjects(bill, internal_id)
@@ -145,6 +181,19 @@ class AZBillScraper(Scraper):
         bill.actions = sorted(bill.actions, key=lambda action: action["date"])
 
         yield bill
+
+    def scrape_related_bills(self, bill, page):
+        # OPEN-649: the bills azleg names in NowPartOf, all in this bill's own session
+        links, unread = now_part_of_links(page.get("NowPartOf"))
+        for clause in unread:
+            self.warning(f"{bill.identifier}: NowPartOf clause not read: {clause!r}")
+        # bill.identifier is azleg's "HB2042" here; the links are written "HB 2042", as stored
+        own = bill.identifier.replace(" ", "")
+        for identifier, relation_type, label in links:
+            if identifier.replace(" ", "") != own:
+                bill.add_related_bill(
+                    identifier, bill.legislative_session, relation_type, label=label
+                )
 
     def scrape_versions_and_documents(self, bill, internal_id):
         # Careful, this sends XML to a browser but JSON to machines
