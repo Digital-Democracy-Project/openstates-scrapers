@@ -10,6 +10,14 @@ class Missouri(State):
         "votes": MOVoteScraper,
         "events": MOEventScraper,
     }
+    # Dates (OPEN-791, read 2026-11-23) are from the Senate journals (senate.mo.gov/journallist)
+    # and House journals (documents.house.mo.gov/billtracking/bills{code}/jrnpdf). A session ends
+    # on its official close (Ramon, 2026-11-22). Every regular session closes at midnight on
+    # May 30 (Mo. Const. art. III, sec. 20): the House's last journal declares it "adjourned
+    # [sine die] as of midnight, May 30", whichever day the chambers last sat; the September veto
+    # session is not a separate session here and does not move the close. An extraordinary
+    # session closes on the later of the two chambers' sine die. Citations: tests/
+    # test_mo_session_dates.py.
     legislative_sessions = [
         {
             "_scraped_name": "2019 Regular Session",
@@ -17,7 +25,7 @@ class Missouri(State):
             "identifier": "2019",
             "name": "2019 Regular Session",
             "start_date": "2019-01-09",
-            "end_date": "2019-05-29",
+            "end_date": "2019-05-30",
         },
         {
             "_scraped_name": "2019 1st Extraordinary Session",
@@ -25,7 +33,7 @@ class Missouri(State):
             "identifier": "2019S1",
             "name": "2019 First Extraordinary Session",
             "start_date": "2019-09-09",
-            "end_date": "2019-09-25",
+            "end_date": "2019-09-24",
         },
         {
             "_scraped_name": "2020 Regular Session",
@@ -33,7 +41,7 @@ class Missouri(State):
             "identifier": "2020",
             "name": "2020 Regular Session",
             "start_date": "2020-01-08",
-            "end_date": "2020-05-27",
+            "end_date": "2020-05-30",
         },
         {
             "_scraped_name": "2020 1st Extraordinary Session",
@@ -49,7 +57,7 @@ class Missouri(State):
             "identifier": "2020S2",
             "name": "2020 Second Extraordinary Session",
             "start_date": "2020-11-05",
-            "end_date": "2020-12-10",
+            "end_date": "2020-12-16",
         },
         {
             "_scraped_name": "2021 Regular Session",
@@ -57,7 +65,7 @@ class Missouri(State):
             "identifier": "2021",
             "name": "2021 Regular Session",
             "start_date": "2021-01-06",
-            "end_date": "2021-05-25",
+            "end_date": "2021-05-30",
         },
         {
             "_scraped_name": "2021 1st Extraordinary Session",
@@ -73,7 +81,7 @@ class Missouri(State):
             "identifier": "2022",
             "name": "2022 Regular Session",
             "start_date": "2022-01-05",
-            "end_date": "2022-05-13",
+            "end_date": "2022-05-30",
             "active": False,
         },
         {
@@ -81,7 +89,7 @@ class Missouri(State):
             "classification": "special",
             "identifier": "2022S1",
             "name": "2022 1st Extraordinary Session",
-            "start_date": "2022-09-15",
+            "start_date": "2022-09-14",
             # both chambers adjourned sine die October 4, 2022 (OPEN-737): Senate journal,
             # eighth day (senate.mo.gov/22info/Journals/T1Day08100454-58.pdf); House journal,
             # ninth day (documents.house.mo.gov/billtracking/bills223/jrnpdf/jrn009.pdf)
@@ -94,7 +102,7 @@ class Missouri(State):
             "identifier": "2023",
             "name": "2023 Regular Session",
             "start_date": "2023-01-04",
-            "end_date": "2023-05-14",
+            "end_date": "2023-05-30",
             "active": False,
         },
         {
@@ -103,7 +111,7 @@ class Missouri(State):
             "identifier": "2024",
             "name": "2024 Regular Session",
             "start_date": "2024-01-03",
-            "end_date": "2024-05-17",
+            "end_date": "2024-05-30",
             "active": False,
         },
         {
@@ -112,7 +120,7 @@ class Missouri(State):
             "identifier": "2025",
             "name": "2025 Regular Session",
             "start_date": "2025-01-08",
-            "end_date": "2025-05-16",
+            "end_date": "2025-05-30",
             "active": False,
         },
         {
@@ -121,8 +129,7 @@ class Missouri(State):
             "identifier": "2025S1",
             "name": "2025 1st Extraordinary Session",
             "start_date": "2025-06-02",
-            # TODO: real end date when session is over
-            "end_date": "2025-06-13",
+            "end_date": "2025-06-11",
             "active": False,
         },
         {
@@ -131,8 +138,7 @@ class Missouri(State):
             "identifier": "2025S2",
             "name": "2025 2nd Extraordinary Session",
             "start_date": "2025-09-03",
-            # TODO: real end date when session is over
-            "end_date": "2025-09-13",
+            "end_date": "2025-09-12",
             "active": False,
         },
         {
@@ -141,7 +147,7 @@ class Missouri(State):
             "identifier": "2026",
             "name": "2026 Regular Session",
             "start_date": "2026-01-07",
-            "end_date": "2026-05-15",
+            "end_date": "2026-05-30",
             "active": True,
         },
     ]

@@ -300,9 +300,9 @@ def test_corrected_sessions(state, identifier, classification):
     assert session["classification"] == classification
 
 
-# OPEN-752 (Wyoming), OPEN-753 (Idaho): regular and special sessions are separate, each with its
-# own dates, so no regular session's dates may cover a special session's.
-@pytest.mark.parametrize("state", ["id", "wy"])
+# OPEN-752 (Wyoming), OPEN-753 (Idaho), OPEN-791 (Missouri): regular and special sessions are
+# separate, each with its own dates, so no regular session's dates may cover a special session's.
+@pytest.mark.parametrize("state", ["id", "mo", "wy"])
 def test_no_regular_session_covers_a_special_session(state):
     sessions = _sessions(state)
     regular = [s for s in sessions if s["classification"] == "primary"]
