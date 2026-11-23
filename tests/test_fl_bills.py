@@ -24,6 +24,7 @@ from types import SimpleNamespace
 
 import lxml.html
 import pytest
+import requests
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
 
@@ -393,6 +394,170 @@ def test_cookie_provider_source_raises_wafblockdetected_on_block_page():
 
         with pytest.raises(WafBlockDetected):
             source.get_response(fake_scraper)
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# OPEN-774: on 11-22 flhouse.gov redirect-looped every visitor for about 7 minutes. The plain
+# request got "Exceeded 30 redirects", the cookie re-visit got the browser's
+# net::ERR_TOO_MANY_REDIRECTS, and that stopped the whole session's collection. These run the
+# real CookieProvider (core) with a fake browser visit and a fake site: no waiting, no live site.
+# ═══════════════════════════════════════════════════════════════════════════
+
+REDIRECT_LOOP = (
+    "Page.goto: net::ERR_TOO_MANY_REDIRECTS at "
+    "https://flhouse.gov/Sections/Bills/bills.aspx"
+)
+
+
+class _FakeFloridaHouse:
+    """The site as the scraper meets it: the next `down_requests` plain visits and
+    `down_warm_ups` cookie visits fail the way they did on 11-22, then it answers."""
+
+    def __init__(self, down_requests=0, down_warm_ups=0):
+        self.down_requests = down_requests
+        self.down_warm_ups = down_warm_ups
+        self.warm_ups = 0
+        self.requests = 0
+
+    def warm_up(self, url):
+        from playwright.sync_api import Error as PlaywrightError
+
+        self.warm_ups += 1
+        if self.down_warm_ups > 0:
+            self.down_warm_ups -= 1
+            raise PlaywrightError(REDIRECT_LOOP)
+        cookie = {
+            "name": "session_cookie_mfhp",
+            "value": f"fresh-{self.warm_ups}",
+            "expires": 0,
+        }
+        return [cookie], "Real Chrome UA"
+
+    def request(self, **kwargs):
+        self.requests += 1
+        if self.down_requests > 0:
+            self.down_requests -= 1
+            raise requests.exceptions.TooManyRedirects("Exceeded 30 redirects.")
+        return SimpleNamespace(content=b"real content")
+
+
+def _source_against(site, monkeypatch, tmp_path, cached_cookie=True):
+    import json
+    import time as real_time
+    from openstates.utils.cookie_provider import CookieProvider
+
+    cache = tmp_path / "fl_waf_cookies.json"
+    provider = CookieProvider(
+        name="fl",
+        warm_up_url="https://flhouse.gov/Sections/Bills/bills.aspx",
+        cookie_names=("session_cookie_mfhp",),
+        cache_path=str(cache),
+        warm_up_func=site.warm_up,
+    )
+    if cached_cookie:  # a long run's cookie from before the outage
+        cache.write_text(
+            json.dumps(
+                {
+                    "session_cookie_mfhp": {
+                        "value": "old",
+                        "expires": real_time.time() + 3600,
+                    },
+                    "_meta": {"user_agent": "Real Chrome UA"},
+                }
+            )
+        )
+    waits = []
+    monkeypatch.setattr("fl.bills.time.sleep", waits.append)
+    monkeypatch.setattr(
+        "fl.bills.RESILIENCE_PROFILES",
+        {"fl": SimpleNamespace(cookie_provider=provider)},
+    )
+    source = _FLHouseCookieProviderSource(
+        "https://flhouse.gov/Sections/Bills/bills.aspx?BillNumber=1", verify=False
+    )
+    return source, SimpleNamespace(request=site.request), waits
+
+
+def test_a_long_run_outlasts_the_redirect_loop_and_carries_on(monkeypatch, tmp_path):
+    # 11-22, the 2024 run: the plain visit loops, the cookie re-visit loops, then the site is back
+    site = _FakeFloridaHouse(down_requests=1, down_warm_ups=1)
+    source, scraper, waits = _source_against(site, monkeypatch, tmp_path)
+    assert source.get_response(scraper).content == b"real content"
+    assert waits == [60]
+    assert (site.warm_ups, site.requests) == (2, 2)
+
+
+def test_a_page_that_still_loops_after_a_good_cookie_visit_is_tried_again(
+    monkeypatch, tmp_path
+):
+    # the cookie visit works but the search page loops on both of fetch_with_retry's requests
+    site = _FakeFloridaHouse(down_requests=2)
+    source, scraper, waits = _source_against(site, monkeypatch, tmp_path)
+    assert source.get_response(scraper).content == b"real content"
+    assert waits == [60]
+    assert (site.warm_ups, site.requests) == (1, 3)
+
+
+def test_a_new_run_whose_first_cookie_visits_fail_carries_on(monkeypatch, tmp_path):
+    # 11-22, the 2025 and 2026 runs: a new task, no cookie yet, and the first visits loop
+    site = _FakeFloridaHouse(down_warm_ups=2)
+    source, scraper, waits = _source_against(
+        site, monkeypatch, tmp_path, cached_cookie=False
+    )
+    assert source.get_response(scraper).content == b"real content"
+    assert waits == [60, 180]
+    assert (site.warm_ups, site.requests) == (3, 1)
+
+
+def test_a_site_that_stays_down_gives_up_after_the_last_try(
+    monkeypatch, tmp_path, caplog
+):
+    from playwright.sync_api import Error as PlaywrightError
+    from fl.bills import FLHOUSE_OUTAGE_WAITS
+
+    site = _FakeFloridaHouse(down_requests=99, down_warm_ups=99)
+    source, scraper, waits = _source_against(site, monkeypatch, tmp_path)
+    with pytest.raises(PlaywrightError):
+        source.get_response(scraper)
+    assert waits == list(FLHOUSE_OUTAGE_WAITS)
+    assert sum(waits) > 7 * 60  # longer than the 11-22 outage
+    assert (site.warm_ups, site.requests) == (4, 1)  # the 4th try really happened
+    assert "after 4 tries" in caplog.text and "giving up" in caplog.text
+
+
+def test_a_page_that_keeps_looping_gives_up_with_the_redirect_error(
+    monkeypatch, tmp_path
+):
+    # the cookie visits work every time; the search page loops on every request
+    from openstates.utils.cookie_provider import WafBlockDetected
+    from fl.bills import FLHOUSE_OUTAGE_WAITS
+
+    site = _FakeFloridaHouse(down_requests=99)
+    source, scraper, waits = _source_against(site, monkeypatch, tmp_path)
+    with pytest.raises(WafBlockDetected) as raised:
+        source.get_response(scraper)
+    assert isinstance(raised.value.__cause__, requests.exceptions.TooManyRedirects)
+    assert waits == list(FLHOUSE_OUTAGE_WAITS)
+    assert site.requests == 8  # 4 tries, each a request and one re-warmed request
+
+
+def test_the_site_back_on_the_last_try_carries_on(monkeypatch, tmp_path):
+    # down through all three waits, answering on the 4th try
+    site = _FakeFloridaHouse(down_warm_ups=3)
+    source, scraper, waits = _source_against(
+        site, monkeypatch, tmp_path, cached_cookie=False
+    )
+    assert source.get_response(scraper).content == b"real content"
+    assert waits == [60, 180, 600]
+    assert (site.warm_ups, site.requests) == (4, 1)
+
+
+def test_a_normal_visit_has_no_wait_and_no_extra_cookie_visit(monkeypatch, tmp_path):
+    site = _FakeFloridaHouse()
+    source, scraper, waits = _source_against(site, monkeypatch, tmp_path)
+    assert source.get_response(scraper).content == b"real content"
+    assert waits == []
+    assert (site.warm_ups, site.requests) == (0, 1)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
