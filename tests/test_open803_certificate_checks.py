@@ -128,6 +128,55 @@ def test_the_scan_leaves_checked_calls_alone(snippet):
     assert certificate_bypasses(snippet) == []
 
 
+# -- the request paths that used to skip the check now go through core ----------------------
+
+# (file, function, how many checked_requests calls it must make). These are the raw `requests`
+# calls that passed verify=False before OPEN-803. Swapping one back to plain `requests` would
+# still pass the scan above (requests verifies by default) but would skip core's per-host
+# exception list, so each one is pinned here.
+CONVERTED = [
+    ("ca/download.py", "get_contents", 1),
+    ("dc/__init__.py", "get_session_list", 1),
+    ("de/__init__.py", "get_session_list", 1),
+    ("hi/__init__.py", "get_session_list", 1),
+    ("il/__init__.py", "get_session_list", 1),
+    ("in/__init__.py", "get_session_list", 1),
+    ("in/apiclient.py", "get_session_no", 1),
+    ("in/apiclient.py", "get_document_url", 1),
+    ("in/apiclient.py", "identify_redirect_url", 1),
+    ("ma/__init__.py", "get_session_list", 1),
+    ("ma/bills.py", "get_as_ajax", 1),
+    ("mi/__init__.py", "get_session_list", 1),
+    ("nj/__init__.py", "get_session_list", 1),
+    ("ok/bills.py", "scrape_chamber", 1),
+    ("pr/__init__.py", "get_session_list", 1),
+    ("usa/bills.py", "scrape_votes", 1),
+    ("va/__init__.py", "get_session_list", 1),
+    ("vi/__init__.py", "get_session_list", 1),
+    ("utils/lxmlize.py", "url_xpath", 1),
+]
+
+
+@pytest.mark.parametrize("relpath,function,expected", CONVERTED)
+def test_formerly_unchecked_requests_go_through_core(relpath, function, expected):
+    tree = ast.parse((SCRAPERS / relpath).read_text())
+    bodies = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.FunctionDef) and node.name == function
+    ]
+    assert len(bodies) == 1, (relpath, function)
+    checked = [
+        node
+        for node in ast.walk(bodies[0])
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and isinstance(node.func.value, ast.Name)
+        and node.func.value.id == "checked_requests"
+    ]
+    assert len(checked) == expected, (relpath, function)
+
+
 # -- what actually reaches the wire --------------------------------------------------------
 
 
@@ -199,6 +248,7 @@ def test_checked_requests_acts_like_plain_requests(wire):
     assert session.requests_per_minute == 0
     assert session.retry_attempts == 0
     assert session.raise_errors is False
+    assert session.timeout is None  # no default timeout, like requests
     assert session.headers["User-Agent"] == requests.utils.default_user_agent()
     assert isinstance(session, VerifyingScraper)
 
