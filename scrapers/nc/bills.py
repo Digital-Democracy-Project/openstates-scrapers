@@ -96,6 +96,26 @@ def vote_classification(subject, rcs, roll_calls):
     return classify_motion("nc", subject)
 
 
+def stored_bill_id(nc_id, bill_type):
+    """(identifier as stored, classification) for a feed's bill number and type: ("S504", "B") -> ("SB 504", "bill"),
+    "R" -> "SR 504", "JR" -> "SJR 504". A chamber and number name one bill whatever its type (0 of 2,342 repeat, 2025)."""
+    for code, classification in (
+        ("JR", "joint resolution"),
+        ("R", "resolution"),
+        ("B", "bill"),
+    ):
+        if code in bill_type:
+            return f"{nc_id[0]}{code} {nc_id[1:]}", classification
+    return nc_id, bill_type
+
+
+# OPEN-783 (Ramon, 2026-11-23, "As companions"; OPEN-651): the bill page's heading links the bill filed identical to
+# this one after "=", e.g. 2025 "House Bill 133 / SL 2026-54 (=S504)". It is a companion (D1, "Identical"), labelled "=".
+IDENTICAL_BILL_LINK = (
+    '//div[contains(@class, "h2")]//a[starts-with(normalize-space(.), "=")]'
+)
+
+
 class NCBillScraper(Scraper):
 
     archived_votes = defaultdict(lambda: defaultdict(list))
@@ -148,15 +168,7 @@ class NCBillScraper(Scraper):
         doc = lxml.html.fromstring(data)
         doc.make_links_absolute(bill_detail_url)
 
-        if "JR" in bill_type:
-            bill_type = "joint resolution"
-            bill_id = bill_id[0] + "JR " + bill_id[1:]
-        elif "R" in bill_type:
-            bill_type = "resolution"
-            bill_id = bill_id[0] + "R " + bill_id[1:]
-        elif "B" in bill_type:
-            bill_type = "bill"
-            bill_id = bill_id[0] + "B " + bill_id[1:]
+        bill_id, bill_type = stored_bill_id(bill_id, bill_type)
 
         # For special cases where bill title is blank, a new title is created using Bill ID
         if not bill_title:
@@ -170,6 +182,7 @@ class NCBillScraper(Scraper):
             classification=bill_type,
         )
         bill.add_source(bill_detail_url)
+        self.scrape_identical_bill(bill, doc)
 
         # skip first PDF link (duplicate link to cur version)
         if chamber == "lower":
@@ -252,6 +265,21 @@ class NCBillScraper(Scraper):
             yield from self.add_archived_votes(bill, bill_id)
 
         yield bill
+
+    def scrape_identical_bill(self, bill, doc):
+        # OPEN-783: "=S504" names the bill by chamber and number only; its stored id comes from the session's own bill
+        # lists (`_stored_ids`, both chambers' feeds), never a guessed type
+        for link in doc.xpath(IDENTICAL_BILL_LINK):
+            nc_id = link.text_content().strip().lstrip("=").strip()
+            identifier = getattr(self, "_stored_ids", {}).get(nc_id)
+            if identifier is None:
+                self.warning(
+                    f"{bill.identifier}: identical bill {nc_id!r} is not in the session's bill lists"
+                )
+            elif identifier != bill.identifier:
+                bill.add_related_bill(
+                    identifier, bill.legislative_session, "companion", label="="
+                )
 
     def scrape_actions(self, bill, doc):
         action_tr_xpath = (
@@ -522,18 +550,35 @@ class NCBillScraper(Scraper):
             self.scrape_archived_votes("upper", session)
             self.scrape_archived_votes("lower", session)
 
+        # OPEN-783: an identical bill may be in the other chamber, so both chambers' lists are read first (each once)
+        self._feeds = {
+            abbr: self.filed_bills_feed(session, abbr) for abbr in ("S", "H")
+        }
+        self._stored_ids = {
+            item[1].text: stored_bill_id(item[1].text, item[7].text)[0]
+            for items in self._feeds.values()
+            for item in items
+        }
+
         for chamber in chambers:
             yield from self.scrape_chamber(chamber, session)
+
+    def filed_bills_feed(self, session, chamber_abbr):
+        """The session's FiledBillsFeed items for one chamber ("S" or "H")."""
+        url = f"https://www.ncleg.gov/Legislation/Bills/FiledBillsFeed/{session}/{chamber_abbr}"
+        return list(lxml.etree.fromstring(self.get(url).content)[0][4:])
 
     def scrape_chamber(self, chamber, session):
         chamber = {"lower": "House", "upper": "Senate"}[chamber]
         chamber_abbr = "S" if chamber == "Senate" else "H"
-        url = f"https://www.ncleg.gov/Legislation/Bills/FiledBillsFeed/{session}/{chamber_abbr}"
+        feeds = getattr(self, "_feeds", {})
+        items = (
+            feeds[chamber_abbr]
+            if chamber_abbr in feeds
+            else self.filed_bills_feed(session, chamber_abbr)
+        )
 
-        page = self.get(url).content
-        data = lxml.etree.fromstring(page)
-
-        for item in data[0][4:]:
+        for item in items:
             bill_id = item[1].text
             bill_type = item[7].text
             bill_title = item[4].text

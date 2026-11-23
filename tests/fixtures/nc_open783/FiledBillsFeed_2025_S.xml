@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='utf-8'?>
+<rss version="2.0">
+  <channel>
+    <title>Filed Bills</title>
+    <link>http://www.ncleg.gov/</link>
+    <description>North Carolina General Assembly Filed Bills</description>
+    <language>en-us</language>
+    <item>
+      <description/>
+      <bill>S1093</bill>
+      <guid>S-1093-0</guid>
+      <fileddate>11/16/2026</fileddate>
+      <shorttitle>Appt. Board of Agriculture.</shorttitle>
+      <primarysponsors>Rabon</primarysponsors>
+      <longtitle>A SENATE RESOLUTION RELATING TO THE APPOINTMENT, NOMINATION, AND CONFIRMATION OF DONALD JAMES "JIM" LAMBETH, FRANKLIN "RAY" ALLEN, JEFFERY B. TURNER, DAN WARD, AND PAT BENTON.</longtitle>
+      <billtype>R</billtype>
+      <localpublic>P</localpublic>
+      <appropriations>0</appropriations>
+      <fiscalimpact>0</fiscalimpact>
+      <constitution>0</constitution>
+      <studies>0</studies>
+      <rollcall>0</rollcall>
+      <appropriation>1</appropriation>
+    </item>
+    <item>
+      <description/>
+      <bill>S1091</bill>
+      <guid>S-1091-0</guid>
+      <fileddate>07/27/2026</fileddate>
+      <shorttitle>Adjournment Resolution.</shorttitle>
+      <primarysponsors>Rabon</primarysponsors>
+      <longtitle>A JOINT RESOLUTION ADJOURNING THE 2025 REGULAR SESSION OF THE GENERAL ASSEMBLY TO A SERIES OF DATES CERTAIN AND PROVIDING FOR THE MATTERS THAT MAY BE CONSIDERED UPON RECONVENING ON THOSE DATES AND ADJOURNING THE 2025 REGULAR SESSION OF THE GENERAL ASSEMBLY SINE DIE THEREAFTER.</longtitle>
+      <billtype>JR</billtype>
+      <localpublic>P</localpublic>
+      <appropriations>0</appropriations>
+      <fiscalimpact>0</fiscalimpact>
+      <constitution>0</constitution>
+      <studies>0</studies>
+      <rollcall>0</rollcall>
+      <appropriation>1</appropriation>
+    </item>
+    <item>
+      <description/>
+      <bill>S504</bill>
+      <guid>S-504-0</guid>
+      <fileddate>03/25/2025</fileddate>
+      <shorttitle>NC Farmland and Military Protection Act.</shorttitle>
+      <primarysponsors>Moffitt, Hanig, McInnis</primarysponsors>
+      <longtitle>AN ACT TO PROHIBIT THE ACQUISITION OF AGRICULTURAL AND OTHER LANDS CRITICAL TO THE SAFETY AND SECURITY OF THE STATE BY CERTAIN FOREIGN GOVERNMENTS DESIGNATED AS ADVERSARIAL BY THE UNITED STATES DEPARTMENT OF STATE.</longtitle>
+      <billtype>B</billtype>
+      <localpublic>P</localpublic>
+      <appropriations>0</appropriations>
+      <fiscalimpact>0</fiscalimpact>
+      <constitution>0</constitution>
+      <studies>0</studies>
+      <rollcall>0</rollcall>
+      <appropriation>1</appropriation>
+    </item>
+    <item>
+      <description/>
+      <bill>S375</bill>
+      <guid>S-375-0</guid>
+      <fileddate>03/20/2025</fileddate>
+      <shorttitle>Harrison's Law.</shorttitle>
+      <primarysponsors>Galey, Barnes, Overcash</primarysponsors>
+      <longtitle>AN ACT TO REVISE THE CRIMINAL OFFENSE OF HAZING AND TO REQUIRE EDUCATION ENTITIES TO ESTABLISH POLICIES AND PROCEDURES TO PREVENT HAZING.</longtitle>
+      <billtype>B</billtype>
+      <localpublic>P</localpublic>
+      <appropriations>0</appropriations>
+      <fiscalimpact>0</fiscalimpact>
+      <constitution>0</constitution>
+      <studies>0</studies>
+      <rollcall>0</rollcall>
+      <appropriation>1</appropriation>
+    </item>
+    </channel>
+</rss>
