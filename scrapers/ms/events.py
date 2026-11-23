@@ -6,6 +6,7 @@ from utils.events import match_coordinates
 from openstates.scrape import Scraper
 from openstates.scrape import Event
 from spatula import PdfPage, HtmlPage, URL
+from openstates.utils.tls import VerifyingScraper
 import datetime
 import dateutil
 
@@ -26,15 +27,15 @@ bill_re = re.compile(
 class SenateAgenda(HtmlPage):
     source = URL(
         "https://www.legislature.ms.gov/calendars-and-schedules/senate-committee-agenda/",
-        verify=False,
     )
 
     def process_page(self):
         pdf_link = URL(
             "https://legislature.ms.gov/media/1151/2025_SENATE_COMMITTEE_AGENDAS.pdf",
-            verify=False,
         )
-        yield from SenateAgendaPdf(source=pdf_link).do_scrape()
+        yield from SenateAgendaPdf(source=pdf_link).do_scrape(
+            scraper=VerifyingScraper()
+        )
 
 
 # Parses events from a pdf
@@ -146,11 +147,11 @@ class MSEventScraper(Scraper):
         yield from self.scrape_senate()
 
     def scrape_senate(self):
-        return SenateAgenda().do_scrape()
+        return SenateAgenda().do_scrape(scraper=VerifyingScraper())
 
     def scrape_house(self):
         event_url = "https://billstatus.ls.state.ms.us/htms/h_sched.htm"
-        page = self.get(event_url, verify=False).text
+        page = self.get(event_url).text
         doc = lxml.html.fromstring(page)
 
         # First clean out any hidden text elements

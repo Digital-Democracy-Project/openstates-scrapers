@@ -140,7 +140,7 @@ class UTBillScraper(Scraper, LXMLMixin):
         session_url = "https://le.utah.gov/billlist.jsp?session={}".format(session_slug)
 
         # For some sessions the link doesn't go straight to the bill list
-        doc = self.lxmlize(session_url, verify=False)
+        doc = self.lxmlize(session_url)
 
         # Get all of the show/hide bill list elements
         # in order to get the IDs of the actual bill lists
@@ -221,11 +221,10 @@ class UTBillScraper(Scraper, LXMLMixin):
             raise EmptyScrape
 
     def scrape_bill(self, chamber, session, url, session_slug):
-        # OPEN-322: verify=False, like every other le.utah.gov fetch in this file. `os-update`'s
-        # --no-verify is a store_false flag, so verification is ON unless it's passed -- and in
-        # the Fargate image le.utah.gov's chain doesn't verify (CERTIFICATE_VERIFY_FAILED), which
-        # killed UT's 2026-10-04 scrape on its first bill page.
-        response = self.get(url, verify=False)
+        # OPEN-322 turned the certificate check off here after le.utah.gov's chain failed in the
+        # Fargate image (CERTIFICATE_VERIFY_FAILED, UT's 2026-10-04 scrape). Since OPEN-800/803 the
+        # check is on; a host that still fails gets a named entry in core's TLS_VERIFY_EXCEPTIONS.
+        response = self.get(url)
         page = lxml.html.fromstring(response.text)
         page.make_links_absolute(url)
 
@@ -365,7 +364,7 @@ class UTBillScraper(Scraper, LXMLMixin):
         api_url = (
             f"https://le.utah.gov/data/{session_slug}/{bill_filename}.json?_={now}"
         )
-        response = self.get(api_url, verify=False)
+        response = self.get(api_url)
         data = json.loads(response.content)
 
         if self._start and data.get("actionHistoryList"):
@@ -687,7 +686,7 @@ class UTBillScraper(Scraper, LXMLMixin):
 
     def parse_html_vote(self, bill, actor, date, motion, url, uniqid):
         try:
-            page_text = self.get(url, verify=False).text
+            page_text = self.get(url).text
         except scrapelib.HTTPError:
             self.warning("A vote page not found for bill {}".format(bill.identifier))
             return
@@ -779,7 +778,7 @@ class UTBillScraper(Scraper, LXMLMixin):
         yield vote
 
     def parse_vote(self, bill, actor, date, motion, url, uniqid):
-        page = self.get(url, verify=False).text
+        page = self.get(url).text
         bill.add_source(url)
         vote_re = re.compile(
             r"YEAS -?\s?(\d+)(.*)NAYS -?\s?(\d+)"

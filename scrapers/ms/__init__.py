@@ -370,6 +370,4 @@ class Mississippi(State):
     ]
 
     def get_session_list(self):
-        return url_xpath(
-            "http://billstatus.ls.state.ms.us/sessions.htm", "//a/text()", verify=False
-        )
+        return url_xpath("http://billstatus.ls.state.ms.us/sessions.htm", "//a/text()")

@@ -87,6 +87,5 @@ class Ohio(State):
             '//div[@id="general-assembly-radio-selector"]//'
             'label[contains(@class, "radio-choice-option")]/span[1]/text()',
             user_agent="openstates 2021",
-            verify=False,
         )
         return sessions

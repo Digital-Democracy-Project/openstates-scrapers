@@ -1,4 +1,4 @@
-import requests
+from utils import checked_requests
 from openstates.scrape import State
 from .bills import PRBillScraper
 from .votes import PRVoteScraper
@@ -72,7 +72,7 @@ class PuertoRico(State):
         get_sessions_dynamically = False
 
         if get_sessions_dynamically:
-            s = requests.Session()
+            s = checked_requests.Session()
             # this URL should work even for future sessions
             url = "https://sutra.oslpr.org/"
 
@@ -88,9 +88,7 @@ class PuertoRico(State):
                 "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
             }
             data = '["/cuatrienios"]'
-            data = s.post(
-                "https://sutra.oslpr.org/", headers=headers, data=data, verify=False
-            )
+            data = s.post("https://sutra.oslpr.org/", headers=headers, data=data)
             sdata = re.search(r"1:(.*?}])", data.text).group(1)
             json_data = json.loads(sdata)
             sessions = []

@@ -150,9 +150,6 @@ class MNBillScraper(Scraper, LXMLMixin):
         if self.is_testing():
             self.debug("TESTING...")
 
-        # SSL broken as of Jan 2020
-        self.verify = False
-
         chambers = [chamber] if chamber else ["upper", "lower"]
         for chamber in chambers:
             # If testing and certain bills to test, only test those
@@ -277,7 +274,7 @@ class MNBillScraper(Scraper, LXMLMixin):
                     current_bill_type,
                 )
                 # Parse HTML
-                html = self.get(url, verify=False).text
+                html = self.get(url).text
                 doc = lxml.html.fromstring(html)
 
                 # get table containing bills
@@ -332,7 +329,7 @@ class MNBillScraper(Scraper, LXMLMixin):
         chamber = "upper" if chamber.lower() == "senate" else chamber
 
         # Get html and parse
-        doc = self.lxmlize(bill_detail_url, verify=False)
+        doc = self.lxmlize(bill_detail_url)
 
         # Check if bill hasn't been transmitted to the other chamber yet
         transmit_check = self.get_node(
@@ -362,7 +359,7 @@ class MNBillScraper(Scraper, LXMLMixin):
             long_desc_url = self.get_node(
                 doc, '//a[text()[contains(.,"Long Description")]]/@href'
             )
-            long_desc_page = self.lxmlize(long_desc_url, verify=False)
+            long_desc_page = self.lxmlize(long_desc_url)
             long_desc_text = self.get_node(
                 long_desc_page, "//h1/" "following-sibling::p/text()"
             )
@@ -420,7 +417,7 @@ class MNBillScraper(Scraper, LXMLMixin):
             search_chamber,
             search_session,
         )
-        topic_list_result = self.get(url, verify=False)
+        topic_list_result = self.get(url)
         html = topic_list_result.text
         doc = lxml.html.fromstring(html)
 
@@ -440,7 +437,7 @@ class MNBillScraper(Scraper, LXMLMixin):
                 "&topic[]=%s&submit_topic=GO"
                 % (BILL_DETAIL_URL_BASE, search_chamber, search_session, value)
             )
-            response = self.get(opt_url, verify=False)
+            response = self.get(opt_url)
             opt_html = response.text
             opt_doc = lxml.html.fromstring(opt_html)
             for bill in opt_doc.xpath("//table/tbody/tr/td[2]/a/text()"):
@@ -621,7 +618,7 @@ class MNBillScraper(Scraper, LXMLMixin):
         ):
             cite_url = link.xpath("@href")[0]
             chapter = link.xpath("text()")[0]
-            html = self.get(cite_url, verify=False).text
+            html = self.get(cite_url).text
             doc = lxml.html.fromstring(html)
 
             title = doc.xpath(
@@ -736,7 +733,7 @@ class MNBillScraper(Scraper, LXMLMixin):
             # self.get retries transient connection/TLS errors; like the old bare
             # requests.get, still parse whatever an error page returns
             try:
-                current_response = self.get(current_html_url, verify=False)
+                current_response = self.get(current_html_url)
             except scrapelib.HTTPError as e:
                 current_response = e.response
             current_content = lxml.html.fromstring(current_response.content)

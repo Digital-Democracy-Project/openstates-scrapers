@@ -235,7 +235,6 @@ class Wisconsin(State):
         sessions = url_xpath(
             "https://docs.legis.wisconsin.gov/search",
             "//select[@name='sessionNumber']/option/text()",
-            verify=False,
             user_agent=user_agent,
         )
         return [session.strip(" -") for session in sessions]

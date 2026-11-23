@@ -116,7 +116,7 @@ class TNBillScraper(Scraper):
 
     def scrape_special(self, session):
         index_page = f"https://wapp.capitol.tn.gov/apps/Indexes/SpecialSessionBillIndex?ga={session[0:3]}&specsessNum={session[4]}"
-        page = self.get(index_page, verify=False).content
+        page = self.get(index_page).content
         page = lxml.html.fromstring(page)
 
         for bill_link in page.xpath("//a[contains(@href, '/BillInfo/Default')]"):

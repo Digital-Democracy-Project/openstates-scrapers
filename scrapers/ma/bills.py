@@ -1,5 +1,6 @@
 import re
 import requests
+from utils import checked_requests
 
 import os
 import json
@@ -351,7 +352,6 @@ def rollcall_of(vote):
 
 
 class MABillScraper(Scraper):
-    verify = False
 
     categorizer = Categorizer()
     session_filters = {}
@@ -372,7 +372,6 @@ class MABillScraper(Scraper):
         super().__init__(*args, **kwargs)
         # forcing these values so that 500s come back as skipped bills
         self.raise_errors = False
-        self.verify = False
         self.retry_attempts = 0
         self._warned_no_title_rule = False
         # OPEN-509/512, filled by scrape_amendment_papers(): what each real bill gets from its amendment papers
@@ -602,7 +601,7 @@ class MABillScraper(Scraper):
 
     def fetch_ok(self, url):
         """A source request that must succeed: the scraper's own get() does not raise on an error status here."""
-        response = self.get(url, verify=False)
+        response = self.get(url)
         if response.status_code != 200:
             raise ValueError("HTTP {} from {}".format(response.status_code, url))
         return response
@@ -870,7 +869,7 @@ class MABillScraper(Scraper):
     def fetch_bill_page(self, bill_url):
         """A bill page's html, or None when it could not be fetched (warned)."""
         try:
-            response = self.get(bill_url, verify=False)
+            response = self.get(bill_url)
             self.info("GET (with `requests`) - {}".format(bill_url))
         except requests.exceptions.RequestException:
             self.warning("Server Error on {}".format(bill_url))
@@ -924,7 +923,7 @@ class MABillScraper(Scraper):
                 "cheaper signal exists."
             )
 
-        list_data = self.get(api_url, verify=False).content
+        list_data = self.get(api_url).content
         for row in json.loads(list_data):
             chambers = ["H", "S"]
 
@@ -1215,9 +1214,7 @@ class MABillScraper(Scraper):
         in its own session. A link the action text already made to the same bill gets the label instead of a second
         row. A tab that cannot be read is skipped with a warning: the bill is still saved, and is read again next run."""
         try:
-            page = lxml.html.fromstring(
-                self.get(bill_url + "/SimilarBills", verify=False).content
-            )
+            page = lxml.html.fromstring(self.get(bill_url + "/SimilarBills").content)
         except Exception as e:
             self.warning(
                 "OPEN-645: Similar Bills not read for {} ({})".format(bill_url, e)
@@ -1706,8 +1703,7 @@ class MABillScraper(Scraper):
 
     def get_as_ajax(self, url):
         # set the X-Requested-With:XMLHttpRequest so the server only sends along the bits we want
-        s = requests.Session()
-        s.verify = False
+        s = checked_requests.Session()
         s.headers.update({"X-Requested-With": "XMLHttpRequest"})
         try:
             return s.get(url)

@@ -12,6 +12,7 @@ from openstates.exceptions import EmptyScrape
 from utils.events import match_coordinates
 from scrapelib import HTTPError
 from spatula import PdfPage, URL
+from openstates.utils.tls import VerifyingScraper
 
 bills_re = re.compile(
     r"(SJR|HCR|HB|HR|SCR|SB|HJR|SR)\s{0,5}0*(\d+)", flags=re.IGNORECASE
@@ -41,7 +42,6 @@ class Agenda(PdfPage):
 class OKEventScraper(Scraper):
     _tz = pytz.timezone("CST6CDT")
     session = requests.Session()
-    verify = False
 
     # usage:
     # poetry run os-update ne \
@@ -70,7 +70,7 @@ class OKEventScraper(Scraper):
     def scrape_senate(self):
         # url = "https://oksenate.gov/committee-meetings"
         url = "https://accessible.oksenate.gov/committee-meetings"
-        page = self.get(url, verify=False).content
+        page = self.get(url).content
         page = lxml.html.fromstring(page)
         page.make_links_absolute(url)
 
@@ -91,7 +91,7 @@ class OKEventScraper(Scraper):
             yield from self.scrape_senate_event(event_url)
 
     def scrape_senate_event(self, url):
-        page = lxml.html.fromstring(self.get(url, verify=False).content)
+        page = lxml.html.fromstring(self.get(url).content)
         page.make_links_absolute(url)
 
         title_nodes = page.xpath("//span[contains(@class,'field--name-title')]/text()")
@@ -157,7 +157,6 @@ class OKEventScraper(Scraper):
             data=json.dumps(post_data),
             headers=headers,
             allow_redirects=True,
-            verify=False,
         ).content
         page = json.loads(page)
 
@@ -225,9 +224,9 @@ class OKEventScraper(Scraper):
                 ):
                     continue
                 try:
-                    for bill in Agenda(
-                        source=URL(link["route"], verify=False)
-                    ).do_scrape():
+                    for bill in Agenda(source=URL(link["route"])).do_scrape(
+                        scraper=VerifyingScraper()
+                    ):
                         event.add_bill(bill)
                 except requests.exceptions.TooManyRedirects:
                     # Missing PDFs on webserver1.lsb.state.ok.us redirect in a

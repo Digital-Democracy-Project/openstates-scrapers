@@ -7,6 +7,7 @@ from openstates.scrape import Scraper, Event
 from openstates.exceptions import EmptyScrape
 
 from spatula import CSS, HtmlPage, URL, XPath
+from openstates.utils.tls import VerifyingScraper
 
 TIMEZONE = pytz.timezone("America/New_York")
 
@@ -91,7 +92,7 @@ class VTEventScraper(Scraper):
 
         url = "https://legislature.vermont.gov/committee/meetings/{}".format(year_slug)
 
-        doc = html.fromstring(self.get(url, verify=False).text)
+        doc = html.fromstring(self.get(url).text)
         doc.make_links_absolute(url)
         event_count = 0
         # This should be some point in the past, because some event agendas actually include dates
@@ -100,10 +101,10 @@ class VTEventScraper(Scraper):
 
         for source in doc.xpath('//a[contains(@href, "/agenda/")]/@href'):
             # Determine when the committee meets
-            source_url = URL(source, verify=False)
+            source_url = URL(source)
             events = VTAgendaOfWeek(source=source_url)
             try:
-                yield from events.do_scrape()
+                yield from events.do_scrape(scraper=VerifyingScraper())
             except Exception as e:
                 self.warning(e)
                 continue

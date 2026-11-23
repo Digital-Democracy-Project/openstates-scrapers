@@ -43,7 +43,7 @@ class CTVoteScraper(Scraper):
 
     def parse_vote(self, url, session, vote_chamber):
         try:
-            response = self.get(url, verify=False)
+            response = self.get(url)
         except Exception as e:
             self.error(f"Failed request in {url} - {e}")
             return

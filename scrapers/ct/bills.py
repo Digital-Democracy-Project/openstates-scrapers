@@ -97,7 +97,7 @@ class CTBillScraper(Scraper):
             "&bill_num=%s&which_year=%s" % (bill_number, bill.legislative_session)
         )
 
-        page = self.get(url, verify=False).text
+        page = self.get(url).text
         if "not found in Database" in page:
             raise SkipBill()
         page = lxml.html.fromstring(page)

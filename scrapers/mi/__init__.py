@@ -1,6 +1,7 @@
 import logging
 
 import requests
+from utils import checked_requests
 import lxml.html
 
 from openstates.scrape import State
@@ -109,9 +110,9 @@ class Michigan(State):
             # same UA bills.py already uses helps sometimes, but legislature.mi.gov's
             # bot-detection is inconsistent: live testing 2026-08-01 got a dropped
             # connection (RemoteDisconnected) instead, the same symptom the MI
-            # archiver hits independently and often. verify=False (upstream
-            # 3266109, 2026-07-21) is the other half of what upstream OpenStates
-            # runs for MI -- neither on its own is a reliable fix for this
+            # archiver hits independently and often. Upstream also turned
+            # the certificate check off here (3266109, 2026-07-21); OPEN-803 turned it
+            # back on (core's per-host rule). Neither is a reliable fix for this
             # blocking, just a best effort -- the fallback below is what actually
             # keeps get_session_list() from raising CommandError.
             #
@@ -126,11 +127,10 @@ class Michigan(State):
             # cookies -- not a separate hardcoded/guessed string, so this plain requests.get
             # call presents the same identity that actually minted the cookies it attaches.
             response = mi_waf_get(
-                lambda cookies, user_agent: requests.get(
+                lambda cookies, user_agent: checked_requests.get(
                     url,
                     headers={"User-Agent": user_agent},
                     cookies=cookies,
-                    verify=False,
                 )
             )
             response.raise_for_status()

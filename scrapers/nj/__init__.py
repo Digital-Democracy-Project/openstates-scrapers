@@ -1,4 +1,4 @@
-import requests
+from utils import checked_requests
 from openstates.scrape import State
 from .bills import NJBillScraper
 from .events import NJEventScraper
@@ -104,7 +104,7 @@ class NewJersey(State):
     def get_session_list(self):
         return [
             s["display"]
-            for s in requests.get(
-                "https://www.njleg.state.nj.us/api/downloads/sessions", verify=False
+            for s in checked_requests.get(
+                "https://www.njleg.state.nj.us/api/downloads/sessions"
             ).json()
         ]

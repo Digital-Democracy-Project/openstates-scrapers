@@ -6,6 +6,7 @@ from spatula import (
     XPath,
 )
 from openstates.scrape import VoteEvent, Scraper
+from openstates.utils.tls import VerifyingScraper
 import re
 import pytz
 import datetime as dt
@@ -81,12 +82,16 @@ class VoteTotalMismatch(Exception):
 
 class MAVoteScraper(Scraper):
     def scrape(self, session=None):
-        yield from HouseJournalDirectory(session=session).do_scrape()
-        yield from SenateJournalDirectory(session=session).do_scrape()
+        yield from HouseJournalDirectory(session=session).do_scrape(
+            scraper=VerifyingScraper()
+        )
+        yield from SenateJournalDirectory(session=session).do_scrape(
+            scraper=VerifyingScraper()
+        )
 
 
 class HouseJournalDirectory(HtmlPage):
-    source = URL("https://malegislature.gov/Journal/House/", verify=False)
+    source = URL("https://malegislature.gov/Journal/House/")
 
     def __init__(self, source=None, session=None):
         super().__init__(source=source or self.source)
@@ -99,16 +104,16 @@ class HouseJournalDirectory(HtmlPage):
             x for x in XPath("//a/@href").match(self.root) if x.endswith("RollCalls")
         ]
         for rc in roll_calls:
-            vote_events = HouseRollCall(
-                source=URL(rc, verify=False), session=self.session
-            ).do_scrape()
+            vote_events = HouseRollCall(source=URL(rc), session=self.session).do_scrape(
+                scraper=VerifyingScraper()
+            )
             for vote_event in vote_events:
                 vote_event.add_source(self.source.url, note="House journal listing")
                 yield vote_event
 
 
 class SenateJournalDirectory(HtmlListPage):
-    source = URL("https://malegislature.gov/Journal/Senate", verify=False)
+    source = URL("https://malegislature.gov/Journal/Senate")
     votes_list = []
 
     def __init__(self, source=None, session=None):
@@ -120,10 +125,10 @@ class SenateJournalDirectory(HtmlListPage):
         month_links = XPath("//a[@aria-controls='journalList']/@href").match(self.root)
         for month_link in month_links:
             vote_events = SenateJournalMonth(
-                source=URL(month_link, verify=False),
+                source=URL(month_link),
                 votes_list=self.votes_list,
                 session=self.session,
-            ).do_scrape()
+            ).do_scrape(scraper=VerifyingScraper())
             for vote_event in vote_events:
                 # vote_event.add_source(self.source.url, note="Senate jouenal listing")
                 yield vote_event
@@ -143,7 +148,7 @@ class SenateJournalMonth(HtmlListPage):
             #     "https://malegislature.gov/Journal/Senate/193/768/sj03232023_0100PM.pdf",
             # ):
             yield SenateJournal(
-                source=URL(journal_pdf_link, verify=False),
+                source=URL(journal_pdf_link),
                 votes_list=self.votes_list,
                 session=self.session,
             )

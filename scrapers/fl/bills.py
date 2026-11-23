@@ -31,6 +31,7 @@ except ImportError:  # pragma: no cover
 
 
 from spatula import HtmlPage, HtmlListPage, XPath, SelectorError, PdfPage, URL, SkipItem
+from openstates.utils.tls import VerifyingScraper
 
 from .actions import Categorizer
 from .utils import (
@@ -152,7 +153,6 @@ class SubjectPDF(PdfPage):
     def get_source_from_input(self):
         return URL(
             f"http://www.leg.state.fl.us/data/session/{self.input['session']}/citator/Daily/subindex.pdf",
-            verify=False,
         )
 
     def process_page(self):
@@ -197,7 +197,6 @@ class BillList(HtmlListPage):
         # per-bill House-page cost it lets us skip for everything not requested.
         return URL(
             f"https://flsenate.gov/Session/Bills/{self.input['session']}?chamber=both",
-            verify=False,
         )
 
     def get_next_source(self):
@@ -213,7 +212,7 @@ class BillList(HtmlListPage):
         if len(set(next_urls)) > 1:
             raise PaginationError("get_next_page returned multiple links: {next_urls}")
 
-        return URL(f"{next_urls[0]}", verify=False)
+        return URL(f"{next_urls[0]}")
 
     def process_item(self, item):
         bill_id = item.text.strip()
@@ -302,7 +301,7 @@ class BillDetail(HtmlPage):
     example_source = "https://flsenate.gov/Session/Bill/2021/1"
 
     def get_source_from_input(self):
-        return URL(self.input.sources[0]["url"], verify=False)
+        return URL(self.input.sources[0]["url"])
 
     def process_page(self):
         if self.root.xpath("//div[@id = 'tabBodyBillHistory']//table"):
@@ -612,13 +611,13 @@ class BillDetail(HtmlPage):
 
                 vote_url = tr.xpath("td[4]/a")[0].attrib["href"]
                 if "SenateVote" in vote_url:
-                    vote_url = URL(vote_url, verify=False)
+                    vote_url = URL(vote_url)
                     yield FloorVote(
                         dict(date=vote_date, chamber="upper", bill=self.input),
                         source=vote_url,
                     )
                 elif "HouseVote" in vote_url:
-                    vote_url = URL(vote_url, verify=False)
+                    vote_url = URL(vote_url)
                     yield FloorVote(
                         dict(
                             date=vote_date,
@@ -628,7 +627,7 @@ class BillDetail(HtmlPage):
                         source=vote_url,
                     )
                 else:
-                    vote_url = URL(vote_url, verify=False)
+                    vote_url = URL(vote_url)
                     yield UpperComVote(
                         dict(date=vote_date, bill=self.input),
                         source=vote_url,
@@ -1121,7 +1120,6 @@ class HouseSearchPage(HtmlListPage):
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
             },
             retries=self.HOUSE_SEARCH_MAX_ATTEMPTS,
-            verify=False,
         )
 
     def accept_response(self, response: requests.Response):
@@ -1184,7 +1182,7 @@ class HouseSearchPage(HtmlListPage):
         # resilience profile, same as hop 1, matching HouseBillPage.accept_response's
         # retry budget below (OPEN-66).
         source = _FLHouseCookieProviderSource(
-            f"{item}", verify=False, retries=FLHOUSE_WAF_MAX_ATTEMPTS
+            f"{item}", retries=FLHOUSE_WAF_MAX_ATTEMPTS
         )
         return HouseBillPage(self.input, source=source)
 
@@ -1262,7 +1260,7 @@ class HouseBillPage(HtmlListPage):
         # _FLHouseCookieProviderSource (OPEN-84) so hop 3 fetches through FL's real
         # resilience profile, same as hops 1/2 (OPEN-66).
         source = _FLHouseCookieProviderSource(
-            f"{item}", verify=False, retries=FLHOUSE_WAF_MAX_ATTEMPTS
+            f"{item}", retries=FLHOUSE_WAF_MAX_ATTEMPTS
         )
         return HouseComVote(self.input, source=source)
 
@@ -1465,7 +1463,12 @@ class FlBillScraper(Scraper):
 
         # The subjects PDF is fetched once here and handed to every page of the bill list,
         # instead of being declared as a per-BillList dependency that re-fetches it (upstream #5880).
-        subjects = next(iter(SubjectPDF({"session": session}).do_scrape()), None)
+        subjects = next(
+            iter(
+                SubjectPDF({"session": session}).do_scrape(scraper=VerifyingScraper())
+            ),
+            None,
+        )
         if subjects is None:
             raise ValueError(
                 f"Florida subjects PDF for {session} produced no subjects; not scraping "
@@ -1474,7 +1477,9 @@ class FlBillScraper(Scraper):
 
         # OPEN-642: ("S", "318") -> "SJR 318" for the whole session, for the Related Bills table.
         bill_ids = {}
-        for identifier in BillIdList({"session": session}).do_scrape():
+        for identifier in BillIdList({"session": session}).do_scrape(
+            scraper=VerifyingScraper()
+        ):
             key = _fl_bill_key(identifier)
             if key:
                 bill_ids[key] = identifier
@@ -1586,7 +1591,7 @@ class FlBillScraper(Scraper):
         """
         Process the bill list with error handling and circuit breaker pattern.
         """
-        for item in bill_list.do_scrape():
+        for item in bill_list.do_scrape(scraper=VerifyingScraper()):
             try:
                 # Reset connection pool if needed
                 self._reset_connection_pool_if_needed()

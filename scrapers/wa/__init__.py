@@ -108,6 +108,5 @@ class Washington(State):
         result = url_xpath(
             "https://leg.wa.gov/",
             '//select[@id="biennium"]/option/text()',
-            verify=False,
         )
         return result

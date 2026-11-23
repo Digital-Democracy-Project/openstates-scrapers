@@ -179,6 +179,6 @@ class AKEventScraper(Scraper, LXMLMixin):
         headers["X-Alaska-Legislature-Basis-Version"] = "1.4"
 
         url = "{}{}".format(self.API_BASE, path)
-        page = self.get(url, params=args, headers=headers, verify=False)
+        page = self.get(url, params=args, headers=headers)
         page = lxml.etree.fromstring(page.content)
         return page

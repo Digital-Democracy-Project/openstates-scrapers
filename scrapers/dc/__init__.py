@@ -1,5 +1,5 @@
 import os
-import requests
+from utils import checked_requests
 from openstates.scrape import State
 from .bills import DCBillScraper
 from .events import DCEventScraper
@@ -93,10 +93,9 @@ class DistrictOfColumbia(State):
             "Accept": "application/json",
             "User-Agent": useragent,
         }
-        resp = requests.get(
+        resp = checked_requests.get(
             "https://lims.dccouncil.gov/api/v2/PublicData/CouncilPeriods",
             headers=headers,
-            verify=False,
         )
         resp.raise_for_status()
         sessions = []

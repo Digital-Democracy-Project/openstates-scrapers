@@ -42,9 +42,7 @@ class VIBillScraper(Scraper):
             "GovernorsNumber": "",
             "SponsorCoSponsor": "0",
         }
-        page = self.post(
-            "https://billtracking.legvi.org:8082/search", data=data, verify=False
-        ).json()
+        page = self.post("https://billtracking.legvi.org:8082/search", data=data).json()
 
         for row in page["recordset"]:
             if row["BillNumber"] or row["ResolutionNumber"]:
@@ -53,9 +51,7 @@ class VIBillScraper(Scraper):
     def scrape_bill(self, session, row: dict):
         data = {"docEntryID": row["ID"]}
 
-        row = self.post(
-            "https://billtracking.legvi.org:8082/details", data=data, verify=False
-        ).json()
+        row = self.post("https://billtracking.legvi.org:8082/details", data=data).json()
         row = row["recordset"][0]
 
         identifier = row["U_BillNumber"] or row["U_ResolutionNumber"]

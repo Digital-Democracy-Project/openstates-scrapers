@@ -51,9 +51,7 @@ class DEEventScraper(Scraper, LXMLMixin):
 
         page_data = []
         try:
-            page_data = self.post(
-                page_url, verify=False, headers=self.post_headers
-            ).json()["Data"]
+            page_data = self.post(page_url, headers=self.post_headers).json()["Data"]
         except json.decoder.JSONDecodeError:
             # No agenda items
             self.info(f"POST returned nothing on {page_url}")
@@ -77,7 +75,7 @@ class DEEventScraper(Scraper, LXMLMixin):
 
     def scrape(self):
         url = "https://legis.delaware.gov/json/CommitteeMeetings/GetUpcomingCommitteeMeetings"
-        resp = self.post(url, verify=False, headers=self.post_headers)
+        resp = self.post(url, headers=self.post_headers)
 
         if resp.text == "":
             raise EmptyScrape

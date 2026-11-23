@@ -50,7 +50,7 @@ def _stub_cookie_provider(monkeypatch, cookies=None, user_agent=DEFAULT_USER_AGE
 def test_get_session_list_returns_scraped_sessions_on_success(monkeypatch):
     _stub_cookie_provider(monkeypatch)
     monkeypatch.setattr(
-        "mi.requests.get",
+        "mi.checked_requests.get",
         lambda url, headers=None, cookies=None, verify=None: FakeResponse(SUCCESS_HTML),
     )
 
@@ -70,7 +70,7 @@ def test_get_session_list_attaches_cached_waf_cookies(monkeypatch):
     _stub_cookie_provider(
         monkeypatch, cookies={"x-bni-fpc": "abc", "x-bni-rncf": "def"}
     )
-    monkeypatch.setattr("mi.requests.get", fake_get)
+    monkeypatch.setattr("mi.checked_requests.get", fake_get)
 
     sessions = Michigan().get_session_list()
 
@@ -83,7 +83,7 @@ def test_get_session_list_falls_back_when_request_fails(monkeypatch):
         raise requests.exceptions.ConnectionError("could not connect")
 
     _stub_cookie_provider(monkeypatch)
-    monkeypatch.setattr("mi.requests.get", raise_connection_error)
+    monkeypatch.setattr("mi.checked_requests.get", raise_connection_error)
 
     sessions = Michigan().get_session_list()
 
@@ -100,7 +100,7 @@ def test_get_session_list_falls_back_when_waf_challenge_page_returned(monkeypatc
     # same known-sessions safety net as before.
     _stub_cookie_provider(monkeypatch)
     monkeypatch.setattr(
-        "mi.requests.get",
+        "mi.checked_requests.get",
         lambda url, headers=None, cookies=None, verify=None: FakeResponse(CAPTCHA_HTML),
     )
 

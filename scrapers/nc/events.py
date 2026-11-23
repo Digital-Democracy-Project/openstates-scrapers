@@ -22,7 +22,6 @@ class UnknownBillIdPrefixError(BaseException):
 
 
 class NCEventScraper(Scraper, LXMLMixin):
-    verify = False
     _tz = pytz.timezone("US/Eastern")
     bill_id_re = re.compile(r"([A-Z]\w+\s)*([A-Z]\w+\s)([A-Z]\w+\s)(\d+)")
 

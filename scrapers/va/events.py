@@ -175,7 +175,7 @@ class VaEventScraper(Scraper):
             start_date = datetime.datetime.today().strftime("%m/%d/%Y")
 
         url = f"https://lis.virginia.gov/Schedule/api/GetScheduleListAsync?startDate={start_date}%2000:00:00"
-        page = self.get(url, verify=False, headers=headers)
+        page = self.get(url, headers=headers)
         page = json.loads(page.content)
         for row in page["Schedules"]:
             if "OwnerName" not in row:

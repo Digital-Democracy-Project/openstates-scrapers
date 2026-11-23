@@ -1,5 +1,5 @@
 import os
-import requests
+from utils import checked_requests
 from openstates.scrape import State
 from .bills import INBillScraper
 from .events import INEventScraper
@@ -198,8 +198,8 @@ class Indiana(State):
             "Accept": "application/json",
             "User-Agent": useragent,
         }
-        # On 2025-06-12 IN TLS certificate expired, so we need to use verify=False
-        # If this is fixed in the future, this can be set to True here and in apiclient.py
-        resp = requests.get("https://api.iga.in.gov", headers=headers, verify=False)
+        # OPEN-803: certificate checked (core's per-host rule); upstream turned it off when
+        # IN's certificate expired on 2025-06-12.
+        resp = checked_requests.get("https://api.iga.in.gov", headers=headers)
         resp.raise_for_status()
         return [session["name"] for session in resp.json()["sessions"]]

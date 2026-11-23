@@ -96,7 +96,7 @@ class OHBillScraper(Scraper):
             bill_versions_url = (
                 f"https://search-prod.lis.state.oh.us{api_bill['versions']}"
             )
-            api_versions_data = self.get(bill_versions_url, verify=False).json()
+            api_versions_data = self.get(bill_versions_url).json()
 
             effective_date_string = None
             for api_bill_version in api_versions_data:
@@ -195,7 +195,7 @@ class OHBillScraper(Scraper):
         legislators_url = (
             f"{self.short_base_url}/api/v2/general_assembly_{session}/legislators"
         )
-        legislators_data = self.get(legislators_url, verify=False).json()
+        legislators_data = self.get(legislators_url).json()
         legislators = {}
         for legislator in legislators_data:
             legislators[legislator["lpid"]] = legislator["displayname"]
@@ -207,7 +207,7 @@ class OHBillScraper(Scraper):
         # so just scrape the actions public-facing page
         # we *COULD* get bill versions from this page as well, but the API v2 does seem to have them already...
         docs_page_url = f"https://www.legislature.ohio.gov/legislation/{session}/{api_bill['number']}/documents"
-        docs_response = self.get(docs_page_url, verify=False)
+        docs_response = self.get(docs_page_url)
 
         docs_page = lxml.html.fromstring(docs_response.content)
         docs_page.make_links_absolute("https://www.legislature.ohio.gov")
@@ -242,7 +242,7 @@ class OHBillScraper(Scraper):
         # the "actions" API endpoint includes *most* bill actions, but seems to exclude some (Governor stuff, Effective)
         # so we use it just for votes data at this point
         actions_api_url = f"{self.short_base_url}/api/v2/general_assembly_{session}/legislation/{api_bill['number']}/actions"
-        actions_api_data = self.get(actions_api_url, verify=False).json()
+        actions_api_data = self.get(actions_api_url).json()
 
         # Actions include vote info
         for action in actions_api_data:
@@ -296,7 +296,7 @@ class OHBillScraper(Scraper):
         # As of Nov 25 API v2 does not contain actions as in prior version
         # so just scrape the actions public-facing page
         actions_page_url = f"https://www.legislature.ohio.gov/legislation/{session}/{api_bill['number']}/status"
-        actions_response = self.get(actions_page_url, verify=False)
+        actions_response = self.get(actions_page_url)
 
         # scrape actions from public-facing bill status page
         actions_page = lxml.html.fromstring(actions_response.content)
@@ -362,7 +362,7 @@ class OHBillScraper(Scraper):
         bills_url = (
             f"{self.short_base_url}/api/v2/general_assembly_{session}/legislation/"
         )
-        bill_data = self.get(bills_url, verify=False).json()
+        bill_data = self.get(bills_url).json()
         if len(bill_data) == 0:
             self.logger.warning("No bills")
         for bill in bill_data:

@@ -70,7 +70,6 @@ class VaBillScraper(Scraper):
     base_url: str = "https://lis.virginia.gov"
     session_code: str = ""
     categorizer = Categorizer()
-    verify = False
 
     chamber_map = {
         "S": "upper",
@@ -141,7 +140,6 @@ class VaBillScraper(Scraper):
             f"{self.base_url}/Legislation/api/getlegislationlistasync",
             headers=self.headers,
             json=body,
-            verify=False,
         ).json()
 
         # The list repeats a bill once per summary version (same LegislationID),
@@ -316,7 +314,6 @@ class VaBillScraper(Scraper):
             f"{self.base_url}/LegislationEvent/api/getlegislationeventbylegislationidasync",
             params=body,
             headers=self.headers,
-            verify=False,
         ).json()
         return page["LegislationEvents"]
 
@@ -383,7 +380,6 @@ class VaBillScraper(Scraper):
         page = self.get(
             f"{self.base_url}/LegislationPatron/api/GetLegislationPatronsByIdAsync/{legislation_id}",
             headers=self.headers,
-            verify=False,
         ).json()
         sponsors = page["Patrons"]
         for row in sponsors:
@@ -405,7 +401,6 @@ class VaBillScraper(Scraper):
             f"{self.base_url}/LegislationText/api/getlegislationtextbyidasync",
             params=body,
             headers=self.headers,
-            verify=False,
         )
         # occasionally this returns empty response, HTTP 204
         if len(response.text) == 0:
@@ -488,7 +483,6 @@ class VaBillScraper(Scraper):
             vote_page_url,
             params=body,
             headers=self.headers,
-            verify=False,
         ).content
 
         if not page:

@@ -237,7 +237,7 @@ class FlEventScraper(Scraper):
 
     def scrape_pdf(self, url):
         try:
-            response = self.get(url, verify=False)
+            response = self.get(url)
         except Exception as e:
             self.error(f"Failed request in {url} - {e}")
             return

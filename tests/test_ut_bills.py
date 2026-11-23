@@ -330,11 +330,10 @@ def test_scraper_defaults_to_a_browser_shaped_user_agent():
 # ── OPEN-322: bill pages must be fetched without certificate verification ───
 
 
-def test_scrape_bill_fetches_the_bill_page_with_verify_false():
-    """os-update turns verification ON unless --no-verify is passed (its flag is store_false),
-    and le.utah.gov's certificate chain doesn't verify in the Fargate image: UT's 2026-10-04
-    scrape died on the first bill page with CERTIFICATE_VERIFY_FAILED. Every other le.utah.gov
-    fetch in this scraper already passes verify=False; scrape_bill's page fetch must too."""
+def test_scrape_bill_fetches_the_bill_page_with_the_certificate_checked():
+    """OPEN-322 had this fetch pass verify=False after le.utah.gov's chain failed in the Fargate
+    image (UT's 2026-10-04 scrape). OPEN-803: the check stays on (core decides per host, from
+    TLS_VERIFY_EXCEPTIONS), so the page is fetched with no verify override."""
     scraper = make_scraper()
     page = mock.Mock()
     page.text = "<html><body></body></html>"  # no breadcrumb -> scrape_bill raises right after
@@ -347,6 +346,4 @@ def test_scrape_bill_fetches_the_bill_page_with_verify_false():
                 )
             )
 
-    get.assert_called_once_with(
-        "https://le.utah.gov/~2025S2/bills/static/HB2001.html", verify=False
-    )
+    get.assert_called_once_with("https://le.utah.gov/~2025S2/bills/static/HB2001.html")

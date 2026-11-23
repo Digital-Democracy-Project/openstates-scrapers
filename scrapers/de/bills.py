@@ -21,7 +21,6 @@ class FailedBillFetch:
 
 
 class DEBillScraper(Scraper, LXMLMixin):
-    verify = False
 
     base_url = "https://legis.delaware.gov"
 
@@ -262,7 +261,7 @@ class DEBillScraper(Scraper, LXMLMixin):
         bill.add_source(html_url, note="text/html")
 
         try:
-            html = self.lxmlize(html_url, verify=False)
+            html = self.lxmlize(html_url)
         except:  # noqa: E722
             # Collecting bills we had to skip because of failure to fetch
             failure = FailedBillFetch(bill_id, "fetch_bill_page")
@@ -363,7 +362,6 @@ class DEBillScraper(Scraper, LXMLMixin):
             url=search_form_url,
             data=form,
             allow_redirects=True,
-            verify=False,
             headers=self.headers,
             timeout=self.timeout,
         ).content
@@ -396,7 +394,6 @@ class DEBillScraper(Scraper, LXMLMixin):
             url=votes_url,
             data=form,
             allow_redirects=True,
-            verify=False,
             headers=self.headers,
             timeout=self.timeout,
         )
@@ -420,7 +417,6 @@ class DEBillScraper(Scraper, LXMLMixin):
             url=vote_url,
             data=form,
             allow_redirects=True,
-            verify=False,
             headers=self.headers,
             timeout=self.timeout,
         )
@@ -493,7 +489,7 @@ class DEBillScraper(Scraper, LXMLMixin):
         ("HA 1 to HB 53", "HB 445 w/HA 1"), or it is a consent calendar.
         """
         try:
-            pdf = self.get(pdf_url, verify=False).content
+            pdf = self.get(pdf_url).content
             lines = fitz.open("pdf", pdf)[0].get_text().splitlines()
         except Exception as e:
             self.warning(f"could not read roll call PDF {pdf_url}: {e}")
@@ -585,7 +581,6 @@ class DEBillScraper(Scraper, LXMLMixin):
             url=actions_url,
             data=form,
             allow_redirects=True,
-            verify=False,
             headers=self.headers,
             timeout=self.timeout,
         )
@@ -731,7 +726,6 @@ class DEBillScraper(Scraper, LXMLMixin):
             url=amds_url,
             data=form,
             allow_redirects=True,
-            verify=False,
             headers=self.headers,
             timeout=self.timeout,
         )
@@ -812,7 +806,6 @@ class DEBillScraper(Scraper, LXMLMixin):
             url=search_form_url,
             data=form,
             allow_redirects=True,
-            verify=False,
             headers=self.headers,
             timeout=self.timeout,
         )
@@ -830,7 +823,5 @@ class DEBillScraper(Scraper, LXMLMixin):
 
     # set up our asp session and fetch cookies
     def init_asp(self):
-        self.get(
-            "https://legis.delaware.gov/", verify=False, headers=self.headers
-        ).content
+        self.get("https://legis.delaware.gov/", headers=self.headers).content
         return
