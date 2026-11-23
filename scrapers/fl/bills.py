@@ -20,6 +20,16 @@ from openstates.utils.cookie_provider import (
     content_matches_block_markers,
 )
 from requests.exceptions import ConnectionError, Timeout, RequestException
+
+try:
+    # The cookie warm-up's browser error (OPEN-774); the image always has Playwright
+    from playwright.sync_api import Error as PlaywrightError
+except ImportError:  # pragma: no cover
+
+    class PlaywrightError(Exception):
+        pass
+
+
 from spatula import HtmlPage, HtmlListPage, XPath, SelectorError, PdfPage, URL, SkipItem
 
 from .actions import Categorizer
@@ -27,6 +37,9 @@ from .utils import (
     get_random_user_agent,
     add_random_delay,
 )
+
+# The same logger the FL cookie provider writes to, so its lines sit together in the run's log
+logger = logging.getLogger("openstates")
 
 SPONSOR_RE = re.compile(
     r"by\s+(?P<sponsors>[^(]+)(\(CO-INTRODUCERS\)\s+(?P<cosponsors>[\s\S]+))?"
@@ -870,6 +883,24 @@ FLHOUSE_WAF_MAX_ATTEMPTS = manifest_value("fl", "waf.max_attempts", 3)
 FL_COOLDOWN_AFTER_FAILURES = manifest_value("fl", "waf.cooldown_after_failures", 3)
 FL_COOLDOWN_SECONDS = manifest_value("fl", "waf.cooldown_s", 300)
 
+# OPEN-774: seconds to wait before each new try when a House visit fails outright, cookie visit
+# included. On 11-22 flhouse.gov redirect-looped every visitor for about 7 minutes (23:01-23:08
+# UTC) and one failed cookie visit stopped the whole session's collection; these waits add up to
+# 14 minutes, so an outage like that one is outlasted.
+FLHOUSE_OUTAGE_WAITS = (60, 180, 600)
+
+
+def _is_flhouse_outage(e: Exception) -> bool:
+    """OPEN-774: flhouse.gov could not be reached at all -- the cookie visit's browser failed, or
+    the request itself failed (a redirect loop, a refused or dropped connection, a timeout). A
+    "Request Rejected" page is not an outage: it keeps its own handling and never waits (OPEN-402).
+    """
+    if isinstance(e, PlaywrightError):
+        return True
+    return isinstance(e, WafBlockDetected) and isinstance(
+        e.__cause__, (ConnectionError, RemoteDisconnected, URLError, RequestException)
+    )
+
 
 def _flhouse_bill_label(page) -> str:
     """Bill identifier for a House-vote-chain Page's log messages, tolerating
@@ -1010,7 +1041,29 @@ class _FLHouseCookieProviderSource(URL):
                 )
             return resp
 
-        return profile.cookie_provider.fetch_with_retry(do_request)
+        # OPEN-774: fetch_with_retry re-warms the cookie once and then lets the error go, and a
+        # failed cookie visit (a browser error, not WafBlockDetected) was never caught at all:
+        # either one stopped the whole session. When the site is unreachable, wait and try again
+        # before giving up.
+        tries = len(FLHOUSE_OUTAGE_WAITS) + 1
+        for attempt in range(1, tries + 1):
+            try:
+                return profile.cookie_provider.fetch_with_retry(do_request)
+            except (WafBlockDetected, PlaywrightError) as e:
+                if not _is_flhouse_outage(e):
+                    raise
+                if attempt == tries:
+                    logger.error(
+                        f"fl: flhouse.gov still failing at {self.url} after {tries} tries "
+                        f"({str(e)[:200]}); giving up"
+                    )
+                    raise
+                wait = FLHOUSE_OUTAGE_WAITS[attempt - 1]
+                logger.warning(
+                    f"fl: flhouse.gov failed at {self.url} ({str(e)[:200]}); "
+                    f"trying again in {wait}s (try {attempt}/{tries})"
+                )
+                time.sleep(wait)
 
 
 class HouseSearchPage(HtmlListPage):
