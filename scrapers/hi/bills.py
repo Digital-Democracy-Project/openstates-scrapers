@@ -28,6 +28,17 @@ TEST_SINGLE_BILL_NUMBER = "572"  # set to bill num you want to test
 repeated_action = ["Excused: none", "Representative(s) Eli"]
 
 vote_re_list = [
+    # OPEN-825: the Senate floor tally, which prints an aye count and names only the exceptions:
+    # "Ayes, 21; Aye(s) with reservations: Senator(s) Chang .  Noes, 2 (Senator(s) Awa, Lee, C.).
+    # Excused, 2 (Senator(s) Gabbard, Kouchi)." ("Ayes, 18." on a nomination). Tried first: the
+    # second pattern below ends a "(Senator(s) ...)" list at the "(s)" and the fourth keeps no
+    # names for the noes, so those names were lost. Same counts as those patterns read.
+    r"""
+    Ayes,\s(?P<n_yes>\d+)[.;]\s*
+    Aye\(s\)\swith\sreservations:\s*(?P<yes_resv>none|Senator\(s\)[^()]*?)\s*\.\s+
+    Noes,\s(?P<n_no>\d+)\s\((?P<no>none|Senator\(s\)[^()]*)\)\.\s+
+    Excused,\s(?P<n_excused>\d+)\s\((?P<excused>none|Senator\(s\)[^()]*)\)
+""",
     r"""
         (?P<n_yes>\d+)\sAye\(?s\)?  # Yes vote count
         (:\s+(?P<yes>.*?))?;\s+  # Yes members
@@ -373,6 +384,13 @@ class HIBillScraper(Scraper):
                 seated_ayes = self.seated_ayes(vote[0], actor, date, bill_id)
                 if seated_ayes is None:
                     vote = None
+            elif (
+                vote
+                and actor == "upper"
+                and not split_specific_votes(vote[0].get("yes"))
+            ):
+                # OPEN-825: a Senate tally with an aye count and no aye names
+                seated_ayes = self.counted_ayes(vote[0], actor, date, bill_id)
 
             if vote:
                 v, motion = vote
@@ -434,22 +452,42 @@ class HIBillScraper(Scraper):
                 act.add_related_entity(name=committee, entity_type="organization")
         yield from reversed(votes)
 
-    def seated_ayes(self, v, chamber, date, bill_id):
+    def counted_ayes(self, v, chamber, date, bill_id):
+        """OPEN-825: the plain ayes of a Senate tally that prints an aye count but names only the
+        exceptions ("Ayes, 25; Aye(s) with reservations: none .  Noes, 0 (none). Excused, 0
+        (none)."): seated_ayes' rule, kept only when those ayes plus the ayes with reservations
+        come to the printed aye count. Otherwise none, with a warning: the roll call keeps its
+        counts and the names it prints, as before."""
+        kept = "plain ayes not stored, counts kept"
+        ayes = self.seated_ayes(v, chamber, date, bill_id, kept)
+        if ayes is None:
+            return []
+        resv = len(split_specific_votes(v["yes_resv"]))
+        if len(ayes) + resv != int(v["n_yes"]):
+            logger.warning(
+                f"OPEN-825: {bill_id} {date} {chamber} {kept}: {len(ayes)} seated and not named "
+                f"plus {resv} with reservations is not the printed {v['n_yes']} ayes"
+            )
+            return []
+        return ayes
+
+    def seated_ayes(self, v, chamber, date, bill_id, skipped="tally skipped"):
         """OPEN-709: the plain ayes of a tally that prints no aye count: the members seated in
         the chamber that day, minus those the text names (no, excused, aye with reservations).
         None, with a warning, when that cannot be done without guessing: no people data or no
         clear list of who sat, a named list whose length is not its printed count, or a name
-        that is not exactly one seated member or names someone already listed."""
+        that is not exactly one seated member or names someone already listed. `skipped` says
+        in the warning what the caller then does."""
         members = getattr(self, "members", None)
         if members is None:
             logger.warning(
-                f"OPEN-709: {bill_id} {date} {chamber} tally skipped: no people data"
+                f"OPEN-709: {bill_id} {date} {chamber} {skipped}: no people data"
             )
             return None
         seated = members.seated(chamber, date)
         if seated is None:
             logger.warning(
-                f"OPEN-709: {bill_id} {date} {chamber} tally skipped: the people data gives no "
+                f"OPEN-709: {bill_id} {date} {chamber} {skipped}: the people data gives no "
                 "clear list of who sat that day"
             )
             return None
@@ -464,7 +502,7 @@ class HIBillScraper(Scraper):
             ]
             if count and len(names) != int(v.get(count) or 0):
                 logger.warning(
-                    f"OPEN-709: {bill_id} {date} {chamber} tally skipped: {group} lists "
+                    f"OPEN-709: {bill_id} {date} {chamber} {skipped}: {group} lists "
                     f"{len(names)} names for a count of {v.get(count)}"
                 )
                 return None
@@ -472,7 +510,7 @@ class HIBillScraper(Scraper):
                 person = members.find(seated, name)
                 if person is None or any(person["id"] == n["id"] for n in named):
                     logger.warning(
-                        f"OPEN-709: {bill_id} {date} {chamber} tally skipped: {name!r} is not "
+                        f"OPEN-709: {bill_id} {date} {chamber} {skipped}: {name!r} is not "
                         "exactly one member seated that day, or is listed twice"
                     )
                     return None

@@ -172,7 +172,12 @@ def test_senate_resolution_adoption(members):
 def test_kept_roll_calls_are_unchanged_by_the_new_ones(members):
     # without people data the scraper yields exactly what it kept before (main); with it, those
     # same roll calls are unchanged; the House floor tally it adds after HB 1705's reconsideration
-    # (04-22-26) carries the "Reconsider: " prefix (OPEN-856, test_hi_reconsider_prefix)
+    # (04-22-26) carries the "Reconsider: " prefix (OPEN-856, test_hi_reconsider_prefix).
+    # OPEN-825: a Senate floor tally with an aye count gains its plain ayes' names, and nothing
+    # else changes: every printed name stays, and its no and excused lists are the same
+    def unnamed(v):
+        return {k: x for k, x in v.items() if k != "named" or v["chamber"] == "lower"}
+
     for name in (
         "HB1705.html",
         "HB1768.html",
@@ -183,7 +188,14 @@ def test_kept_roll_calls_are_unchanged_by_the_new_ones(members):
     ):
         before = _votes(name, None)
         after = _votes(name, members)
-        assert [v for v in after if v in before] == before
+        kept = [a for a in after if unnamed(a) in [unnamed(b) for b in before]]
+        assert [unnamed(a) for a in kept] == [unnamed(b) for b in before]
+        for b, a in zip(before, kept):
+            if b["chamber"] == "upper":
+                assert set(b["named"].get("yes", [])) <= set(a["named"].get("yes", []))
+                assert {o: n for o, n in a["named"].items() if o != "yes"} == {
+                    o: n for o, n in b["named"].items() if o != "yes"
+                }
     assert [
         v["date"]
         for v in _votes("HB1705.html", members)
