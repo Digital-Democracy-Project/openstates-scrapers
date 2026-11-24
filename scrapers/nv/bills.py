@@ -26,6 +26,10 @@ ACTION_CLASSIFIERS = (
     ),
     ("From committee: .+? pass", ["committee-passage"]),
     (r"Prefiled\.\s*Referred", ["introduction", "referral-committee"]),
+    # OPEN-840: NELIS sometimes prints these as their own lines ("Prefiled." then
+    # "Referred to Select Committee on ...") and each line is now its own action
+    (r"^Prefiled\.", ["introduction"]),
+    (r"^Referred to", ["referral-committee"]),
     ("Read first time. Referred", ["reading-1", "referral-committee"]),
     ("Read first time.", ["reading-1"]),
     ("Read second time.", ["reading-2"]),
@@ -281,28 +285,22 @@ class BillTabDetail(Utf8HtmlMixin, HtmlPage):
                 date, cell, _ = [x.text for x in row.getchildren()]
                 date = parse_date(date)
 
-                # NELIS joins a day's steps with \r, and the chamber can change
-                # mid-cell ("... To Senate.\rIn Senate.\rRead first time...").
-                # Start a new action at each "In Assembly"/"In Senate" line.
-                segments = []
-                for line in cell.split("\r"):
-                    if line.startswith("In Assembly"):
-                        actor = "lower"
-                    elif line.startswith("In Senate"):
-                        actor = "upper"
-                    elif segments:
-                        segments[-1][1].append(line)
+                # NELIS prints a day's steps as lines of one cell, joined with \r, and
+                # the chamber can change mid-cell ("... To Senate.\rIn Senate.\rRead
+                # first time..."). OPEN-840: one action per printed line, in order, so
+                # each step keeps its own chamber and labels; an "In Assembly"/"In
+                # Senate" line moves the chamber for itself and the lines after it.
+                for line in cell.splitlines():
+                    action = line.strip()
+                    if not action:
                         continue
-                    segments.append((actor, [line]))
-                # a trailing marker only says where the bill goes next
-                if len(segments) > 1 and len(segments[-1][1]) == 1:
-                    segments[-2][1].append(segments.pop()[1][0])
-
-                for seg_actor, lines in segments:
-                    action = "\r".join(lines)
-                    if not action.startswith("In ") and "Governor" in action:
-                        actor = seg_actor = "executive"
-                    self.add_action(bill, date, action, seg_actor)
+                    if action.startswith("In Assembly"):
+                        actor = "lower"
+                    elif action.startswith("In Senate"):
+                        actor = "upper"
+                    elif "Governor" in action:
+                        actor = "executive"
+                    self.add_action(bill, date, action, actor)
         except SelectorError:
             pass
 
