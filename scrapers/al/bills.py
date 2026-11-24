@@ -647,6 +647,13 @@ class ALBillScraper(Scraper):
             classification=vote_classification(action_row),
         )
         vote.dedupe_key = vote_key
+        # OPEN-863: ALISON gives a vote its day only; its roll-call number rises in the order the
+        # chamber took its votes (HB 460's House, 2026-02-24: Roll Call 520 lost, then 521 adopted).
+        # The broker reads this key into Motion.rollcall_num to order two same-day votes in one
+        # chamber (as OPEN-628 and OPEN-685 did for the other states).
+        vote.extras[
+            "senate-rollcall-num" if body == "Senate" else "house-rollcall-num"
+        ] = str(roll_call)
 
         vote.set_count("yes", yeas)
         vote.set_count("no", nays)
