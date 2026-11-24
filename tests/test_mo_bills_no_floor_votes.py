@@ -68,7 +68,8 @@ def test_hb2885_floor_actions_keep_their_text_and_totals():
     assert [(a["description"], a["organization_id"]) for a in final] == [
         (
             "Truly Agreed To and Finally Passed - AYES: 27 NOES: 0 PRESENT: 0",
-            '~{"classification": "lower"}',
+            # OPEN-869: the Senate's vote, as the Senate Journal it cites says (was "lower")
+            '~{"classification": "upper"}',
         )
     ]
     assert final[0]["classification"] == ["passage"]

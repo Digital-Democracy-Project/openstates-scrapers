@@ -36,6 +36,20 @@ def is_committee_report(action):
     return "Reported Do" in action
 
 
+# OPEN-869: the chamber whose journal records a House bill XML action: its <HouseJournalStartPage>
+# or <SenateJournalStartPage>. The (H)/(S) in the text is not always the actor: on a 2026 House
+# concurrent resolution the Senate's adoption (31 ayes, Senate Journal p. 118) reads "Adopted (H)",
+# and the Senate's "Truly Agreed To and Finally Passed" and "Taken Up" lines carry no marker, so they
+# were filed under the House. Over all 2,101 saved 2026 House bill XMLs no action cites both
+# journals; actions citing neither (committee hearings, prefiling) keep the text's marker.
+def journal_chamber(action):
+    house = bool(action.xpath("./HouseJournalStartPage"))
+    senate = bool(action.xpath("./SenateJournalStartPage"))
+    if house == senate:
+        return None
+    return "lower" if house else "upper"
+
+
 class UnrecognizedSessionType(BaseException):
     def __init__(self, session):
         super().__init__(f"Session {session} has the unrecognized session types.")
@@ -548,6 +562,9 @@ class MOBillScraper(Scraper, LXMLMixin):
                 action.xpath("./PubDate/text()")[0], "%Y-%m-%d"
             )
             actor = house_get_actor_from_action(action_title)
+            # OPEN-869: the journal names the chamber; the Governor's actions stay the executive's
+            if actor != "executive":
+                actor = journal_chamber(action) or actor
             type_class = self._get_action(actor, action_title)
 
             # if there is rollcall
