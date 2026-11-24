@@ -249,9 +249,13 @@ class BillTabDetail(Utf8HtmlMixin, HtmlPage):
             # Example: Assemblywoman Alexis Hansen
             # Also check if sponsor is an organization or person
             # Example: "Assembly Committee on Government Affairs" is an organization
+            # OPEN-829: NELIS links a committee sponsor to its committee page
+            # (.../Committee/460/Overview) and a legislator to /App/Legislator/...;
+            # special-session committees drop the word ("Assembly Health and Wellness")
             chamber = None
             entity_type = "person"
-            if "committee" in name.lower():
+            href = link.get("href") or ""
+            if "/Committee/" in href or "committee" in name.lower():
                 entity_type = "organization"
             if name.split()[0] in [
                 "Assemblywoman",
