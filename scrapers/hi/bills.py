@@ -106,15 +106,29 @@ vote_re_list = [
 FAILED_RE = re.compile(r"\b(failed|sustained)\b", re.IGNORECASE)
 PASSED_RE = re.compile(r"\b(passed|adopted|overridden)\b", re.IGNORECASE)
 OVERRIDE_RE = re.compile(r"\boverrid", re.IGNORECASE)
+# OPEN-868: a committee's decision-making vote ("The committee(s) on WAM recommend(s) that the measure be PASSED, WITH
+# AMENDMENTS. The votes in WAM were as follows: 4 Aye(s) ...; 9 No(es) ...") prints the recommendation it voted on, not
+# its outcome, so its "PASSED" says nothing about the vote. Its result is the tally's: more ayes than noes. On the Mac
+# replica (2026-11-24, 7,628 stored committee votes) every one with ayes <= noes (14, all Senate) is followed the same
+# day by "The recommendation was not adopted." and every one with more ayes than noes is not; a plurality wins even
+# without a majority of the members (House 5-3 with 2 excused, Senate 2-1 with 2 excused, and the bill moves on).
+# Matched on the first sentence naming both "committee" and "recommend" (also the Conference Committee's and the
+# Senate's "The recommendation of the committee(s) on ... is to ADVISE AND CONSENT ...").
+COMMITTEE_RECOMMENDATION_RE = re.compile(
+    r"\A(?=[^.]*\bcommittee)(?=[^.]*\brecommend)", re.IGNORECASE
+)
 # Hawaii Constitution Art. III sec. 17: an override needs two-thirds of all the members to which
 # each house is entitled (House 51, Senate 25), not of those voting.
 CHAMBER_SIZE = {"lower": 51, "upper": 25}
 
 
 def vote_result(chamber, text, yes_count, no_count):
-    """'pass' or 'fail' for one roll call in chamber "upper"/"lower": the outcome the text states
-    (passed, adopted, overridden; failed, sustained), else two-thirds of the house's seats for a
-    veto override, else more yeas than nays."""
+    """'pass' or 'fail' for one roll call in chamber "upper"/"lower": a committee's recommendation
+    vote by its tally (OPEN-868), else the outcome the text states (passed, adopted, overridden;
+    failed, sustained), else two-thirds of the house's seats for a veto override, else more yeas
+    than nays."""
+    if COMMITTEE_RECOMMENDATION_RE.search(text):
+        return "pass" if yes_count > no_count else "fail"
     if FAILED_RE.search(text):
         return "fail"
     if PASSED_RE.search(text):
