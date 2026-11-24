@@ -16,6 +16,7 @@ import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
 
+from openstates.metadata import lookup  # noqa: E402
 from openstates.scrape import Bill  # noqa: E402
 from openstates.utils import get_pseudo_id  # noqa: E402
 
@@ -33,10 +34,10 @@ class FakeResponse:
         self.content = content
 
 
-def scrape_bill(monkeypatch, measure, chamber):
+def scrape_bill(monkeypatch, measure, chamber, fixtures=FIXTURES):
     """The Bill scrape_bills() makes from one real history XML (its roll calls are not read)."""
     scraper = MSBillScraper.__new__(MSBillScraper)
-    history = open(os.path.join(FIXTURES, measure + "_2026_history.xml"), "rb").read()
+    history = open(os.path.join(fixtures, measure + "_2026_history.xml"), "rb").read()
 
     def get(url, verify=False):
         if "all_measures" in url:
@@ -99,8 +100,6 @@ def sponsors(monkeypatch, measure, chamber):
         ),
         # "Hines *": filed by request ("By: Representative Hines (By Request)" on the bill)
         ("HB1595", "lower", [("Hines", True, {"name": "Hines", "chamber": "lower"})]),
-        # a nomination: the appointing authority has no member page, so no chamber (as before)
-        ("SN10", "upper", [("GOVERNOR", True, {"name": "GOVERNOR"})]),
     ],
 )
 def test_real_authors_keep_name_and_chamber(monkeypatch, measure, chamber, expected):
@@ -136,3 +135,49 @@ def test_author_name_and_chamber(name, link, expected):
 def test_co_author_source_is_their_own_page(monkeypatch, measure, chamber, page):
     sources = [s["url"] for s in scrape_bill(monkeypatch, measure, chamber).sources]
     assert "http://billstatus.ls.state.ms.us/2026/pdf/" + page in sources
+
+
+# OPEN-828: on a nomination the legislature prints the appointing office as the author, with no
+# member page. The fixtures under ms_open828 are real 2026 nomination histories, read 2026-11-23
+# (SN 50 and SN 101 by the Governor, SN 1 by the Lieutenant Governor, SN 110 by the Attorney
+# General); SN 10 (the Governor) is the OPEN-808 fixture.
+FIXTURES_828 = os.path.join(os.path.dirname(__file__), "fixtures", "ms_open828")
+
+
+def sponsor_entities(monkeypatch, measure, fixtures):
+    """(name, entity type, primary, pseudo id) of each author of one real nomination."""
+    bill = scrape_bill(monkeypatch, measure, "upper", fixtures)
+    return [
+        (
+            s["name"],
+            s["entity_type"],
+            s["primary"],
+            get_pseudo_id(s["person_id"] or s["organization_id"]),
+        )
+        for s in bill.sponsorships
+    ]
+
+
+@pytest.mark.parametrize(
+    "measure,fixtures",
+    [("SN10", FIXTURES), ("SN50", FIXTURES_828), ("SN101", FIXTURES_828)],
+)
+def test_governor_nomination_is_sponsored_by_the_executive(
+    monkeypatch, measure, fixtures
+):
+    # the name core resolves is Mississippi's executive organization as core's metadata names it
+    executive = lookup(abbr="ms").executive_name
+    assert sponsor_entities(monkeypatch, measure, fixtures) == [
+        (executive, "organization", True, {"name": executive})
+    ]
+
+
+@pytest.mark.parametrize(
+    "measure,office",
+    [("SN1", "LT. GOVERNOR"), ("SN110", "ATTORNEY GENERAL")],
+)
+def test_other_appointing_offices_stay_as_printed(monkeypatch, measure, office):
+    # no organization for these offices in core: unchanged from OPEN-808
+    assert sponsor_entities(monkeypatch, measure, FIXTURES_828) == [
+        (office, "person", True, {"name": office})
+    ]

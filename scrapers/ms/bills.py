@@ -160,13 +160,27 @@ class MSBillScraper(Scraper):
                 )
                 type = "primary"
                 bill.add_source(main_sponsor_url)
-                bill.add_sponsorship(
-                    self.clean_voter_name(main_sponsor),
-                    classification=type,
-                    entity_type="person",
-                    primary=True,
-                    chamber=main_chamber,
-                )
+                if main_chamber is None and main_sponsor.upper() == "GOVERNOR":
+                    # OPEN-828: a nomination the Governor makes prints the office as its
+                    # author, with no member page; its sponsor is Mississippi's executive
+                    # organization (core's metadata executive_name), as Hawaii's governor's
+                    # messages (OPEN-805). "GOVERNOR" as a person matched no one. The other
+                    # appointing offices (LT. GOVERNOR, ATTORNEY GENERAL, a commission) have
+                    # no organization in core and stay as printed.
+                    bill.add_sponsorship(
+                        "Office of the Governor",
+                        classification=type,
+                        entity_type="organization",
+                        primary=True,
+                    )
+                else:
+                    bill.add_sponsorship(
+                        self.clean_voter_name(main_sponsor),
+                        classification=type,
+                        entity_type="person",
+                        primary=True,
+                        chamber=main_chamber,
+                    )
 
             for author in details_root.xpath("//AUTHORS/ADDITIONAL"):
                 co_link = author.xpath("string(CO_LINK)").replace(" ", "_")

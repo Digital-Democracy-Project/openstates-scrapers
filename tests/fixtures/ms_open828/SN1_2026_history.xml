@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="../../dtds_xslts/history.xslt"?>
+ 
+<!DOCTYPE HISTORY SYSTEM "../../dtds_xslts/history.dtd">
+ 
+<HISTORY>
+	<YEAR>2026</YEAR>
+	<SESSION>Regular Session</SESSION>
+	<SHORTTITLE>Allison Grogan Crews, Canton, Mississippi, Board of Trustees of the Mississippi Outdoor Stewardship Trust Fund, four year term beginning July 1, 2025 and ending June 30, 2029.</SHORTTITLE>
+	<DATETIMELASTCHG>03/29/26 at 19:24</DATETIMELASTCHG>
+ 
+	<MEASURE>
+		<MSR_HS>S</MSR_HS>
+		<MSR_TYPE>N</MSR_TYPE>
+		<MSR_NUM>   1</MSR_NUM>
+		<FORMAT_MSRID>Senate Nomination    1</FORMAT_MSRID>
+		<SHORT_MSRID>SN 1</SHORT_MSRID>
+		<OWNER>S</OWNER>
+	</MEASURE>
+ 
+	<BACKGROUND>
+		<DISPOSITION>Confirmed</DISPOSITION>
+		<DEADLINE>None</DEADLINE>
+		<REVENUE>No</REVENUE>
+		<VOTETYPE>Majority</VOTETYPE>
+	</BACKGROUND>
+	<COMMITTEES>
+		<SENATE>
+			<S_NAME>Wildlife, Fisheries and Parks</S_NAME>
+			<S_INCMTE>F</S_INCMTE>
+			<S_LINK>../../Senate_cmtes/WI.xml</S_LINK>
+		</SENATE>
+	</COMMITTEES>
+	<AUTHORS>
+		<PRINCIPAL>
+			<P_NAME>LT. GOVERNOR</P_NAME>
+		</PRINCIPAL>
+	</AUTHORS>
+	<ACTION>
+		<ACT_NUMBER> 1</ACT_NUMBER>
+		<ACT_DESC>01/07 (S) Referred To Wildlife, Fisheries and Parks</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 2</ACT_NUMBER>
+		<ACT_DESC>03/25 (S) Do Advise and Consent</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 3</ACT_NUMBER>
+		<ACT_DESC>03/27 (S) Appointment Confirmed</ACT_DESC>
+		<ACT_VOTE>../../../../2026/pdf/votes/senate/0810011.pdf</ACT_VOTE>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 4</ACT_NUMBER>
+		<ACT_DESC>03/29 (S) Notified of Approval</ACT_DESC>
+	</ACTION>
+</HISTORY>
