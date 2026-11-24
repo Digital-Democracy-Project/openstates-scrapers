@@ -63,14 +63,35 @@ OTHER_VOTE_KINDS = (
 )
 
 
-def vote_classification(motion):
+# OPEN-874 (Ramon, 2026-11-24: every full up-or-down roll call on a bill counts, and the latest replaces earlier
+# ones; then "Count only failed introductions, not passed ones"): a failed introduction (a budget-session bill needs
+# two thirds to be introduced, and a failed vote ends the bill) and a failed Committee of the Whole vote are passage
+# when no later roll call of the same chamber that counts follows them on the bill: 106 bill-chambers of 2026 end
+# there (91 failed introductions, 15 failed COW votes). A passed "Introduced and Referred" roll call is only the
+# vote to introduce the bill, so it never counts: it keeps its reading-1 label. Where a later counting roll call
+# follows, the earlier one keeps its label (north carolina's second reading, OPEN-572).
+EARLIER_STAGE_RE = re.compile(r"^[SH] (failed introduction|COW:Failed)\b", re.I)
+
+
+def counts_as_passage(motion):
+    """A roll call that is passage on its own, or an earlier-stage one (which counts unless a later one replaces it)."""
+    return "passage" in classify_motion("wy", motion) or bool(
+        EARLIER_STAGE_RE.search(motion)
+    )
+
+
+def vote_classification(motion, later_passage=False):
+    """The roll call's motion classification. `later_passage`: a later roll call of the same chamber that counts is
+    on the bill, so a failed introduction or COW vote (EARLIER_STAGE_RE) is not the one that counts."""
     classification = classify_motion("wy", motion)
-    if classification:
-        return classification
-    for pattern, kind in OTHER_VOTE_KINDS:
-        if pattern.search(motion):
-            return [kind]
-    return []
+    if not classification:
+        for pattern, kind in OTHER_VOTE_KINDS:
+            if pattern.search(motion):
+                classification = [kind]
+                break
+    if EARLIER_STAGE_RE.search(motion) and not later_passage:
+        return ["passage"] + classification
+    return classification
 
 
 # OPEN-684: a roll call's result was "yeas beat nays", but a line-item veto override needs two thirds of the
@@ -82,6 +103,7 @@ def vote_classification(motion):
 # thirds of the chamber's 31 or 62, and any other vote yeas over nays.
 FAILED_RE = re.compile(r"\b(failed|did not)\b", re.I)
 PASSED_RE = re.compile(r"\b(passed|adopted)\b", re.I)
+VETO_OVERRIDE_RE = re.compile(r"\boverride\b.*\bveto\b|\bveto override\b", re.I)
 CHAMBER_SIZE = {"S": 31, "H": 62}
 
 
@@ -91,7 +113,9 @@ def vote_result(chamber, motion, yes_count, no_count):
         return "fail"
     if PASSED_RE.search(motion):
         return "pass"
-    if "veto-override" in vote_classification(motion):
+    if "veto-override" in vote_classification(motion) or VETO_OVERRIDE_RE.search(
+        motion
+    ):
         return "pass" if 3 * yes_count >= 2 * CHAMBER_SIZE[chamber] else "fail"
     return "pass" if yes_count > no_count else "fail"
 
@@ -333,7 +357,9 @@ class WYBillScraper(Scraper, LXMLMixin):
 
         keys_seen = set()
         for vote_json in bill_json["rollCalls"]:
-            for vote in self.scrape_vote(bill, vote_json, session):
+            for vote in self.scrape_vote(
+                bill, vote_json, session, bill_json["rollCalls"]
+            ):
                 # OPEN-769: a roll call the API lists twice for one bill is kept once
                 key = getattr(vote, "dedupe_key", None)
                 if key:
@@ -364,12 +390,32 @@ class WYBillScraper(Scraper, LXMLMixin):
                 names.append(token)
         return names
 
-    def scrape_vote(self, bill, vote_json, session):
-
+    @staticmethod
+    def _motion(vote_json):
         if vote_json["amendmentNumber"]:
-            motion = "{}: {}".format(vote_json["amendmentNumber"], vote_json["action"])
-        else:
-            motion = vote_json["action"]
+            return "{}: {}".format(vote_json["amendmentNumber"], vote_json["action"])
+        return vote_json["action"]
+
+    def _order(self, vote_json):
+        """A roll call's place on the bill: its date, then the API's own number (which grows through the session)."""
+        return (
+            self.parse_local_date(vote_json["voteDate"]),
+            vote_json.get("voteID") or 0,
+        )
+
+    def _later_passage(self, vote_json, roll_calls):
+        """True when a passage roll call of the same chamber comes after this one on the bill (OPEN-874)."""
+        chamber, order = voting_chamber(vote_json), self._order(vote_json)
+        return any(
+            voting_chamber(other) == chamber
+            and self._order(other) > order
+            and counts_as_passage(self._motion(other))
+            for other in roll_calls
+        )
+
+    def scrape_vote(self, bill, vote_json, session, roll_calls=()):
+        """`roll_calls`: every roll call of the bill (to tell whether a later one replaces an earlier stage)."""
+        motion = self._motion(vote_json)
 
         chamber = voting_chamber(vote_json)
         result = vote_result(
@@ -383,7 +429,9 @@ class WYBillScraper(Scraper, LXMLMixin):
             result=result,
             legislative_session=session,
             bill=bill,
-            classification=vote_classification(motion),
+            classification=vote_classification(
+                motion, self._later_passage(vote_json, roll_calls)
+            ),
         )
 
         v.set_count(option="yes", value=vote_json["yesVotesCount"])

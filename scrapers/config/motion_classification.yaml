@@ -681,7 +681,15 @@ jurisdictions:
       - '^[sh] 3rd reading:(passed|failed)\b'    # a lost third reading is a lost passage vote (pa, al, nc, or)
       - '^[sh] concur:(passed|failed)\b'         # concurrence in the other chamber's amendments = passage (pa OPEN-617, la OPEN-583)
       - '\b[sh] adopted [a-z]{2}\d+jc\d+\b'      # conference committee report adopted = passage (pa, la, ut, mi, nc, or)
-    default: null                                # anything not seen ("Did Not Concur", a whole-bill veto override, ...) stays unclassified
+      # OPEN-874 (Ramon, 2026-11-24: whole-bill overrides only, as pa, ne, la): "HB0178VT001: Did Not Override Veto
+      # 36-21-5-0-0" (HB 178, SF 101, SF 119 of 2026; no passed one seen, so "Veto Override" is by analogy). The budget
+      # bill's "Line Item Veto Override" / "Did Not Override Line Item Veto" do not match (the scraper labels them
+      # veto-override). A failed introduction and a failed Committee of the Whole vote are not listed: the wy
+      # scraper makes them passage when no later counting roll call follows (EARLIER_STAGE_RE). A passed
+      # introduction never counts (Ramon, 2026-11-24).
+      - '\bdid not override veto\b'
+      - '(?<!line item )\bveto override\b'
+    default: null                                # anything not seen ("Did Not Concur", ...) stays unclassified
 
   # OPEN-679 (North Dakota, gate E). The motion text is the vote modal's title on the bill-actions page
   # (ndlegis.gov/assembly/<n>-<year>/regular/bill-actions/ba<number>.html) wrapped by the scraper as
