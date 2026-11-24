@@ -389,50 +389,9 @@ class MEBillScraper(Scraper):
                     and contains(.,"Cannot find requested paper")])'
                 )
 
-                previous_title = ""
                 if not is_bill_text_missing:
                     vdoc.make_links_absolute(ver_url)
-                    for row in vdoc.cssselect("span.tlnk-bill, span.tlnk-fiscal"):
-                        title = " ".join(
-                            row.xpath(
-                                ".//span[@class='story_header' or @class='story_subhead' or @class='inlineHeading']/text()"
-                            )
-                        ).strip()
-                        title = (
-                            title.replace("Text", "")
-                            .replace("RESLV ", "")
-                            .replace("ACTPUB", "")
-                            .replace("Chapter Fiscal Note", "")
-                            .strip()
-                        )
-                        classification = ""
-                        if row.xpath("parent::span[contains(@class, 'tlnk-amdblk')]"):
-                            title = f"Amendment {title}"
-                            classification = "amendment"
-
-                        if row.xpath(".//a[contains(@href, 'getPDF')]"):
-                            pdf_url = row.xpath(
-                                ".//a[contains(@href, 'getPDF')]/@href"
-                            )[0]
-                            bill.add_version_link(
-                                title,
-                                pdf_url,
-                                classification=classification,
-                                media_type="application/pdf",
-                                on_duplicate="ignore",
-                            )
-                        if row.xpath(".//a[contains(@href, '/fiscalpdfs/')]"):
-                            pdf_url = row.xpath(
-                                ".//a[contains(@href, 'fiscalpdfs')]/@href"
-                            )[0]
-                            bill.add_document_link(
-                                f"{previous_title} - Fiscal Note",
-                                pdf_url,
-                                classification="fiscal-note",
-                                media_type="application/pdf",
-                                on_duplicate="ignore",
-                            )
-                        previous_title = title
+                    add_bill_texts(bill, vdoc)
                     # committee actions are also on this page
                     for row in vdoc.xpath('//table[@name="CDtab"]/tr')[2:]:
                         action_date = row.xpath("td[1]/text()")[0].strip()
@@ -614,6 +573,78 @@ class MEBillScraper(Scraper):
                     chamber=chamber,
                     classification=attrs["classification"],
                 )
+
+
+# OPEN-811: the bill-text page (display_ps.asp) heads the bill's printed paper "Text", then its LD and
+# paper numbers ("LD 144 SP 80", span.tlnk-bill, the getPDF link's item=1); the bill directory calls it
+# the "Printed LD PDF". It is the Legislative Document as printed when the bill was introduced and
+# referred: its first page reads "Legislative Document No. 144 / S.P. 80 / In Senate, January 14, 2025
+# ... Reference to the Committee on Marine Resources suggested and ordered printed. ... Presented by
+# Senator ..." (132nd LD 144, read 2026-11-23). Each bill has one, kept by a bill carried over into the
+# Second Regular Session; a joint resolution's or order's paper has LD 0 ("LD 0 SP 919"). A committee's
+# New Draft "is a legislative document in its own right and has its own paper and document numbers"
+# (Maine Legislative Drafting Manual, "New drafts"), so an LD paper with other numbers than the bill's own
+# (its LD, or for LD 0 its paper) is that redraft, never the introduced text. None of the 132nd's 2,245
+# LDs has one.
+LD_PAPER = re.compile(r"LD (\d+) ([HS]P \d+)")
+
+
+def version_name(title, bill_id):
+    """The version name of a text from its header on the bill-text page (the scraper's cleaned title).
+
+    The bill's own printed LD paper, "LD 144 SP 80" on bill "LD 144" (or an LD 0 paper, "LD 0 SP
+    919", on bill "SP 919"), is the bill as introduced: "Introduced (LD 144, SP 80)". An LD paper with
+    other numbers is a committee New Draft: "Amended in New Draft (LD n, HP n)". Every other header
+    ("C-A (S-46)", "Chapter 82", ...) keeps its name.
+    """
+    paper = LD_PAPER.fullmatch(" ".join(title.split()))
+    if not paper:
+        return title
+    if bill_id == (paper[2] if paper[1] == "0" else f"LD {paper[1]}"):
+        return f"Introduced (LD {paper[1]}, {paper[2]})"
+    return f"Amended in New Draft (LD {paper[1]}, {paper[2]})"
+
+
+def add_bill_texts(bill, vdoc):
+    """Add the versions and fiscal notes listed on a bill-text page (display_ps.asp, links absolute)."""
+    previous_title = ""
+    for row in vdoc.cssselect("span.tlnk-bill, span.tlnk-fiscal"):
+        title = " ".join(
+            row.xpath(
+                ".//span[@class='story_header' or @class='story_subhead' or @class='inlineHeading']/text()"
+            )
+        ).strip()
+        title = (
+            title.replace("Text", "")
+            .replace("RESLV ", "")
+            .replace("ACTPUB", "")
+            .replace("Chapter Fiscal Note", "")
+            .strip()
+        )
+        classification = ""
+        if row.xpath("parent::span[contains(@class, 'tlnk-amdblk')]"):
+            title = f"Amendment {title}"
+            classification = "amendment"
+
+        if row.xpath(".//a[contains(@href, 'getPDF')]"):
+            pdf_url = row.xpath(".//a[contains(@href, 'getPDF')]/@href")[0]
+            bill.add_version_link(
+                version_name(title, bill.identifier),
+                pdf_url,
+                classification=classification,
+                media_type="application/pdf",
+                on_duplicate="ignore",
+            )
+        if row.xpath(".//a[contains(@href, '/fiscalpdfs/')]"):
+            pdf_url = row.xpath(".//a[contains(@href, 'fiscalpdfs')]/@href")[0]
+            bill.add_document_link(
+                f"{previous_title} - Fiscal Note",
+                pdf_url,
+                classification="fiscal-note",
+                media_type="application/pdf",
+                on_duplicate="ignore",
+            )
+        previous_title = title
 
 
 def _get_chunks(el, buff=None):
