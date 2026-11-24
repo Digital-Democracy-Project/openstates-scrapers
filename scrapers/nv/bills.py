@@ -407,11 +407,22 @@ class BillTabText(Utf8HtmlMixin, HtmlPage):
     def process_page(self):
         bill = self.input
         # some BDRs have no text link
-        for row in CSS(".d-md-none a").match(self.root, min_items=0):
+        # OPEN-830: each text ("As Introduced", "Reprint 1", "As Enrolled") is the
+        # link in its <p class="h5"> heading; the amendments listed under it
+        # (<p class="text-wrap">, "Amendment 13 (Adopted)") are amendment papers,
+        # whose changes the next reprint carries, so they are documents
+        for row in CSS(".d-md-none p.h5 a").match(self.root, min_items=0):
             title = row.text_content()
             link = row.get("href")
             bill.add_version_link(
                 title, link, media_type="application/pdf", on_duplicate="ignore"
+            )
+        for row in CSS(".d-md-none p.text-wrap a").match(self.root, min_items=0):
+            bill.add_document_link(
+                row.text_content().strip(),
+                row.get("href"),
+                media_type="application/pdf",
+                on_duplicate="ignore",
             )
         ex_url = self.source.url.replace("Text", "Exhibits")
 
