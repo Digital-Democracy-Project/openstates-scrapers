@@ -605,6 +605,15 @@ class OKBillScraper(Scraper):
             for name in votes["other"]:
                 self.add_voter(vote, "other", name, chamber, bill.legislative_session)
             vote.dedupe_key = url + "#" + rcs
+            # OPEN-872: oklegislature.gov gives a roll call its day only; its RCS# rises in the order the
+            # chamber took its votes (HB 1003's House, 2025-03-26: RCS 432, then 446, both Third Reading).
+            # The broker reads this key into Motion.rollcall_num to order two same-day votes in one
+            # chamber (as OPEN-628, OPEN-685 and OPEN-863 did for the other states). Committee and floor
+            # roll calls are numbered in separate runs and 2026's restarts at 1, so compare two numbers
+            # only for two floor votes (the passage ones) of one chamber on one day, nothing else.
+            vote.extras[
+                "senate-rollcall-num" if chamber == "upper" else "house-rollcall-num"
+            ] = rcs
 
             vote.add_source(url)
 
