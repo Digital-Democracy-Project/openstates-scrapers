@@ -3,8 +3,8 @@
 The measure status page (data.capitol.hawaii.gov session/measure_indiv.aspx) prints its status table newest first, and
 6,395 of Hawaii's 6,728 bills of 2025-26 were stored in that order. The scraper reads the table backwards: a sort by
 date would scramble same-day actions, and reversing keeps the page's own sequence within a day. The votes are still
-read in the table's order, so each vote's dedupe_key (it holds the row's index in the table) and its "Reconsider: "
-prefix are what they were before.
+yielded in the table's order, and each vote's dedupe_key (it holds the row's index in the table) is what it was before
+(the "Reconsider: " prefix moved with OPEN-856, test_hi_reconsider_prefix).
 
 Every page here is a real saved status page already used by other tests (read 2026-11-20): HB 1800, HB 1628 and SR 10
 (hi_open691), SB 2387, SB 2135, SR 20, HB 1705 and HB 862 of 2021 (hi_open709), HR 50 (hi_open710), GM 1101 and

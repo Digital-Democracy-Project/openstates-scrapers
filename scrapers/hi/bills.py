@@ -306,11 +306,17 @@ class HIBillScraper(Scraper):
         # vote types that have been reconsidered since last vote of that type
         reconsiderations = set()
         # OPEN-823: the status table lists actions newest first; they are stored oldest first (the table
-        # read backwards, so a day's actions keep their sequence, as Wyoming's OPEN-780). The rows are still
-        # read in the table's order, so each vote's dedupe_key index and "Reconsider: " prefix stay as stored
+        # read backwards, so a day's actions keep their sequence, as Wyoming's OPEN-780). Each vote's
+        # dedupe_key keeps the row's index in the table, so the roll calls stored before still match.
+        # OPEN-856: the rows are read oldest first too, so "Reconsider: " goes on the chamber's first vote
+        # after its reconsideration. Read newest first it went on the vote before it: 109 stored roll calls,
+        # such as HB 1705's JHA vote of 02-25-26 for the House's reconsideration of 04-22-26. The votes are
+        # still yielded in the table's order.
         actions = []
+        votes = []
+        rows = list(enumerate(action_table.cssselect("tr")[1:]))
 
-        for index, action_row in enumerate(action_table.cssselect("tr")[1:]):
+        for index, action_row in reversed(rows):
             cells = action_row.cssselect("td")
             date_cell = cells[0]
             actor_cell = cells[1]
@@ -356,12 +362,10 @@ class HIBillScraper(Scraper):
 
             if vote:
                 v, motion = vote
-                # OPEN-709: a tally whose ayes are worked out neither takes nor clears a pending
-                # "Reconsider: " prefix, so the roll calls kept before read exactly as they did
+                # OPEN-856: a tally whose ayes are worked out (OPEN-709) is a vote like any other: the
+                # House's re-vote after a reconsideration is often one ("Adopted with none voting ...")
                 motion_text = (
-                    ("Reconsider: " + motion)
-                    if actor in reconsiderations and not derived
-                    else motion
+                    ("Reconsider: " + motion) if actor in reconsiderations else motion
                 )
                 yays = v.get("n_yes")
                 nays = v["n_no"]
@@ -384,8 +388,7 @@ class HIBillScraper(Scraper):
                     # committee-passage; texts no rule names stay unlabelled)
                     classification=classify_motion("hi", motion_text),
                 )
-                if not derived:
-                    reconsiderations.discard(actor)
+                reconsiderations.discard(actor)
                 vote.add_source(url)
                 vote.set_count("yes", yays)
                 vote.set_count("no", nays)
@@ -406,15 +409,16 @@ class HIBillScraper(Scraper):
                 for voter in seated_ayes:
                     vote.yes(voter)
 
-                yield vote
+                votes.append(vote)
 
             elif re.search("reconsider", string, re.IGNORECASE):
                 reconsiderations.add(actor)
 
-        for string, date, actor, atype, real_committees in reversed(actions):
+        for string, date, actor, atype, real_committees in actions:
             act = bill.add_action(string, date, chamber=actor, classification=atype)
             for committee in real_committees:
                 act.add_related_entity(name=committee, entity_type="organization")
+        yield from reversed(votes)
 
     def seated_ayes(self, v, chamber, date, bill_id):
         """OPEN-709: the plain ayes of a tally that prints no aye count: the members seated in
