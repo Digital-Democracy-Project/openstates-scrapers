@@ -6,9 +6,10 @@ import scrapelib
 from utils import LXMLMixin
 from utils.votes import check_counts
 from openstates.scrape import Scraper, VoteEvent
-from openstates.utils import convert_pdf
+from openstates.utils import _make_pseudo_id, convert_pdf
 
 from classify_motion import classify_motion
+from utils import presiding_officers
 
 # OPEN-700: an amendment roll call, labelled here because config/motion_classification.yaml only
 # decides passage: a House floor amendment ("FLA Del. Buckel /613520/1"), a Senate one ("Floor
@@ -21,6 +22,33 @@ AMENDMENT_VOTE = re.compile(
 # A vote on a ruling or a motion about an amendment is procedure, not the amendment itself:
 # "FLA Del. Miller /.../1 Ruled Out of Order Decision of the Chair", "... Motion to Lay Over".
 PROCEDURAL_VOTE = re.compile(r"decision of the chair|motion to lay over", re.I)
+
+
+# OPEN-815: a roll call prints its chamber's presiding officer by title, "Speaker" on a House one
+# and "Mr. President" on a Senate one; who that is comes from the manifest's
+# votes.house_speaker_by_session / senate_president_by_session (utils/presiding_officers.py). A
+# session the manifest does not list keeps the title as printed, and the scraper warns.
+PRESIDING_OFFICERS = {
+    "Speaker": ("lower", "house_speaker_by_session"),
+    "Mr. President": ("upper", "senate_president_by_session"),
+}
+# "Presiding: Speaker", "Presiding: Clippinger": who held the chair for the roll call
+PRESIDING_LINE = re.compile(r"^Presiding:\s+(\S.*?)(?:\s{2,}|$)")
+
+
+def add_voter(vote, option, name, chamber, session, day, stand_in=None):
+    """Record `name`'s vote. The chamber's title is the officer the manifest names for `session`
+    on `day`, or `stand_in` when a member held the chair and cast the title's vote under their own
+    name (House 2026RS 1483: "Presiding: Clippinger", "Speaker" voting yea, Clippinger printed
+    nowhere else and the Speaker printed by name as absent). Returns the manifest field with no
+    name for it, else None."""
+    if stand_in and PRESIDING_OFFICERS.get(name, (None,))[0] == chamber:
+        vote.vote(option, name)
+        vote.votes[-1]["voter_id"] = _make_pseudo_id(name=stand_in)
+        return None
+    return presiding_officers.add_voter(
+        vote, option, name, chamber, session, "md", PRESIDING_OFFICERS, day
+    )
 
 
 def vote_classification(motion):
@@ -187,6 +215,7 @@ class MDVoteScraper(Scraper, LXMLMixin):
         # NO. 2") and the year of the session the bill was vetoed in, when its header gives one
         override = False
         vetoed_year = None
+        presiding = None
         # OPEN-718: a Senate third-reading consent calendar ("Consent Calendar No. 10") lists its
         # bills on one or more lines after that header, and the roll call is a vote on each
         consent_bills = None
@@ -194,6 +223,9 @@ class MDVoteScraper(Scraper, LXMLMixin):
 
         for line in lines:
             if section == "preamble":
+                chair = PRESIDING_LINE.match(line)
+                if chair:
+                    presiding = chair.group(1)
                 if "vetoed" in line.lower():
                     override = True
                     year = re.search(r"(\d{4})\s+vetoed", line, re.I)
@@ -279,6 +311,20 @@ class MDVoteScraper(Scraper, LXMLMixin):
         else:
             bill_ids = [bill_id]
 
+        # the member in the chair cast the title's vote when they are printed nowhere else
+        printed = {
+            n.strip().replace("*", "") for names in voters.values() for n in names
+        }
+        stand_in = None
+        if (
+            presiding
+            and presiding not in PRESIDING_OFFICERS
+            and presiding not in printed
+        ):
+            stand_in = presiding
+        # (manifest field, session) pairs already warned about in this run, one warning each
+        warned = self.__dict__.setdefault("_warned_officers", set())
+
         # bleh - result not indicated anywhere
         result = "pass" if yes_count > no_count else "fail"
         date = datetime.datetime.strptime(date, "%b %d, %Y").strftime("%Y-%m-%d")
@@ -311,7 +357,19 @@ class MDVoteScraper(Scraper, LXMLMixin):
                         and "COPY" not in name
                         and "Indicates Vote Change" not in name
                     ):
-                        vote.vote(how, name)
+                        unnamed = add_voter(
+                            vote, how, name, chamber, session, date, stand_in
+                        )
+                        if unnamed and (unnamed, session) not in warned:
+                            warned.add((unnamed, session))
+                            self.warning(
+                                "OPEN-815: manifest md.votes.%s has no %s on %s; %r left "
+                                "as printed",
+                                unnamed,
+                                session,
+                                date,
+                                name,
+                            )
             check_counts(vote, raise_error=True)
             votes.append(vote)
         return votes
