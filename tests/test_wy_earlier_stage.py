@@ -44,18 +44,21 @@ def labels(votes, prefix):
     "motion,expected",
     [
         ("S Failed Introduction 0-31-0-0-0", ["passage", "reading-1"]),
-        (
-            "H Introduced and Referred to H05 - Agriculture 46-16-0-0-0",
-            ["passage", "reading-1"],
-        ),
+        ("H Failed Introduction 34-28-0-0-0", ["passage", "reading-1"]),
         ("S COW:Failed 13-16-2-0-0", ["passage"]),
         (
             "H COW:Passed 34-22-6-0-0",
             [],
         ),  # advances the bill; the third reading is the vote
+        # Ramon, 2026-11-24, "Count only failed introductions, not passed ones": a passed introduction is the vote
+        # to introduce the bill and never counts, with or without a later vote
+        ("H Introduced and Referred to H05 - Agriculture 46-16-0-0-0", ["reading-1"]),
+        ("S Introduced and Referred to S10 - Labor 25-6-0-0-0", ["reading-1"]),
     ],
 )
-def test_earlier_stage_alone_is_passage(motion, expected):
+def test_failed_introduction_and_failed_cow_are_passage_a_passed_introduction_is_not(
+    motion, expected
+):
     assert vote_classification(motion) == expected
 
 
@@ -63,8 +66,8 @@ def test_earlier_stage_alone_is_passage(motion, expected):
     "motion,expected",
     [
         ("S Failed Introduction 0-31-0-0-0", ["reading-1"]),
-        ("H Introduced and Referred to H05 - Agriculture 46-16-0-0-0", ["reading-1"]),
         ("S COW:Failed 13-16-2-0-0", []),
+        ("H Introduced and Referred to H05 - Agriculture 46-16-0-0-0", ["reading-1"]),
     ],
 )
 def test_earlier_stage_is_not_passage_when_a_later_one_replaces_it(motion, expected):
@@ -84,17 +87,9 @@ def test_hb116_failed_introduction_is_replaced_by_the_third_reading():
 def test_hb145_cow_failed_is_replaced_by_the_senate_third_reading():
     votes = scrape("HB0145")
     assert labels(votes, "S COW:Failed") == {"S COW:Failed 13-16-2-0-0": []}
-    # the House's introduction is replaced by its own third reading, and the Senate has no introduction roll call
+    # the House's passed introduction never counts; its third reading is the House vote that does
     assert labels(votes, "H Introduced") == {
         "H Introduced and Referred to H08 - Transportation 57-1-4-0-0": ["reading-1"]
-    }
-
-
-def test_a_later_roll_call_of_the_other_chamber_does_not_replace_it():
-    votes = scrape("SF0119")
-    # SF 119: the Senate's introduction is replaced by the Senate's third reading, not counted twice
-    assert labels(votes, "S Introduced") == {
-        "S Introduced and Referred to S02 - Appropriations 27-4-0-0-0": ["reading-1"]
     }
 
 
@@ -120,24 +115,24 @@ def test_a_passed_whole_bill_override_needs_two_thirds():
     assert vote_result("H", "HB0001VT001: Veto Override 42-20-0-0-0", 42, 20) == "pass"
 
 
-def test_the_other_chambers_third_reading_does_not_replace_it():
-    # HB 145's real roll calls with the House's own passage votes left out: the Senate's later third reading and
-    # COW passage must not stop the House's introduction roll call counting
+def test_the_other_chambers_later_vote_does_not_replace_it():
+    # HB 116's House failed introduction (real roll call) with only the Senate's later roll calls of HB 145 beside
+    # it: another chamber's third reading and COW vote must not stop the House's failed introduction counting
+    with open(os.path.join(FIXTURES, "2026_HB0116.json")) as f:
+        failed = [r for r in json.load(f)["rollCalls"] if r["voteID"] == 5131]
     with open(os.path.join(FIXTURES, "2026_HB0145.json")) as f:
-        roll_calls = json.load(f)["rollCalls"]
-    house_intro = [r for r in roll_calls if r["voteID"] == 5146]
-    senate_later = [r for r in roll_calls if r["voteID"] in (471, 510)]
+        senate_later = [
+            r for r in json.load(f)["rollCalls"] if r["voteID"] in (471, 510)
+        ]
     scraper = WYBillScraper(Wyoming(), "/tmp/")
-    bill = Bill("HB 145", legislative_session="2026", chamber="lower", title="t")
-    (vote,) = scraper.scrape_vote(
-        bill, house_intro[0], "2026", house_intro + senate_later
-    )
+    bill = Bill("HB 116", legislative_session="2026", chamber="lower", title="t")
+    (vote,) = scraper.scrape_vote(bill, failed[0], "2026", failed + senate_later)
     assert vote.motion_classification == ["passage", "reading-1"]
 
 
-def test_hb67_introduction_is_replaced_by_its_failed_cow_vote():
-    # HB 67 (House): introduced 45-10, then Committee of the Whole failed 24-25 and the bill died. Only the COW vote
-    # counts; the introduction roll call keeps its reading label.
+def test_hb67_passed_introduction_never_counts_and_its_failed_cow_vote_does():
+    # HB 67 (House): introduced 45-10 (a passed introduction, not counted), then Committee of the Whole failed
+    # 24-25 and the bill died: one counted vote, the COW one.
     votes = scrape("HB0067")
     assert labels(votes, "H Introduced") == {
         "H Introduced and Referred to H08 - Transportation 45-10-1-0-6": ["reading-1"]

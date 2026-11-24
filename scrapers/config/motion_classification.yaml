@@ -672,8 +672,9 @@ jurisdictions:
       # OPEN-874 (Ramon, 2026-11-24: whole-bill overrides only, as pa, ne, la): "HB0178VT001: Did Not Override Veto
       # 36-21-5-0-0" (HB 178, SF 101, SF 119 of 2026; no passed one seen, so "Veto Override" is by analogy). The budget
       # bill's "Line Item Veto Override" / "Did Not Override Line Item Veto" do not match (the scraper labels them
-      # veto-override). A failed introduction, an introduction and a failed Committee of the Whole vote are
-      # not listed: the wy scraper makes them passage when no later passage roll call follows (EARLIER_STAGE_RE).
+      # veto-override). A failed introduction and a failed Committee of the Whole vote are not listed: the wy
+      # scraper makes them passage when no later counting roll call follows (EARLIER_STAGE_RE). A passed
+      # introduction never counts (Ramon, 2026-11-24).
       - '\bdid not override veto\b'
       - '(?<!line item )\bveto override\b'
     default: null                                # anything not seen ("Did Not Concur", ...) stays unclassified

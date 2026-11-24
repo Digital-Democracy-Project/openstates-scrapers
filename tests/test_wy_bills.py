@@ -224,18 +224,10 @@ REAL_KINDS = [
     ("Amendment adopted 28-3-0-0-0", "SF0001S2010", ["amendment"]),
     ("Amendment failed 12-19-0-0-0", "SF0001S2014", ["amendment"]),
     # SF 7
-    # OPEN-874: with no later passage roll call on the bill, an introduction roll call is passage as well
-    (
-        "S Introduced and Referred to S01 - Judiciary 31-0-0-0-0",
-        None,
-        ["passage", "reading-1"],
-    ),
+    # OPEN-874 (Ramon: count only failed introductions): a passed introduction never counts; a failed one does
+    ("S Introduced and Referred to S01 - Judiciary 31-0-0-0-0", None, ["reading-1"]),
     # HB 10
-    (
-        "H Introduced and Referred to H01 - Judiciary 46-16-0-0-0",
-        None,
-        ["passage", "reading-1"],
-    ),
+    ("H Introduced and Referred to H01 - Judiciary 46-16-0-0-0", None, ["reading-1"]),
     ("S Failed Introduction 0-31-0-0-0", None, ["passage", "reading-1"]),  # SF 3
     ("Line Item Veto Override 23-6-2-0-0", "SF0001VT001", ["veto-override"]),
     ("Did Not Override Line Item Veto 34-26-1-1-0", "SF0001VT002", ["veto-override"]),

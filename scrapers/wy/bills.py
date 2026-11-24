@@ -64,14 +64,13 @@ OTHER_VOTE_KINDS = (
 
 
 # OPEN-874 (Ramon, 2026-11-24: every full up-or-down roll call on a bill counts, and the latest replaces earlier
-# ones): a failed introduction, an introduction and referral, and a failed Committee of the Whole vote are roll calls
-# on the bill itself at an earlier stage. Each is passage when no later passage roll call (third reading, concurrence,
-# conference report, whole-bill veto override) of the same chamber follows it on the bill: 139 bill-chambers of 2026
-# end there (91 failed introductions, 33 introductions, 15 failed COW votes). Where one does follow, the earlier roll
-# call keeps its reading label and the later one is the vote that counts (north carolina's second reading, OPEN-572).
-EARLIER_STAGE_RE = re.compile(
-    r"^[SH] (failed introduction|introduced and referred to|COW:Failed)\b", re.I
-)
+# ones; then "Count only failed introductions, not passed ones"): a failed introduction (a budget-session bill needs
+# two thirds to be introduced, and a failed vote ends the bill) and a failed Committee of the Whole vote are passage
+# when no later roll call of the same chamber that counts follows them on the bill: 106 bill-chambers of 2026 end
+# there (91 failed introductions, 15 failed COW votes). A passed "Introduced and Referred" roll call is only the
+# vote to introduce the bill, so it never counts: it keeps its reading-1 label. Where a later counting roll call
+# follows, the earlier one keeps its label (north carolina's second reading, OPEN-572).
+EARLIER_STAGE_RE = re.compile(r"^[SH] (failed introduction|COW:Failed)\b", re.I)
 
 
 def counts_as_passage(motion):
@@ -82,9 +81,8 @@ def counts_as_passage(motion):
 
 
 def vote_classification(motion, later_passage=False):
-    """The roll call's motion classification. `later_passage`: a later roll call of the same chamber that counts
-    (passage, or an earlier stage itself) is on the bill, so an earlier-stage roll call (EARLIER_STAGE_RE) is
-    not the one that counts."""
+    """The roll call's motion classification. `later_passage`: a later roll call of the same chamber that counts is
+    on the bill, so a failed introduction or COW vote (EARLIER_STAGE_RE) is not the one that counts."""
     classification = classify_motion("wy", motion)
     if not classification:
         for pattern, kind in OTHER_VOTE_KINDS:
