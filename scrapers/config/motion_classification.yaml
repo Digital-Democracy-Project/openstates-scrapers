@@ -487,14 +487,21 @@ jurisdictions:
 
   ne:
     not_passage:
-      - "^advanced to enrollment"                # General File / Select File advancement, not final passage (Utah precedent)
-      - "^failed to advance"
+      # OPEN-876: a motion to return a bill to Select File (carried or failed) is a vote on procedure, not on the
+      # bill: it stays out. (The advancement roll calls moved to `passage` below.)
       - "^returned to select file"
       - "^motion to return"
       - "^adopted$"
       - ' (adopted|lost|failed|prevailed|withdrawn)$'   # "Hansen AM1097 lost", "Arch AM1312 adopted", "Dorn MO30 prevailed"
     passage:
       - "^(passed|failed) on final reading"      # includes "with Emergency Clause" and "Emergency Clause stricken"
+      # OPEN-876 (Ramon, 2026-11-24: "Yes, count them"): in the one chamber a General File or Select File roll call
+      # advances (or stops) the whole bill, so it is a vote on the bill. Real texts on the replica: "Advanced to
+      # Enrollment and Review Initial" (General File), "... for Engrossment" (Select File), "... for Reengrossment",
+      # "Readvanced to ...", "Failed to advance to ...". The broker's "latest passage vote per chamber replaces earlier
+      # ones" lets the final reading (or an override) replace them; nothing here orders them.
+      - "^(re)?advanced to enrollment"
+      - "^failed to advance"
       # BROKER-579 (Ramon, 2026-11-22: "Count overrides too"; it replaces the earlier final reading, as for nc,
       # mt, ms, hi, md): the whole-bill veto override, lost or carried. 2025 rows carry the result text with the
       # vote ("Failed to become law notwithstanding the objections of the Governor 24-24-1", LB 319 and LB 287 of
