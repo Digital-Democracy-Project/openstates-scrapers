@@ -15,7 +15,7 @@ into its letter and name; that is `HOUSE_CELL_RE`, not a name rule.
 """
 import re
 
-from openstates.utils.ddp_manifest import manifest_value
+from utils import presiding_officers
 
 # One "<vote letter> <name>" cell of the House roll grid in `pdftotext -layout` output,
 # e.g. "Y   Mr. Speaker", "N   Tyler *" or "X Silvia" (a single space happens). The letter
@@ -25,21 +25,11 @@ HOUSE_CELL_RE = re.compile(
     r"(?:^|(?<=\s))([YNXP])\s+(\S(?:.*?\S)?)(?=\s{2,}[YNXP]\s|\s*$)"
 )
 
-# Who "Mr. Speaker" is, per session. Only sessions with a single Speaker throughout are
-# listed: Ronald Mariano was elected Speaker on 2020-12-30 and has held it since. For
-# any other session the name is left as printed (so it stays visibly unmatched rather
-# than being given to the wrong person); add the session here when a new Speaker is
-# elected. OPEN-555: read from the manifest's votes.house_speaker_by_session (add a new session
-# there); this table is the fallback until both hosts and the image carry the field.
-HOUSE_SPEAKER_BY_SESSION = manifest_value(
-    "ma",
-    "votes.house_speaker_by_session",
-    {
-        "192nd": "Ronald Mariano",
-        "193rd": "Ronald Mariano",
-        "194th": "Ronald Mariano",
-    },
-)
+# "Mr. Speaker" is the session's Speaker, named by the manifest's votes.house_speaker_by_session
+# through the shared reader utils/presiding_officers.py (OPEN-810: no member name in code). A
+# session the manifest does not list keeps the title as printed, so it stays visibly unmatched
+# rather than going to the wrong person, and the bills scraper warns.
+SPEAKER_TITLE = "Mr. Speaker"
 
 _SURNAME_INITIAL_RE = re.compile(r"^(?P<surname>[^,]+?) (?P<initial>[A-Z]\.)$")
 _SUFFIX_RE = re.compile(r"^(Jr|Sr|II|III|IV)\.?$")
@@ -48,8 +38,11 @@ _SUFFIX_RE = re.compile(r"^(Jr|Sr|II|III|IV)\.?$")
 def house_voter_name(raw, session):
     """A name from the House roll grid, as the people data spells it."""
     name = raw.rstrip(" *").replace("--", "").strip()
-    if name == "Mr. Speaker":
-        return HOUSE_SPEAKER_BY_SESSION.get(session, name)
+    if name == SPEAKER_TITLE:
+        return (
+            presiding_officers.officer("ma", "house_speaker_by_session", session)
+            or name
+        )
     # "Moran M." -> "Moran, M." (the sheet sometimes drops the comma it prints for
     # "Ramos, A." and "Rogers, J.")
     match = _SURNAME_INITIAL_RE.match(name)

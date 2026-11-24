@@ -8,6 +8,11 @@ does: House No. 25 of the 2025 RollCalls PDF (`ma_house_rollcall_194_jones_x.txt
 
 The NAYS and not-voting names below were read off the sheet by eye, not by the code
 under test.
+
+OPEN-810: "Mr. Speaker" is named only by the manifest's votes.house_speaker_by_session (read by
+utils/presiding_officers.py). These tests point the manifest at a made-up Speaker, SPEAKER, a
+name in no scraper code, fixture or people file, so a name that comes out can only have come
+from the manifest.
 """
 import os
 import sys
@@ -21,6 +26,21 @@ from ma.voter_names import house_voter_name, senate_voter_name  # noqa: E402
 from ma.votes import HouseVoteRecordParser  # noqa: E402
 
 FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures")
+SPEAKER = "Oswin Thackerberry"
+MA = "ma:\n  votes:\n    house_speaker_by_session:\n      194th: {}\n".format(SPEAKER)
+
+
+def _write_manifest(tmp_path, monkeypatch, text, name="jurisdictions.yaml"):
+    # a new file each time: the reader caches a file by its modification time
+    path = tmp_path / name
+    path.write_text(text)
+    monkeypatch.setenv("DDP_JURISDICTIONS_MANIFEST", str(path))
+
+
+@pytest.fixture(autouse=True)
+def manifest(tmp_path, monkeypatch):
+    _write_manifest(tmp_path, monkeypatch, MA)
+
 
 NO_25_NAYS = {
     "Garry",
@@ -84,11 +104,19 @@ class _FakeVote:
         pass
 
 
-def _house_vote(fixture, number):
+def _house_scraper(fixture, warnings):
     scraper = MABillScraper.__new__(MABillScraper)
     scraper.get_house_pdf = lambda vurl: _fixture(fixture)
-    scraper.info = scraper.warning = lambda *a, **kw: None
+    scraper.info = lambda *a, **kw: None
+    scraper.warning = lambda msg, *a: warnings.append(msg % a)
+    return scraper
+
+
+def _house_vote(fixture, number, session="194th", warnings=None, scraper=None):
+    if scraper is None:
+        scraper = _house_scraper(fixture, [] if warnings is None else warnings)
     vote = _FakeVote()
+    vote.legislative_session = session
     assert scraper.scrape_house_vote(vote, "http://example/RollCalls", number) is True
     return vote.voters
 
@@ -99,7 +127,7 @@ def _house_vote(fixture, number):
         ("--Jones--", "Jones"),
         ("--Whipps--", "Whipps"),
         ("Tyler *", "Tyler"),
-        ("Mr. Speaker", "Ronald Mariano"),
+        ("Mr. Speaker", SPEAKER),
         ("Moran M.", "Moran, M."),
         ("Moran, M.", "Moran, M."),
         ("Ramos, A.", "Ramos, A."),
@@ -114,6 +142,52 @@ def test_house_names(printed, expected):
 def test_speaker_of_an_unlisted_session_is_left_as_printed():
     """Better unmatched than given to the wrong person."""
     assert house_voter_name("Mr. Speaker", "191st") == "Mr. Speaker"
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        None,  # no manifest file
+        "ma:\n  name: Massachusetts\n",  # no votes block
+        "ma:\n  votes:\n    house_speaker_by_session: null\n",
+        "zz:\n  votes:\n    house_speaker_by_session:\n      194th: Someone\n",
+    ],
+)
+def test_without_a_manifest_name_the_title_stays_as_printed(
+    tmp_path, monkeypatch, text
+):
+    """OPEN-810: there is no name in code to fall back on."""
+    if text is None:
+        monkeypatch.setenv("DDP_JURISDICTIONS_MANIFEST", str(tmp_path / "absent.yaml"))
+    else:
+        _write_manifest(tmp_path, monkeypatch, text, "other.yaml")
+    assert house_voter_name("Mr. Speaker", "194th") == "Mr. Speaker"
+
+
+def test_the_speaker_is_whoever_the_manifest_names(tmp_path, monkeypatch):
+    _write_manifest(
+        tmp_path,
+        monkeypatch,
+        "ma:\n  votes:\n    house_speaker_by_session:\n      195th: Pell Verricombe\n",
+        "next.yaml",
+    )
+    assert house_voter_name("Mr. Speaker", "195th") == "Pell Verricombe"
+    assert house_voter_name("Mr. Speaker", "194th") == "Mr. Speaker"
+
+
+def test_a_session_the_manifest_does_not_list_is_warned_once(tmp_path, monkeypatch):
+    """The scrape says so (once a session) instead of guessing a name."""
+    fixture, warnings = "ma_house_rollcall_194_jones_x.txt", []
+    scraper = _house_scraper(fixture, warnings)
+    voters = _house_vote(fixture, 25, session="195th", scraper=scraper)
+    _house_vote(fixture, 25, session="195th", scraper=scraper)
+    assert ("yes", "Mr. Speaker") in voters
+    speaker_warnings = [w for w in warnings if "house_speaker_by_session" in w]
+    assert len(speaker_warnings) == 1 and "195th" in speaker_warnings[0]
+
+    warnings.clear()
+    _house_vote(fixture, 25, scraper=scraper)  # 194th is listed
+    assert not [w for w in warnings if "house_speaker_by_session" in w]
 
 
 @pytest.mark.parametrize(
@@ -144,7 +218,7 @@ def test_house_reader_pairs_each_letter_with_its_own_name():
 
 def test_house_reader_writes_names_the_people_data_holds():
     names = {n for _, n in _house_vote("ma_house_rollcall_194_jones_x.txt", 25)}
-    assert {"Ronald Mariano", "Jones", "Whipps", "Garcia"} <= names
+    assert {SPEAKER, "Jones", "Whipps", "Garcia"} <= names
     assert not any(n.startswith(("X ", "Y ", "N ", "P ")) for n in names)
     assert not any("--" in n or "*" in n or n == "Mr. Speaker" for n in names)
 
@@ -157,7 +231,7 @@ def test_votes_scraper_house_reader_uses_the_same_names():
     parser = HouseVoteRecordParser(
         text.split("MASSACHUSETTS HOUSE OF REPRESENTATIVES", 1)[1], session="194th"
     )
-    assert "Ronald Mariano" in parser.names and "Mr. Speaker" not in parser.names
+    assert SPEAKER in parser.names and "Mr. Speaker" not in parser.names
 
 
 def test_senate_reader_writes_given_names_first(monkeypatch):

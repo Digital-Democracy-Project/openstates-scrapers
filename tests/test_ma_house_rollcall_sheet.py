@@ -77,9 +77,17 @@ def test_a_roll_call_in_the_year_pdf_is_read_there_and_no_sheet_is_fetched():
     assert [c.args[0] for c in scraper.get_house_pdf.call_args_list] == [YEAR_PDF]
 
 
-def test_a_roll_call_missing_from_the_year_pdf_is_read_from_its_own_sheet():
+def test_a_roll_call_missing_from_the_year_pdf_is_read_from_its_own_sheet(
+    tmp_path, monkeypatch
+):
     """No. 275: the year PDF does not have it, its sheet does. The sheet's bill line
     says H. 5699 and the vote is on H 5700; that is not a reason to refuse it."""
+    # OPEN-810: "Mr. Speaker" is named by the manifest only; a made-up Speaker here
+    manifest = tmp_path / "jurisdictions.yaml"
+    manifest.write_text(
+        "ma:\n  votes:\n    house_speaker_by_session:\n      194th: Oswin Thackerberry\n"
+    )
+    monkeypatch.setenv("DDP_JURISDICTIONS_MANIFEST", str(manifest))
     scraper = _scraper({YEAR_PDF: YEAR_TEXT, SHEET_275: SHEET_TEXT})
     vote = _vote(152, 0)
     assert scraper.scrape_house_voters(vote, YEAR_PDF, "194th", 275) == SHEET_275
@@ -93,7 +101,7 @@ def test_a_roll_call_missing_from_the_year_pdf_is_read_from_its_own_sheet():
         5,
     )
     names = {v["voter_name"] for v in vote.votes}
-    assert "Ronald Mariano" in names  # "Mr. Speaker", named as on the year PDF
+    assert "Oswin Thackerberry" in names  # "Mr. Speaker", named as on the year PDF
     assert _counts(vote) == {"yes": 152, "no": 0}
 
 
