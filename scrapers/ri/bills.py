@@ -50,7 +50,7 @@ def add_voter(vote, option, name, chamber, session, day):
 # Amendment / Passage" are both seen). These are the lines the motion is made of.
 MOTION_LINE = re.compile(
     r"^(passage( as amended)?|as amended|in concurrence|(passage|approval) of amendment"
-    r"|reconsideration|ruling of the chair)$",
+    r"|reconsider(ation)?|ruling of the chair)$",
     re.I,
 )
 # the line naming a budget article ("ARTICLE 2"), voted on one by one in the House
@@ -64,6 +64,39 @@ AMENDMENT_VOTE = re.compile(r"\b(passage|approval) of amendment\b", re.I)
 YEARLESS_ITEM = re.compile(
     r"^ITEM\s+\d+\s+-?(?:(?P<chamber>[SH])\s*)?(?P<bill>[1-9][0-9]*)\b"
 )
+# OPEN-873: a bill number printed in a form the two patterns above do not read, only
+# tried when they find nothing. The Senate prints the budget as "House Bill No. 7127  SUB A aa"
+# and "BUDGET H-7127 SUB A AA", a bill "SENATE BILL - S 2045 sub a", "REP NAME      H 7165",
+# "2025   H-5477" or "HOUSE BILL 2026 H-8611", and a bill filed by a member "SEN NAME   No. 2067"
+# (or "REP NAME  HOUSE No. 5146"). The chamber is the letter (or the word) before the number.
+PRINTED_BILL = [
+    re.compile(
+        r"(?:^|[\s-])(?:(?P<year>(?:20)?\d\d)[\s-]*)?(?P<chamber>[SH])[\s-]+(?P<bill>[1-9][0-9]*)\b"
+    ),
+    re.compile(
+        r"\b(?P<chamber>House|Senate)\s+(?:Bill\s+)?(?:No\.?\s*)?(?P<bill>[1-9][0-9]*)\b",
+        re.I,
+    ),
+    re.compile(r"^(?P<chamber>SEN|REP)\b.*\bNo\.?\s*(?P<bill>[1-9][0-9]*)\b", re.I),
+]
+# a calendar item's header is its marker, the item and the bill's title, with no motion
+# line when the item is simply read and passed (OPEN-873)
+CALENDAR_MARKER = re.compile(r"^(calendar|immediate consideration)$", re.I)
+ITEM_LINE = re.compile(r"^ITEM\b", re.I)
+
+
+def printed_bill(headers):
+    """The bill a header prints in one of the PRINTED_BILL forms, as {"year", "chamber"
+    ("S" or "H"), "bill"}, else None."""
+    for pattern in PRINTED_BILL:
+        for h in headers:
+            m = pattern.search(h.strip())
+            if m:
+                found = m.groupdict()
+                found.setdefault("year", None)
+                found["chamber"] = found["chamber"][0].upper()
+                return found
+    return None
 
 
 def vote_motion(headers):
@@ -71,12 +104,23 @@ def vote_motion(headers):
     joined with " / " ("PASSAGE / AS AMENDED"), else the last line as before (a
     header with no motion line, such as a point of order, ends in the title). A
     budget article's vote keeps its article ("ARTICLE 2 PASSAGE"): it cannot pass
-    or kill the whole bill."""
+    or kill the whole bill. OPEN-873: a calendar item with no motion line at all
+    ("CALENDAR", "ITEM 59  2026-S 3315", title) is the item read and passed, so its
+    motion is the marker ("CALENDAR", "IMMEDIATE CONSIDERATION"), not a title line."""
     lines = [h.strip() for h in headers if h.strip()]
     motion = []
     while lines and MOTION_LINE.match(lines[-1]):
         motion.insert(0, lines.pop())
-    motion = " / ".join(motion) if motion else (headers[-1].strip() if headers else "")
+    if motion:
+        motion = " / ".join(motion)
+    elif (
+        lines
+        and CALENDAR_MARKER.match(lines[0])
+        and any(ITEM_LINE.match(h) for h in lines)
+    ):
+        motion = lines[0]
+    else:
+        motion = headers[-1].strip() if headers else ""
     article = [h for h in lines if ARTICLE_LINE.match(h)]
     if article:
         motion = "%s %s" % (article[0], motion)
@@ -683,6 +727,16 @@ class RIBillScraper(Scraper):
                 if inf is not None:
                     bill_metainf = inf.groupdict()
                     break
+
+        if bill_metainf is None:
+            bill_metainf = printed_bill(headers)
+            if bill_metainf is not None and bill_metainf["year"]:
+                if bill_metainf["year"][-2:] != session[-2:]:
+                    self.warning(
+                        "Skipping vote - it's in the %s session, we're in the %s session."
+                        % (bill_metainf["year"][-2:], session[-2:])
+                    )
+                    return ret
 
         if bill_metainf is None:
             # OPEN-711: a Senate consent roll call's whole header is "CONSENT
