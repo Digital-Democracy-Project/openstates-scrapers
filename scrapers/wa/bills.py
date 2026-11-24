@@ -7,6 +7,7 @@ from collections import defaultdict
 
 from .actions import Categorizer
 from .utils import xpath
+from openstates.exceptions import EmptyScrape
 from openstates.scrape import Scraper, Bill, VoteEvent as Vote
 from classify_motion import classify_motion
 from utils import LXMLMixin
@@ -16,8 +17,8 @@ import lxml.html
 
 
 # OPEN-78: normalizes both an incoming bill_no= identifier and WA's own internal bill_id
-# strings (e.g. "HB 1146", built from wa:BillId in scrape_chamber() / the raw prefile-page
-# text in get_prefiles()) into the same compact shape, so "HB1146" and "HB 1146" compare
+# strings (e.g. "HB 1146", built from wa:BillId in scrape_chamber() / get_prefiles()) into
+# the same compact shape, so "HB1146" and "HB 1146" compare
 # equal regardless of spacing. Mirrors MI's _mi_bill_id_to_no (OPEN-81) but built off WA's
 # own prefix set, derived from WABillScraper.norm_bill_id_re: chamber (S|H) + one of
 # B/CR/JM/JR/R. Longest-prefix-first (3-letter CR/JM/JR before 1-letter B/R) is checked out
@@ -272,19 +273,23 @@ class WABillScraper(Scraper, LXMLMixin):
                 )
 
     def get_prefiles(self, chamber, session, year):
+        # OPEN-853: the pre-filed bills, from the legislature's web service. The prefiled.aspx
+        # page this used to read is now built by script and has no table in it, so it found
+        # nothing. The service takes no year; _listed_bill_id keeps this session's biennium. It
+        # was empty on 2026-11-24, before pre-filing for 2027 opened. _prefiles_read says the
+        # service answered with its own (possibly empty) list, which scrape() needs before it
+        # takes "no bills" as "nothing pre-filed yet".
+        self._prefiles_read = False
         try:
-            url = "http://apps.leg.wa.gov/billinfo/prefiled.aspx?" "year={}".format(
-                year
-            )
-            page = self.lxmlize(url)
-
-            bill_rows = page.xpath(
-                '//table[@id="ctl00_ContentPlaceHolder1_gvPrefiled"]/tr'
-            )
-            for row in bill_rows[1:]:
-                if row.xpath("td[1]/a"):
-                    bill_id = row.xpath("td[1]/a/text()")[0]
+            url = "%s/GetPreFiledLegislationInfo" % self._base_url
+            page = lxml.etree.fromstring(self.get(url).content)
+            if page.tag != "{http://WSLWebServices.leg.wa.gov/}ArrayOfLegislationInfo":
+                raise ValueError(f"unexpected answer <{page.tag}>")
+            for leg_info in xpath(page, "//wa:LegislationInfo"):
+                bill_id = self._listed_bill_id(leg_info)
+                if bill_id:
                     self._bill_id_list.append(bill_id)
+            self._prefiles_read = True
         except (scrapelib.HTTPError, Exception) as e:
             self.warning(
                 "Unable to scrape prefiled bills for session {}, error {}".format(
@@ -318,8 +323,14 @@ class WABillScraper(Scraper, LXMLMixin):
         if bill_no:
             bill_nos = {_wa_bill_id_to_no(b) for b in bill_no.split(",") if b.strip()}
 
-        self._bill_id_list = self.get_prefiles(chamber, session, year)
+        # OPEN-853: two sessions are active at once (2025-2026 and 2027-2028), and
+        # openstates-core scrapes them one after the other in the same process, with a new
+        # scraper each. The bill list and the version links were class-level, so the second
+        # session started with the first one's bills and links; start each session empty.
+        self._bill_id_list = []
+        self.versions = {}
         self.biennium = "%s-%s" % (session[0:4], session[7:9])
+        self.get_prefiles(chamber, session, year)
 
         for chamber in chambers:
             self.scrape_chamber(chamber, session)
@@ -340,8 +351,38 @@ class WABillScraper(Scraper, LXMLMixin):
                 self.warning(
                     f"Requested bill_no '{missing}' not found in session {session}"
                 )
+        yielded = 0
         for bill_id in bill_ids:
-            yield from self.scrape_bill(chamber, session, bill_id, year)
+            for obj in self.scrape_bill(chamber, session, bill_id, year):
+                yielded += 1
+                yield obj
+
+        # OPEN-853: openstates-core fails the whole run (every active session) when one session
+        # yields nothing. EmptyScrape is its escape hatch for an expected silence, as Utah's
+        # OPEN-106 uses it:
+        # * a session that has not convened and lists no bills yet: 2027-2028 before pre-filing
+        #   opens (usually December), when the pre-file service answered with an empty list. A
+        #   session that has convened and lists nothing, or a failed pre-file read, still fails.
+        # * an incremental run where the session lists bills but none changed since the cutoff
+        #   (scrape_bill returns quietly only for those, test bills and appointments; a failed
+        #   read raises). With one session this already ended as a no-op; with two, one quiet
+        #   session would stop the other from being scraped.
+        if bill_nos:
+            return
+        if not bill_ids and self._prefiles_read and self._not_convened(session):
+            self.info(f"{session} has not convened and lists no bills yet")
+            raise EmptyScrape
+        if self._start_dt and bill_ids and not yielded:
+            self.info(f"{session}: no bill changed since {self._start_dt}")
+            raise EmptyScrape
+
+    def _not_convened(self, session):
+        for s in self.jurisdiction.legislative_sessions:
+            if s["identifier"] == session:
+                return (
+                    datetime.date.fromisoformat(s["start_date"]) > datetime.date.today()
+                )
+        return False
 
     def scrape_chamber(self, chamber, session):
 
@@ -368,28 +409,39 @@ class WABillScraper(Scraper, LXMLMixin):
 
             page = self._legislation_by_year[y]
             for leg_info in xpath(page, "//wa:LegislationInfo"):
-                bill_id = xpath(leg_info, "string(wa:BillId)")
-                bill_num = xpath(leg_info, "number(wa:BillNumber)")
                 bill_chamber = xpath(leg_info, "string(wa:OriginalAgency)")
                 bill_chamber = self._chamber_map[bill_chamber]
-
-                # Skip gubernatorial appointments
-                if bill_num >= 9000:
-                    continue
-                # skip ballot initiatives
-                if bill_id.startswith("SI") or bill_id.startswith("HI"):
-                    continue
-
                 if not bill_chamber == chamber:
                     continue
+                bill_id = self._listed_bill_id(leg_info)
+                if bill_id:
+                    self._bill_id_list.append(bill_id)
 
-                # normalize bill_id
-                bill_id_norm = self.norm_bill_id_re.findall(bill_id)
-                if not bill_id_norm:
-                    self.warning("illegal bill_id %s" % bill_id)
-                    continue
+    def _listed_bill_id(self, leg_info):
+        """The bill id to scrape for one wa:LegislationInfo record, or None for a record of
+        another biennium or one that is not a bill (a gubernatorial appointment, a ballot
+        initiative, an unknown id)."""
+        # OPEN-853: with 2025-2026 and 2027-2028 both scraped, a year list or the pre-file list
+        # may hold the other biennium's bills (all 3,941 records of the 2026 list were 2025-26
+        # on 2026-11-24)
+        if xpath(leg_info, "string(wa:Biennium)") != self.biennium:
+            return None
+        bill_id = xpath(leg_info, "string(wa:BillId)")
+        bill_num = xpath(leg_info, "number(wa:BillNumber)")
 
-                self._bill_id_list.append(bill_id_norm[0])
+        # Skip gubernatorial appointments
+        if bill_num >= 9000:
+            return None
+        # skip ballot initiatives
+        if bill_id.startswith("SI") or bill_id.startswith("HI"):
+            return None
+
+        # normalize bill_id
+        bill_id_norm = self.norm_bill_id_re.findall(bill_id)
+        if not bill_id_norm:
+            self.warning("illegal bill_id %s" % bill_id)
+            return None
+        return bill_id_norm[0]
 
     def _legislation_fields(self, leg):
         return [
