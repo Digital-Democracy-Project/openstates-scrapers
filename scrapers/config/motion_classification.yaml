@@ -455,8 +455,9 @@ jurisdictions:
 
   # OPEN-700 (Maryland, gate E). The motion text is the last line above the tally of a roll-call PDF
   # (mgaleg.maryland.gov/<session>/votes/house|senate/<seq>.pdf), as read by scrape_vote() in md/votes.py and
-  # by parse_vote_pdf() in md/bills.py. Rules written from every roll call of 2026RS (3,054 PDFs, 2,567
-  # emitted by the votes scraper: House 1,462, Senate 1,105) and of 2025S1 and 2026S1 (read 2026-11-20).
+  # by parse_vote_pdf() in md/bills.py; a tag wrapped onto its own line ("(Emerg)") joins it and a conferee
+  # line under it ("Del. ...") is skipped (OPEN-832). Rules written from every roll call of 2026RS (3,054
+  # PDFs, 2,567 emitted by the votes scraper: House 1,462, Senate 1,105) and of 2025S1 and 2026S1 (read 2026-11-20).
   # Passage: third reading, lost ones too, with any tag ("(Amend)", "(Emerg)", "(Const)", "(Reconsidered)",
   # "(Rules Suspended)"); the House's single roll call after it concurs, recedes or adopts a conference report
   # ("On Third Reading and Final Passage (Hse concurred)", "(CCR Adp)", "(Hse Receded)": concurrence, pa
