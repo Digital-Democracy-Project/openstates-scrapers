@@ -159,11 +159,9 @@ EXPECTED = {
     },
     "hb0081_2026RS.html": {
         "Introduced (First Reader)": bills("2026RS/bills/hb/hb0081f.pdf"),
-        REIN: bills("Pubs/BudgetFiscal/2026RS-HB0081-REIN.pdf"),
     },
     "sb0854_2026RS.html": {
         "Introduced (First Reader)": bills("2026RS/bills/sb/sb0854f.pdf"),
-        REIN: bills("Pubs/BudgetFiscal/2026RS-SB0854-REIN.pdf"),
     },
     "hj0006_2026RS.html": {
         "Introduced (First Reader)": bills("2026RS/bills/hj/hj0006f.pdf"),
@@ -182,12 +180,13 @@ EXPECTED = {
 
 @pytest.mark.parametrize("page", sorted(EXPECTED))
 def test_saved_pages(page):
+    # the Racial Equity Impact Note is not a text of the bill: OPEN-814 makes it a document
     bill = scrape(page)
-    assert versions(bill) == EXPECTED[page]
-    for note in versions(bill):
+    texts = {note: url for note, url in versions(bill).items() if note != REIN}
+    assert texts == EXPECTED[page]
+    for note in texts:
         assert bill.title not in note
-        if note != REIN:  # OPEN-814's, not a text of the bill
-            assert note_stage(note)[0] != STAGE_UNKNOWN
+        assert note_stage(note)[0] != STAGE_UNKNOWN
 
 
 @pytest.mark.parametrize(
