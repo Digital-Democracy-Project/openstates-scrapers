@@ -58,6 +58,50 @@ VOTE_LINE_RES = (
 )
 
 
+# OPEN-875: a chamber's 2nd-reading roll call is a full up-or-down vote on the bill and is typed passage
+# (config/motion_classification.yaml), but it counts only while no later passage roll call of that chamber follows
+# it on the bill (3rd reading, 2nd & 3rd combined, a failed vote, concurrence, conference): the North Carolina rule
+# (nc/bills.py vote_classification, OPEN-572). The broker also keeps only a chamber's latest passage vote, but an
+# earlier one stored as passage is a tie when two votes share a day; this keeps the stored typing single-valued.
+SECOND_READING_RE = re.compile(r"^(Senate|House)/ passed 2nd reading$", re.I)
+
+
+def _vote_order(vote):
+    """Sort key of a vote's start date: the API path gives a Utah-time datetime, or a "YYYY-MM-DD" string for an
+    action without a time of day (the older HTML path always); one bill can mix them, so both become naive Utah
+    wall-clock time (a date alone is midnight)."""
+    when = vote.start_date
+    if isinstance(when, str):
+        return datetime.datetime.strptime(when[:10], "%Y-%m-%d")
+    return when.replace(tzinfo=None)
+
+
+def settle_second_readings(votes):
+    """Clears the passage typing of every 2nd-reading roll call that a later passage roll call of the same chamber
+    follows. `votes` are all the roll calls scraped for one bill, in any order (le.utah.gov lists newest first)."""
+    for vote in votes:
+        if not SECOND_READING_RE.match(vote.motion_text.strip()):
+            continue
+        if any(
+            "passage" in other.motion_classification
+            and other.organization == vote.organization
+            and _vote_order(other) > _vote_order(vote)
+            for other in votes
+            if other is not vote
+        ):
+            vote.motion_classification = []
+
+
+def drain(generator):
+    """Runs a scrape generator to its end: (everything it yielded, what it returned)."""
+    items = []
+    while True:
+        try:
+            items.append(next(generator))
+        except StopIteration as stop:
+            return items, stop.value
+
+
 def voting_chamber(description):
     """The chamber that voted ("upper"/"lower") on a floor vote line (passage, concurrence or its refusal, a failed
     vote, a conference committee report's final passage), or None for any other line."""
@@ -278,14 +322,21 @@ class UTBillScraper(Scraper, LXMLMixin):
             # the database" -- silently wiping every UT bill's versions/documents/actions/
             # sponsorships back out across incremental runs ever since this start= filtering was
             # added (2026-06-30). Returning here instead leaves the existing data alone.
-            skip = yield from self.scrape_bill_details_from_api(bill, url, session_slug)
+            scraped, skip = drain(
+                self.scrape_bill_details_from_api(bill, url, session_slug)
+            )
             if skip:
                 return
         else:
-            yield from self.parse_bill_details_from_html(
-                bill, bill_id, chamber, page, primary_info
+            scraped, _ = drain(
+                self.parse_bill_details_from_html(
+                    bill, bill_id, chamber, page, primary_info
+                )
             )
 
+        # held back until the bill's last roll call is known (OPEN-875)
+        settle_second_readings([item for item in scraped if isinstance(item, Vote)])
+        yield from scraped
         yield bill
 
     def parse_bill_details_from_html(self, bill, bill_id, chamber, page, primary_info):

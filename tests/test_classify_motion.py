@@ -145,15 +145,18 @@ def test_az_not_passage(text):
     # these to []; the result field carries pass/fail.
     ("House/ failed", ["passage"]),
     ("Senate/ failed", ["passage"]),
+    # OPEN-875 (Ramon, 2026-11-24): a 2nd-reading roll call is a full up-or-down vote and is passage here;
+    # ut/bills.py clears it when a later passage roll call of the same chamber follows.
+    ("House/ passed 2nd reading", ["passage"]),
+    ("Senate/ passed 2nd reading", ["passage"]),
 ])
 def test_ut_passage(text, expected):
     assert classify_motion("ut", text) == expected
 
 
 @pytest.mark.parametrize("text", [
-    "House/ passed 2nd reading",
-    "Senate/ passed 2nd reading",
     "House/ second reading",
+    "Senate/ 2nd reading",  # the reading itself, not a roll call that passed it
     "House/ substitute adoption failed",  # ends in "failed" but is not the bare "House/ failed"
     "House/ floor amendment",
     # Bare "Final Passage" is not a Utah text (0 of 1,917 stored votes; the real one is

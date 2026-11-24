@@ -86,9 +86,11 @@ jurisdictions:
     default: null                                # anything else stays unclassified, never passage
 
   ut:
-    not_passage:
-      - "passed 2nd reading$"                    # standalone 2nd-reading advancement vote (not final)
     passage:
+      # OPEN-875 (Ramon, 2026-11-24): a 2nd-reading roll call is a full up-or-down vote on the bill and counts. It
+      # was not_passage (807fa5785) so it could not stand beside the 3rd-reading vote; ut/bills.py now clears it
+      # when a later passage-typed roll call of the same chamber follows (settle_second_readings).
+      - "^(house|senate)/ passed 2nd reading$"
       - "^house/ passed 3rd reading"
       - "^senate/ passed 3rd reading"
       - "^house/ passed on 3rd reading"
