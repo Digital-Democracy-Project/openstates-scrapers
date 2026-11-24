@@ -91,6 +91,22 @@ def vote_classification(motion, line_item_veto=False):
     return []
 
 
+# OPEN-852: an action line names the chamber that took it only at its end ("to Rules (S)", "received in House",
+# "enrolled, signed by President of the Senate"). Most floor lines name none ("1st reading", "3rd reading, passed 32-6
+# ...", "passed 32-5", "veto overridden"); they belong to the chamber holding the bill at that point, which changes on
+# each "received in House" / "received in Senate". A chamber named mid-line is not the one acting ("posted for passage
+# for concurrence in Senate Committee Substitute (1)" is the House's line).
+RECEIVED_IN = re.compile(r"^received in (House|Senate)$", re.I)
+
+
+def holding_chamber(action_text, holder):
+    """The chamber holding the bill after an action line: it moves on "received in House" / "received in Senate"."""
+    match = RECEIVED_IN.match(action_text)
+    if match:
+        return "lower" if match.group(1).lower() == "house" else "upper"
+    return holder
+
+
 def session_url(session):
     return "https://apps.legislature.ky.gov/record/%s/" % session[2:]
 
@@ -109,9 +125,16 @@ class KYBillScraper(Scraper, LXMLMixin):
         ("reported favorably", "committee-passage"),
         ("adopted by voice vote", "passage"),
         ("3rd reading, passed", ["reading-3", "passage"]),
+        # OPEN-852: a resolution's passage reads "adopted": "3rd reading, adopted 38-0", "adopted 36-0", "adopted with
+        # Committee Substitute (1)" (a voice vote)
+        ("3rd reading, adopted", ["reading-3", "passage"]),
+        (r"adopted \d+-\d+", "passage"),
+        ("adopted with", "passage"),
         ("1st reading", "reading-1"),
         ("2nd reading", "reading-2"),
         ("3rd reading", "reading-3"),
+        # OPEN-852: "passed over and retained in the Orders of the Day" is a bill skipped on the day's agenda
+        ("passed over", None),
         ("passed", "passage"),
         (r"bill passed", "passage"),
         ("line items vetoed", "executive-veto-line-item"),
@@ -197,6 +220,8 @@ class KYBillScraper(Scraper, LXMLMixin):
         action_rows = page.xpath(
             '//div[preceding-sibling::a[@id="actions"]][1]/table[1]/tbody/tr'
         )
+        # the chamber holding the bill as the list goes on (OPEN-852); it starts in the bill's own chamber
+        holder = chamber
         for row in action_rows:
             action_date = row.xpath("th[1]/text()")[0].strip()
 
@@ -216,12 +241,13 @@ class KYBillScraper(Scraper, LXMLMixin):
 
             for action_text in action_texts:
                 action_text = action_text.strip()
+                holder = holding_chamber(action_text, holder)
                 if action_text.endswith("House") or action_text.endswith("(H)"):
                     actor = "lower"
                 elif action_text.endswith("Senate") or action_text.endswith("(S)"):
                     actor = "upper"
                 else:
-                    actor = chamber
+                    actor = holder
 
                 classifications = self.classify_action(action_text)
                 bill.add_action(
