@@ -63,7 +63,17 @@ def test_before_2027_28_convenes_only_2025_26_is_active(monkeypatch, day):
     assert _active_on(monkeypatch, day) == {"2025-2026"}
 
 
-@pytest.mark.parametrize("day", [datetime.date(2027, 1, 11), datetime.date(2027, 3, 1)])
+# the whole biennium: still the active session after the 2027 sine die and in the 2028 session,
+# as 2025-2026 is active today past its 2026-03-06 end_date
+@pytest.mark.parametrize(
+    "day",
+    [
+        datetime.date(2027, 1, 11),
+        datetime.date(2027, 3, 1),
+        datetime.date(2027, 6, 1),
+        datetime.date(2028, 2, 1),
+    ],
+)
 def test_2027_28_is_active_from_the_day_it_convenes(monkeypatch, day):
     assert _active_on(monkeypatch, day) == {"2027-2028"}
 
