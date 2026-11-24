@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfLegislationInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://WSLWebServices.leg.wa.gov/">
+  <LegislationInfo>
+    <Biennium>2025-26</Biennium>
+    <BillId>HB 1000</BillId>
+    <BillNumber>1000</BillNumber>
+    <SubstituteVersion>0</SubstituteVersion>
+    <EngrossedVersion>0</EngrossedVersion>
+    <ShortLegislationType>
+      <ShortLegislationType>B</ShortLegislationType>
+      <LongLegislationType>Bill</LongLegislationType>
+    </ShortLegislationType>
+    <OriginalAgency>House</OriginalAgency>
+    <Active>true</Active>
+  </LegislationInfo>
+  <LegislationInfo>
+    <Biennium>2025-26</Biennium>
+    <BillId>SB 5001</BillId>
+    <BillNumber>5001</BillNumber>
+    <SubstituteVersion>0</SubstituteVersion>
+    <EngrossedVersion>0</EngrossedVersion>
+    <ShortLegislationType>
+      <ShortLegislationType>B</ShortLegislationType>
+      <LongLegislationType>Bill</LongLegislationType>
+    </ShortLegislationType>
+    <OriginalAgency>Senate</OriginalAgency>
+    <Active>true</Active>
+  </LegislationInfo>
+  <LegislationInfo>
+    <Biennium>2025-26</Biennium>
+    <BillId>SGA 9016</BillId>
+    <BillNumber>9016</BillNumber>
+    <SubstituteVersion>0</SubstituteVersion>
+    <EngrossedVersion>0</EngrossedVersion>
+    <ShortLegislationType>
+      <ShortLegislationType>GA</ShortLegislationType>
+      <LongLegislationType>Gubernatorial Appointment</LongLegislationType>
+    </ShortLegislationType>
+    <OriginalAgency>Senate</OriginalAgency>
+    <Active>true</Active>
+  </LegislationInfo>
+  <LegislationInfo>
+    <Biennium>2025-26</Biennium>
+    <BillId>HI IL26-001</BillId>
+    <BillNumber>26001</BillNumber>
+    <SubstituteVersion>0</SubstituteVersion>
+    <EngrossedVersion>0</EngrossedVersion>
+    <ShortLegislationType>
+      <ShortLegislationType>I</ShortLegislationType>
+      <LongLegislationType>Initiative</LongLegislationType>
+    </ShortLegislationType>
+    <OriginalAgency>House</OriginalAgency>
+    <Active>true</Active>
+  </LegislationInfo>
+
+</ArrayOfLegislationInfo>

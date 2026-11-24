@@ -1,12 +1,13 @@
-"""OPEN-819: Washington's 2027-28 biennium is listed and becomes the active session on the day the
-legislature convenes.
+"""OPEN-819: Washington's 2027-28 biennium is listed; OPEN-853: it is active now, for its
+pre-filed bills, beside 2025-2026 until it convenes.
 
 leg.wa.gov added "2027-28" to its biennium menu, and Washington's nightly failed in
 openstates-core's check_session_list before reading a bill (prod run wa-69bec06e89b6,
-2026-11-24). The legislature says "The 2027 Regular Session convenes on January 11"; until then
-2025-2026 stays the only active session. openstates-core scrapes the sessions marked active when
-no session= is given, which is how our runs call it, so the active flags below are exactly what a
-run would scrape on that day. The fixture is the biennium menu leg.wa.gov served on 2026-11-23;
+2026-11-24). The legislature says "The 2027 Regular Session convenes on January 11". OPEN-853
+(Ramon, 2026-11-24): scrape 2027-2028 now for pre-filed bills, as Nevada's 84th (OPEN-659);
+2025-2026 stays active beside it until 2027-01-11, then drops. openstates-core scrapes the
+sessions marked active when no session= is given, which is how our runs call it, so the active
+flags below are exactly what a run would scrape on that day. The fixture is the biennium menu leg.wa.gov served on 2026-11-23;
 no request leaves the test.
 """
 import datetime
@@ -59,8 +60,8 @@ def _reload_with_real_date(monkeypatch):
 @pytest.mark.parametrize(
     "day", [datetime.date(2026, 11, 24), datetime.date(2027, 1, 10)]
 )
-def test_before_2027_28_convenes_only_2025_26_is_active(monkeypatch, day):
-    assert _active_on(monkeypatch, day) == {"2025-2026"}
+def test_before_2027_28_convenes_both_sessions_are_active(monkeypatch, day):
+    assert _active_on(monkeypatch, day) == {"2025-2026", "2027-2028"}
 
 
 # the whole biennium: still the active session after the 2027 sine die and in the 2028 session,
@@ -111,7 +112,7 @@ class _FakeResponse:
 @pytest.mark.parametrize(
     "day,active",
     [
-        (datetime.date(2026, 11, 24), {"2025-2026"}),
+        (datetime.date(2026, 11, 24), {"2025-2026", "2027-2028"}),
         (datetime.date(2027, 1, 11), {"2027-2028"}),
     ],
 )
