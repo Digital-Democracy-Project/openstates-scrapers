@@ -56,6 +56,13 @@ def _classify_action(action):
     return (None, ctty)
 
 
+# OPEN-814: the Department of Legislative Services' analyses of a bill that its history table also lists as
+# "Text - <name>". The bill page lists the Racial Equity Impact Note under "Analysis" beside the Fiscal and
+# Policy Note (Pubs/BudgetFiscal/<session>-<bill>-REIN.pdf); it is an analysis of the bill, not a text of it,
+# so it is a document, not a version.
+ANALYSES = {"Racial Equity Impact Note"}
+
+
 class MDBillScraper(Scraper):
     _TZ = pytz.timezone("US/Eastern")
     BASE_URL = "http://mgaleg.maryland.gov/mgawebsite/"
@@ -337,7 +344,12 @@ class MDBillScraper(Scraper):
                 link_text = link.text_content().strip()
                 if link_text.startswith("Text"):
                     link_text = link_text.replace("Text - ", "")
-                    bill.add_version_link(
+                    add_link = (
+                        bill.add_document_link
+                        if link_text in ANALYSES
+                        else bill.add_version_link
+                    )
+                    add_link(
                         link_text,
                         link.get("href"),
                         media_type="application/pdf",
@@ -441,15 +453,18 @@ class MDBillScraper(Scraper):
         self.scrape_bill_sponsors(bill, page)
         self.scrape_bill_actions(bill, page)
 
-        # fiscal note
-        if page.xpath('//dt[contains(text(), "Analysis")]/following-sibling::dd[1]/a'):
-            fiscal_note = page.xpath(
-                '//dt[contains(text(), "Analysis")]/following-sibling::dd[1]/a'
-            )[0]
-            fiscal_url = fiscal_note.get("href")
-            fiscal_title = fiscal_note.text_content()
+        # fiscal note (the first analysis), and the analyses in ANALYSES (OPEN-814)
+        analyses = page.xpath(
+            '//dt[contains(text(), "Analysis")]/following-sibling::dd[1]/a'
+        )
+        for index, analysis in enumerate(analyses):
+            if index and analysis.text_content().strip() not in ANALYSES:
+                continue
             bill.add_document_link(
-                fiscal_title, fiscal_url, media_type="application/pdf"
+                analysis.text_content(),
+                analysis.get("href"),
+                media_type="application/pdf",
+                on_duplicate="ignore",
             )
 
         # effective date, where available
