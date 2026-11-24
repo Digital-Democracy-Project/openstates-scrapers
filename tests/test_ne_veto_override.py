@@ -39,7 +39,7 @@ def test_2026_the_override_on_its_motion_row_counts():
     labels = votes("ne_LB1256_2026.html", "LB 1256")
     assert labels["Cavanaugh, J. MO585 failed"] == ["passage"]
     assert labels["Passed on Final Reading 49-0-0"] == ["passage"]
-    assert labels["Advanced to Enrollment and Review Initial"] == []
+    assert labels["Advanced to Enrollment and Review Initial"] == ["passage"]  # OPEN-876
 
 
 def test_2025_the_override_on_its_result_row_counts():
@@ -47,11 +47,13 @@ def test_2025_the_override_on_its_result_row_counts():
     assert labels[
         "Failed to become law notwithstanding the objections of the Governor 24-24-1"
     ] == ["passage"]
-    # every other roll call on the page that is not final reading stays uncounted
+    # every other roll call on the page that is not final reading or an advancement (OPEN-876) stays uncounted
     others = {
         text: label
         for text, label in labels.items()
-        if "Final Reading" not in text and "notwithstanding" not in text
+        if "Final Reading" not in text
+        and "notwithstanding" not in text
+        and "dvanced to" not in text
     }
     assert others and all(label == [] for label in others.values()), others
 

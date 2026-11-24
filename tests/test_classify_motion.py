@@ -426,11 +426,14 @@ def test_pa(text, expected):
     ("Passed on Final Reading with Emergency Clause stricken 40-9-0", ["passage"]),
     ("Failed on Final Reading 20-25-4", ["passage"]),                     # a lost vote on passage
     ("Failed on Final Reading with Emergency Clause 30-15-4", ["passage"]),
-    # advancement and procedure are not passage (Utah precedent)
-    ("Advanced to Enrollment and Review Initial", []),
-    ("Advanced to Enrollment and Review for Engrossment", []),
-    ("Failed to advance to Enrollment and Review Initial", []),
-    ("Failed to advance to Enrollment and Review for Engrossment", []),
+    # OPEN-876 (Ramon, 2026-11-24): General File / Select File advancement roll calls are votes on the bill
+    ("Advanced to Enrollment and Review Initial", ["passage"]),                 # General File
+    ("Advanced to Enrollment and Review for Engrossment", ["passage"]),         # Select File
+    ("Advanced to Enrollment and Review for Reengrossment", ["passage"]),       # Select File, after a return
+    ("Readvanced to Enrollment and Review for Engrossment", ["passage"]),
+    ("Failed to advance to Enrollment and Review Initial", ["passage"]),        # a lost vote on the bill
+    ("Failed to advance to Enrollment and Review for Engrossment", ["passage"]),
+    # a motion to return a bill to Select File is procedure, not a vote on the bill
     ("Returned to Select File for specific amendment", []),
     ("Motion to return to Select File failed", []),
     ("Adopted", []),
