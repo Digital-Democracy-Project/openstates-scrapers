@@ -83,6 +83,15 @@ PRINTED_BILL = [
 # line when the item is simply read and passed (OPEN-873)
 CALENDAR_MARKER = re.compile(r"^(calendar|immediate consideration)$", re.I)
 ITEM_LINE = re.compile(r"^ITEM\b", re.I)
+# OPEN-873: a roll call on a bill filed by a member prints that member's line first
+# ("SEN ACOSTA   No. 2067", "REP CHIPPENDALE   H 7165"), then the bill's title, and when the
+# bill is simply read and passed there is no marker and no motion line after it. The header
+# does not say what the vote decides; the legislature's own history of the bill does ("Senate
+# read and passed", "Senate passed in concurrence").
+MEMBER_LINE = re.compile(r"^(SEN|REP)\s+\S", re.I)
+PASSED_ACTION = re.compile(
+    r"^(?P<chamber>House|Senate)\s+(?:read and\s+)?passed\b(?P<rest>.*)$", re.I
+)
 
 
 def printed_bill(headers):
@@ -103,6 +112,36 @@ def printed_bill(headers):
         if found:
             return None
     return None
+
+
+def title_only_header(headers):
+    """True for the header shape above: a member line first (so not a calendar item,
+    whose marker is its first line), then a title, with no motion line last."""
+    lines = [h.strip() for h in headers if h.strip()]
+    return (
+        len(lines) > 1
+        and bool(MEMBER_LINE.match(lines[0]))
+        and not MOTION_LINE.match(lines[-1])
+    )
+
+
+def passed_actions(actions):
+    """{(chamber, "YYYY-MM-DD"): motion} for each action of a bill's history ("01/22/2026
+    Senate passed in concurrence") where a chamber passed it. The motion is "In Concurrence"
+    or "Passage"."""
+    passed = {}
+    for action in actions:
+        date, _, text = action.partition(" ")
+        m = PASSED_ACTION.match(text.strip())
+        if not m:
+            continue
+        day = dt.datetime.strptime(date, "%m/%d/%Y").date().isoformat()
+        chamber = {"house": "lower", "senate": "upper"}[m["chamber"].lower()]
+        motion = (
+            "In Concurrence" if "in concurrence" in m["rest"].lower() else "Passage"
+        )
+        passed.setdefault((chamber, day), motion)
+    return passed
 
 
 def vote_motion(headers):
@@ -233,6 +272,8 @@ class RIBillScraper(Scraper):
     # so we keep a dict of (chamber, number) -> bill_id from the bill scrape to be used in the
     # vote scrape
     _bill_id_by_type = {}
+    # (bill chamber, number) -> passed_actions() of the bill's history (OPEN-873)
+    _chamber_passed = {}
     # OPEN-784: text index URL -> {bill: [TEXT_FILE matches, oldest first]}, new each run
     _text_index = {}
     categorizer = Categorizer()
@@ -467,6 +508,9 @@ class RIBillScraper(Scraper):
                     ] = billid
 
                     self.process_actions(bill["actions"], b)
+                    self._chamber_passed[
+                        (chamber, re.findall(r"\d+", billid)[0])
+                    ] = passed_actions(bill["actions"])
                     sponsors = bill["sponsors"][len("BY") :].strip()
                     sponsors = sponsors.split(",")
                     sponsors = [s.strip() for s in sponsors]
@@ -538,11 +582,18 @@ class RIBillScraper(Scraper):
                             "no such bill_id %s %s", letters, vote["meta"]["bill"]
                         )
                         continue
+                    motion = vote["meta"]["extra"]["motion"]
+                    if vote["meta"]["extra"].get("title_only"):
+                        # OPEN-873: the header names no motion; the bill's own history
+                        # says this chamber passed it that day
+                        motion = self._chamber_passed.get(found[0], {}).get(
+                            (chamber, vote["time"].date().isoformat()), motion
+                        )
                     yield self.vote_event(
                         chamber,
                         session,
                         vote,
-                        vote["meta"]["extra"]["motion"],
+                        motion,
                         self._bill_id_by_type[found[0]],
                         found[0][0],
                         vote["source"],
@@ -756,7 +807,10 @@ class RIBillScraper(Scraper):
             return ret
 
         motion = vote_motion(headers)
-        bill_metainf["extra"] = {"motion": motion}
+        bill_metainf["extra"] = {
+            "motion": motion,
+            "title_only": title_only_header(headers),
+        }
 
         votes = []
 

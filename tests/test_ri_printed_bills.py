@@ -20,7 +20,13 @@ import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
 
-from ri.bills import RIBillScraper, printed_bill, vote_motion  # noqa: E402
+from ri.bills import (  # noqa: E402
+    RIBillScraper,
+    passed_actions,
+    printed_bill,
+    title_only_header,
+    vote_motion,
+)
 
 FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures", "ri_open873")
 
@@ -48,9 +54,11 @@ def _page(name):
     return open(os.path.join(FIXTURES, name), encoding="utf-8").read()
 
 
-def _scrape_votes(name, chamber, session):
-    """scrape_chamber_votes over a date list naming this one real report."""
+def _scrape_votes(name, chamber, session, history=None):
+    """scrape_chamber_votes over a date list naming this one real report. `history` is
+    {(bill chamber, number): [action lines]} the bill scrape would have read."""
     scraper = object.__new__(RIBillScraper)
+    scraper._chamber_passed = {k: passed_actions(v) for k, v in (history or {}).items()}
     # the OPEN-785 presiding-officer warning (no manifest here) is tested in test_ri_presiding_officers.py
     scraper.warning = lambda *a, **k: None
     scraper._bill_id_by_type = dict(BILLS)
@@ -213,3 +221,152 @@ def test_calendar_item_with_a_motion_line_keeps_it_and_a_point_of_order_stays_un
         vote_motion(["POINT of ORDER", "ITEM 1  2025-S 359 SUB A", "CRIMINAL OFFENSES"])
         == "CRIMINAL OFFENSES"
     )
+
+
+# OPEN-873 follow-up: a roll call whose header is a member line and a title, with no marker
+# and no motion, is the chamber's passage vote when the bill's own history says that chamber
+# passed it that day (Ramon, 2026-11-24).
+SENATE_2067 = {("upper", "2067"): ["01/13/2026 Senate read and passed"]}
+SENATE_7165 = {("lower", "7165"): ["01/22/2026 Senate passed in concurrence"]}
+
+
+@pytest.mark.parametrize(
+    "name,history,bill,motion",
+    [
+        # both roll calls on the Senate resolution, same day as "Senate read and passed"
+        ("S_17324.html", SENATE_2067, "S 2067", "Passage"),
+        ("S_17325.html", SENATE_2067, "S 2067", "Passage"),
+        ("S_17332.html", SENATE_7165, "H 7165", "In Concurrence"),
+    ],
+)
+def test_title_only_roll_call_is_passage_when_the_bill_history_says_it_passed(
+    name, history, bill, motion
+):
+    (vote,) = _scrape_votes(name, "upper", "2026", history)
+    assert vote.bill_identifier == bill
+    assert vote.motion_text == motion
+    assert vote.motion_classification == ["passage"]
+    # the report's counts and names are kept as printed
+    assert len(vote.votes) > 30
+    assert sum(c["value"] for c in vote.counts) == len(vote.votes)
+
+
+@pytest.mark.parametrize(
+    "history",
+    [
+        # no history read for the bill
+        {},
+        # passed, but on another day
+        {("upper", "2067"): ["01/14/2026 Senate read and passed"]},
+        # the other chamber passed it that day
+        {("upper", "2067"): ["01/13/2026 House read and passed"]},
+        # a committee recommending passage, and a passage that failed, are not a chamber passing it
+        {("upper", "2067"): ["01/13/2026 Committee recommends passage"]},
+        {("upper", "2067"): ["01/13/2026 Senate failed to pass"]},
+    ],
+)
+def test_title_only_roll_call_stays_unlabelled_without_a_matching_passage(history):
+    (vote,) = _scrape_votes("S_17324.html", "upper", "2026", history)
+    assert vote.motion_text == "FAILURES IN LATIN AMERICA"
+    assert vote.motion_classification == []
+
+
+@pytest.mark.parametrize(
+    "name,session,chamber,bill_key,motion,classification",
+    [
+        # a motion line: kept, whatever the history says (a reconsideration, an amendment)
+        (
+            "S_18011.html",
+            "2026",
+            "upper",
+            ("upper", "2045"),
+            "Reconsider / Passage as Amended",
+            [],
+        ),
+        ("S_17782.html", "2026", "upper", ("lower", "7127"), "Passage", ["passage"]),
+        (
+            "S_17769.html",
+            "2026",
+            "upper",
+            ("lower", "7127"),
+            "BUDGET H-7127 SUB A AA",
+            [],
+        ),
+        # a calendar marker: its own rule
+        ("S_17356.html", "2026", "upper", ("upper", "2018"), "CALENDAR", ["passage"]),
+        (
+            "H_22382.html",
+            "2026",
+            "lower",
+            ("lower", "7165"),
+            "IMMEDIATE CONSIDERATION",
+            ["passage"],
+        ),
+    ],
+)
+def test_other_header_shapes_ignore_the_history(
+    name, session, chamber, bill_key, motion, classification
+):
+    # a history that would confirm a passage on every date of every chamber
+    every = [
+        "%s %s passed in concurrence" % (d, c)
+        for d in (
+            "01/13/2026",
+            "01/22/2026",
+            "06/09/2026",
+            "06/10/2026",
+            "06/11/2026",
+            "01/20/2026",
+            "06/16/2026",
+            "06/20/2026",
+        )
+        for c in ("Senate", "House")
+    ]
+    (vote,) = _scrape_votes(name, chamber, session, {bill_key: every})
+    assert vote.motion_text == motion
+    assert vote.motion_classification == classification
+
+
+@pytest.mark.parametrize(
+    "lines,expected",
+    [
+        (["SEN ACOSTA              No. 2067", "SENATE RESOLUTION", "TITLE"], True),
+        (["REP CHIPPENDALE           H 7165", "AN ACT RELATING TO", "MARRIAGES"], True),
+        # a motion line ends the header
+        (["REP ABNEY", "MAKING APPROPRIATION", "Approval of Amendment"], False),
+        (["SEN ACOSTA   No. 2067", "TITLE", "PASSAGE"], False),
+        # a calendar item, a point of order, a bare roll call, a nomination, an election
+        (["CALENDAR", "ITEM 59  2026-S 3315", "TITLE"], False),
+        (["POINT of ORDER", "ITEM 1  2025-S 359 SUB A", "CRIMINAL OFFENSES"], False),
+        (["ROLL CALL"], False),
+        (
+            ["CALENDAR", "ITEM 3          0", "Appointment of a Member to the Board"],
+            False,
+        ),
+        (["Election of the", "Senate Reading Clerk"], False),
+        # "SENATOR" is not a member line, and a member line alone has no title after it
+        (["SENATOR KALLMAN", "TITLE"], False),
+        (["SEN ACOSTA   No. 2067"], False),
+    ],
+)
+def test_title_only_header(lines, expected):
+    assert title_only_header(lines) is expected
+
+
+def test_passed_actions():
+    assert passed_actions(
+        [
+            "01/13/2026 Recommended for Immediate Consideration",
+            "01/13/2026 Senate read and passed",
+            "01/20/2026 House passed Sub A as amended in concurrence",
+            "01/21/2026 Committee recommends passage",
+            "01/22/2026 Senate passed in concurrence",
+            "01/22/2026 Transmitted to Governor",
+            "01/23/2026 House failed to pass",
+            "01/24/2026 Scheduled for House passage (01/24/2026)",
+        ]
+    ) == {
+        ("upper", "2026-01-13"): "Passage",
+        ("lower", "2026-01-20"): "In Concurrence",
+        ("upper", "2026-01-22"): "In Concurrence",
+    }
