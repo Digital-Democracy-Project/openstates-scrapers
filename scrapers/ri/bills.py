@@ -74,7 +74,7 @@ PRINTED_BILL = [
         r"(?:^|[\s-])(?:(?P<year>(?:20)?\d\d)[\s-]*)?(?P<chamber>[SH])[\s-]+(?P<bill>[1-9][0-9]*)\b"
     ),
     re.compile(
-        r"\b(?P<chamber>House|Senate)\s+(?:Bill\s+)?(?:No\.?\s*)?(?P<bill>[1-9][0-9]*)\b",
+        r"\b(?P<chamber>House|Senate)\s+(?:Bill\s+(?:No\.?\s*)?|No\.?\s*)(?P<bill>[1-9][0-9]*)\b",
         re.I,
     ),
     re.compile(r"^(?P<chamber>SEN|REP)\b.*\bNo\.?\s*(?P<bill>[1-9][0-9]*)\b", re.I),
@@ -87,15 +87,21 @@ ITEM_LINE = re.compile(r"^ITEM\b", re.I)
 
 def printed_bill(headers):
     """The bill a header prints in one of the PRINTED_BILL forms, as {"year", "chamber"
-    ("S" or "H"), "bill"}, else None."""
+    ("S" or "H"), "bill"}, else None. The first form that finds a bill decides; if it
+    finds two different bills in the header, the header is ambiguous and reads as none."""
     for pattern in PRINTED_BILL:
+        found = []
         for h in headers:
             m = pattern.search(h.strip())
             if m:
-                found = m.groupdict()
-                found.setdefault("year", None)
-                found["chamber"] = found["chamber"][0].upper()
-                return found
+                found.append(m.groupdict())
+        for f in found:
+            f.setdefault("year", None)
+            f["chamber"] = f["chamber"][0].upper()
+        if len({(f["chamber"], f["bill"]) for f in found}) == 1:
+            return found[0]
+        if found:
+            return None
     return None
 
 

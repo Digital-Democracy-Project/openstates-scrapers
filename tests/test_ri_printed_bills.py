@@ -172,6 +172,10 @@ def test_roll_call_is_tied_to_its_bill_and_labelled(
         (["HOUSE BILL 2026 H-8611", "RELATING TO TAXATION"], ("H", "8611")),
         (["SEN ACOSTA              No. 2067", "SENATE RESOLUTION"], ("S", "2067")),
         (["REP SLATER        HOUSE No. 5146", "AN ACT"], ("H", "5146")),
+        # two different bills printed by the same form: never a guess
+        (["SENATE BILL - S 2045 sub a", "RELATING TO S 3315"], None),
+        # a chamber word and a number with neither "Bill" nor "No." is title text, not a bill
+        (["ACT RELATING TO THE STATE HOUSE 2026 ROOF"], None),
         # no bill number at all: a bare roll call, a nomination, an election
         (["ROLL CALL"], None),
         (
