@@ -1,8 +1,19 @@
+from datetime import date
+
 from openstates.scrape import State
 from .events import WAEventScraper
 from .bills import WABillScraper
 
 settings = dict(SCRAPELIB_TIMEOUT=300)
+
+# OPEN-819: leg.wa.gov lists the 2027-28 biennium, so it must be in the list below or every run
+# fails the session-list check. It becomes the active session on the day the legislature
+# convenes, 2027-01-11 ("The 2027 Regular Session convenes on January 11", leg.wa.gov, read
+# 2026-11-23); until then 2025-2026 stays the only active one. Read once per run, so the first
+# run on or after 2027-01-11 scrapes 2027-2028 (as Arizona's 2027, OPEN-632, and Georgia's
+# 2027-28, OPEN-605).
+SESSION_2027_28_START = "2027-01-11"
+SESSION_2027_28_STARTED = date.today() >= date.fromisoformat(SESSION_2027_28_START)
 
 
 class Washington(State):
@@ -84,7 +95,19 @@ class Washington(State):
             "name": "2025-2026 Regular Session",
             "start_date": "2025-01-13",
             "end_date": "2026-03-06",
-            "active": True,
+            "active": not SESSION_2027_28_STARTED,
+        },
+        {
+            "_scraped_name": "2027-28",
+            "classification": "primary",
+            "identifier": "2027-2028",
+            "name": "2027-2028 Regular Session",
+            "start_date": SESSION_2027_28_START,
+            # OPEN-819: the 2027 session's sine die, the last day the state constitution allows
+            # (leg.wa.gov's draft 2027 cutoff calendar, read 2026-11-23). The biennium's end is
+            # the 2028 session's sine die; replace this once leg.wa.gov publishes it.
+            "end_date": "2027-04-25",
+            "active": SESSION_2027_28_STARTED,
         },
     ]
     ignored_scraped_sessions = [
