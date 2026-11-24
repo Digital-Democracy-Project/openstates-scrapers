@@ -118,6 +118,19 @@ def test_person_votes_match_the_printed_counts(
     }
     everyone = sum(v["named"].values(), [])
     assert len(everyone) == len(set(everyone)) == 25
+    # every name the page prints keeps its option ...
+    printed = _senate_floor(path, None, date)["named"]
+    for option, names in printed.items():
+        assert set(names) <= set(v["named"][option])
+    assert {o: n for o, n in v["named"].items() if o != "yes"} == {
+        o: n for o, n in printed.items() if o != "yes"
+    }
+    # ... and no worked-out aye is a senator the page already named (printed names are family
+    # names, worked-out ones full names, so compare family names from the people data)
+    family = {p["name"]: p["family_name"] for p, *_ in members.roles}
+    worked_out = set(v["named"]["yes"]) - set(printed.get("yes", []))
+    printed_families = {n.split(",")[0] for n in sum(printed.values(), [])}
+    assert not {family[n] for n in worked_out} & printed_families
 
 
 def test_sb283_reservations_are_named_once(members):
