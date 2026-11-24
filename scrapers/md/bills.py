@@ -56,6 +56,12 @@ def _classify_action(action):
     return (None, ctty)
 
 
+# OPEN-814: the Department of Legislative Services' analyses of a bill that its history table also lists as
+# "Text - <name>". The bill page lists the Racial Equity Impact Note under "Analysis" beside the Fiscal and
+# Policy Note (Pubs/BudgetFiscal/<session>-<bill>-REIN.pdf); it is an analysis of the bill, not a text of it,
+# so it is a document, not a version.
+ANALYSES = {"Racial Equity Impact Note"}
+
 # OPEN-813: a bill's printed texts are listed in its history table as "Text - <reader> - <bill title>"
 # ("Text - First - Motor Vehicles - Police Stops - ..."). The name was the reader plus the whole title, which
 # no version rule reads ("First - ..." and "Third - ..." had no stage), and words in a title ("Governor",
@@ -375,8 +381,14 @@ class MDBillScraper(Scraper):
                 link = row.xpath("td[4]/a")[0]
                 link_text = link.text_content().strip()
                 if link_text.startswith("Text"):
-                    bill.add_version_link(
-                        version_name(link_text, link.get("href")),
+                    name = version_name(link_text, link.get("href"))
+                    add_link = (
+                        bill.add_document_link
+                        if name in ANALYSES
+                        else bill.add_version_link
+                    )
+                    add_link(
+                        name,
                         link.get("href"),
                         media_type="application/pdf",
                         on_duplicate="ignore",
@@ -479,15 +491,18 @@ class MDBillScraper(Scraper):
         self.scrape_bill_sponsors(bill, page)
         self.scrape_bill_actions(bill, page)
 
-        # fiscal note
-        if page.xpath('//dt[contains(text(), "Analysis")]/following-sibling::dd[1]/a'):
-            fiscal_note = page.xpath(
-                '//dt[contains(text(), "Analysis")]/following-sibling::dd[1]/a'
-            )[0]
-            fiscal_url = fiscal_note.get("href")
-            fiscal_title = fiscal_note.text_content()
+        # fiscal note (the first analysis), and the analyses in ANALYSES (OPEN-814)
+        analyses = page.xpath(
+            '//dt[contains(text(), "Analysis")]/following-sibling::dd[1]/a'
+        )
+        for index, analysis in enumerate(analyses):
+            if index and analysis.text_content().strip() not in ANALYSES:
+                continue
             bill.add_document_link(
-                fiscal_title, fiscal_url, media_type="application/pdf"
+                analysis.text_content(),
+                analysis.get("href"),
+                media_type="application/pdf",
+                on_duplicate="ignore",
             )
 
         # effective date, where available
