@@ -305,6 +305,10 @@ class HIBillScraper(Scraper):
 
         # vote types that have been reconsidered since last vote of that type
         reconsiderations = set()
+        # OPEN-823: the status table lists actions newest first; they are stored oldest first (the table
+        # read backwards, so a day's actions keep their sequence, as Wyoming's OPEN-780). The rows are still
+        # read in the table's order, so each vote's dedupe_key index and "Reconsider: " prefix stay as stored
+        actions = []
 
         for index, action_row in enumerate(action_table.cssselect("tr")[1:]):
             cells = action_row.cssselect("td")
@@ -340,10 +344,7 @@ class HIBillScraper(Scraper):
                 and any(description in string for description in repeated_action)
             ):
                 continue
-            act = bill.add_action(string, date, chamber=actor, classification=atype)
-
-            for committee in real_committees:
-                act.add_related_entity(name=committee, entity_type="organization")
+            actions.append((string, date, actor, atype, real_committees))
             vote = self.parse_vote(string)
             seated_ayes = []
             derived = bool(vote) and vote[0].get("n_yes") is None
@@ -409,6 +410,11 @@ class HIBillScraper(Scraper):
 
             elif re.search("reconsider", string, re.IGNORECASE):
                 reconsiderations.add(actor)
+
+        for string, date, actor, atype, real_committees in reversed(actions):
+            act = bill.add_action(string, date, chamber=actor, classification=atype)
+            for committee in real_committees:
+                act.add_related_entity(name=committee, entity_type="organization")
 
     def seated_ayes(self, v, chamber, date, bill_id):
         """OPEN-709: the plain ayes of a tally that prints no aye count: the members seated in
