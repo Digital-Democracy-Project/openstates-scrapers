@@ -171,8 +171,8 @@ def test_senate_resolution_adoption(members):
 
 def test_kept_roll_calls_are_unchanged_by_the_new_ones(members):
     # without people data the scraper yields exactly what it kept before (main); with it, those
-    # same roll calls are unchanged, including a "Reconsider: " prefix a House floor tally
-    # might otherwise have taken (HB 1705's reconsideration of 04-16-26)
+    # same roll calls are unchanged; the House floor tally it adds after HB 1705's reconsideration
+    # (04-22-26) carries the "Reconsider: " prefix (OPEN-856, test_hi_reconsider_prefix)
     for name in (
         "HB1705.html",
         "HB1768.html",
@@ -184,10 +184,11 @@ def test_kept_roll_calls_are_unchanged_by_the_new_ones(members):
         before = _votes(name, None)
         after = _votes(name, members)
         assert [v for v in after if v in before] == before
-    assert any(
-        v["motion"].startswith("Reconsider: The committee on JHA")
+    assert [
+        v["date"]
         for v in _votes("HB1705.html", members)
-    )
+        if v["motion"].startswith("Reconsider: ")
+    ] == ["2026-04-23"]
 
 
 def test_no_people_data_keeps_no_derived_roll_call():
