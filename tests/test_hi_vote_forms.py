@@ -57,17 +57,16 @@ def test_forms_are_read(text, counts, resv, no, excused):
     assert v["excused"] == excused
 
 
-def test_kept_senate_third_reading_still_read_by_its_old_pattern():
-    # a real form the scraper already kept (HB 1642, 2026-04-14): the earlier pattern still
-    # reads it, exactly as on main (the new pattern has no "yes" group)
+def test_kept_senate_third_reading_reads_the_same_counts():
+    # a real form the scraper already kept (HB 1642, 2026-04-14). OPEN-825 reads it with its own
+    # pattern now (the names of its lists, whole), with the same counts the earlier pattern read
     v = _parse(
         "Report adopted; Passed Third Reading.  Ayes, 25; Aye(s) with reservations: none .  "
         "Noes, 0 (none). Excused, 0 (none).  Transmitted to House."
     )
     assert v == {
         "n_yes": "25",
-        "yes": "",
-        "yes_resv": "none ",
+        "yes_resv": "none",
         "n_no": "0",
         "no": "none",
         "n_excused": "0",

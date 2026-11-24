@@ -172,7 +172,11 @@ def test_senate_resolution_adoption(members):
 def test_kept_roll_calls_are_unchanged_by_the_new_ones(members):
     # without people data the scraper yields exactly what it kept before (main); with it, those
     # same roll calls are unchanged, including a "Reconsider: " prefix a House floor tally
-    # might otherwise have taken (HB 1705's reconsideration of 04-16-26)
+    # might otherwise have taken (HB 1705's reconsideration of 04-16-26). OPEN-825: a Senate
+    # floor tally with an aye count gains its plain ayes' names, and nothing else changes
+    def unnamed(v):
+        return {k: x for k, x in v.items() if k != "named" or v["chamber"] == "lower"}
+
     for name in (
         "HB1705.html",
         "HB1768.html",
@@ -181,8 +185,8 @@ def test_kept_roll_calls_are_unchanged_by_the_new_ones(members):
         "HB1642.html",
         "HB1621.html",
     ):
-        before = _votes(name, None)
-        after = _votes(name, members)
+        before = [unnamed(v) for v in _votes(name, None)]
+        after = [unnamed(v) for v in _votes(name, members)]
         assert [v for v in after if v in before] == before
     assert any(
         v["motion"].startswith("Reconsider: The committee on JHA")

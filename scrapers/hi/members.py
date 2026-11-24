@@ -12,6 +12,11 @@ data/hi/legislature and data/hi/retired YAML, fetched from GitHub's main at scra
 2026-11-20: people changes nightly, so it is not bundled into the scraper image). When the files
 cannot be read, or a listed name does not match exactly one seated member, the caller keeps no
 roll call for that tally: it never guesses.
+
+OPEN-825: the Senate floor tally prints an aye count but names only the exceptions ("Ayes, 25;
+Aye(s) with reservations: none .  Noes, 0 (none). Excused, 0 (none)."). Its plain ayes come from
+the same rule, kept only when they and the ayes with reservations come to the printed count;
+otherwise the roll call keeps its counts and printed names (it was kept before this rule).
 """
 import datetime as dt
 import glob
@@ -129,7 +134,8 @@ def load_members(scraper):
     except Exception as e:  # any failure means no roster: the caller skips, never guesses
         logger.warning(
             "OPEN-709: Hawaii people data not read (%s); House floor tallies and Senate "
-            "resolution adoptions are skipped this run",
+            "resolution adoptions are skipped this run, Senate floor tallies keep counts only "
+            "(OPEN-825)",
             e,
         )
         return None

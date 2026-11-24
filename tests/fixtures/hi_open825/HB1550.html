@@ -1,0 +1,1325 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head id="Head1"><meta name="robots" content="noindex" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta http-equiv="content-type" content="text/html;charset=utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <script>
+        // Privacy: Google Analytics and the UserWay accessibility widget record the full page URL. Sign-in and
+        // confirmation links redirect to a clean URL on the server; this removes any token or email address that
+        // still reaches the address bar before either script loads. Must stay above both scripts.
+        (function () {
+            try {
+                var params = new URLSearchParams(window.location.search);
+                var sensitive = ['email', 'token', 'key2'];
+                if (/^\/account\//i.test(window.location.pathname)) sensitive.push('key');
+                var changed = false;
+                Array.from(params.keys()).forEach(function (name) {
+                    if (sensitive.indexOf(name.toLowerCase()) >= 0) { params.delete(name); changed = true; }
+                });
+                if (changed) {
+                    var query = params.toString();
+                    history.replaceState(history.state, '', window.location.pathname + (query ? '?' + query : '') + window.location.hash);
+                }
+            } catch (e) { /* older browsers: the server-side redirects still apply */ }
+        })();
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XG174C2F7B"></script>
+    <script>
+
+        //Google Analytics GA4
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        // Analytics only: no Google signals (cross-device / demographics from signed-in Google accounts)
+        // and no ad personalization from this site's data. See the privacy statement.
+        // cookie_domain: by default GA4 sets _ga on the broadest domain it can (.hawaii.gov), where every other
+        // *.hawaii.gov site could read the same visitor ID. Keep it on capitol.hawaii.gov (www, data, search);
+        // other hosts (localhost, *.azurewebsites.net slots) can't hold a capitol.hawaii.gov cookie, so they keep 'auto'.
+        var gaCookieDomain = /(^|\.)capitol\.hawaii\.gov$/i.test(window.location.hostname) ? 'capitol.hawaii.gov' : 'auto';
+        gtag('config', 'G-XG174C2F7B', {
+            allow_google_signals: false,
+            allow_ad_personalization_signals: false,
+            cookie_domain: gaCookieDomain
+        });
+
+        function clearText(textbox, text) {
+            if (textbox.value == text)
+                textbox.value = "";
+        }
+        function resetText(textbox, text) {
+            if (textbox.value == "")
+                textbox.value = text;
+        }
+
+        function clickme() {
+            document.getElementById("LinkButtonLinks").click();
+        }
+    </script>
+    <link href="/assets/css/google-fonts.css" rel="stylesheet" /><link href="/assets/css/bootstrap-4.6.1.min.css" rel="stylesheet" /><link href="/assets/css/font-awesome-6.6.0.css" rel="stylesheet" /><link rel="stylesheet" href="/assets/css/main.css?v=11182026-00" /><link rel="preload" href="/assets/js/header-alert-session.js?v=04282026-01" as="script" />
+    
+    <style>
+        /* Make header elements more compact */
+        .menu-seal-img { width: 60px !important; height: 60px !important; }
+        .main-header-text-lg { font-size: 1.5rem !important; }
+        .main-header-text-sm { font-size: 0.7rem !important; }
+        #header-seal { height: 60px !important; }
+    </style>
+    
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.ico" />
+    <title>
+	Measure Status Details for HB 1550
+</title></head>
+
+<body>
+    <nav id="skiptocontent" aria-label="Skip link">
+        <a href="#main-content" class="ac-hidden">Skip to main content</a>
+    </nav>
+    
+
+    <div class="container-fluid p-0">
+        
+        <form method="post" action="./measure_indiv.aspx?billtype=HB&amp;billnumber=1550&amp;year=2026" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="ToolkitScriptManager1_HiddenField" id="ToolkitScriptManager1_HiddenField" value="" />
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['form1'];
+if (!theForm) {
+    theForm = document.form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=cK43mISzgWolW36nlesh1XD5J19qKRbZCuAmEDfmTdXnF2s64V87KQxuYiRsAdxn5WPL0Etl7i6V48vcBId1hMmdvl6Zt-sxR-HjofJxHhk1&amp;t=639190473332169432" type="text/javascript"></script>
+
+
+<script src="/ScriptResource.axd?d=NaedDJGMz9w-2I9dPiRD0imJyMTbNhNPHXPOncNfjRGkRLJ34EieYraCiqu-906tCpweavjwD5zjx-IQ1y6Is5pdTTP-q7MsOk0N0kjB0rweVpjLIgMn971NXHYHDAXz0&amp;t=78f0a2d1" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=SOlrUxF5SU02-AdyqPsaVu4EcnHYnRWcryAALOJMCHoarp-Drg4TRI3cBf8OxdAmco0bjp8I_yYAqUtILRrtwwSEZNeMrR4_ggS0SJ8l2yKngrQuogeOHEVOuQVNO4EuuTNWCZPep-9NW2_6ftAfbA2&amp;t=78f0a2d1" type="text/javascript"></script>
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="4F1CA6D5" />
+	<input type="hidden" name="__VIEWSTATEENCRYPTED" id="__VIEWSTATEENCRYPTED" value="" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="qiLI5eKCVE9IbgRQV3kQmw2NHk2SAXDIIRG8ydT7JuxR4Y2XmNykO6G5TfMxyEfTf8L334yw3WEfWlcd8fLrnEXgjOT39XFTm7GRG2SFLJraSm9aKk6PYyL21dxhiKqfcV6IpVap/GminG2kwZEIwHVnsRZp3qoUwQkD/IlGgN2/bs7qMdF40OPdbMb5Pj1qdCtgycC+mDba1sgIgu1NeS80GoHBLQOb4BED57DgYr4lROpG0J8he95KAYN9rd1mEkjXeKAiP8TQliGUA7Uw1hRYDUfOl5PwqrEmlw5d/G+rYD9JGpMaR9eFZiV8Hyef+R05/RzQ4DryFOHoGXybjA==" />
+</div>
+            <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ToolkitScriptManager1', 'form1', ['tctl00$MainContent$UpdatePanel1','MainContent_UpdatePanel1','tctl00$MainContent$UpdatePanel2','MainContent_UpdatePanel2'], [], [], 90, 'ctl00');
+//]]>
+</script>
+
+
+            
+            <!-- Minimized menu bar that appears when header is collapsed -->
+            <div id="minimized-menu-bar">
+                <a href="/" class="minimized-logo">
+                    <img src="/assets/images/hawaii-state-seal.png" alt="Hawaii State Seal" />
+                    <span>Hawai'i State Legislature</span>
+                </a>
+                <div class="minimized-nav" id="minimized-nav-host" role="navigation" aria-label="Compact primary navigation"></div>
+                <button type="button" class="mobile-menu-toggle" aria-label="Show menu">
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="expand-trigger" aria-label="Expand header" title="Click to expand full header">
+                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <!-- Mobile navigation drawer (shown when mobile chevron button is tapped). -->
+            <div id="mobile-nav-drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Mobile navigation menu">
+                <div class="mobile-nav-drawer-header">
+                    <button type="button" class="mobile-nav-close" tabindex="-1" aria-label="Close navigation menu">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="mobile-nav-section">
+                    <button type="button" class="mobile-nav-section-toggle" tabindex="-1" aria-expanded="false">LEGISLATURE <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+                    <div class="mobile-nav-section-items">
+                        <a class="mobile-nav-item" tabindex="-1" href="/house.aspx">HOUSE</a>
+                        <a class="mobile-nav-item sub" tabindex="-1" href="/legislature/legislators.aspx?chamber=H">House Members</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/senate.aspx">SENATE</a>
+                        <a class="mobile-nav-item sub" tabindex="-1" href="/legislature/legislators.aspx?chamber=S">Senate Members</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/legislature/committees.aspx?chamber=all">COMMITTEES</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/fyl/?v=2">FIND YOUR LEGISLATOR</a>
+                    </div>
+                </div>
+                <div class="mobile-nav-section">
+                    <button type="button" class="mobile-nav-section-toggle" tabindex="-1" aria-expanded="false">EVENTS <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+                    <div class="mobile-nav-section-items">
+                        <a class="mobile-nav-item" tabindex="-1" href="/session/upcominghearingsfiltered.aspx">UPCOMING HEARINGS</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/session/od.aspx?date=today">ORDER OF THE DAY</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/livevideo.aspx">LIVE AND ON-DEMAND VIDEO</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/docs/sessioncalendar.pdf">LEGISLATIVE CALENDAR</a>
+                    </div>
+                </div>
+                <div class="mobile-nav-section">
+                    <button type="button" class="mobile-nav-section-toggle" tabindex="-1" aria-expanded="false">PARTICIPATE <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+                    <div class="mobile-nav-section-items">
+                        <a class="mobile-nav-item" tabindex="-1" href='/account/submittestimony.aspx'>SUBMIT TESTIMONY</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/account/hearingnotice.aspx">HEARING NOTIFICATION</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/account/measuretracking.aspx">MEASURE TRACKING</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/contact.aspx">CONTACT LEGISLATORS</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="https://lrb.hawaii.gov/par/">PUBLIC ACCESS ROOM</a>
+                    </div>
+                </div>
+                <div class="mobile-nav-section">
+                    <button type="button" class="mobile-nav-section-toggle" tabindex="-1" aria-expanded="false">LAWS &amp; RESEARCH <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+                    <div class="mobile-nav-section-items">
+                        <a class="mobile-nav-item" tabindex="-1" href="/hrsall">HAWAI'I REVISED STATUTES</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/session/slh.aspx">SESSION LAWS</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/advreports/main.aspx">REPORTS AND LISTS</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/specialstudies.aspx">SPECIAL STUDIES</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/leginfo.aspx">LEGISLATIVE INFO</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/session/budget.aspx">BUDGET</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/session/gia.aspx">GRANT-IN-AID</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/session/archives/main.aspx">ARCHIVES</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/session/documentindex.aspx">2026 DOCUMENT INDEX</a>
+                    </div>
+                </div>
+                <div class="mobile-nav-section">
+                    <button type="button" class="mobile-nav-section-toggle" tabindex="-1" aria-expanded="false">HELP &amp; INFO <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+                    <div class="mobile-nav-section-items">
+                        <a class="mobile-nav-item" tabindex="-1" href="/help.aspx">TESTIMONY AND LOGIN</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/faq.aspx">FAQs</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/mapsdirectories.aspx">MAPS &amp; DIRECTORIES</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/glossary.aspx?show=all">LEGISLATIVE GLOSSARY</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/rss.aspx">RSS FEEDS</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="https://lrb.hawaii.gov/par/">PUBLIC ACCESS ROOM</a>
+                        <a class="mobile-nav-item" tabindex="-1" href="/contact.aspx">CONTACT US</a>
+                    </div>
+                </div>
+            </div>
+            <div id="mobile-nav-backdrop"></div>
+
+            
+            <div id="header-alert" class="header-alert" role="region" aria-label="Site notices">
+                <div class="header-alert-item header-notice-banner topalert-normal" data-alert-id="session-jobs-2027">
+  <div class="header-notice-inner pl-5">
+    <div class="header-notice-text text-center">
+      <strong>Now hiring: </strong>2027 session job opportunities are available with the <a href="https://www.capitol.hawaii.gov/hjobs.aspx">House</a> and the <a href="https://www.capitol.hawaii.gov/sjobs.aspx">Senate</a>.
+    </div>
+    <button type="button" class="header-notice-close" aria-label="Close job opportunities notice">
+      <i class="fa fa-times" aria-hidden="true"></i>
+    </button>
+  </div>
+</div>
+
+            </div>
+            
+            <script type="text/javascript" src="/assets/js/header-alert-session.js?v=09102026-00"></script>
+
+            <header id="header-container">
+    <meta name="robots" content="noindex" />
+                <div class="d-flex flex-row justify-content-center">
+                    <div class="container" id="header-blue-nav">
+                        <div class="d-flex d-flex-row justify-content-between flex-wrap align-items-start" id="expandedheader">
+                            <div class="d-flex state-seal flex-row align-items-center" id="header-image">
+                                <div id="header-seal" class="d-flex justify-content-between align-items-center">
+                                    <a href="/" style="text-decoration: none;" aria-label="Hawaii State Legislature Home">
+                                        <img src="/assets/images/hawaii-state-seal.png" class="menu-seal-img pt-1 img-responsive" alt="Hawaii State Seal" />
+                                    </a>
+                                    <div id="header-title" class="text-white pl-3">
+                                        <h1 class="main-header-text-lg mb-1">Hawai'i State Legislature</h1>
+                                        <p class="main-header-text-sm mb-0" lang="haw">Ka 'Aha'ōlelo Moku'āina 'O Hawai'i</p>
+                                    </div>
+                                </div>
+                            </div> 
+                            
+                            <div id="account-search-bar" class="d-flex flex-column align-items-end">
+                                <span class="ac-hidden">Account Login Navigation</span>
+                                <div class="login-bar-row mb-3">
+                                    <nav id="section-login" aria-label="account-navigation">
+                                        
+                                        <div id="PanelNotLoggedIn">
+	
+                                            <a id="HyperLinkLogin" class="account-link" href="/account/login.aspx">
+                                                <i class="fa fa-sign-in" aria-hidden="true"></i> Log In
+                                            </a>
+                                            <span class="mx-2">|</span>
+                                            <a id="HyperLinkRegister" class="account-link" href="/account/register.aspx">
+                                                <i class="fa fa-pen-to-square" aria-hidden="true"></i> Register
+                                            </a>
+                                            
+                                        
+</div>
+                                    </nav>
+                                    <button type="button" class="mobile-menu-toggle d-md-none" aria-label="Show navigation menu">
+                                        <i class="fa fa-bars" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                
+                                <div id="search-container" class="modern-search-container" role="search" aria-label="Website search">
+                                    <span class="ac-hidden">Website Search</span>
+                                    
+                                    <!-- Main Search Bar -->
+                                    <div id="search-bar" class="modern-search-bar">
+                                        <input name="ctl00$TextSearch" type="text" id="TextSearch" class="search-input" aria-label="Search the website. Type your search term to show filter options below." placeholder="Search..." autocomplete="off" spellcheck="false" />
+                                        <button type="button" id="btnClearSearch" class="clear-btn" aria-label="Clear search" style="display: none;">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                        </button>
+                                        <a id="btnSearch" class="search-submit-btn" aria-label="Search" href="javascript:__doPostBack(&#39;ctl00$btnSearch&#39;,&#39;&#39;)">
+                                            <i class="fa fa-search" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                    <div class="search-help-link">
+                                        <a href="https://search.capitol.hawaii.gov" class="search-help" aria-label="Go to advanced search page" target="_blank" rel="noopener noreferrer">
+                                            <i class="fa fa-external-link-alt" aria-hidden="true"></i> Advanced Search
+                                        </a>
+                                        <button type="button" class="search-help" aria-label="Search help and tips" data-toggle="modal" data-target="#searchHelpModal">
+                                            <i class="fa fa-question-circle" aria-hidden="true"></i> Help
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- Filter Section -->
+                                    <div id="filter-section" class="filter-section" role="group" aria-labelledby="filter-section-title" aria-describedby="filter-section-desc">
+                                        <span id="filter-section-desc" class="ac-hidden">These filters apply to the search box above. Type in the search box to show these options. Then select one or more content types to narrow your search: Measures, Hearings, HRS, Legislators, Committees, or Documents. You can select multiple filters.</span>
+                                        <div class="filter-header">
+                                            <div class="filter-title" id="filter-section-title">
+                                                <i class="fa fa-chevron-up filter-chevron" aria-hidden="true"></i>
+                                                <span>Filter by</span>
+                                            </div>
+                                            <button type="button" id="btnEnableAll" class="enable-all-btn" aria-label="Enable all search filters">Enable all</button>
+                                        </div>
+                                        
+                                        <div class="filter-pills" role="group" aria-label="Search content type filters">
+                                            <button type="button" class="filter-pill active" data-filter="measures" aria-label="Measures filter">
+                                                <i class="fa fa-file-text" aria-hidden="true"></i>
+                                                <span>Measures</span>
+                                            </button>
+                                            <button type="button" class="filter-pill" data-filter="hearings" aria-label="Hearings filter">
+                                                <i class="fa fa-microphone" aria-hidden="true"></i>
+                                                <span>Hearings</span>
+                                            </button>
+                                            <button type="button" class="filter-pill" data-filter="hrs" aria-label="HRS filter">
+                                                <i class="fa fa-book" aria-hidden="true"></i>
+                                                <span>HRS</span>
+                                            </button>
+                                            <button type="button" class="filter-pill" data-filter="legislators" aria-label="Legislators filter">
+                                                <i class="fa fa-user-tie" aria-hidden="true"></i>
+                                                <span>Legislators</span>
+                                            </button>
+                                            <button type="button" class="filter-pill" data-filter="committees" aria-label="Committees filter">
+                                                <i class="fa fa-users" aria-hidden="true"></i>
+                                                <span>Committees</span>
+                                            </button>
+                                            <button type="button" class="filter-pill" data-filter="documents" aria-label="Documents filter">
+                                                <i class="fa fa-file-alt" aria-hidden="true"></i>
+                                                <span>Documents</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Hidden fields for server-side processing -->
+                                    <input type="hidden" name="ctl00$hdnActiveFilters" id="hdnActiveFilters" />
+                                    <input type="hidden" name="ctl00$hdnContentType" id="hdnContentType" />
+                                </div>
+                            </div>
+                        </div>
+                        <nav id="main-nav" class="navbar navbar-expand-md navbar-light" aria-label="primary-navigation" role="navigation" style="padding: 0.02rem 0 !important; min-height: 18px !important; overflow: visible !important;">
+                            <button type="button" class="navbar-toggler ml-auto d-none" data-toggle="collapse" data-target="#navbarMenu">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse justify-content-between main-nav" id="navbarMenu">
+
+                                <ul class="nav navbar-nav no-style-type">
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="legislatureMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="normal">LEGISLATURE</span>
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="legislatureMenu">
+                                            <ul style="padding:0;">
+                                                <li>
+                                                    <a class="dropdown-item" href="/house.aspx">HOUSE</a>
+                                                    <ul class="sub-menu"><li><a class="dropdown-item" href="/legislature/legislators.aspx?chamber=H">House Members</a></li></ul>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="/senate.aspx">SENATE</a>
+                                                    <ul class="sub-menu"><li><a class="dropdown-item" href="/legislature/legislators.aspx?chamber=S">Senate Members</a></li></ul>
+                                                </li>
+                                                <li><a class="dropdown-item" href="/legislature/committees.aspx?chamber=all">COMMITTEES</a></li>
+                                                <li><a class="dropdown-item" href="/fyl/?v=2">FIND YOUR LEGISLATOR</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                                <ul class="nav navbar-nav no-style-type">
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="eventsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="normal">EVENTS</span>
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="eventsMenu">
+                                            <ul style="padding:0;">
+                                                <li><a class="dropdown-item" href="/session/upcominghearingsfiltered.aspx">UPCOMING HEARINGS</a></li>
+                                                <li><a class="dropdown-item" href="/session/od.aspx?date=today">ORDER OF THE DAY</a></li>
+                                                <li><a class="dropdown-item" href="/livevideo.aspx">LIVE AND ON-DEMAND VIDEO</a></li>
+                                                <li><a class="dropdown-item" href="/docs/sessioncalendar.pdf">LEGISLATIVE CALENDAR</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                                <ul class="nav navbar-nav no-style-type">
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="participateMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="normal">PARTICIPATE</span>
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="participateMenu">
+                                            <ul style="padding:0;">
+                                                <li><a class="dropdown-item" href='/account/submittestimony.aspx'>SUBMIT TESTIMONY</a></li>
+                                                <li><a class="dropdown-item" href="/account/hearingnotice.aspx">HEARING NOTIFICATION</a></li>
+                                                <li><a class="dropdown-item" href="/account/measuretracking.aspx">MEASURE TRACKING</a></li>
+                                                <li><a class="dropdown-item" href="/contact.aspx">CONTACT LEGISLATORS</a></li>
+                                                <li><a class="dropdown-item" href="https://lrb.hawaii.gov/par/">PUBLIC ACCESS ROOM</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                                <ul class="nav navbar-nav no-style-type">
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="lawsAndResearchMenu"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="normal">LAWS & RESEARCH</span>
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="lawsAndResearchMenu">
+                                            <ul style="padding:0;">
+                                                <li><a class="dropdown-item" href="/hrsall"  >HAWAI&#699;I REVISED STATUTES</a></li>
+                                                <li><a class="dropdown-item" href="/session/slh.aspx" >SESSION LAWS</a></li>
+                                                <li><a class="dropdown-item" href="/advreports/main.aspx" >REPORTS AND LISTS</a></li>
+                                                <li><a class="dropdown-item" href="/specialstudies.aspx" >SPECIAL STUDIES</a></li>
+                                                <li><a class="dropdown-item" href="/leginfo.aspx" >LEGISLATIVE INFO</a></li>
+                                                <li><a class="dropdown-item" href="/session/budget.aspx" >BUDGET</a></li>
+                                                <li><a class="dropdown-item" href="/session/gia.aspx" >GRANT-IN-AID</a></li>
+                                                <li><a class="dropdown-item" href="/session/archives/main.aspx" >ARCHIVES</a></li>
+                                                <li><a class="dropdown-item" href="/session/documentindex.aspx" >2026 DOCUMENT INDEX</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                                <ul class="nav navbar-nav no-style-type">
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="helpAndInfoMenu"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="normal">HELP & INFO</span>
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="helpAndInfoMenu">
+                                            <ul style="padding:0;">
+                                                <li><a class="dropdown-item" href="/help.aspx">TESTIMONY AND LOGIN</a></li>
+                                                <li><a class="dropdown-item" href="/faq.aspx">FAQs</a></li>
+                                                <li><a class="dropdown-item" href="/mapsdirectories.aspx">MAPS & DIRECTORIES</a></li>
+                                                <li><a class="dropdown-item" href="/glossary.aspx?show=all">LEGISLATIVE GLOSSARY</a></li>
+                                                <li><a class="dropdown-item" href="/rss.aspx">RSS FEEDS</a></li>
+                                                <li><a class="dropdown-item" href="https://lrb.hawaii.gov/par/">PUBLIC ACCESS ROOM</a></li>
+                                                <li><a class="dropdown-item" href="/contact.aspx">CONTACT US</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                              
+                                
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </header>
+            
+            <div id="header-spacer" aria-hidden="true"></div>
+            <script type="text/javascript" src="/assets/js/header-boot.js?v=08312026-01"></script>
+
+            
+                
+                
+            <main id="main-content" tabindex="-1">
+                
+                <div class="container">
+                    
+                    
+    
+
+<dialog id="measure-video-dialog" class="measure-video-dialog" aria-modal="true" aria-labelledby="measure-video-dialog-title">
+    <div class="measure-video-dialog-inner">
+        <div class="measure-video-dialog-header">
+            <h2 id="measure-video-dialog-title" class="measure-video-dialog-title" tabindex="-1">Full Video Stream</h2>
+            <button type="button" class="measure-video-dialog-close" id="measure-video-dialog-close" aria-label="Close video">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <p id="measure-video-notice-wrap" class="measure-video-notice-wrap" style="display: none;">
+            <i class="fa-solid fa-file-lines" aria-hidden="true"></i> <a id="measure-video-notice-link" href="#" target="_blank" rel="noopener noreferrer">View hearing notice</a> <i class="fa-brands fa-youtube ml-3" aria-hidden="true"></i> <a id="measure-video-watch-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Watch this video on YouTube (opens in new window)">Watch this video on YouTube</a>
+        </p>
+        <div class="measure-video-sr-controls" role="group" aria-label="Video controls">
+            <button type="button" id="measure-video-play" class="sr-only sr-only-focusable measure-video-ctrl" aria-label="Play">Play</button>
+            <button type="button" id="measure-video-pause" class="sr-only sr-only-focusable measure-video-ctrl measure-video-ctrl-hidden" aria-label="Pause" tabindex="-1">Pause</button>
+            <button type="button" id="measure-video-vol-up" class="sr-only sr-only-focusable measure-video-ctrl" aria-label="Volume up">Volume up</button>
+            <button type="button" id="measure-video-vol-down" class="sr-only sr-only-focusable measure-video-ctrl" aria-label="Volume down">Volume down</button>
+            <button type="button" id="measure-video-rewind" class="sr-only sr-only-focusable measure-video-ctrl" aria-label="Rewind 10 seconds">Rewind 10 seconds</button>
+            <button type="button" id="measure-video-forward" class="sr-only sr-only-focusable measure-video-ctrl" aria-label="Fast forward 10 seconds">Fast forward 10 seconds</button>
+            <button type="button" id="measure-video-captions-on" class="sr-only sr-only-focusable measure-video-ctrl" aria-label="Turn on captions">Turn on captions</button>
+            <button type="button" id="measure-video-captions-off" class="sr-only sr-only-focusable measure-video-ctrl measure-video-ctrl-hidden" aria-label="Turn off captions" tabindex="-1">Turn off captions</button>
+        </div>
+        <div class="embed-responsive embed-responsive-16by9 measure-video-player-wrap" aria-hidden="true" tabindex="-1">
+            <div id="measure-video-player" class="embed-responsive-item" tabindex="-1"></div>
+        </div>
+    </div>
+</dialog>
+
+    <div class="modal fade" id="measureHelpModal" tabindex="-1" role="dialog" aria-labelledby="measureHelpModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title h5 mb-0" id="measureHelpModalTitle">Measure Page FAQ</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close help dialog">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-left">
+                    <section class="mb-4" aria-labelledby="measure-help-email-heading">
+                        <h3 id="measure-help-email-heading" class="h6 font-weight-bold">Subscribing to a Measure</h3>
+                        <ul class="mb-0 pl-3">
+                            <li class="mb-2">If you are logged in to your account, select <strong>"Subscribe"</strong> on the measure status page to receive email notifications when a hearing notice is filed for the measure.</li>
+                            <li class="mb-2">If you have an account but are not logged in, selecting <strong>"Subscribe"</strong> will redirect you to the login screen. After you log in, the system will automatically subscribe you to hearing notice email notifications for this measure then return you to the measure status page.</li>
+                            <li class="mb-2">If you do not have an account, please <strong>Register</strong> first. You must <strong>confirm your email address</strong> (using the link in the confirmation email) before you can log in and subscribe to hearing notice email notifications.</li>
+                            <li class="mb-2">Once subscribed, email notifications will be sent to the email associated with your account.</li>
+                            <li class="mb-2">Select <strong>Unsubscribe</strong> on the measure status page at any time to stop receiving email notifications for that measure.</li>
+                            <li class="mb-2">You may manage all email notification subscriptions from your account’s 
+                                <a id="MainContent_HyperLinkHelpHearing" class="d-inline-block font-weight-bold text-break" aria-label="Hearing notifications page">hearing notifications page</a>.
+                            </li>
+                        </ul>
+                    </section>
+                    <section aria-labelledby="measure-help-rss-heading">
+                        <h3 id="measure-help-rss-heading" class="h6 font-weight-bold">What are RSS feeds?</h3>
+                        <p class="mb-2">RSS feeds let you get updates when new information is published—for example, this measure&rsquo;s status. You can use a feed reader or browser to follow feeds.</p>
+                        <p class="mb-0"><a href="/rss.aspx" rel="noopener noreferrer" aria-label="Go to RSS feed help page.">View RSS feed help page for more details.</a></p>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Scroll to top button (hidden until user scrolls) -->
+    <button type="button" class="btn btn-danger btn-floating btn-lg" id="btn-top" onclick="backToTop()" aria-label="Scroll to top of page" style="display: none;">
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
+    </button>
+    <span id="measure-content-start" tabindex="-1" class="sr-only">Start of measure content</span>
+    <div class="measure-main">
+        <div class="main-col">
+            <div id="MainContent_PanelMeasureTypeNum" class="measure-main">
+	
+                <div class="measure-number d-flex flex-wrap align-items-center">
+                    <div class="pr-2 pt-0 mt-0 flex-nowrap">
+                        <a id="MainContent_LinkButtonMeasure" class="measure-header" aria-label="Link to measure HB1550 HD2 SD2 CD1 .HTM file" href="javascript:__doPostBack(&#39;ctl00$MainContent$LinkButtonMeasure&#39;,&#39;&#39;)">HB1550 HD2 SD2 CD1</a>
+                    </div>
+                    <div class="p-1 flex-nowrap">
+                        <a id="MainContent_PdfLink" class="noprint img-button mr-0" aria-label="Link to measure PDF file" href="/sessions/session2026/bills/HB1550_CD1_.pdf" style="vertical-align: top"><img src="/assets/images/pdf_icon.gif" alt="Pdf File" /></a>
+                        <input type="image" name="ctl00$MainContent$ImageButtonRSS" id="MainContent_ImageButtonRSS" class="noprint img-button m-0" aria-label="Link to measure&#39;s RSS feed" src="../assets/images/rss_icon.gif" alt="RSS" align="top" />
+                        <button type="button" class="btn btn-link p-0 m-0 noprint align-middle" data-toggle="modal" data-target="#measureHelpModal" aria-label="Open help notes for email updates and RSS feeds" style="color: black; font-size: 1.5rem; line-height: 1; vertical-align: middle;">
+                            <i class="fa fa-question-circle text-danger" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="measure-actions d-flex flex-nowrap">
+                        <div class="noprint submit-testimony">
+                            <a id="MainContent_ButtonNotification" title="Log in to opt into emails notifications when this measure is scheduled for a hearing" class="btn btn-main pl-1 pr-1" aria-label="Subscribe button. Click to be redirected to login page. After login you will return to this measure and be signed up to receive email notifications." href="javascript:__doPostBack(&#39;ctl00$MainContent$ButtonNotification&#39;,&#39;&#39;)" style="width:145px; display:inline-block; text-decoration:none;"><i class="fa fa-bell" aria-hidden="true"></i> Subscribe</a>
+                        </div>
+                        <div class="noprint submit-testimony">
+                            <input type="submit" name="ctl00$MainContent$ButtonTestimony" value="Submit Testimony" id="MainContent_ButtonTestimony" title="Go to the submit testimony page" class="btn btn-main pl-1 pr-1" aria-label="Link to submit testimony page" style="width:145px;" />
+                        </div>
+                    </div>
+                    <span id="MainContent_LabelTrackStatus" tabindex="-1" class="noprint mb-2" role="status" aria-live="polite" aria-atomic="true" tabindex="-1" style="color:Green;"></span>
+
+                </div>
+
+
+            
+</div>
+          
+            
+                    <div id="MainContent_ListView1_itemPlaceholderContainer" style="">
+                        
+                    <div class="table-responsive">
+                        <table id="measure-info" class="table table-striped w-100">
+                            <caption class="sr-only">Measure details</caption>
+                            <tr>
+                                <th scope="row" class="measure-label">Measure Title:</th>
+                                <td>
+                                    <span id="MainContent_ListView1_measure_titleLabel_0">RELATING TO HEALTH.</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="measure-label">Report Title: </th>
+                                <td>
+                                    <span id="MainContent_ListView1_report_titleLabel_0">DOH; Uniform Controlled Substances Act; Drug Paraphernalia; Drug Testing Products; Qualifying Patients; Medical Cannabis; Medical Records; Inspection</span><span id="MainContent_ListView1_Label41_0"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="measure-label">Description: </th>
+                                <td>
+                                    <span id="MainContent_ListView1_descriptionLabel_0">Excludes drug testing products from the definition of drug paraphernalia under the Uniform Controlled Substances Act.  Removes items that are used to plant, propagate, cultivate, grow, harvest, test, analyze, pack, repack, store, contain, conceal, inject, ingest, inhale, or otherwise introduce into the human body a controlled substance from the law prohibiting drug paraphernalia under the Uniform Controlled Substances Act.  Restricts the law prohibiting drug paraphernalia under the Uniform Controlled Substances Act to only prohibit items that are used for the manufacturing, compounding, converting, production, processing, or preparing of controlled substances.  Repeals language permitting the Department of Health to inspect a qualifying patient's medical records and suspend or revoke the ability of certain health care providers to issue written certifications under certain circumstances.  (CD1)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" style="color: #124D79">Companion:</th>
+                                <td>
+                                    <span id="MainContent_ListView1_companionLabel_0">&nbsp;<a href="/session/measure_indiv.aspx?billtype=SB&billnumber=2419&year=2026" aria-label="Link to view companion SB2419">SB2419</a></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="measure-label">Package:</th>
+                                <td>
+                                    <span id="MainContent_ListView1_package_acroLabel_0">None</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="measure-label">Current Referral: </th>
+                                <td>
+                                    <span id="MainContent_ListView1_current_referralLabel_0">HHS, JDC</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="measure-label">Introducer(s):</th>
+                                <td>
+                                    <span id="MainContent_ListView1_introducerLabel_0">TARNAS, AMATO, EVSLIN, ILAGAN, IWAMOTO, KEOHOKAPU-LEE LOY, KUSCH, LEE, M., MARTEN, MATAYOSHI, OLDS, PERRUSO, SOUZA, TAKAYAMA, Poepoe</span>
+                                </td>
+                            </tr>
+                            <tr style='display: none'>
+                                <th scope="row" style="color: #124D79; font-weight: bold;">Act: </th>
+                                <td>
+                                    </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                
+                    </div>
+                    <div style="">
+                    </div>
+                
+
+            <div id="measure-status-sort-announcer" class="sr-only" role="alert" aria-live="assertive" aria-atomic="true" aria-relevant="text" tabindex="-1"></div>
+            <div id="MainContent_UpdatePanel1">
+	
+                    <br />
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <h1 class="measure-status-title mb-1">Measure Status History</h1>
+                        <a id="MainContent_LinkButtonSortByDate" class="btn btn-link p-0" aria-label="Sort by date button will sort measure status history." href="javascript:__doPostBack(&#39;ctl00$MainContent$LinkButtonSortByDate&#39;,&#39;&#39;)">Sort by Date</a>
+                    </div>
+                    <div>
+		<table cellspacing="0" cellpadding="6" rules="rows" border="1" id="MainContent_GridViewStatus" style="border-style:None;width:100%;border-collapse:collapse;">
+			<tr class="solid-gray">
+				<th align="left" scope="col">Date</th><th align="left" scope="col">Chamber</th><th align="left" scope="col">Status Text</th>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">5/6/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">Recommitted to Conference committee as amended in CD 1 with none voting no and Representative(s) Alcos excused.</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">5/6/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">Failed to pass Final Reading. Ayes, 9; Aye(s) with reservations: none. Noes, 16 (Senator(s) Awa, Chang, DeCorte, Dela Cruz, Elefante, Fevella, Gabbard, Hashimoto, Inouye, Kidani, Kim, Lamosao, Lee, C., McKelvey, Moriwaki, Wakai). Excused, 0 (none).</td>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">4/29/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">48 Hrs. Notice (as amended CD 1) 05-06-26</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">4/29/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">Reported from Conference Committee as amended CD 1 (Conf. Com. Rep. No. 80-26).</td>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">4/29/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">Forty-eight (48) hours notice Wednesday, 05-06-26.</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">4/29/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">Reported from Conference Committee (Conf Com. Rep. No. 80-26) as amended in (CD 1).</td>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">4/29/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">The Conference Committee recommends that the measure be Passed, with Amendments. The votes were as follows: 4 Ayes: Representative(s) Takayama, Tarnas, Keohokapu-Lee Loy; Ayes with reservations: Representative(s) Garcia; 0 Noes: none; and 0 Excused: none.</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">4/29/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">The Conference committee recommends that the measure be PASSED, WITH AMENDMENTS. The votes of the Senate Conference Managers were as follows: 3 Aye(s): Senator(s) San Buenaventura, Rhoads, McKelvey; Aye(s) with reservations: none ; 0 No(es): none; and 0 Excused: none.</td>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">4/28/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">Conference committee meeting scheduled for 04-29-26 3:45PM; CR 329.</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">4/27/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">Received notice of Senate conferees (Sen. Com. No. 778).</td>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">4/27/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">Senate Conferees Appointed: San Buenaventura Chair; Rhoads Co-Chair; McKelvey.</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">4/21/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">Received notice of appointment of House conferees (Hse. Com. No. 799).</td>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">4/21/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">House Conferees Appointed: Takayama, Tarnas Co-Chairs; Keohokapu-Lee Loy, Garcia.</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">4/17/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">Received notice of disagreement (Hse. Com. No. 780).</td>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">4/16/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">House disagrees with Senate amendment (s).</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">4/14/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">Returned from Senate (Sen. Com. No.  584) in amended form (SD 2).</td>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">4/14/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">Report adopted; Passed Third Reading, as amended (SD  2). Ayes, 25; Aye(s) with reservations: none .  Noes, 0 (none). Excused, 0 (none).  Transmitted to House.</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">4/10/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">48 Hrs. Notice 04-14-26.</td>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">4/10/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">Reported from JDC (Stand. Com. Rep. No. 3764) with recommendation of passage on Third Reading, as amended (SD 2).</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">4/1/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">The committee(s) on  JDC recommend(s) that the measure be PASSED, WITH AMENDMENTS.  The votes in JDC were as follows: 4 Aye(s): Senator(s) Rhoads, Chang, San Buenaventura, Awa; Aye(s) with reservations: none ; 0 No(es): none; and 1 Excused: Senator(s) Gabbard.</td>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">3/30/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">The committee(s) on JDC will hold a public decision making on 04-01-26 10:40AM; Conference Room 016 &amp; Videoconference.</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">3/25/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">Report adopted; Passed Second Reading, as amended (SD 1) and referred to JDC.</td>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">3/25/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">Reported from HHS (Stand. Com. Rep. No. 3191) with recommendation of passage on Second Reading, as amended (SD 1) and referral to JDC.</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">3/20/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">The committee(s) on  HHS recommend(s) that the measure be PASSED, WITH AMENDMENTS.  The votes in HHS were as follows: 4 Aye(s): Senator(s) San Buenaventura, Kanuha, Keohokalole, Fevella; Aye(s) with reservations: none ; 0 No(es): none; and 1 Excused: Senator(s) McKelvey.</td>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">3/17/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">The committee(s) on HHS has scheduled a public hearing on 03-20-26 1:00PM; Conference Room 225 &amp; Videoconference.</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">3/12/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">Referred to HHS, JDC.</td>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">3/12/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">Passed First Reading.</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">3/12/2026</td><td align="center" style="color:Black;font-weight:normal;">S</td><td style="color:Black;">Received from House (Hse. Com. No. 243).</td>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">3/10/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">Passed Third Reading as amended in HD 2 with Representative(s) Garcia, Kila voting aye with reservations; Representative(s) Pierick voting no (1) and none excused (0).  Transmitted to Senate.</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">3/6/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">Forty-eight (48) hours notice Tuesday,  03-10-26.</td>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">3/6/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">Reported from JHA (Stand. Com. Rep. No. 1149-26) as amended in HD 2, recommending passage on Third Reading.</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">2/25/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">The committee on JHA recommend that the measure be PASSED, WITH AMENDMENTS. The votes were as follows: 9 Ayes: Representative(s) Tarnas, Poepoe, Cochran, Hashem, Kahaloa, Sayama, Takayama, Garcia, Shimizu; Ayes with reservations: none; 0 Noes: none; and 1 Excused: Representative(s) Belatti.   </td>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">2/23/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">Bill scheduled to be heard by JHA on Wednesday, 02-25-26 2:00PM in House conference room 325 VIA VIDEOCONFERENCE.</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">2/18/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">Passed Second Reading as amended in HD 1 and referred to the committee(s) on JHA with none voting aye with reservations; Representative(s) Pierick voting no (1) and none excused (0).</td>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">2/18/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">Reported from HLT (Stand. Com. Rep. No. 359-26) as amended in HD 1, recommending passage on Second Reading and referral to JHA.</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">2/13/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">The committee on HLT recommend that the measure be PASSED, WITH AMENDMENTS. The votes were as follows: 9 Ayes: Representative(s) Takayama, Keohokapu-Lee Loy, Amato, Hartsfield, Marten, Olds, Takenouchi, Alcos, Garcia; Ayes with reservations: none;  Noes: none; and  Excused: none.   </td>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">2/10/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">Bill scheduled to be heard by HLT on Friday, 02-13-26 9:00AM in House conference room 329 VIA VIDEOCONFERENCE.</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">1/26/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">Referred to HLT, JHA, referral sheet 1</td>
+			</tr><tr>
+				<td class="date-label" style="color:Black;">1/21/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">Introduced and Pass First Reading.</td>
+			</tr><tr style="background-color:#F0F0F0;">
+				<td class="date-label" style="color:Black;">1/15/2026</td><td align="center" style="color:Black;font-weight:normal;">H</td><td style="color:Black;">Prefiled.</td>
+			</tr>
+		</table>
+	</div>
+                
+</div>
+            <br />
+            <p id="status-legend" style="color: #124D79" aria-hidden="true">
+                <b>S</b> = Senate |
+       
+                <b>H</b> = House |
+       
+                <b>D</b> = Data Systems |
+	
+                <b>$</b> = Appropriation measure |
+	
+                <b>ConAm</b> = Constitutional Amendment
+                   
+            </p>
+
+
+            <p>
+                Some of the above items require Adobe Acrobat Reader. Please visit 
+	
+                <a href="http://get.adobe.com/reader" rel="noopener noreferrer">Adobe's download page</a>
+                for detailed instructions.
+                   
+            </p>
+            <br />
+            
+        </div>
+
+
+        <div class="side-col">
+            <div class="noprint">
+
+                
+
+                
+                <!-- Measure Versions -->
+                <div id="MainContent_UpdatePanel2">
+	
+                        
+                                <div class="measure-status card shadow">
+                                    <h1 class="measure-status card-header text-center">All Versions of this Measure</h1>
+                                    <div class="card-body p-3">
+                            
+                                <div class="d-flex justify-content-between flex-now">
+                                    <a id="MainContent_RepeaterVersions_VersionsLink_0" class="visited" aria-label="Link to HB1550_CD1 .HTM file" href="/sessions/session2026/bills/HB1550_CD1_.HTM">HB1550_CD1</a>
+                                    <a id="MainContent_RepeaterVersions_PdfLink_0" aria-label="Link to HB1550_CD1 .PDF file" href="/sessions/session2026/bills/HB1550_CD1_.PDF"><img src="/assets/images/pdf_icon.gif" alt="Link to HB1550_CD1 .PDF file" /></a>
+                                </div>
+                            
+                                <div class="d-flex justify-content-between flex-now">
+                                    <a id="MainContent_RepeaterVersions_VersionsLink_1" class="visited" aria-label="Link to HB1550_SD2 .HTM file" href="/sessions/session2026/bills/HB1550_SD2_.HTM">HB1550_SD2</a>
+                                    <a id="MainContent_RepeaterVersions_PdfLink_1" aria-label="Link to HB1550_SD2 .PDF file" href="/sessions/session2026/bills/HB1550_SD2_.PDF"><img src="/assets/images/pdf_icon.gif" alt="Link to HB1550_SD2 .PDF file" /></a>
+                                </div>
+                            
+                                <div class="d-flex justify-content-between flex-now">
+                                    <a id="MainContent_RepeaterVersions_VersionsLink_2" class="visited" aria-label="Link to HB1550_HD2 .HTM file" href="/sessions/session2026/bills/HB1550_HD2_.HTM">HB1550_HD2</a>
+                                    <a id="MainContent_RepeaterVersions_PdfLink_2" aria-label="Link to HB1550_HD2 .PDF file" href="/sessions/session2026/bills/HB1550_HD2_.PDF"><img src="/assets/images/pdf_icon.gif" alt="Link to HB1550_HD2 .PDF file" /></a>
+                                </div>
+                            
+                                <div class="d-flex justify-content-between flex-now">
+                                    <a id="MainContent_RepeaterVersions_VersionsLink_3" class="visited" aria-label="Link to HB1550_SD1 .HTM file" href="/sessions/session2026/bills/HB1550_SD1_.HTM">HB1550_SD1</a>
+                                    <a id="MainContent_RepeaterVersions_PdfLink_3" aria-label="Link to HB1550_SD1 .PDF file" href="/sessions/session2026/bills/HB1550_SD1_.PDF"><img src="/assets/images/pdf_icon.gif" alt="Link to HB1550_SD1 .PDF file" /></a>
+                                </div>
+                            
+                                <div class="d-flex justify-content-between flex-now">
+                                    <a id="MainContent_RepeaterVersions_VersionsLink_4" class="visited" aria-label="Link to HB1550_HD1 .HTM file" href="/sessions/session2026/bills/HB1550_HD1_.HTM">HB1550_HD1</a>
+                                    <a id="MainContent_RepeaterVersions_PdfLink_4" aria-label="Link to HB1550_HD1 .PDF file" href="/sessions/session2026/bills/HB1550_HD1_.PDF"><img src="/assets/images/pdf_icon.gif" alt="Link to HB1550_HD1 .PDF file" /></a>
+                                </div>
+                            
+                                <div class="d-flex justify-content-between flex-now">
+                                    <a id="MainContent_RepeaterVersions_VersionsLink_5" class="visited" aria-label="Link to HB1550 .HTM file" href="/sessions/session2026/bills/HB1550_.HTM">HB1550</a>
+                                    <a id="MainContent_RepeaterVersions_PdfLink_5" aria-label="Link to HB1550 .PDF file" href="/sessions/session2026/bills/HB1550_.PDF"><img src="/assets/images/pdf_icon.gif" alt="Link to HB1550 .PDF file" /></a>
+                                </div>
+                            
+                                <span>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                    
+</div>
+                <!-- Committee Reports -->
+                
+                        <div class="measure-status card shadow">
+                            <h1 class="measure-status card-header text-center">Committee Reports</h1>
+                            <div class="card-body p-3">
+                    
+                        <div class="d-flex justify-content-between flex-now">
+
+                            <a id="MainContent_RepeaterCommRpt_CategoryLink_0" class="visited" aria-label="Link to committee report HB1550_HD1_HSCR359-26_ .HTM file" href="/sessions/session2026/CommReports/HB1550_HD1_HSCR359-26_.htm">HB1550_HD1_HSCR359-26_</a>
+                            <a id="MainContent_RepeaterCommRpt_PdfLink_0" aria-label="Link to committee report HB1550_HD1_HSCR359-26_ .PDF file" href="/sessions/session2026/CommReports/HB1550_HD1_HSCR359-26_.pdf"><img src="/assets/images/pdf_icon.gif" alt="Link to committee report HB1550_HD1_HSCR359-26_ .PDF file" /></a>
+                        </div>
+                    
+                        <div class="d-flex justify-content-between flex-now">
+
+                            <a id="MainContent_RepeaterCommRpt_CategoryLink_1" class="visited" aria-label="Link to committee report HB1550_HD2_HSCR1149-26_ .HTM file" href="/sessions/session2026/CommReports/HB1550_HD2_HSCR1149-26_.htm">HB1550_HD2_HSCR1149-26_</a>
+                            <a id="MainContent_RepeaterCommRpt_PdfLink_1" aria-label="Link to committee report HB1550_HD2_HSCR1149-26_ .PDF file" href="/sessions/session2026/CommReports/HB1550_HD2_HSCR1149-26_.pdf"><img src="/assets/images/pdf_icon.gif" alt="Link to committee report HB1550_HD2_HSCR1149-26_ .PDF file" /></a>
+                        </div>
+                    
+                        <div class="d-flex justify-content-between flex-now">
+
+                            <a id="MainContent_RepeaterCommRpt_CategoryLink_2" class="visited" aria-label="Link to committee report HB1550_SD1_SSCR3191_ .HTM file" href="/sessions/session2026/CommReports/HB1550_SD1_SSCR3191_.htm">HB1550_SD1_SSCR3191_</a>
+                            <a id="MainContent_RepeaterCommRpt_PdfLink_2" aria-label="Link to committee report HB1550_SD1_SSCR3191_ .PDF file" href="/sessions/session2026/CommReports/HB1550_SD1_SSCR3191_.pdf"><img src="/assets/images/pdf_icon.gif" alt="Link to committee report HB1550_SD1_SSCR3191_ .PDF file" /></a>
+                        </div>
+                    
+                        <div class="d-flex justify-content-between flex-now">
+
+                            <a id="MainContent_RepeaterCommRpt_CategoryLink_3" class="visited" aria-label="Link to committee report HB1550_SD2_SSCR3764_ .HTM file" href="/sessions/session2026/CommReports/HB1550_SD2_SSCR3764_.htm">HB1550_SD2_SSCR3764_</a>
+                            <a id="MainContent_RepeaterCommRpt_PdfLink_3" aria-label="Link to committee report HB1550_SD2_SSCR3764_ .PDF file" href="/sessions/session2026/CommReports/HB1550_SD2_SSCR3764_.pdf"><img src="/assets/images/pdf_icon.gif" alt="Link to committee report HB1550_SD2_SSCR3764_ .PDF file" /></a>
+                        </div>
+                    
+                        <div class="d-flex justify-content-between flex-now">
+
+                            <a id="MainContent_RepeaterCommRpt_CategoryLink_4" class="visited" aria-label="Link to committee report HB1550_CD1_CCR80-26_ .HTM file" href="/sessions/session2026/CommReports/HB1550_CD1_CCR80-26_.htm">HB1550_CD1_CCR80-26_</a>
+                            <a id="MainContent_RepeaterCommRpt_PdfLink_4" aria-label="Link to committee report HB1550_CD1_CCR80-26_ .PDF file" href="/sessions/session2026/CommReports/HB1550_CD1_CCR80-26_.pdf"><img src="/assets/images/pdf_icon.gif" alt="Link to committee report HB1550_CD1_CCR80-26_ .PDF file" /></a>
+                        </div>
+                    
+                                
+                            </div>
+                        </div>
+                           
+                    
+                <!-- Testimony -->
+                
+                        <div class="measure-status card shadow">
+                            <h1 class="measure-status card-header text-center">Testimony</h1>
+                            <div class="card-body p-3">
+                    
+                                <div class="d-flex justify-content-between flex-now">
+                                    <a id="MainContent_RepeaterTestimony_PdfLink_0" class="visited" aria-label="HB1550_TESTIMONY_HLT_02-13-26_ testimony" href="/sessions/session2026/Testimony/HB1550_TESTIMONY_HLT_02-13-26_.PDF">HB1550_TESTIMONY_HLT_02-13-26_</a>
+                                </div>
+                    
+                                <div class="d-flex justify-content-between flex-now">
+                                    <a id="MainContent_RepeaterTestimony_PdfLink_1" class="visited" aria-label="HB1550_HD1_TESTIMONY_JHA_02-25-26_ testimony" href="/sessions/session2026/Testimony/HB1550_HD1_TESTIMONY_JHA_02-25-26_.PDF">HB1550_HD1_TESTIMONY_JHA_02-25-26_</a>
+                                </div>
+                    
+                                <div class="d-flex justify-content-between flex-now">
+                                    <a id="MainContent_RepeaterTestimony_PdfLink_2" class="visited" aria-label="HB1550_HD2_TESTIMONY_HHS_03-20-26_ testimony" href="/sessions/session2026/Testimony/HB1550_HD2_TESTIMONY_HHS_03-20-26_.PDF">HB1550_HD2_TESTIMONY_HHS_03-20-26_</a>
+                                </div>
+                    
+                                <div class="d-flex justify-content-between flex-now">
+                                    <a id="MainContent_RepeaterTestimony_PdfLink_3" class="visited" aria-label="HB1550_SD1_TESTIMONY_JDC_04-01-26_ testimony" href="/sessions/session2026/Testimony/HB1550_SD1_TESTIMONY_JDC_04-01-26_.PDF">HB1550_SD1_TESTIMONY_JDC_04-01-26_</a>
+                                </div>
+                    
+                                
+                            </div>
+                        </div>
+                    
+                <!-- Hearing Notices -->
+                
+                        <div class="measure-status card shadow text-center">
+                            <h1 class="measure-status card-header">Hearing Notices</h1>
+                            <div class="card-body p-3">
+                    
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="flex-even">
+                                <strong>
+                                    HLT</strong>
+                            </div>
+                            <div class="flex-even" style="font-size: .9rem;">
+                                2/13/26 9:00A<br />
+                                329 VIA VIDEOCONFERENCE
+                            </div>
+                            <div class="flex-even">
+                                <div>
+                                    <a id="MainContent_RepeaterHearingNotices_LinkNotice_0" aria-label="Link to agenda for HLT hearing on 2/13/26 9:00A" href="../sessions/session2026/hearingnotices/HEARING_HLT_02-13-26_.HTM">Agenda</a>
+                                </div>
+                            <div class="flex-even">
+                                    <a class="video-btn" href="#" role="button" tabindex="0" style="" data-src="https://www.youtube.com/embed/sqfV2EnqBQg" data-notice-url='/sessions/session2026/hearingnotices/HEARING_HLT_02-13-26_.HTM' data-notice-text='HLT (2/13/26 9:00A)' aria-label='Watch video of HLT hearing on February 13, 2026 9:00 AM (opens in dialog)'>
+                                    <img src="/assets/images/YouTube.png" alt="" role="presentation" style="width:40px;" data-uw-rm-alt-original="Full video stream of this hearing" data-uw-rm-alt="ALT">
+                                </a>
+                            </div>
+                            </div>
+
+                        </div>
+                    
+                        <div class="d-flex justify-content-between align-items-center" style="background-color: #EAEAEA">
+                            <div class="flex-even">
+                                <strong>
+                                    JHA</strong>
+                            </div>
+                            <div class="flex-even text-center" style="font-size: .9rem;">
+                                2/25/26 2:00P<br />
+                                325 VIA VIDEOCONFERENCE
+                            </div>
+                            <div class="flex-even flex-nowrap">
+                                <div>
+                                    <a id="MainContent_RepeaterHearingNotices_LinkNotice_1" aria-label="Link to agenda for JHA hearing on 2/25/26 2:00P" href="../sessions/session2026/hearingnotices/HEARING_JHA_02-25-26_.HTM">Agenda</a>
+                                </div>
+                                <div class="flex-even flex-nowrap">
+                                    <a class="video-btn" href="#" role="button" tabindex="0" style="" data-src="https://www.youtube.com/embed/1umIYbg9O4M" data-notice-url='/sessions/session2026/hearingnotices/HEARING_JHA_02-25-26_.HTM' data-notice-text='JHA (2/25/26 2:00P)' aria-label='Watch video of JHA hearing on February 25, 2026 2:00 PM (opens in dialog)'>
+                                        <img src="/assets/images/YouTube.png" alt="" role="presentation" style="width:40px;" data-uw-rm-alt-original="Stream Hearing YouTube" data-uw-rm-alt="ALT">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="flex-even">
+                                <strong>
+                                    HHS</strong>
+                            </div>
+                            <div class="flex-even" style="font-size: .9rem;">
+                                3/20/26 1:00P<br />
+                                CR 225 & Videoconference
+                            </div>
+                            <div class="flex-even">
+                                <div>
+                                    <a id="MainContent_RepeaterHearingNotices_LinkNotice_2" aria-label="Link to agenda for HHS hearing on 3/20/26 1:00P" href="../sessions/session2026/hearingnotices/HEARING_HHS_03-20-26_.HTM">Agenda</a>
+                                </div>
+                            <div class="flex-even">
+                                    <a class="video-btn" href="#" role="button" tabindex="0" style="" data-src="https://www.youtube.com/embed/7hSLx9dgDaA" data-notice-url='/sessions/session2026/hearingnotices/HEARING_HHS_03-20-26_.HTM' data-notice-text='HHS (3/20/26 1:00P)' aria-label='Watch video of HHS hearing on March 20, 2026 1:00 PM (opens in dialog)'>
+                                    <img src="/assets/images/YouTube.png" alt="" role="presentation" style="width:40px;" data-uw-rm-alt-original="Full video stream of this hearing" data-uw-rm-alt="ALT">
+                                </a>
+                            </div>
+                            </div>
+
+                        </div>
+                    
+                        <div class="d-flex justify-content-between align-items-center" style="background-color: #EAEAEA">
+                            <div class="flex-even">
+                                <strong>
+                                    JDC</strong>
+                            </div>
+                            <div class="flex-even text-center" style="font-size: .9rem;">
+                                4/01/26 10:40A<br />
+                                CR 016 & Videoconference
+                            </div>
+                            <div class="flex-even flex-nowrap">
+                                <div>
+                                    <a id="MainContent_RepeaterHearingNotices_LinkNotice_3" aria-label="Link to agenda for JDC hearing on 4/01/26 10:40A" href="../sessions/session2026/hearingnotices/HEARING_JDC_04-01-26-1_.HTM">Agenda</a>
+                                </div>
+                                <div class="flex-even flex-nowrap">
+                                    <a class="video-btn" href="#" role="button" tabindex="0" style="" data-src="https://www.youtube.com/embed/V3JtbQur-ag" data-notice-url='/sessions/session2026/hearingnotices/HEARING_JDC_04-01-26-1_.HTM' data-notice-text='JDC (4/01/26 10:40A)' aria-label='Watch video of JDC hearing on April 1, 2026 10:40 AM (opens in dialog)'>
+                                        <img src="/assets/images/YouTube.png" alt="" role="presentation" style="width:40px;" data-uw-rm-alt-original="Stream Hearing YouTube" data-uw-rm-alt="ALT">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="flex-even">
+                                <strong>
+                                    CONF</strong>
+                            </div>
+                            <div class="flex-even" style="font-size: .9rem;">
+                                4/29/26 3:45P<br />
+                                CR 329
+                            </div>
+                            <div class="flex-even">
+                                <div>
+                                    <a id="MainContent_RepeaterHearingNotices_LinkNotice_4" aria-label="Link to agenda for CONF hearing on 4/29/26 3:45P" href="../sessions/session2026/hearingnotices/CONF_HHS_04-29-26_1_.HTM">Agenda</a>
+                                </div>
+                            <div class="flex-even">
+                                    <a class="video-btn" href="#" role="button" tabindex="0" style="" data-src="https://www.youtube.com/embed/q__fYQcSgls" data-notice-url='/sessions/session2026/hearingnotices/CONF_HHS_04-29-26_1_.HTM' data-notice-text='CONF (4/29/26 3:45P)' aria-label='Watch video of CONF hearing on April 29, 2026 3:45 PM (opens in dialog)'>
+                                    <img src="/assets/images/YouTube.png" alt="" role="presentation" style="width:40px;" data-uw-rm-alt-original="Full video stream of this hearing" data-uw-rm-alt="ALT">
+                                </a>
+                            </div>
+                            </div>
+
+                        </div>
+                    
+                                
+                            </div>
+                        </div>
+                    
+
+                <!-- BEGIN OTHER DOCUMENTS SECTION ---------------------------------- <a id="MainContent_HearingPdfLink" target="_blank"><img src="/assets/images/pdf_icon.gif" alt="" /></a>--------------------------->
+                
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    
+
+                    
+                </div>
+            </main>
+
+            <footer class="footer-main" role="contentinfo" >
+
+                <!-- Section: Links  -->
+                <section>
+                    <div class="container text-left text-md-start">
+                        <!-- Grid row -->
+                        <div class="row mt-2">
+                            <!-- Grid column -->
+                            <div class="col-md-3 mx-auto mb-4">
+                                <!-- Links -->
+                                <h3 class="text-uppercase footer-section h6">Legislature</h3>
+                                <ul>
+                                    <li><a href="/house.aspx" class="text-reset">House</a></li>
+                                    <li><a href="/senate.aspx" class="text-reset">Senate</a></li>
+                                    <li><a href="/hjobs.aspx" class="text-reset">House Jobs</a></li>
+                                    <li><a href="/sjobs.aspx" class="text-reset">Senate Jobs</a></li>
+                                </ul>
+                            </div>
+                            <!-- Grid column -->
+                            <div class="col-md-3 mx-auto mb-4">
+                                <h3 class="text-uppercase footer-section h6">Executive</h3>
+                                <ul>
+                                    <li><a href="/redirect.aspx?page=https://hawaii.gov/gov/" class="text-reset" target="_blank">Governor Josh Green</a></li>
+                                    <li><a href="/redirect.aspx?page=https://ltgov.hawaii.gov/" class="text-reset" target="_blank">Lt. Governor Sylvia Luke</a></li>
+        
+                                    <li aria-hidden="true">&nbsp;</li> 
+                                    <li>
+                                        <h3 class="text-uppercase footer-section h6">Judiciary</h3>
+                                    </li>
+                                    <li><a href="/redirect.aspx?page=https://www.courts.state.hi.us/" class="text-reset" target="_blank">Hawaii State Judiciary</a></li>
+                                </ul>
+                            </div>
+                            <!-- Grid column -->
+                            <div class="col-md-3 mx-auto mb-4">
+                                <!-- Links -->
+                                <h3 class="text-uppercase footer-section h6">Reference</h3>
+                                <ul>
+                                    <li><a href="/redirect.aspx?page=https://lrb.hawaii.gov" class="text-reset" target="_blank">Legislative Reference Bureau</a></li>
+                                    <li><a href="/redirect.aspx?page=https://lrb.hawaii.gov/par/" class="text-reset" target="_blank">Public Access Room</a></li>
+                                    <li><a href="/redirect.aspx?page=https://lrb.hawaii.gov/directory" class="text-reset" target="_blank">Hawaii Directory State, County, and Federal Officials</a></li>
+                                </ul>
+                            </div>
+                            <!-- Grid column -->
+                            <div class="col-md-3 mx-auto mb-md-0">
+                                <!-- Links -->
+                                <h3 class="text-uppercase footer-section h6">About Us</h3>
+                                <p>
+                                    Hawaiʻi State Capitol<br />
+                                    415 South Beretania St.<br />
+                                    Honolulu, HI 96813
+                                </p>
+                                <ul>
+                                    <li><a href="/contact.aspx" class="text-reset">Contact Us</a></li>
+                                    <li><a href="/privacy.aspx" class="text-reset">Privacy Policy</a></li>
+                                    <li><a href="/accessibility-statement.aspx" class="text-reset">Accessibility Statement</a></li>
+                                </ul>
+                            </div>
+                            <!-- Grid column -->
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-3 mx-auto">
+                                <h3 class="text-uppercase footer-section h6">Offices</h3>
+                                <ul>
+                                    <li><a href="/redirect.aspx?page=http://hawaii.gov/ethics" class="text-reset" target="_blank">Hawaii State Ethics Commission</a></li>
+                                    <li><a href="/redirect.aspx?page=http://auditor.hawaii.gov/" class="text-reset" target="_blank">Office of the Auditor</a></li>
+                                    <li><a href="/redirect.aspx?page=https://www.ombudsman.hawaii.gov" class="text-reset" target="_blank">Office of the Ombudsman</a></li>
+                                    <li><a href="/redirect.aspx?page=http://hawaii.gov/oip/" class="text-reset" target="_blank">Office of Information Practices</a></li>
+                                    <li><a href="/redirect.aspx?page=http://www.oha.org/" class="text-reset" target="_blank">Office of Hawaiian Affairs</a></li>
+                                    <li><a href="/redirect.aspx?page=http://portal.ehawaii.gov" class="text-reset" target="_blank">Hawaii Government Services</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-3 mx-auto">
+                                <h3 class="text-uppercase footer-section h6">U.S. Legislators</h3>
+                                <ul>
+                                    <li><a href="/redirect.aspx?page=https://tokuda.house.gov/" class="text-reset" target="_blank">U.S. Rep Jill Tokuda</a></li>
+                                    <li><a href="/redirect.aspx?page=https://case.house.gov/" class="text-reset" target="_blank">U.S. Rep Ed Case</a></li>
+                                    <li><a href="/redirect.aspx?page=https://www.hirono.senate.gov/" class="text-reset" target="_blank">U.S. Senator Mazie Hirono</a></li>
+                                    <li><a href="/redirect.aspx?page=https://www.schatz.senate.gov/" class="text-reset" target="_blank">U.S. Senator Brian Schatz</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-3 mx-auto">
+                                <h3 class="text-uppercase footer-section h6">County</h3>
+                                <ul>
+                                    <li><a href="/redirect.aspx?page=http://www.honolulu.gov/index.php" class="text-reset" target="_blank">C&C of Honolulu</a></li>
+                                    <li><a href="/redirect.aspx?page=http://www.co.maui.hi.us/" class="text-reset" target="_blank">County of Maui</a></li>
+                                    <li><a href="/redirect.aspx?page=http://www.kauai.gov/" class="text-reset" target="_blank">County of Kauaʻi</a></li>
+                                    <li><a href="/redirect.aspx?page=https://www.hawaiicounty.gov/" class="text-reset" target="_blank">County of Hawaii</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="col-md-3 col-lg-3 col-xl-3 mx-auto">
+                                <!-- Links -->
+                                <h3 class="text-uppercase footer-section h6">Related Links</h3>
+                                <ul>
+                                    <li><a href="/redirect.aspx?page=http://www.olelo.org/" class="text-reset" target="_blank">‘Ōlelo Community Television</a></li>
+                                    <li><a href="/redirect.aspx?page=http://www.akaku.org/" class="text-reset" target="_blank">Akaku: Maui Community Television</a></li>
+                                    <li><a href="/redirect.aspx?page=http://www.hoike.org" class="text-reset" target="_blank">Hō‘ike: Kaua‘i Community Television</a></li>
+                                    <li><a href="/redirect.aspx?page=http://naleo.tv" class="text-reset" target="_blank">Na Leo O Hawai‘i:  Big Island Community Television</a></li>
+                                    <li><a href="/redirect.aspx?page=http://www.ncsl.org/" class="text-reset" target="_blank">National Conference of State Legislatures</a></li>
+                                    <li><a href="/redirect.aspx?page=http://www.csg.org/" class="text-reset" target="_blank">Council of State Governments</a></li>
+                                    <li><a href="/redirect.aspx?page=http://www.csgwest.org/" class="text-reset" target="_blank">Council of State Governments-West</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Grid row -->
+                    </div>
+                </section>
+     
+                <!-- Section: Disclaimer -->
+                <section class="footer-disclaimer">
+                    <div class="container pt-2">
+                        <p>
+                            Please be advised that these pages may contain links to external Internet sites
+                            established by other entities. The Hawaii State Legislature does not maintain, review,
+                            or endorse these sites and is not responsible for their content.
+                        </p>
+                        <p>Visit our ADA page <a id="HyperLink2" accesskey="A" href="/ada.aspx">here</a>
+                            or press Ctrl+U to activate our accessibility menu. </p>
+                        <p>
+                            If you have any problems with any of these pages, please <a href="mailto:webmaster@capitol.hawaii.gov" aria-label="contact the webmaster">contact the webmaster</a> with the page address and problems encountered.
+                        </p>
+                    </div>
+                </section>
+            </footer>
+            
+            <!-- Search Help Modal -->
+            <div class="modal fade" id="searchHelpModal" tabindex="-1" role="dialog" aria-labelledby="searchHelpModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="searchHelpModalLabel">How to Use the Search</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h2 style="font-size: 1.2em; font-weight: bold;">Using Search Filters</h2>
+                            <p>Click in the search box to see available filters. You can filter your search by content type:</p>
+                            <ul>
+                                <li><strong>Measures</strong> - Search bills, resolutions, and other legislative measures</li>
+                                <li><strong>Hearings</strong> - Find upcoming and past committee hearings</li>
+                                <li><strong>HRS</strong> - Search Hawaii Revised Statutes (state laws)</li>
+                                <li><strong>Legislators</strong> - Find legislators by name or district</li>
+                                <li><strong>Committees</strong> - Search for committee information</li>
+                                <li><strong>Documents</strong> - Search PDF documents and reports</li>
+                            </ul>
+                            <p><strong>Selecting Filters:</strong></p>
+                            <ul>
+                                <li>Click a filter pill to select it (it will highlight when active)</li>
+                                <li>Select multiple filters to search across different content types</li>
+                                <li>Click "Enable all" to search all content types at once</li>
+                                <li>If no filters are selected, the search will include all content types</li>
+                            </ul>
+                            <br />
+                            
+                            <h2 style="font-size: 1.2em; font-weight: bold;">Searching for Bills</h2>
+                            <p>To find a specific bill or measure, simply type the bill number in the search box (e.g., <strong>SB123</strong>, <strong>HB456</strong>, <strong>HCR45</strong>). The search will automatically detect bill numbers and take you directly to the measure status page.</p>
+                            <br />
+                            
+                            <h2 style="font-size: 1.2em; font-weight: bold;">Search Tips</h2>
+                            <ul>
+                                <li>Use the <strong>Measures</strong> filter to search bills, resolutions, and other legislative measures from the current session</li>
+                                <li>Use the <strong>HRS</strong> filter to search Hawaii Revised Statutes (state laws). To find a specific section, use the "Browse HRS Sections" link on the HRS page</li>
+                                <li>Use the <strong>Hearings</strong> filter to find upcoming and past committee hearings</li>
+                                <li>Use the <strong>Legislators</strong> filter to find legislators by name or district</li>
+                                <li>Use the <strong>Committees</strong> filter to search for committee information</li>
+                                <li>Use the <strong>Documents</strong> filter to search PDF documents, committee reports, and other files</li>
+                            </ul>
+                            <br />
+                            <p><strong>Note:</strong> You can combine multiple filters to search across different content types simultaneously. If you don't select any filters, the search will include all content types.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <input type="button" name="ctl00$ButtonReenableEmail" value="Re-enable Emails" onclick="javascript:__doPostBack(&#39;ctl00$ButtonReenableEmail&#39;,&#39;&#39;)" id="ButtonReenableEmail" class="d-none" />
+            
+
+<div class="modal fade"
+     id="accessibleConfirmModal"
+     tabindex="-1"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="acm_title">
+
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h2 class="modal-title h5"
+                    id="acm_title"
+                    tabindex="-1"
+                    aria-describedby="acm_desc">
+                    Confirmation
+                </h2>
+
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close dialog and return to the page.">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <p id="acm_desc" aria-live="assertive"></p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button"
+                        id="acm_confirm"
+                        class="btn btn-primary">
+                    Confirm
+                </button>
+                <button type="button"
+                        id="acm_cancel"
+                        class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Cancel
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+        
+
+<script type="text/javascript">
+//<![CDATA[
+(function() {var fn = function() {$get("ToolkitScriptManager1_HiddenField").value = '';Sys.Application.remove_init(fn);};Sys.Application.add_init(fn);})();//]]>
+</script>
+</form>
+        
+        <script type="text/javascript" src="/assets/js/jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2"></script>
+        <script type="text/javascript" src="/assets/js/popper-1.16.1.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"></script>
+        <script type="text/javascript" src="/assets/js/bootstrap-4.6.1.min.js" integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2"></script>
+        <script type="text/javascript" src="/assets/js/confirm-modal.js"></script>
+        
+        <!-- UserWay ADA Widget -->
+       <script type="text/javascript" src="/assets/js/main.js?v=11162026-00"></script>
+        
+    <script type="text/javascript" src="/assets/js/measure-page-scroll-top.js"></script>
+    <script type="text/javascript" src="/assets/js/video-dialog.js?v=11182026-02"></script>
+
+    </div>
+    <script src="/assets/js/fa-6.6.0-all.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/assets/js/ADA.js?v=11172026-00"></script>
+    <script>
+        // Configuration - Get search base URL from web.config
+        const SEARCH_APP_URL = '';
+        // Make search base URL available globally for main.js
+        window.SEARCH_BASE_URL = '';
+        // Get form elements - Updated for server-side search
+        const searchInput = document.getElementById('TextSearch');
+        const searchButton = document.getElementById('btnSearch');
+
+        // Sync filter state to hidden fields before form submission
+        function syncFiltersToHiddenFields() {
+            const filterPills = document.querySelectorAll('.filter-pill');
+            const activeFilters = [];
+            
+            filterPills.forEach(pill => {
+                if (pill.classList.contains('active')) {
+                    activeFilters.push(pill.getAttribute('data-filter'));
+                }
+            });
+            
+            // Set hidden field value
+            const hdnActiveFilters = document.getElementById('hdnActiveFilters');
+            if (hdnActiveFilters) {
+                hdnActiveFilters.value = activeFilters.join(',');
+            }
+        }
+
+        // Handle search button click - sync filters then submit
+        if (searchButton) {
+            searchButton.addEventListener('click', function (e) {
+                syncFiltersToHiddenFields();
+                // Let the form submit normally for server-side processing
+            });
+        }
+
+        // Handle Enter key in search input
+        if (searchInput) {
+            searchInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    syncFiltersToHiddenFields();
+                    // Trigger the search button click to submit form
+                    if (searchButton) {
+                        searchButton.click();
+                    }
+                }
+            });
+        }
+
+        // Handle quick search select change
+        //quickSearchSelect.addEventListener('change', function (e) {
+        //    const selectedType = e.target.value;
+        //    if (selectedType) {
+        //        contentTypeSelect.value = selectedType;
+        //        searchInput.focus();
+        //        // Reset the quick search select to the default option
+        //        e.target.value = '';
+        //    }
+        //});
+
+        // Auto-focus the search box when page loads (desktop only — mobile focus triggers keyboard popup)
+        //document.addEventListener('DOMContentLoaded', function () {
+        //    const path = (window.location.pathname || '').toLowerCase();
+        //    if (path.indexOf('/account/') === 0) {
+        //        return;
+        //    }
+        //    if (window.innerWidth > 768) {
+        //        const searchInputEl = document.getElementById('TextSearch');
+        //        if (searchInputEl) {
+        //            searchInputEl.focus();
+        //        }
+        //    }
+        //});
+
+        // Handle URL parameters if someone navigates here with pre-filled values
+        window.addEventListener('load', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get('q');
+
+            if (query && searchInput) {
+                searchInput.value = query;
+            }
+        });
+
+    </script>
+</body>
+
+</html>
+<!-- Updated: Modern Search Interface -->
+
