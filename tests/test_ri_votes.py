@@ -4,7 +4,7 @@ Every header below is a real roll call from the Senate and House vote reports
 (webserver.rilegislature.gov/SVotes|HVotes/votereport.asp, 2025 and 2026, read 2026-11-20): the lines
 of the report's <pre> header, as the scraper reads them. The motion is the motion lines at the end
 joined with " / "; a budget article's vote keeps its article; a header with no motion line ends in
-the title, as before.
+the title, as before, except a calendar item (OPEN-873: its motion is the marker, "CALENDAR").
 """
 import os
 import sys
@@ -276,11 +276,12 @@ REAL_HEADERS = [
         "SALE OF PROHIBITED FIREARMS",
         [],
     ),
-    # House 1/20/2026 (id 22382): an immediate-consideration roll call with no motion line
+    # House 1/20/2026 (id 22382): an immediate-consideration item with no motion line is the item
+    # read and passed (OPEN-873): its motion is the marker
     (
         ["IMMEDIATE CONSIDERATION", "ITEM 1                26-H 7165"],
-        "ITEM 1                26-H 7165",
-        [],
+        "IMMEDIATE CONSIDERATION",
+        ["passage"],
     ),
 ]
 
