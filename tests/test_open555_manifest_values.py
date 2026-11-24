@@ -5,6 +5,9 @@ field is missing. Today's values are written out below by hand (the constants as
 reader that returned anything else -- with the field, without it, or for a manifest with no entry for the state --
 fails here. The values are read at import, so each manifest is loaded in a fresh interpreter (re-importing in this one
 would re-apply fl/bills.py's URL patch and leave other tests holding stale classes).
+
+OPEN-810: MA's Speaker table is gone (no member name in code); "Mr. Speaker" is named by the manifest only, through
+utils/presiding_officers.py, and tested in test_ma_voter_names.py.
 """
 import json
 import os
@@ -15,12 +18,6 @@ import pytest
 import yaml
 
 SCRAPERS = os.path.join(os.path.dirname(__file__), "..", "scrapers")
-
-MA_SPEAKERS = {
-    "192nd": "Ronald Mariano",
-    "193rd": "Ronald Mariano",
-    "194th": "Ronald Mariano",
-}
 
 # (module, attribute, state, manifest field, today's value, a different value)
 READERS = [
@@ -44,14 +41,6 @@ READERS = [
         2,
         7,
     ),
-    (
-        "ma.voter_names",
-        "HOUSE_SPEAKER_BY_SESSION",
-        "ma",
-        "votes.house_speaker_by_session",
-        MA_SPEAKERS,
-        dict(MA_SPEAKERS, **{"195th": "Someone Else"}),
-    ),
     ("nc.bills", "_BARE_KEY_SESSION", "nc", "votes.bare_key_session", "2025", "2027"),
 ]
 
@@ -61,9 +50,7 @@ out = {}
 for module, attr in json.loads(sys.argv[1]):
     out[module + "." + attr] = getattr(importlib.import_module(module), attr)
 nc = importlib.import_module("nc.bills")
-ma = importlib.import_module("ma.voter_names")
 out["nc_keys"] = [nc.vote_dedupe_key("2025", "[S]-1"), nc.vote_dedupe_key("2025E1", "[S]-1")]
-out["ma_speaker"] = [ma.house_voter_name("Mr. Speaker", "194th"), ma.house_voter_name("Mr. Speaker", "191st")]
 print(json.dumps(out))
 """
 
@@ -133,7 +120,6 @@ def test_every_reader_returns_todays_value(tmp_path, case, text):
     out = _read(tmp_path, text)
     assert _values(out) == TODAY, case
     assert out["nc_keys"] == ["[S]-1", "2025E1-[S]-1"]
-    assert out["ma_speaker"] == ["Ronald Mariano", "Mr. Speaker"]
 
 
 def test_every_reader_reads_the_manifest(tmp_path):

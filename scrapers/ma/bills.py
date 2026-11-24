@@ -15,7 +15,7 @@ from openstates.utils.transformers import fix_bill_id
 
 from . import catchup
 from .actions import Categorizer
-from .voter_names import senate_voter_name
+from .voter_names import SPEAKER_TITLE, senate_voter_name
 from .votes import (
     JOURNAL_MONTH_URL,
     JOURNAL_PDF_LINKS,
@@ -1605,6 +1605,18 @@ class MABillScraper(Scraper):
         sheet = HouseVoteRecordParser(
             "No. {}{}".format(supplement, vote_text), session=vote.legislative_session
         )
+        # OPEN-810: the Speaker's name comes only from the manifest; a session it does not
+        # list leaves "Mr. Speaker" unmatched, said once per session per run
+        warned = self.__dict__.setdefault("_warned_speaker_sessions", set())
+        session = vote.legislative_session
+        if SPEAKER_TITLE in sheet.names and session not in warned:
+            warned.add(session)
+            self.warning(
+                "OPEN-810: manifest ma.votes.house_speaker_by_session has no %s; "
+                "%r left as printed",
+                session,
+                SPEAKER_TITLE,
+            )
         for letter, name in zip(sheet.votes, sheet.names):
             if letter == "Y":
                 vote.yes(name)

@@ -5,8 +5,9 @@ Some legislatures print each chamber's presiding officer by title, which matches
 name. Who they are comes from the jurisdiction manifest's votes.house_speaker_by_session and
 votes.senate_president_by_session. There is no built-in table: for a session the manifest does
 not list, the title is left as printed (and the caller warns), so it stays visibly unmatched
-rather than going to the wrong person. Louisiana (la/voter_names.py) and Rhode Island
-(ri/bills.py) read them here; Idaho, Mississippi and Missouri keep their own Speaker readers.
+rather than going to the wrong person. Louisiana (la/voter_names.py), Rhode Island (ri/bills.py)
+and Massachusetts' Speaker (ma/voter_names.py, OPEN-810) read them here; Idaho, Mississippi and
+Missouri keep their own Speaker readers.
 
 A session whose officer changed maps each first day held ('YYYY-MM-DD') to a name, for example
 Rhode Island's 2026 House: {'2026-01-06': 'Joe Shekarchi', '2026-05-07': 'Chris Blazejewski'};
