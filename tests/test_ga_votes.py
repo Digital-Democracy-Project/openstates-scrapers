@@ -343,3 +343,52 @@ def test_scrape_fails_hb1192_override_when_attached_to_its_bill():
     assert _scrape(detail) == {
         "House Vote #11": ("Veto Override", ["passage"], "fail"),
     }
+
+
+# ---------------------------------------------------------------------------
+# OPEN-864: each vote keeps its roll call number, so two same-day votes of one chamber are ordered
+# (the broker reads the `*rollcall-num` extras key into Motion.rollcall_num). The cases are the real
+# 2026_ss ties, checked against GetVotes (session 1034, read 2026-11-24): House #13 (08:37) before #15
+# (08:43) on 06-23, Senate #8 (10:24) before #16 (12:27) on 06-20.
+# ---------------------------------------------------------------------------
+
+
+def _scrape_votes(detail):
+    captured = []
+    real = ga_bills.VoteEvent
+
+    class Recording(real):
+        def __init__(self, *a, **k):
+            super().__init__(*a, **k)
+            captured.append(self)
+
+    with mock.patch.object(ga_bills, "VoteEvent", Recording):
+        _scrape(detail)
+    return captured
+
+
+def test_hb80_house_votes_carry_their_roll_call_number():
+    votes = _scrape_votes(load("detail_2026_ss_HB80.json"))
+    assert [(v.start_date, v.extras) for v in votes] == [
+        ("2026-06-23", {"house-rollcall-num": "13"}),
+        ("2026-06-23", {"house-rollcall-num": "14"}),
+        ("2026-06-23", {"house-rollcall-num": "15"}),
+    ]
+
+
+def test_sb1_senate_votes_carry_their_roll_call_number():
+    votes = _scrape_votes(load("detail_2026_ss_SB1.json"))
+    assert [(v.identifier, v.extras) for v in votes] == [
+        ("Senate Vote #8", {"senate-rollcall-num": "8"}),
+        ("Senate Vote #15", {"senate-rollcall-num": "15"}),
+        ("Senate Vote #16", {"senate-rollcall-num": "16"}),
+    ]
+    # same day, one chamber: the number puts the consent calendar before the passage vote
+    assert {v.start_date for v in votes} == {"2026-06-20"}
+
+
+def test_a_vote_with_no_number_gets_no_key():
+    detail = load("detail_2026_ss_SB1.json")
+    for v in detail["Votes"]["VoteListing"]:
+        v["Number"] = None
+    assert all(not v.extras for v in _scrape_votes(detail))
