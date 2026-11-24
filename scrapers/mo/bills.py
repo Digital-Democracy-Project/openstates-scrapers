@@ -1,8 +1,9 @@
 import re
+import time
 import pytz
 import datetime as dt
 from collections import defaultdict
-from scrapelib import HTTPError
+from requests.exceptions import RequestException, SSLError
 import lxml.html
 import lxml.etree
 from openstates.scrape import Scraper, Bill, VoteEvent
@@ -23,6 +24,12 @@ bill_types = {
 
 TIMEZONE = pytz.timezone("America/Chicago")
 
+# OPEN-848: seconds to wait before each new try when a Senate bill page cannot be fetched. These
+# 14 minutes come on top of scrapelib's own three retries (10, 20, 40 s) inside every try, so a
+# page is given up on about 19 minutes after its first failure. A 2026 run lost 28 bills, in
+# three runs of consecutive list positions, to fetch failures that were logged and skipped.
+SENATE_OUTAGE_WAITS = (60, 180, 600)
+
 
 def is_committee_report(action):
     # "Reported Do Pass (H)", "HCS Reported Do Pass (H)", "Reported Do Not Pass (H)", ...
@@ -32,6 +39,11 @@ def is_committee_report(action):
 class UnrecognizedSessionType(BaseException):
     def __init__(self, session):
         super().__init__(f"Session {session} has the unrecognized session types.")
+
+
+class SenateBillNotCollected(Exception):
+    """OPEN-848: a Senate bill on the bill list could not be read; the run stops rather than
+    finish without it."""
 
 
 class MOBillScraper(Scraper, LXMLMixin):
@@ -128,6 +140,24 @@ class MOBillScraper(Scraper, LXMLMixin):
         else:
             self.error("Unrecognized Session Type")
 
+    def _senate_get(self, url):
+        """Fetch a Senate bill page (the bill, its Actions, BillText or Amendments). A failure is
+        tried again after each of SENATE_OUTAGE_WAITS and then raised: a bill is never stored
+        without one of its pages, nor left out (OPEN-848)."""
+        tries = len(SENATE_OUTAGE_WAITS) + 1
+        for attempt in range(1, tries + 1):
+            try:
+                return self.get(url)
+            except RequestException as e:
+                if isinstance(e, SSLError) or attempt == tries:
+                    raise
+                wait = SENATE_OUTAGE_WAITS[attempt - 1]
+                self.warning(
+                    f"mo: senate.mo.gov failed at {url} ({str(e)[:200]}); "
+                    f"trying again in {wait}s (try {attempt}/{tries})"
+                )
+                time.sleep(wait)
+
     def _scrape_senate_subjects(self, session: str):
         self.info("Collecting subject tags from upper chamber")
 
@@ -150,13 +180,7 @@ class MOBillScraper(Scraper, LXMLMixin):
     def _parse_senate_billpage(
         self, bill_url, bill_identifier, bill_sponsor_link, year
     ):
-        try:
-            bill_page = self.get(bill_url).content
-        except HTTPError:
-            self.error(f"500 Error, unable to fetch {bill_url}")
-            return
-
-        bill_page = lxml.html.fromstring(bill_page)
+        bill_page = lxml.html.fromstring(self._senate_get(bill_url).content)
 
         bill_id_and_meta_string = bill_page.xpath(
             '//div[contains(@class, "detail-grid__item") and contains(string(.), "Title")]/div[1]'
@@ -265,12 +289,7 @@ class MOBillScraper(Scraper, LXMLMixin):
         yield bill
 
     def _parse_senate_bill_versions(self, bill: Bill, url: str):
-        try:
-            page = self.get(url).content
-        except HTTPError:
-            self.error(f"500 Error, unable to fetch {url}")
-            return
-        page = lxml.html.fromstring(page)
+        page = lxml.html.fromstring(self._senate_get(url).content)
 
         for link in page.cssselect("div.link-card-stack a"):
             link_url = link.xpath("@href")[0]
@@ -287,12 +306,7 @@ class MOBillScraper(Scraper, LXMLMixin):
             )
 
     def _parse_senate_actions(self, bill: Bill, url: str):
-        try:
-            page = self.get(url).content
-        except HTTPError:
-            self.error(f"500 Error, unable to fetch {url}")
-            return
-        page = lxml.html.fromstring(page)
+        page = lxml.html.fromstring(self._senate_get(url).content)
         # The Senate lists a bill's actions newest first, a day's actions included; they are
         # read oldest first, so the last action is the latest (OPEN-695). The House XML is
         # already oldest first.
@@ -311,11 +325,7 @@ class MOBillScraper(Scraper, LXMLMixin):
             )
 
     def _parse_senate_amends(self, bill: Bill, url: str):
-        try:
-            page = self.get(url)
-        except HTTPError:
-            self.error(f"500 Error, unable to fetch {url}")
-            return
+        page = self._senate_get(url)
         if "No amendments available for this bill" in page.text:
             return
 
@@ -350,28 +360,46 @@ class MOBillScraper(Scraper, LXMLMixin):
         for card_header in index_page.cssselect("div.bill-card-header"):
             bill_sponsor_link = None
             bill_identifier_element = card_header.cssselect("div.bill-number a")
-            if not bill_identifier_element:
-                self.warning("Missing bill identifier element. Skipping.")
-                continue
+            bill_identifier_link = None
+            if bill_identifier_element:
+                link_el = bill_identifier_element[0]
+                bill_identifier = link_el.text_content().strip()
+                bill_identifier_link = link_el.get("href")  # None-safe, no IndexError
+            else:
+                bill_identifier = card_header.cssselect("div.bill-number")
+                bill_identifier = (
+                    bill_identifier[0].text_content().strip() if bill_identifier else ""
+                )
 
-            link_el = bill_identifier_element[0]
-            bill_identifier = link_el.text_content().strip()
-            bill_identifier_link = link_el.get("href")  # None-safe, no IndexError
+            if bill_identifier_link is None:
+                # A withdrawn bill is listed with its number but no link to a bill page
+                # (2026: SB 1348, SB 1390, SB 1478). Any other card without one is a bill
+                # this run would lose, so it stops the run (OPEN-848).
+                card = card_header.getparent()
+                if "WITHDRAWN" in card.text_content():
+                    self.info(
+                        f"Skipping withdrawn bill {bill_identifier}: no bill page."
+                    )
+                    continue
+                raise SenateBillNotCollected(
+                    f"mo: Senate bill list card {bill_identifier or '(no number)'} has no "
+                    f"link to a bill page and is not marked withdrawn ({index_url})"
+                )
 
             # Extract sponsor handler link if present
             sponsor_elements = card_header.cssselect("div.bill-sponsor-handler div a")
             if sponsor_elements:
                 bill_sponsor_link = sponsor_elements[0].get("href")
 
-            if bill_identifier_link is None:
-                self.warning(
-                    f"Missing bill identifier link for bill {bill_identifier}. Skipping."
+            try:
+                yield from self._parse_senate_billpage(
+                    bill_identifier_link, bill_identifier, bill_sponsor_link, session
                 )
-                continue
-
-            yield from self._parse_senate_billpage(
-                bill_identifier_link, bill_identifier, bill_sponsor_link, session
-            )
+            except RequestException as e:
+                raise SenateBillNotCollected(
+                    f"mo: Senate bill {bill_identifier} could not be read from "
+                    f"{bill_identifier_link}: {e}"
+                ) from e
 
     def _scrape_lower_chamber(self, session):
         self.info("Scraping bills from lower chamber.")

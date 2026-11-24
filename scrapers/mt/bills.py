@@ -65,6 +65,120 @@ def version_name(file_name: str) -> str:
     return f"Amended Version {int(number)}"
 
 
+# OPEN-851: a status name carries no outcome ("(H) 3rd Reading" reads the same passed or failed); the status row's
+# `result` field holds it. Its 21 values in 2025 (66,235 status rows of 4,495 bills, api.legmt.gov, 2026-11-24) are
+# written in the legislature's own words, the ones its archive API used for 2023 and before ("(H) 3rd Reading
+# Passed", "(H) 3rd Reading Failed", "(S) 2nd Reading Not Concurred", "(H) Committee Executive Action--Bill Passed
+# as Amended", "(S) 3rd Reading Conference Committee Report Adopted", "(H) 2nd Reading Motion to Amend Carried").
+# "" means the status name already says it ("(H) Tabled in Committee"). A value not listed here keeps its own
+# words, so it is never dropped.
+OUTCOME_WORDS = {
+    "BILL_PASSED": "Passed",
+    "BILL_PASSED_AS_AMENDED": "Passed as Amended",
+    "BILL_NOT_PASSED": "Not Passed",
+    "BILL_NOT_PASSED_AS_AMENDED": "Not Passed as Amended",
+    "BILL_CONCURRED": "Concurred",
+    "BILL_CONCURRED_AS_AMENDED": "Concurred as Amended",
+    "BILL_NOT_CONCURRED": "Not Concurred",
+    "BILL_NOT_CONCURRED_AS_AMENDED": "Not Concurred as Amended",
+    "RESOLUTION_ADOPTED": "Adopted",
+    "RESOLUTION_ADOPTED_AS_AMENDED": "Adopted as Amended",
+    "RESOLUTION_FAILED": "Not Adopted",
+    "REPORT_ADOPTED": "Adopted",
+    "REPORT_REJECTED": "Rejected",
+    "MOTION_CARRIED": "Carried",
+    "MOTION_FAILED": "Failed",
+    "REVOTE_ON_PREVIOUS_ACTION": "Carried",
+    "NO_REVOTE_ON_PREVIOUS_ACTION": "Failed",
+    "VETO_OVERRIDDEN": "Passed",
+    "VETO_NOT_OVERRIDDEN": "Failed",
+    "BILL_TABLED": "",
+    "BILL_REMOVED_FROM_TABLE": "",
+}
+OUTCOME_YES = {
+    "BILL_PASSED",
+    "BILL_PASSED_AS_AMENDED",
+    "BILL_CONCURRED",
+    "BILL_CONCURRED_AS_AMENDED",
+    "RESOLUTION_ADOPTED",
+    "RESOLUTION_ADOPTED_AS_AMENDED",
+    "REPORT_ADOPTED",
+    "VETO_OVERRIDDEN",
+}
+OUTCOME_NO = {
+    "BILL_NOT_PASSED",
+    "BILL_NOT_PASSED_AS_AMENDED",
+    "BILL_NOT_CONCURRED",
+    "BILL_NOT_CONCURRED_AS_AMENDED",
+    "RESOLUTION_FAILED",
+    "REPORT_REJECTED",
+    "VETO_NOT_OVERRIDDEN",
+}
+STATUS_PREFIX = re.compile(r"\((?:H|S|LC)\) ")
+COMMITTEE_ACTION = re.compile(r"Committee (?:Executive Action|Report)")
+# the third reading is the chamber's final vote (OPEN-694's motion rules): on the bill, the other chamber's
+# amendments or a conference report; the governor's amendments are not passage. Only the bill's own third
+# reading lost is the bill's failure.
+THIRD_READING = re.compile(
+    r"3rd Reading(?:; 2nd Chamber Vote Required| Senate Amendments| House Amendments"
+    r"| (?:Free )?Conference Committee Report)?"
+)
+BILL_THIRD_READING = re.compile(r"3rd Reading(?:; 2nd Chamber Vote Required)?")
+
+
+def action_outcome(name: str, result, committee_passed: bool = False) -> tuple:
+    """The words a status row's result adds to its name, and the labels it decides: (words, labels).
+
+    Committee: "--Bill Passed" (committee-passage) or "--Bill Not Passed" (committee-failure), as the archive API
+    wrote it. Third reading: passage, or failure when the bill's own third reading is lost ("3rd Reading Failed",
+    the archive's words). A simple resolution is adopted on 2nd reading (passage). Veto override passed or failed.
+    `committee_passed`: the same committee's last executive action on the bill passed it (see the report below).
+    """
+    if not result:
+        return "", []
+    status = STATUS_PREFIX.sub("", name, count=1)
+    if COMMITTEE_ACTION.fullmatch(status):
+        # a committee report's "concurred in as amended" is filed as BILL_NOT_CONCURRED_AS_AMENDED: all 273 such
+        # 2025 rows follow the same committee's passing executive action (270 BILL_CONCURRED_AS_AMENDED), 248 go
+        # on to be concurred in on 2nd reading, and no report row says BILL_CONCURRED_AS_AMENDED. Without that
+        # passing executive action the value is kept as written.
+        if (
+            status == "Committee Report"
+            and result == "BILL_NOT_CONCURRED_AS_AMENDED"
+            and committee_passed
+        ):
+            result = "BILL_CONCURRED_AS_AMENDED"
+        if result in OUTCOME_WORDS:
+            kind = result.split("_", 1)[0].title()
+            words = f"--{kind} {OUTCOME_WORDS[result]}"
+        else:
+            words = f"--{result.replace('_', ' ').title()}"
+        if result in OUTCOME_YES:
+            return words, ["committee-passage"]
+        if result in OUTCOME_NO:
+            return words, ["committee-failure"]
+        return words, []
+
+    words = OUTCOME_WORDS.get(result, result.replace("_", " ").title())
+    labels = []
+    if THIRD_READING.fullmatch(status):
+        if result in OUTCOME_YES:
+            labels = ["passage"]
+        elif result in OUTCOME_NO and BILL_THIRD_READING.fullmatch(status):
+            words, labels = "Failed", ["failure"]
+    elif status == "2nd Reading" and result.startswith("RESOLUTION_"):
+        if result in OUTCOME_YES:
+            labels = ["passage"]
+        elif result in OUTCOME_NO:
+            labels = ["failure"]
+    elif status == "Veto Override":
+        if result in OUTCOME_YES:
+            labels = ["veto-override-passage"]
+        elif result in OUTCOME_NO:
+            labels = ["veto-override-failure"]
+    return (f" {words}" if words else ""), labels
+
+
 class MTBillScraper(Scraper):
     tz = pytz.timezone("America/Denver")
     results_per_page = 100
@@ -283,6 +397,8 @@ class MTBillScraper(Scraper):
             yield from self.scrape_list_page(session, page_num + 1)
 
     def scrape_actions(self, bill: Bill, row: dict):
+        # OPEN-851: each committee's last executive action result on this bill, for its report
+        executive_results = {}
         for action in row["draft"]["billStatuses"]:
             name = action["billStatusCode"]["name"]
             # Try to add committee Name to description where applicable
@@ -298,7 +414,24 @@ class MTBillScraper(Scraper):
                     ),
                     None,
                 )
-            description = f"{name} - {committee['name']}" if committee else name
+            # OPEN-851: the outcome follows the name ("(H) 3rd Reading Passed"), before the committee
+            result = action.get("result")
+            if result and result not in OUTCOME_WORDS:
+                self.warning(
+                    f"Unknown Montana status result {result} on {bill.identifier}"
+                )
+            # (statuses come oldest first: all 4,495 bills of 2025)
+            if name.endswith("Committee Executive Action"):
+                executive_results[standing_committee_id] = result
+            words, outcome_labels = action_outcome(
+                name,
+                result,
+                committee_passed=executive_results.get(standing_committee_id)
+                in OUTCOME_YES,
+            )
+            description = f"{name}{words}"
+            if committee:
+                description = f"{description} - {committee['name']}"
 
             when = dateutil.parser.parse(action["timeStamp"])
             when = self.tz.localize(when)
@@ -313,7 +446,7 @@ class MTBillScraper(Scraper):
                 description,
                 date=when,
                 chamber=chamber,
-                classification=categorize_actions(name),
+                classification=categorize_actions(name) + outcome_labels,
             )
 
             # we want to be able to look up the action name later for votes

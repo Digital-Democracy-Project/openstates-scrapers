@@ -26,6 +26,10 @@ ACTION_CLASSIFIERS = (
     ),
     ("From committee: .+? pass", ["committee-passage"]),
     (r"Prefiled\.\s*Referred", ["introduction", "referral-committee"]),
+    # OPEN-840: NELIS sometimes prints these as their own lines ("Prefiled." then
+    # "Referred to Select Committee on ...") and each line is now its own action
+    (r"^Prefiled\.", ["introduction"]),
+    (r"^Referred to", ["referral-committee"]),
     ("Read first time. Referred", ["reading-1", "referral-committee"]),
     ("Read first time.", ["reading-1"]),
     ("Read second time.", ["reading-2"]),
@@ -249,9 +253,13 @@ class BillTabDetail(Utf8HtmlMixin, HtmlPage):
             # Example: Assemblywoman Alexis Hansen
             # Also check if sponsor is an organization or person
             # Example: "Assembly Committee on Government Affairs" is an organization
+            # OPEN-829: NELIS links a committee sponsor to its committee page
+            # (.../Committee/460/Overview) and a legislator to /App/Legislator/...;
+            # special-session committees drop the word ("Assembly Health and Wellness")
             chamber = None
             entity_type = "person"
-            if "committee" in name.lower():
+            href = link.get("href") or ""
+            if "/Committee/" in href or "committee" in name.lower():
                 entity_type = "organization"
             if name.split()[0] in [
                 "Assemblywoman",
@@ -281,28 +289,22 @@ class BillTabDetail(Utf8HtmlMixin, HtmlPage):
                 date, cell, _ = [x.text for x in row.getchildren()]
                 date = parse_date(date)
 
-                # NELIS joins a day's steps with \r, and the chamber can change
-                # mid-cell ("... To Senate.\rIn Senate.\rRead first time...").
-                # Start a new action at each "In Assembly"/"In Senate" line.
-                segments = []
-                for line in cell.split("\r"):
-                    if line.startswith("In Assembly"):
-                        actor = "lower"
-                    elif line.startswith("In Senate"):
-                        actor = "upper"
-                    elif segments:
-                        segments[-1][1].append(line)
+                # NELIS prints a day's steps as lines of one cell, joined with \r, and
+                # the chamber can change mid-cell ("... To Senate.\rIn Senate.\rRead
+                # first time..."). OPEN-840: one action per printed line, in order, so
+                # each step keeps its own chamber and labels; an "In Assembly"/"In
+                # Senate" line moves the chamber for itself and the lines after it.
+                for line in cell.splitlines():
+                    action = line.strip()
+                    if not action:
                         continue
-                    segments.append((actor, [line]))
-                # a trailing marker only says where the bill goes next
-                if len(segments) > 1 and len(segments[-1][1]) == 1:
-                    segments[-2][1].append(segments.pop()[1][0])
-
-                for seg_actor, lines in segments:
-                    action = "\r".join(lines)
-                    if not action.startswith("In ") and "Governor" in action:
-                        actor = seg_actor = "executive"
-                    self.add_action(bill, date, action, seg_actor)
+                    if action.startswith("In Assembly"):
+                        actor = "lower"
+                    elif action.startswith("In Senate"):
+                        actor = "upper"
+                    elif "Governor" in action:
+                        actor = "executive"
+                    self.add_action(bill, date, action, actor)
         except SelectorError:
             pass
 
@@ -407,11 +409,22 @@ class BillTabText(Utf8HtmlMixin, HtmlPage):
     def process_page(self):
         bill = self.input
         # some BDRs have no text link
-        for row in CSS(".d-md-none a").match(self.root, min_items=0):
+        # OPEN-830: each text ("As Introduced", "Reprint 1", "As Enrolled") is the
+        # link in its <p class="h5"> heading; the amendments listed under it
+        # (<p class="text-wrap">, "Amendment 13 (Adopted)") are amendment papers,
+        # whose changes the next reprint carries, so they are documents
+        for row in CSS(".d-md-none p.h5 a").match(self.root, min_items=0):
             title = row.text_content()
             link = row.get("href")
             bill.add_version_link(
                 title, link, media_type="application/pdf", on_duplicate="ignore"
+            )
+        for row in CSS(".d-md-none p.text-wrap a").match(self.root, min_items=0):
+            bill.add_document_link(
+                row.text_content().strip(),
+                row.get("href"),
+                media_type="application/pdf",
+                on_duplicate="ignore",
             )
         ex_url = self.source.url.replace("Text", "Exhibits")
 

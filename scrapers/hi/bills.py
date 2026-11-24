@@ -117,15 +117,29 @@ vote_re_list = [
 FAILED_RE = re.compile(r"\b(failed|sustained)\b", re.IGNORECASE)
 PASSED_RE = re.compile(r"\b(passed|adopted|overridden)\b", re.IGNORECASE)
 OVERRIDE_RE = re.compile(r"\boverrid", re.IGNORECASE)
+# OPEN-868: a committee's decision-making vote ("The committee(s) on WAM recommend(s) that the measure be PASSED, WITH
+# AMENDMENTS. The votes in WAM were as follows: 4 Aye(s) ...; 9 No(es) ...") prints the recommendation it voted on, not
+# its outcome, so its "PASSED" says nothing about the vote. Its result is the tally's: more ayes than noes. On the Mac
+# replica (2026-11-24, 7,628 stored committee votes) every one with ayes <= noes (14, all Senate) is followed the same
+# day by "The recommendation was not adopted." and every one with more ayes than noes is not; a plurality wins even
+# without a majority of the members (House 5-3 with 2 excused, Senate 2-1 with 2 excused, and the bill moves on).
+# Matched on the first sentence naming both "committee" and "recommend" (also the Conference Committee's and the
+# Senate's "The recommendation of the committee(s) on ... is to ADVISE AND CONSENT ...").
+COMMITTEE_RECOMMENDATION_RE = re.compile(
+    r"\A(?=[^.]*\bcommittee)(?=[^.]*\brecommend)", re.IGNORECASE
+)
 # Hawaii Constitution Art. III sec. 17: an override needs two-thirds of all the members to which
 # each house is entitled (House 51, Senate 25), not of those voting.
 CHAMBER_SIZE = {"lower": 51, "upper": 25}
 
 
 def vote_result(chamber, text, yes_count, no_count):
-    """'pass' or 'fail' for one roll call in chamber "upper"/"lower": the outcome the text states
-    (passed, adopted, overridden; failed, sustained), else two-thirds of the house's seats for a
-    veto override, else more yeas than nays."""
+    """'pass' or 'fail' for one roll call in chamber "upper"/"lower": a committee's recommendation
+    vote by its tally (OPEN-868), else the outcome the text states (passed, adopted, overridden;
+    failed, sustained), else two-thirds of the house's seats for a veto override, else more yeas
+    than nays."""
+    if COMMITTEE_RECOMMENDATION_RE.search(text):
+        return "pass" if yes_count > no_count else "fail"
     if FAILED_RE.search(text):
         return "fail"
     if PASSED_RE.search(text):
@@ -316,8 +330,18 @@ class HIBillScraper(Scraper):
 
         # vote types that have been reconsidered since last vote of that type
         reconsiderations = set()
+        # OPEN-823: the status table lists actions newest first; they are stored oldest first (the table
+        # read backwards, so a day's actions keep their sequence, as Wyoming's OPEN-780). Each vote's
+        # dedupe_key keeps the row's index in the table, so the roll calls stored before still match.
+        # OPEN-856: the rows are read oldest first too, so "Reconsider: " goes on the chamber's first vote
+        # after its reconsideration. Read newest first it went on the vote before it: 109 stored roll calls,
+        # such as HB 1705's JHA vote of 02-25-26 for the House's reconsideration of 04-22-26. The votes are
+        # still yielded in the table's order.
+        actions = []
+        votes = []
+        rows = list(enumerate(action_table.cssselect("tr")[1:]))
 
-        for index, action_row in enumerate(action_table.cssselect("tr")[1:]):
+        for index, action_row in reversed(rows):
             cells = action_row.cssselect("td")
             date_cell = cells[0]
             actor_cell = cells[1]
@@ -351,10 +375,7 @@ class HIBillScraper(Scraper):
                 and any(description in string for description in repeated_action)
             ):
                 continue
-            act = bill.add_action(string, date, chamber=actor, classification=atype)
-
-            for committee in real_committees:
-                act.add_related_entity(name=committee, entity_type="organization")
+            actions.append((string, date, actor, atype, real_committees))
             vote = self.parse_vote(string)
             seated_ayes = []
             derived = bool(vote) and vote[0].get("n_yes") is None
@@ -373,12 +394,10 @@ class HIBillScraper(Scraper):
 
             if vote:
                 v, motion = vote
-                # OPEN-709: a tally whose ayes are worked out neither takes nor clears a pending
-                # "Reconsider: " prefix, so the roll calls kept before read exactly as they did
+                # OPEN-856: a tally whose ayes are worked out (OPEN-709) is a vote like any other: the
+                # House's re-vote after a reconsideration is often one ("Adopted with none voting ...")
                 motion_text = (
-                    ("Reconsider: " + motion)
-                    if actor in reconsiderations and not derived
-                    else motion
+                    ("Reconsider: " + motion) if actor in reconsiderations else motion
                 )
                 yays = v.get("n_yes")
                 nays = v["n_no"]
@@ -401,8 +420,7 @@ class HIBillScraper(Scraper):
                     # committee-passage; texts no rule names stay unlabelled)
                     classification=classify_motion("hi", motion_text),
                 )
-                if not derived:
-                    reconsiderations.discard(actor)
+                reconsiderations.discard(actor)
                 vote.add_source(url)
                 vote.set_count("yes", yays)
                 vote.set_count("no", nays)
@@ -423,10 +441,16 @@ class HIBillScraper(Scraper):
                 for voter in seated_ayes:
                     vote.yes(voter)
 
-                yield vote
+                votes.append(vote)
 
             elif re.search("reconsider", string, re.IGNORECASE):
                 reconsiderations.add(actor)
+
+        for string, date, actor, atype, real_committees in actions:
+            act = bill.add_action(string, date, chamber=actor, classification=atype)
+            for committee in real_committees:
+                act.add_related_entity(name=committee, entity_type="organization")
+        yield from reversed(votes)
 
     def counted_ayes(self, v, chamber, date, bill_id):
         """OPEN-825: the plain ayes of a Senate tally that prints an aye count but names only the

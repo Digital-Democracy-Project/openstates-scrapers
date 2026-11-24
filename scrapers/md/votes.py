@@ -23,6 +23,14 @@ AMENDMENT_VOTE = re.compile(
 # "FLA Del. Miller /.../1 Ruled Out of Order Decision of the Chair", "... Motion to Lay Over".
 PROCEDURAL_VOTE = re.compile(r"decision of the chair|motion to lay over", re.I)
 
+# OPEN-832: lines of a roll call's motion block that are not a new motion line: the motion's
+# tags printed alone on the next line ("(Emerg)", "(Const)", "(Emerg/Amend)"), and a member
+# line under the motion, the conferees of a conference report bill ("Del. ..." after "Bill is
+# on Third Reading for Final Passage."). An amendment's motion ("FLA Del. ...") starts with
+# its own words, so it is not a member line.
+TAG_LINE = re.compile(r"^(\([^()]*\)\s*)+$")
+MEMBER_LINE = re.compile(r"^(Del|Sen)\.\s")
+
 
 # OPEN-815: a roll call prints its chamber's presiding officer by title, "Speaker" on a House one
 # and "Mr. President" on a Senate one; who that is comes from the manifest's
@@ -259,7 +267,16 @@ class MDVoteScraper(Scraper, LXMLMixin):
                     excused_count = int(excused_count)
                     absent_count = int(absent_count)
                     section = "votes"
-                elif line and line != "(Const)":
+                elif motion and TAG_LINE.match(line):
+                    # OPEN-832: a tag the motion wrapped onto its own line ("(Emerg)" under "On
+                    # Third Reading and Final Passage (Hse concurred)") is part of it; one the
+                    # motion line already prints ("On Third Reading   (Const)") is not repeated
+                    if line not in motion:
+                        motion = motion + " " + line
+                elif motion and MEMBER_LINE.match(line):
+                    # OPEN-832: a conferee line under the motion is not the motion
+                    continue
+                elif line:
                     # questions seem to be split across two lines
                     if line.endswith("?"):
                         motion = motion + " " + line

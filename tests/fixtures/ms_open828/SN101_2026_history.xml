@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="../../dtds_xslts/history.xslt"?>
+ 
+<!DOCTYPE HISTORY SYSTEM "../../dtds_xslts/history.dtd">
+ 
+<HISTORY>
+	<YEAR>2026</YEAR>
+	<SESSION>Regular Session</SESSION>
+	<SHORTTITLE>Judy Paulette Hollingsworth, Laurel, Mississippi, State Board of Mental Health, remainder of a seven year term effective upon Senate confirmation and ending June 30, 2032, representing the Second Supreme Court District, vice Dr. Laurie Lawson.</SHORTTITLE>
+	<DATETIMELASTCHG>04/01/26 at 18:43</DATETIMELASTCHG>
+ 
+	<MEASURE>
+		<MSR_HS>S</MSR_HS>
+		<MSR_TYPE>N</MSR_TYPE>
+		<MSR_NUM> 101</MSR_NUM>
+		<FORMAT_MSRID>Senate Nomination  101</FORMAT_MSRID>
+		<SHORT_MSRID>SN 101</SHORT_MSRID>
+		<OWNER>S</OWNER>
+	</MEASURE>
+ 
+	<BACKGROUND>
+		<DISPOSITION>Confirmed</DISPOSITION>
+		<DEADLINE>None</DEADLINE>
+		<REVENUE>No</REVENUE>
+		<VOTETYPE>Majority</VOTETYPE>
+	</BACKGROUND>
+	<COMMITTEES>
+		<SENATE>
+			<S_NAME>Public Health and Welfare</S_NAME>
+			<S_INCMTE>F</S_INCMTE>
+			<S_LINK>../../Senate_cmtes/PH.xml</S_LINK>
+		</SENATE>
+	</COMMITTEES>
+	<AUTHORS>
+		<PRINCIPAL>
+			<P_NAME>GOVERNOR</P_NAME>
+		</PRINCIPAL>
+	</AUTHORS>
+	<ACTION>
+		<ACT_NUMBER> 1</ACT_NUMBER>
+		<ACT_DESC>03/05 (S) Referred To Public Health and Welfare</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 2</ACT_NUMBER>
+		<ACT_DESC>03/31 (S) Do Advise and Consent</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 3</ACT_NUMBER>
+		<ACT_DESC>04/01 (S) Appointment Confirmed</ACT_DESC>
+		<ACT_VOTE>../../../../2026/pdf/votes/senate/0860034.pdf</ACT_VOTE>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 4</ACT_NUMBER>
+		<ACT_DESC>04/01 (S) Immediate Release</ACT_DESC>
+	</ACTION>
+	<ACTION>
+		<ACT_NUMBER> 5</ACT_NUMBER>
+		<ACT_DESC>04/01 (S) Notified of Approval</ACT_DESC>
+	</ACTION>
+</HISTORY>

@@ -1,0 +1,4116 @@
+[
+{
+"bill": "SB 224",
+"status": {
+"billProgressCategory": {
+"code": 100,
+"description": "Second Chamber 2nd Reading Process",
+"id": 13,
+"sortOrder": 6
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"chamber": "HOUSE",
+"code": "556",
+"id": 337,
+"name": "(H) 2nd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 72727,
+"propylonUuid": null,
+"result": "BILL_CONCURRED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-09T15:21:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-09T15:21:11",
+"id": 3560,
+"motion": "Do Concur",
+"orderOfBusinessId": 7,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 2045
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 224",
+"status": {
+"billProgressCategory": {
+"code": 110,
+"description": "Second Chamber 3rd Reading Process",
+"id": 14,
+"sortOrder": 7
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 60,
+"description": "First Chamber 3rd Reading Process",
+"id": 8,
+"sortOrder": 4
+},
+"chamber": "HOUSE",
+"code": "596",
+"id": 376,
+"name": "(H) 3rd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 73395,
+"propylonUuid": null,
+"result": "BILL_CONCURRED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-10T08:59:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-10T08:50:27",
+"id": 3591,
+"motion": "Do Concur",
+"orderOfBusinessId": 9,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 2060
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 224",
+"status": {
+"billProgressCategory": {
+"code": 80,
+"description": "Second Chamber Committee Process",
+"id": 11,
+"sortOrder": 5
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "HOUSE",
+"code": "516",
+"id": 299,
+"name": "(H) Committee Executive Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": 4072,
+"id": 57267,
+"propylonUuid": null,
+"result": "BILL_CONCURRED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 12,
+"timeStamp": "2025-03-18T11:30:34.564",
+"vote": null
+}
+},
+{
+"bill": "SB 224",
+"status": {
+"billProgressCategory": {
+"code": 100,
+"description": "Second Chamber 2nd Reading Process",
+"id": 13,
+"sortOrder": 6
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 40,
+"description": "In First House--Out of Committee",
+"id": 6,
+"sortOrder": null
+},
+"chamber": "HOUSE",
+"code": "530",
+"id": 313,
+"name": "(H) Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 57318,
+"propylonUuid": null,
+"result": "BILL_CONCURRED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 12,
+"timeStamp": "2025-03-18T13:12:00",
+"vote": null
+}
+},
+{
+"bill": "HB 135",
+"status": {
+"billProgressCategory": {
+"code": 100,
+"description": "Second Chamber 2nd Reading Process",
+"id": 13,
+"sortOrder": 6
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"chamber": "SENATE",
+"code": "156",
+"id": 107,
+"name": "(S) 2nd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 61617,
+"propylonUuid": null,
+"result": "BILL_CONCURRED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-03-26T13:30:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-03-26T13:30:21",
+"id": 2565,
+"motion": "Do Concur",
+"orderOfBusinessId": 25,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 1240
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 135",
+"status": {
+"billProgressCategory": {
+"code": 110,
+"description": "Second Chamber 3rd Reading Process",
+"id": 14,
+"sortOrder": 7
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 60,
+"description": "First Chamber 3rd Reading Process",
+"id": 8,
+"sortOrder": 4
+},
+"chamber": "SENATE",
+"code": "196",
+"id": 146,
+"name": "(S) 3rd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 62649,
+"propylonUuid": null,
+"result": "BILL_CONCURRED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-03-27T15:04:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-03-27T14:56:24",
+"id": 2639,
+"motion": "Do Concur",
+"orderOfBusinessId": 27,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 1280
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 135",
+"status": {
+"billProgressCategory": {
+"code": 80,
+"description": "Second Chamber Committee Process",
+"id": 11,
+"sortOrder": 5
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "SENATE",
+"code": "116",
+"id": 68,
+"name": "(S) Committee Executive Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": 4293,
+"id": 58546,
+"propylonUuid": null,
+"result": "BILL_CONCURRED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 31,
+"timeStamp": "2025-03-20T11:29:19.21",
+"vote": null
+}
+},
+{
+"bill": "HB 135",
+"status": {
+"billProgressCategory": {
+"code": 100,
+"description": "Second Chamber 2nd Reading Process",
+"id": 13,
+"sortOrder": 6
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 40,
+"description": "In First House--Out of Committee",
+"id": 6,
+"sortOrder": null
+},
+"chamber": "SENATE",
+"code": "130",
+"id": 82,
+"name": "(S) Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 59274,
+"propylonUuid": null,
+"result": "BILL_CONCURRED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 31,
+"timeStamp": "2025-03-21T14:29:00",
+"vote": null
+}
+},
+{
+"bill": "SB 154",
+"status": {
+"billProgressCategory": {
+"code": 100,
+"description": "Second Chamber 2nd Reading Process",
+"id": 13,
+"sortOrder": 6
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"chamber": "HOUSE",
+"code": "556",
+"id": 337,
+"name": "(H) 2nd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 71463,
+"propylonUuid": null,
+"result": "BILL_CONCURRED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-08T14:22:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-08T13:47:06",
+"id": 3441,
+"motion": "Do Pass As Amended",
+"orderOfBusinessId": 7,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 2007
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 116",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 150,
+"description": "Governor's Amendment Process",
+"id": 19,
+"sortOrder": 9
+},
+"chamber": "HOUSE",
+"code": "639",
+"id": 418,
+"name": "(H) 2nd Reading Governor's Amendments",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 83741,
+"propylonUuid": null,
+"result": "BILL_CONCURRED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-25T09:35:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-25T09:35:09",
+"id": 5322,
+"motion": "Do Concur",
+"orderOfBusinessId": 7,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 2796
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 136",
+"status": {
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 130,
+"description": "In Process to Consider Second House Amendments",
+"id": 16,
+"sortOrder": null
+},
+"chamber": "HOUSE",
+"code": "610",
+"id": 389,
+"name": "(H) 2nd Reading Senate Amendments",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 58583,
+"propylonUuid": null,
+"result": "BILL_CONCURRED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-03-20T13:19:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-03-20T13:18:18",
+"id": 2349,
+"motion": "Do Concur",
+"orderOfBusinessId": 7,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 1416
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 116",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 150,
+"description": "Governor's Amendment Process",
+"id": 19,
+"sortOrder": 9
+},
+"chamber": "HOUSE",
+"code": "643",
+"id": 422,
+"name": "(H) 3rd Reading Governor's Amendments",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 84746,
+"propylonUuid": null,
+"result": "BILL_CONCURRED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-28T11:41:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-28T11:11:41",
+"id": 5387,
+"motion": "Do Concur",
+"orderOfBusinessId": 9,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 2820
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 136",
+"status": {
+"billProgressCategory": {
+"code": 60,
+"description": "First Chamber 3rd Reading Process",
+"id": 8,
+"sortOrder": 4
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 130,
+"description": "In Process to Consider Second House Amendments",
+"id": 16,
+"sortOrder": null
+},
+"chamber": "HOUSE",
+"code": "614",
+"id": 393,
+"name": "(H) 3rd Reading Senate Amendments",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 59211,
+"propylonUuid": null,
+"result": "BILL_CONCURRED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-03-21T13:52:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-03-21T13:27:30",
+"id": 2408,
+"motion": "Do Concur",
+"orderOfBusinessId": 9,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 1447
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 174",
+"status": {
+"billProgressCategory": {
+"code": 80,
+"description": "Second Chamber Committee Process",
+"id": 11,
+"sortOrder": 5
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "HOUSE",
+"code": "516",
+"id": 299,
+"name": "(H) Committee Executive Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": 5706,
+"id": 68561,
+"propylonUuid": null,
+"result": "BILL_CONCURRED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 24,
+"timeStamp": "2025-04-03T15:47:00",
+"vote": null
+}
+},
+{
+"bill": "HB 231",
+"status": {
+"billProgressCategory": {
+"code": 100,
+"description": "Second Chamber 2nd Reading Process",
+"id": 13,
+"sortOrder": 6
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"chamber": "SENATE",
+"code": "156",
+"id": 107,
+"name": "(S) 2nd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 81561,
+"propylonUuid": null,
+"result": "BILL_CONCURRED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-22T18:23:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-22T18:22:47",
+"id": 5031,
+"motion": "Do Concur As Amended",
+"orderOfBusinessId": 25,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 2721
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 116",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 150,
+"description": "Governor's Amendment Process",
+"id": 19,
+"sortOrder": 9
+},
+"chamber": "SENATE",
+"code": "239",
+"id": 188,
+"name": "(S) 2nd Reading Governor's Amendments",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 81997,
+"propylonUuid": null,
+"result": "BILL_CONCURRED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-23T13:13:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-23T13:13:18",
+"id": 5076,
+"motion": "Do Concur",
+"orderOfBusinessId": 25,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 2766
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 163",
+"status": {
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 130,
+"description": "In Process to Consider Second House Amendments",
+"id": 16,
+"sortOrder": null
+},
+"chamber": "SENATE",
+"code": "210",
+"id": 159,
+"name": "(S) 2nd Reading House Amendments",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 67167,
+"propylonUuid": null,
+"result": "BILL_CONCURRED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-02T13:19:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-02T13:18:54",
+"id": 2924,
+"motion": "Do Pass",
+"orderOfBusinessId": 25,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 1415
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 116",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 150,
+"description": "Governor's Amendment Process",
+"id": 19,
+"sortOrder": 9
+},
+"chamber": "SENATE",
+"code": "243",
+"id": 192,
+"name": "(S) 3rd Reading Governor's Amendments",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 83995,
+"propylonUuid": null,
+"result": "BILL_CONCURRED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-25T11:31:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-25T11:22:17",
+"id": 5379,
+"motion": "Do Concur",
+"orderOfBusinessId": 27,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 2936
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 163",
+"status": {
+"billProgressCategory": {
+"code": 60,
+"description": "First Chamber 3rd Reading Process",
+"id": 8,
+"sortOrder": 4
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 130,
+"description": "In Process to Consider Second House Amendments",
+"id": 16,
+"sortOrder": null
+},
+"chamber": "SENATE",
+"code": "214",
+"id": 163,
+"name": "(S) 3rd Reading House Amendments",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 68093,
+"propylonUuid": null,
+"result": "BILL_CONCURRED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-03T13:20:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-03T13:14:24",
+"id": 2993,
+"motion": "Do Pass",
+"orderOfBusinessId": 27,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 1453
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 136",
+"status": {
+"billProgressCategory": {
+"code": 80,
+"description": "Second Chamber Committee Process",
+"id": 11,
+"sortOrder": 5
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "SENATE",
+"code": "116",
+"id": 68,
+"name": "(S) Committee Executive Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": 760,
+"id": 36053,
+"propylonUuid": null,
+"result": "BILL_CONCURRED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 23,
+"timeStamp": "2025-02-05T08:30:00",
+"vote": null
+}
+},
+{
+"bill": "SB 92",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"chamber": "HOUSE",
+"code": "556",
+"id": 337,
+"name": "(H) 2nd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 73646,
+"propylonUuid": null,
+"result": "BILL_NOT_CONCURRED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-10T10:35:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-10T10:35:22",
+"id": 3631,
+"motion": "Do Concur",
+"orderOfBusinessId": 7,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 2082
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 155",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"chamber": "SENATE",
+"code": "156",
+"id": 107,
+"name": "(S) 2nd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 79506,
+"propylonUuid": null,
+"result": "BILL_NOT_CONCURRED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-17T14:59:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-17T14:55:09",
+"id": 4646,
+"motion": "Do Concur",
+"orderOfBusinessId": 25,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 2482
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 71",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "SENATE",
+"code": "116",
+"id": 68,
+"name": "(S) Committee Executive Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": 1368,
+"id": 41732,
+"propylonUuid": null,
+"result": "BILL_NOT_CONCURRED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 29,
+"timeStamp": "2025-02-13T15:32:00",
+"vote": null
+}
+},
+{
+"bill": "SB 218",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 150,
+"description": "Governor's Amendment Process",
+"id": 19,
+"sortOrder": 9
+},
+"chamber": "HOUSE",
+"code": "639",
+"id": 418,
+"name": "(H) 2nd Reading Governor's Amendments",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 84947,
+"propylonUuid": null,
+"result": "BILL_NOT_CONCURRED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-28T14:29:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-28T14:20:50",
+"id": 5434,
+"motion": "Do Concur",
+"orderOfBusinessId": 7,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 2848
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 151",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 130,
+"description": "In Process to Consider Second House Amendments",
+"id": 16,
+"sortOrder": null
+},
+"chamber": "HOUSE",
+"code": "610",
+"id": 389,
+"name": "(H) 2nd Reading Senate Amendments",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 63455,
+"propylonUuid": null,
+"result": "BILL_NOT_CONCURRED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-03-28T13:20:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-03-28T13:18:27",
+"id": 2673,
+"motion": "Do Not Concur",
+"orderOfBusinessId": 7,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 1611
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 174",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 130,
+"description": "In Process to Consider Second House Amendments",
+"id": 16,
+"sortOrder": null
+},
+"chamber": "HOUSE",
+"code": "614",
+"id": 393,
+"name": "(H) 3rd Reading Senate Amendments",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 75441,
+"propylonUuid": null,
+"result": "BILL_NOT_CONCURRED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-11T18:10:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-11T17:10:29",
+"id": 4061,
+"motion": "Do Concur",
+"orderOfBusinessId": 9,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 2303
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 163",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 40,
+"description": "In First House--Out of Committee",
+"id": 6,
+"sortOrder": null
+},
+"chamber": "HOUSE",
+"code": "530",
+"id": 313,
+"name": "(H) Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 42906,
+"propylonUuid": null,
+"result": "BILL_NOT_CONCURRED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 7,
+"timeStamp": "2025-02-22T09:25:00",
+"vote": null
+}
+},
+{
+"bill": "SB 2",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 130,
+"description": "In Process to Consider Second House Amendments",
+"id": 16,
+"sortOrder": null
+},
+"chamber": "SENATE",
+"code": "210",
+"id": 159,
+"name": "(S) 2nd Reading House Amendments",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 83601,
+"propylonUuid": null,
+"result": "BILL_NOT_CONCURRED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-17T18:00:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-17T14:24:40",
+"id": 4615,
+"motion": "Do Not Concur",
+"orderOfBusinessId": 25,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 2470
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 76",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "SENATE",
+"code": "116",
+"id": 68,
+"name": "(S) Committee Executive Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": 4989,
+"id": 64093,
+"propylonUuid": null,
+"result": "BILL_NOT_CONCURRED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 19,
+"timeStamp": "2025-03-28T17:13:45",
+"vote": null
+}
+},
+{
+"bill": "HB 136",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 40,
+"description": "In First House--Out of Committee",
+"id": 6,
+"sortOrder": null
+},
+"chamber": "SENATE",
+"code": "130",
+"id": 82,
+"name": "(S) Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 32171,
+"propylonUuid": null,
+"result": "BILL_NOT_CONCURRED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 23,
+"timeStamp": "2025-02-05T13:34:00",
+"vote": null
+}
+},
+{
+"bill": "HB 322",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"chamber": "HOUSE",
+"code": "556",
+"id": 337,
+"name": "(H) 2nd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 42918,
+"propylonUuid": null,
+"result": "BILL_NOT_PASSED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-02-22T09:39:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-02-22T09:39:20",
+"id": 1108,
+"motion": "Do Pass",
+"orderOfBusinessId": 7,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 689
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 639",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 60,
+"description": "First Chamber 3rd Reading Process",
+"id": 8,
+"sortOrder": 4
+},
+"chamber": "HOUSE",
+"code": "596",
+"id": 376,
+"name": "(H) 3rd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 53553,
+"propylonUuid": null,
+"result": "BILL_NOT_PASSED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-03-07T10:02:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-03-07T08:44:44",
+"id": 2119,
+"motion": null,
+"orderOfBusinessId": 9,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 1271
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 76",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "HOUSE",
+"code": "516",
+"id": 299,
+"name": "(H) Committee Executive Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 60628,
+"propylonUuid": null,
+"result": "BILL_NOT_PASSED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 28,
+"timeStamp": "2025-01-10T15:36:42",
+"vote": null
+}
+},
+{
+"bill": "SB 114",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"chamber": "SENATE",
+"code": "156",
+"id": 107,
+"name": "(S) 2nd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 32415,
+"propylonUuid": null,
+"result": "BILL_NOT_PASSED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-02-05T15:55:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-02-05T15:54:12",
+"id": 634,
+"motion": "Do Pass",
+"orderOfBusinessId": 25,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 215
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 158",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 60,
+"description": "First Chamber 3rd Reading Process",
+"id": 8,
+"sortOrder": 4
+},
+"chamber": "SENATE",
+"code": "196",
+"id": 146,
+"name": "(S) 3rd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 31581,
+"propylonUuid": null,
+"result": "BILL_NOT_PASSED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-02-04T13:52:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-02-04T13:47:41",
+"id": 578,
+"motion": "Do Pass",
+"orderOfBusinessId": 27,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 196
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 141",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "SENATE",
+"code": "116",
+"id": 68,
+"name": "(S) Committee Executive Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": 1789,
+"id": 42690,
+"propylonUuid": null,
+"result": "BILL_NOT_PASSED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 20,
+"timeStamp": "2025-02-21T17:38:41",
+"vote": null
+}
+},
+{
+"bill": "HB 27",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"chamber": "HOUSE",
+"code": "556",
+"id": 337,
+"name": "(H) 2nd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 58662,
+"propylonUuid": null,
+"result": "BILL_NOT_PASSED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-03-20T14:39:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-03-20T14:39:26",
+"id": 2366,
+"motion": "Do Pass As Amended",
+"orderOfBusinessId": 7,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 1424
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 152",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "HOUSE",
+"code": "516",
+"id": 299,
+"name": "(H) Committee Executive Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": 966,
+"id": 34220,
+"propylonUuid": null,
+"result": "BILL_NOT_PASSED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 12,
+"timeStamp": "2025-01-17T10:46:00",
+"vote": null
+}
+},
+{
+"bill": "SB 310",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "SENATE",
+"code": "116",
+"id": 68,
+"name": "(S) Committee Executive Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": 2298,
+"id": 46225,
+"propylonUuid": null,
+"result": "BILL_NOT_PASSED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 29,
+"timeStamp": "2025-02-25T15:05:12.284",
+"vote": null
+}
+},
+{
+"bill": "HB 135",
+"status": {
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"chamber": "HOUSE",
+"code": "556",
+"id": 337,
+"name": "(H) 2nd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 26266,
+"propylonUuid": null,
+"result": "BILL_PASSED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-01-24T14:17:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-01-24T14:17:31",
+"id": 284,
+"motion": "Do Pass",
+"orderOfBusinessId": 7,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 202
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 135",
+"status": {
+"billProgressCategory": {
+"code": 60,
+"description": "First Chamber 3rd Reading Process",
+"id": 8,
+"sortOrder": 4
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 60,
+"description": "First Chamber 3rd Reading Process",
+"id": 8,
+"sortOrder": 4
+},
+"chamber": "HOUSE",
+"code": "596",
+"id": 376,
+"name": "(H) 3rd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 27370,
+"propylonUuid": null,
+"result": "BILL_PASSED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-01-27T15:07:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-01-27T14:47:37",
+"id": 337,
+"motion": "Do Pass",
+"orderOfBusinessId": 9,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 252
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 136",
+"status": {
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "HOUSE",
+"code": "516",
+"id": 299,
+"name": "(H) Committee Executive Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": 229,
+"id": 19873,
+"propylonUuid": null,
+"result": "BILL_PASSED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 5,
+"timeStamp": "2025-01-17T12:09:06.411751",
+"vote": null
+}
+},
+{
+"bill": "HB 136",
+"status": {
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 40,
+"description": "In First House--Out of Committee",
+"id": 6,
+"sortOrder": null
+},
+"chamber": "HOUSE",
+"code": "530",
+"id": 313,
+"name": "(H) Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 20429,
+"propylonUuid": null,
+"result": "BILL_PASSED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 5,
+"timeStamp": "2025-01-17T14:03:00",
+"vote": null
+}
+},
+{
+"bill": "SB 224",
+"status": {
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"chamber": "SENATE",
+"code": "156",
+"id": 107,
+"name": "(S) 2nd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 45973,
+"propylonUuid": null,
+"result": "BILL_PASSED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-02-25T14:03:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-02-25T14:02:59",
+"id": 1208,
+"motion": "Do Pass",
+"orderOfBusinessId": 25,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 567
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 224",
+"status": {
+"billProgressCategory": {
+"code": 60,
+"description": "First Chamber 3rd Reading Process",
+"id": 8,
+"sortOrder": 4
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 60,
+"description": "First Chamber 3rd Reading Process",
+"id": 8,
+"sortOrder": 4
+},
+"chamber": "SENATE",
+"code": "196",
+"id": 146,
+"name": "(S) 3rd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 47356,
+"propylonUuid": null,
+"result": "BILL_PASSED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-02-26T15:14:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-02-26T15:13:25",
+"id": 1258,
+"motion": "Do Pass",
+"orderOfBusinessId": 27,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 601
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 163",
+"status": {
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "SENATE",
+"code": "116",
+"id": 68,
+"name": "(S) Committee Executive Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": 883,
+"id": 26479,
+"propylonUuid": null,
+"result": "BILL_PASSED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 25,
+"timeStamp": "2025-01-23T15:00:00",
+"vote": null
+}
+},
+{
+"bill": "SB 163",
+"status": {
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 40,
+"description": "In First House--Out of Committee",
+"id": 6,
+"sortOrder": null
+},
+"chamber": "SENATE",
+"code": "130",
+"id": 82,
+"name": "(S) Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 26202,
+"propylonUuid": null,
+"result": "BILL_PASSED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 25,
+"timeStamp": "2025-01-24T14:02:00",
+"vote": null
+}
+},
+{
+"bill": "HB 823",
+"status": {
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"chamber": "HOUSE",
+"code": "556",
+"id": 337,
+"name": "(H) 2nd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 52106,
+"propylonUuid": null,
+"result": "BILL_PASSED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-03-05T09:50:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-03-05T09:50:04",
+"id": 1640,
+"motion": "Do Pass As Amended",
+"orderOfBusinessId": 7,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 1002
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 135",
+"status": {
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "HOUSE",
+"code": "516",
+"id": 299,
+"name": "(H) Committee Executive Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 60708,
+"propylonUuid": null,
+"result": "BILL_PASSED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 5,
+"timeStamp": "2025-01-21T11:17:14",
+"vote": null
+}
+},
+{
+"bill": "HB 135",
+"status": {
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 40,
+"description": "In First House--Out of Committee",
+"id": 6,
+"sortOrder": null
+},
+"chamber": "HOUSE",
+"code": "530",
+"id": 313,
+"name": "(H) Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 23454,
+"propylonUuid": null,
+"result": "BILL_PASSED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 5,
+"timeStamp": "2025-01-21T13:43:15.049164",
+"vote": null
+}
+},
+{
+"bill": "SB 546",
+"status": {
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"chamber": "SENATE",
+"code": "156",
+"id": 107,
+"name": "(S) 2nd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 68341,
+"propylonUuid": null,
+"result": "BILL_PASSED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-03T15:59:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-03T15:44:36",
+"id": 3039,
+"motion": "Do Pass As Amended",
+"orderOfBusinessId": 25,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 1490
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 224",
+"status": {
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "SENATE",
+"code": "116",
+"id": 68,
+"name": "(S) Committee Executive Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": 1788,
+"id": 42685,
+"propylonUuid": null,
+"result": "BILL_PASSED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 20,
+"timeStamp": "2025-02-21T17:32:49",
+"vote": null
+}
+},
+{
+"bill": "SB 224",
+"status": {
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 40,
+"description": "In First House--Out of Committee",
+"id": 6,
+"sortOrder": null
+},
+"chamber": "SENATE",
+"code": "130",
+"id": 82,
+"name": "(S) Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 44482,
+"propylonUuid": null,
+"result": "BILL_PASSED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 20,
+"timeStamp": "2025-02-24T13:32:00",
+"vote": null
+}
+},
+{
+"bill": "SJ 5",
+"status": {
+"billProgressCategory": {
+"code": 80,
+"description": "Second Chamber Committee Process",
+"id": 11,
+"sortOrder": 5
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "HOUSE",
+"code": "526",
+"id": 309,
+"name": "(H) Taken from Table in Committee",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": 3689,
+"id": 94455,
+"propylonUuid": null,
+"result": "BILL_REMOVED_FROM_TABLE",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 5,
+"timeStamp": "2025-02-19T11:54:02",
+"vote": null
+}
+},
+{
+"bill": "HB 231",
+"status": {
+"billProgressCategory": {
+"code": 80,
+"description": "Second Chamber Committee Process",
+"id": 11,
+"sortOrder": 5
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "SENATE",
+"code": "126",
+"id": 78,
+"name": "(S) Taken from Table in Committee",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": 6118,
+"id": 79994,
+"propylonUuid": null,
+"result": "BILL_REMOVED_FROM_TABLE",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 21,
+"timeStamp": "2025-04-09T10:01:30",
+"vote": null
+}
+},
+{
+"bill": "SB 546",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 25,
+"description": "In First House Committee--Tabled",
+"id": 4,
+"sortOrder": null
+},
+"chamber": "HOUSE",
+"code": "524",
+"id": 307,
+"name": "(H) Tabled in Committee",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": 6605,
+"id": 78671,
+"propylonUuid": null,
+"result": "BILL_TABLED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 13,
+"timeStamp": "2025-04-16T11:34:30",
+"vote": null
+}
+},
+{
+"bill": "SB 123",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 25,
+"description": "In First House Committee--Tabled",
+"id": 4,
+"sortOrder": null
+},
+"chamber": "SENATE",
+"code": "124",
+"id": 76,
+"name": "(S) Tabled in Committee",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": 1010,
+"id": 34396,
+"propylonUuid": null,
+"result": "BILL_TABLED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 17,
+"timeStamp": "2025-02-10T15:55:15.686032",
+"vote": null
+}
+},
+{
+"bill": "SB 154",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "SOFT",
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"chamber": "HOUSE",
+"code": "714",
+"id": 485,
+"name": "(H) 2nd Reading Motion to Amend",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 71425,
+"propylonUuid": null,
+"result": "MOTION_CARRIED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-08T13:47:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-08T13:46:32",
+"id": 3440,
+"motion": "AMD-SB0154.002.001 Buttrey DO PASS",
+"orderOfBusinessId": 7,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 2006
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 886",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "SOFT",
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"chamber": "HOUSE",
+"code": "663",
+"id": 442,
+"name": "(H) Motion",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 64275,
+"propylonUuid": null,
+"result": "MOTION_CARRIED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-03-28T15:12:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-03-28T15:05:07",
+"id": 2704,
+"motion": "Take HB 886 from JUH to NAH",
+"orderOfBusinessId": 15,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 1628
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 312",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 40,
+"description": "In First House--Out of Committee",
+"id": 6,
+"sortOrder": null
+},
+"chamber": "HOUSE",
+"code": "549",
+"id": 331,
+"name": "(H) Take from Committee; Place on 2nd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 74750,
+"propylonUuid": null,
+"result": "MOTION_CARRIED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 11,
+"timeStamp": "2025-04-11T11:34:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-11T11:33:59",
+"id": 3848,
+"motion": "Take from table in JUH to second reading - Sullivan ",
+"orderOfBusinessId": 15,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 2166
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 114",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"chamber": "SENATE",
+"code": "174",
+"id": 125,
+"name": "(S) 2nd Reading Indefinitely Postponed",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 38215,
+"propylonUuid": null,
+"result": "MOTION_CARRIED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-02-05T16:00:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-02-05T15:57:04",
+"id": 635,
+"motion": "Indefinitely Postpone -SB 114McGillvray",
+"orderOfBusinessId": 25,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 216
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 546",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "SOFT",
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"chamber": "SENATE",
+"code": "314",
+"id": 263,
+"name": "(S) 2nd Reading Motion to Amend",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 68288,
+"propylonUuid": null,
+"result": "MOTION_CARRIED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-03T15:19:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-03T15:16:56",
+"id": 3036,
+"motion": "AMD-SB0546.001.002 Fern D/PASS",
+"orderOfBusinessId": 25,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 1489
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 45",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "SOFT",
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"chamber": "SENATE",
+"code": "263",
+"id": 212,
+"name": "(S) Motion",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 47490,
+"propylonUuid": null,
+"result": "MOTION_CARRIED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-02-26T16:12:00",
+"vote": null
+}
+},
+{
+"bill": "SB 224",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "SOFT",
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"chamber": "HOUSE",
+"code": "714",
+"id": 485,
+"name": "(H) 2nd Reading Motion to Amend",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 72726,
+"propylonUuid": null,
+"result": "MOTION_FAILED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-09T15:20:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-09T15:19:49",
+"id": 3559,
+"motion": "AMD-SB0224.002.001 Byrne DO PASS",
+"orderOfBusinessId": 7,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 2044
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 118",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "SOFT",
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"chamber": "HOUSE",
+"code": "663",
+"id": 442,
+"name": "(H) Motion",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 85008,
+"propylonUuid": null,
+"result": "MOTION_FAILED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-28T15:02:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-28T15:01:50",
+"id": 5450,
+"motion": "Take from APH to Third Reading Tuesday 29th - Gillette",
+"orderOfBusinessId": 15,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 2852
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 101",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 40,
+"description": "In First House--Out of Committee",
+"id": 6,
+"sortOrder": null
+},
+"chamber": "HOUSE",
+"code": "549",
+"id": 331,
+"name": "(H) Take from Committee; Place on 2nd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 72185,
+"propylonUuid": null,
+"result": "MOTION_FAILED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 9,
+"timeStamp": "2025-03-01T09:43:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-03-01T15:06:41",
+"id": 1424,
+"motion": "Take from table in FWP and put on second reading ",
+"orderOfBusinessId": 15,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 869
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 155",
+"status": {
+"billProgressCategory": {
+"code": 100,
+"description": "Second Chamber 2nd Reading Process",
+"id": 13,
+"sortOrder": 6
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"chamber": "SENATE",
+"code": "174",
+"id": 125,
+"name": "(S) 2nd Reading Indefinitely Postponed",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 79508,
+"propylonUuid": null,
+"result": "MOTION_FAILED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-17T15:00:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-17T14:56:06",
+"id": 4647,
+"motion": "Indefinitely Postpone -McGillvray",
+"orderOfBusinessId": 25,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 2483
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 114",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "SOFT",
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"chamber": "SENATE",
+"code": "314",
+"id": 263,
+"name": "(S) 2nd Reading Motion to Amend",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 32363,
+"propylonUuid": null,
+"result": "MOTION_FAILED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-02-05T14:55:00",
+"vote": {
+"amendmentNumber": "SB0114.001.001",
+"dateTime": "2025-02-05T14:53:59",
+"id": 632,
+"motion": "SB0114.001.001",
+"orderOfBusinessId": 25,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 213
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 155",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "SOFT",
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"chamber": "SENATE",
+"code": "263",
+"id": 212,
+"name": "(S) Motion",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 84047,
+"propylonUuid": null,
+"result": "MOTION_FAILED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-25T11:51:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-25T11:27:32",
+"id": 5382,
+"motion": "ReconsAction -Dunwell",
+"orderOfBusinessId": 30,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 2939
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 536",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "HOUSE",
+"code": "551",
+"id": 333,
+"name": "(H) Reconsidered Previous Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 60953,
+"propylonUuid": null,
+"result": "NO_REVOTE_ON_PREVIOUS_ACTION",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-03-25T15:13:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-03-25T15:10:04",
+"id": 2540,
+"motion": "ReconsAction - Schubert",
+"orderOfBusinessId": 15,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 1524
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 324",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "SENATE",
+"code": "151",
+"id": 102,
+"name": "(S) Reconsidered Previous Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 85970,
+"propylonUuid": null,
+"result": "NO_REVOTE_ON_PREVIOUS_ACTION",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-30T14:02:18",
+"vote": null
+}
+},
+{
+"bill": "HB 151",
+"status": {
+"billProgressCategory": {
+"code": 140,
+"description": "Conference or Free Conference Committee Process",
+"id": 17,
+"sortOrder": 8
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 140,
+"description": "Conference or Free Conference Committee Process",
+"id": 17,
+"sortOrder": 8
+},
+"chamber": "HOUSE",
+"code": "619",
+"id": 398,
+"name": "(H) 2nd Reading Conference Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 74928,
+"propylonUuid": null,
+"result": "REPORT_ADOPTED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-11T15:29:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-11T15:29:05",
+"id": 3913,
+"motion": "Do Adopt",
+"orderOfBusinessId": 7,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 2193
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 117",
+"status": {
+"billProgressCategory": {
+"code": 140,
+"description": "Conference or Free Conference Committee Process",
+"id": 17,
+"sortOrder": 8
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 140,
+"description": "Conference or Free Conference Committee Process",
+"id": 17,
+"sortOrder": 8
+},
+"chamber": "HOUSE",
+"code": "629",
+"id": 408,
+"name": "(H) 2nd Reading Free Conference Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 85612,
+"propylonUuid": null,
+"result": "REPORT_ADOPTED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-29T14:20:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-29T14:19:26",
+"id": 5542,
+"motion": "Do Adopt",
+"orderOfBusinessId": 7,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 2883
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 151",
+"status": {
+"billProgressCategory": {
+"code": 140,
+"description": "Conference or Free Conference Committee Process",
+"id": 17,
+"sortOrder": 8
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 140,
+"description": "Conference or Free Conference Committee Process",
+"id": 17,
+"sortOrder": 8
+},
+"chamber": "HOUSE",
+"code": "623",
+"id": 402,
+"name": "(H) 3rd Reading Conference Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 75449,
+"propylonUuid": null,
+"result": "REPORT_ADOPTED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-11T18:15:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-11T17:13:27",
+"id": 4068,
+"motion": "Do Adopt",
+"orderOfBusinessId": 9,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 2310
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 117",
+"status": {
+"billProgressCategory": {
+"code": 140,
+"description": "Conference or Free Conference Committee Process",
+"id": 17,
+"sortOrder": 8
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 140,
+"description": "Conference or Free Conference Committee Process",
+"id": 17,
+"sortOrder": 8
+},
+"chamber": "HOUSE",
+"code": "633",
+"id": 412,
+"name": "(H) 3rd Reading Free Conference Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 85879,
+"propylonUuid": null,
+"result": "REPORT_ADOPTED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-30T11:06:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-30T10:54:33",
+"id": 5597,
+"motion": "Do Adopt",
+"orderOfBusinessId": 9,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 2918
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 151",
+"status": {
+"billProgressCategory": {
+"code": 140,
+"description": "Conference or Free Conference Committee Process",
+"id": 17,
+"sortOrder": 8
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 140,
+"description": "Conference or Free Conference Committee Process",
+"id": 17,
+"sortOrder": 8
+},
+"chamber": "SENATE",
+"code": "219",
+"id": 168,
+"name": "(S) 2nd Reading Conference Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 72436,
+"propylonUuid": null,
+"result": "REPORT_ADOPTED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-09T13:50:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-09T13:35:30",
+"id": 3518,
+"motion": "Do Adopt",
+"orderOfBusinessId": 25,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 1780
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 117",
+"status": {
+"billProgressCategory": {
+"code": 140,
+"description": "Conference or Free Conference Committee Process",
+"id": 17,
+"sortOrder": 8
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 140,
+"description": "Conference or Free Conference Committee Process",
+"id": 17,
+"sortOrder": 8
+},
+"chamber": "SENATE",
+"code": "229",
+"id": 178,
+"name": "(S) 2nd Reading Free Conference Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 85427,
+"propylonUuid": null,
+"result": "REPORT_ADOPTED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-29T11:39:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-29T11:39:47",
+"id": 5493,
+"motion": "Do Adopt",
+"orderOfBusinessId": 25,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 3003
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 151",
+"status": {
+"billProgressCategory": {
+"code": 140,
+"description": "Conference or Free Conference Committee Process",
+"id": 17,
+"sortOrder": 8
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 140,
+"description": "Conference or Free Conference Committee Process",
+"id": 17,
+"sortOrder": 8
+},
+"chamber": "SENATE",
+"code": "223",
+"id": 172,
+"name": "(S) 3rd Reading Conference Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 73787,
+"propylonUuid": null,
+"result": "REPORT_ADOPTED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-10T12:00:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-10T11:42:33",
+"id": 3665,
+"motion": "Do Adopt",
+"orderOfBusinessId": 27,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 1854
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 117",
+"status": {
+"billProgressCategory": {
+"code": 140,
+"description": "Conference or Free Conference Committee Process",
+"id": 17,
+"sortOrder": 8
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 140,
+"description": "Conference or Free Conference Committee Process",
+"id": 17,
+"sortOrder": 8
+},
+"chamber": "SENATE",
+"code": "233",
+"id": 182,
+"name": "(S) 3rd Reading Free Conference Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 85947,
+"propylonUuid": null,
+"result": "REPORT_ADOPTED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-30T13:47:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-30T13:44:19",
+"id": 5626,
+"motion": "Do Adopt",
+"orderOfBusinessId": 27,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 3084
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 324",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 140,
+"description": "Conference or Free Conference Committee Process",
+"id": 17,
+"sortOrder": 8
+},
+"chamber": "SENATE",
+"code": "223",
+"id": 172,
+"name": "(S) 3rd Reading Conference Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 85962,
+"propylonUuid": null,
+"result": "REPORT_REJECTED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-30T13:56:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-30T13:48:51",
+"id": 5637,
+"motion": "Do Adopt",
+"orderOfBusinessId": 27,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 3095
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HR 6",
+"status": {
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"chamber": "HOUSE",
+"code": "556",
+"id": 337,
+"name": "(H) 2nd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 82878,
+"propylonUuid": null,
+"result": "RESOLUTION_ADOPTED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-24T13:45:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-24T13:44:59",
+"id": 5211,
+"motion": "Do Adopt",
+"orderOfBusinessId": 7,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 2735
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HJ 1",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "HOUSE",
+"code": "516",
+"id": 299,
+"name": "(H) Committee Executive Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 27030,
+"propylonUuid": null,
+"result": "RESOLUTION_ADOPTED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 7,
+"timeStamp": "2025-01-16T13:10:00",
+"vote": null
+}
+},
+{
+"bill": "HJ 1",
+"status": {
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 40,
+"description": "In First House--Out of Committee",
+"id": 6,
+"sortOrder": null
+},
+"chamber": "HOUSE",
+"code": "530",
+"id": 313,
+"name": "(H) Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 18540,
+"propylonUuid": null,
+"result": "RESOLUTION_ADOPTED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 7,
+"timeStamp": "2025-01-16T13:19:00",
+"vote": null
+}
+},
+{
+"bill": "SR 108",
+"status": {
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"chamber": "SENATE",
+"code": "156",
+"id": 107,
+"name": "(S) 2nd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 79457,
+"propylonUuid": null,
+"result": "RESOLUTION_ADOPTED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-17T14:23:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-17T14:23:29",
+"id": 4613,
+"motion": "Do Adopt",
+"orderOfBusinessId": 25,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 2469
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HJ 1",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "SENATE",
+"code": "116",
+"id": 68,
+"name": "(S) Committee Executive Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": 4784,
+"id": 62883,
+"propylonUuid": null,
+"result": "RESOLUTION_ADOPTED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 25,
+"timeStamp": "2025-03-27T17:52:44",
+"vote": null
+}
+},
+{
+"bill": "SR 108",
+"status": {
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 40,
+"description": "In First House--Out of Committee",
+"id": 6,
+"sortOrder": null
+},
+"chamber": "SENATE",
+"code": "130",
+"id": 82,
+"name": "(S) Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 78186,
+"propylonUuid": null,
+"result": "RESOLUTION_ADOPTED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 32,
+"timeStamp": "2025-04-16T13:08:00",
+"vote": null
+}
+},
+{
+"bill": "HR 6",
+"status": {
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "HOUSE",
+"code": "516",
+"id": 299,
+"name": "(H) Committee Executive Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": 6754,
+"id": 79749,
+"propylonUuid": null,
+"result": "RESOLUTION_ADOPTED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 9,
+"timeStamp": "2025-04-17T17:15:36",
+"vote": null
+}
+},
+{
+"bill": "HR 6",
+"status": {
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 40,
+"description": "In First House--Out of Committee",
+"id": 6,
+"sortOrder": null
+},
+"chamber": "HOUSE",
+"code": "530",
+"id": 313,
+"name": "(H) Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 80190,
+"propylonUuid": null,
+"result": "RESOLUTION_ADOPTED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 9,
+"timeStamp": "2025-04-18T10:42:00",
+"vote": null
+}
+},
+{
+"bill": "SJ 3",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "SENATE",
+"code": "116",
+"id": 68,
+"name": "(S) Committee Executive Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": 409,
+"id": 26320,
+"propylonUuid": null,
+"result": "RESOLUTION_ADOPTED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 30,
+"timeStamp": "2025-01-24T14:42:21.059124",
+"vote": null
+}
+},
+{
+"bill": "SR 1",
+"status": {
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 40,
+"description": "In First House--Out of Committee",
+"id": 6,
+"sortOrder": null
+},
+"chamber": "SENATE",
+"code": "130",
+"id": 82,
+"name": "(S) Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 15466,
+"propylonUuid": null,
+"result": "RESOLUTION_ADOPTED_AS_AMENDED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 2,
+"timeStamp": "2025-01-08T13:21:00",
+"vote": null
+}
+},
+{
+"bill": "HR 7",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"chamber": "HOUSE",
+"code": "556",
+"id": 337,
+"name": "(H) 2nd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 82891,
+"propylonUuid": null,
+"result": "RESOLUTION_FAILED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-24T13:53:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-24T13:52:33",
+"id": 5215,
+"motion": "Do Adopt",
+"orderOfBusinessId": 7,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 2737
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SR 4",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 50,
+"description": "First Chamber 2nd Reading Process",
+"id": 7,
+"sortOrder": 3
+},
+"chamber": "SENATE",
+"code": "156",
+"id": 107,
+"name": "(S) 2nd Reading",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 70707,
+"propylonUuid": null,
+"result": "RESOLUTION_FAILED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-07T13:33:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-07T13:31:35",
+"id": 3324,
+"motion": "Do Adopt",
+"orderOfBusinessId": 25,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 1653
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SJ 15",
+"status": {
+"billProgressCategory": {
+"code": 5,
+"description": "Progress Stopped",
+"id": 1,
+"sortOrder": 13
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 40,
+"description": "In First House--Out of Committee",
+"id": 6,
+"sortOrder": null
+},
+"chamber": "SENATE",
+"code": "130",
+"id": 82,
+"name": "(S) Committee Report",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 50191,
+"propylonUuid": null,
+"result": "RESOLUTION_FAILED",
+"scheduledBillHearingId": null,
+"standingCommitteeId": 31,
+"timeStamp": "2025-03-03T12:10:36.317",
+"vote": null
+}
+},
+{
+"bill": "SB 312",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "HOUSE",
+"code": "551",
+"id": 333,
+"name": "(H) Reconsidered Previous Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 77447,
+"propylonUuid": null,
+"result": "REVOTE_ON_PREVIOUS_ACTION",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-04-15T14:28:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-04-15T14:26:01",
+"id": 4361,
+"motion": "ReconsAction - Elverum ",
+"orderOfBusinessId": 15,
+"sessionId": 2,
+"systemId": {
+"chamber": "HOUSE",
+"sequence": 2385
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "SB 159",
+"status": {
+"billProgressCategory": null,
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 30,
+"description": "First Chamber Committee Process",
+"id": 5,
+"sortOrder": 2
+},
+"chamber": "SENATE",
+"code": "151",
+"id": 102,
+"name": "(S) Reconsidered Previous Action",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 32428,
+"propylonUuid": null,
+"result": "REVOTE_ON_PREVIOUS_ACTION",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-02-05T16:10:00",
+"vote": {
+"amendmentNumber": null,
+"dateTime": "2025-02-05T16:07:35",
+"id": 641,
+"motion": "ReconsAction -Emrich",
+"orderOfBusinessId": 30,
+"sessionId": 2,
+"systemId": {
+"chamber": "SENATE",
+"sequence": 223
+},
+"voteMotion": null
+}
+}
+},
+{
+"bill": "HB 850",
+"status": {
+"billProgressCategory": {
+"code": 160,
+"description": "Governor's Veto Process",
+"id": 20,
+"sortOrder": 10
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 170,
+"description": "Law Finalization Process",
+"id": 21,
+"sortOrder": 11
+},
+"chamber": "HOUSE",
+"code": "649",
+"id": 428,
+"name": "(H) Veto Override",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 94731,
+"propylonUuid": null,
+"result": "VETO_NOT_OVERRIDDEN",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-06-27T17:00:00",
+"vote": null
+}
+},
+{
+"bill": "SB 537",
+"status": {
+"billProgressCategory": {
+"code": 160,
+"description": "Governor's Veto Process",
+"id": 20,
+"sortOrder": 10
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 170,
+"description": "Law Finalization Process",
+"id": 21,
+"sortOrder": 11
+},
+"chamber": "SENATE",
+"code": "249",
+"id": 198,
+"name": "(S) Veto Override",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 94755,
+"propylonUuid": null,
+"result": "VETO_NOT_OVERRIDDEN",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-07-11T12:18:00",
+"vote": null
+}
+},
+{
+"bill": "HB 643",
+"status": {
+"billProgressCategory": {
+"code": 160,
+"description": "Governor's Veto Process",
+"id": 20,
+"sortOrder": 10
+},
+"billStatusCode": {
+"actionWeight": "HARD",
+"billProgressCategory": {
+"code": 170,
+"description": "Law Finalization Process",
+"id": 21,
+"sortOrder": 11
+},
+"chamber": "HOUSE",
+"code": "649",
+"id": 428,
+"name": "(H) Veto Override",
+"standingCommitteeStatusGrouping": {
+"id": 1,
+"name": "test_name"
+}
+},
+"executiveActionId": null,
+"id": 94749,
+"propylonUuid": null,
+"result": "VETO_OVERRIDDEN",
+"scheduledBillHearingId": null,
+"standingCommitteeId": null,
+"timeStamp": "2025-07-15T17:00:00",
+"vote": null
+}
+}
+]

@@ -171,10 +171,10 @@ def test_senate_resolution_adoption(members):
 
 def test_kept_roll_calls_are_unchanged_by_the_new_ones(members):
     # without people data the scraper yields exactly what it kept before (main); with it, those
-    # same roll calls are unchanged, including a "Reconsider: " prefix a House floor tally
-    # might otherwise have taken (HB 1705's reconsideration of 04-16-26). OPEN-825: a Senate
-    # floor tally with an aye count gains its plain ayes' names, and nothing else changes: every
-    # printed name stays, and its no and excused lists are the same
+    # same roll calls are unchanged; the House floor tally it adds after HB 1705's reconsideration
+    # (04-22-26) carries the "Reconsider: " prefix (OPEN-856, test_hi_reconsider_prefix).
+    # OPEN-825: a Senate floor tally with an aye count gains its plain ayes' names, and nothing
+    # else changes: every printed name stays, and its no and excused lists are the same
     def unnamed(v):
         return {k: x for k, x in v.items() if k != "named" or v["chamber"] == "lower"}
 
@@ -196,10 +196,11 @@ def test_kept_roll_calls_are_unchanged_by_the_new_ones(members):
                 assert {o: n for o, n in a["named"].items() if o != "yes"} == {
                     o: n for o, n in b["named"].items() if o != "yes"
                 }
-    assert any(
-        v["motion"].startswith("Reconsider: The committee on JHA")
+    assert [
+        v["date"]
         for v in _votes("HB1705.html", members)
-    )
+        if v["motion"].startswith("Reconsider: ")
+    ] == ["2026-04-23"]
 
 
 def test_no_people_data_keeps_no_derived_roll_call():
