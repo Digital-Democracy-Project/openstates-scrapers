@@ -393,10 +393,11 @@ class MEBillScraper(Scraper):
                     vdoc.make_links_absolute(ver_url)
                     add_bill_texts(bill, vdoc)
                     # committee actions are also on this page
+                    floor_actions = len(bill.actions)
                     for row in vdoc.xpath('//table[@name="CDtab"]/tr')[2:]:
                         action_date = row.xpath("td[1]/text()")[0].strip()
-                        action_date = dateutil.parser.parse(action_date)
-                        action_date = self._tz.localize(action_date)
+                        # a plain date, as the floor history has (OPEN-839)
+                        action_date = dateutil.parser.parse(action_date).date()
 
                         action = row.xpath("td[2]/text()")[0].strip()
 
@@ -411,6 +412,16 @@ class MEBillScraper(Scraper):
                             chamber="legislature",  # Maine committees are joint
                             classification=attrs["classification"],
                         )
+                    # a committee reports a bill before the floor reads the report, so a day's
+                    # committee actions go before that day's floor actions (OPEN-839)
+                    bill.actions[:] = (
+                        bill.actions[floor_actions:] + bill.actions[:floor_actions]
+                    )
+
+        # OPEN-839: the floor history, the governor's action and the committee docket come from
+        # three pages; the bill's actions are stored oldest first, and the sort is stable, so
+        # each page keeps its own order within a day (Alabama OPEN-528, Wyoming OPEN-780)
+        bill.actions.sort(key=lambda a: str(a["date"]))
 
     def scrape_votes(self, bill, url):
         page = self.get(url, retry_on_404=True).text
