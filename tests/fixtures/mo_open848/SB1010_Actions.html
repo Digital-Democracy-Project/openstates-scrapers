@@ -1,0 +1,111 @@
+
+
+<div class="actions-container" data-bill-identifier="Bill">
+    <div class="section-header">
+        <div class="section-header__title">
+            <p tabindex="0" aria-live="polite">Complete legislative action history for this bill:</p>
+        </div>
+        <div class="section-header__actions">
+            <button type="button" onclick="printActions()" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-printer"></i> Print Actions
+            </button>
+        </div>
+    </div>
+
+        <div class="table-responsive" id="actionsTable">
+            <table class="table table--hover">
+                <thead>
+                    <tr>
+                        <th class="col--date" tabindex="0" aria-live="polite">Date</th>
+                        <th tabindex="0" aria-live="polite">Action</th>
+                        <th class="col--journal" tabindex="0" aria-live="polite">Journal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">01/08/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Second Read and Referred S Families, Seniors and Health Committee</td>
+                            <td>
+                                        <a href="https://www.senate.mo.gov/26info/pdf-jrnl/DAY02.pdf#page=14" target="_blank" title="View Journal" tabindex="0" aria-live="polite">S130</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">01/07/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">S First Read</td>
+                            <td>
+                                        <a href="https://www.senate.mo.gov/26info/pdf-jrnl/DAY01.pdf#page=52" target="_blank" title="View Journal" tabindex="0" aria-live="polite">S52</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">12/01/2025</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Prefiled</td>
+                            <td>
+                            </td>
+                        </tr>
+                </tbody>
+            </table>
+        </div>
+</div>
+
+<style>
+    .link-card-item:hover {
+        color: white !important;
+    }
+
+    /* Print styles */
+    @media print {
+        .section-header {
+            display: none !important;
+        }
+
+        .actions-container .table {
+            border: 1px solid #000;
+        }
+
+        .actions-container .table th {
+            background: none !important;
+            color: #000 !important;
+            border-bottom: 2px solid #000 !important;
+        }
+
+        .actions-container .table td {
+            border-bottom: 1px solid #000 !important;
+        }
+
+        .actions-container .table--hover tbody tr:hover {
+            background-color: transparent !important;
+        }
+    }
+</style>
+
+<script>
+    function printActions() {
+        var actionsContainer = document.querySelector('.actions-container');
+        var billTitle = actionsContainer?.getAttribute('data-bill-identifier') || 'Bill Actions';
+        var actionsTable = document.getElementById('actionsTable');
+        if (!actionsTable) return;
+
+        var cols = 3;
+        var rows = [];
+
+        var trs = actionsTable.querySelectorAll('tbody tr');
+        trs.forEach(function (tr) {
+            var cells = tr.querySelectorAll('td');
+            if (cells.length >= 2) {
+                rows.push('<tr><td>' + PrintUtil.esc(cells[0].textContent.trim())
+                        + '</td><td>' + PrintUtil.esc(cells[1].textContent.trim())
+                        + '</td><td>' + PrintUtil.esc((cells[2]?.textContent || '').trim())
+                        + '</td></tr>');
+            }
+        });
+
+        if (!rows.length) return;
+
+        PrintUtil.printTable({
+            title:     billTitle,
+            subtitles: ['Legislative Actions'],
+            columns:   ['Date', 'Action', 'Journal'],
+            rows:      rows
+        });
+    }
+</script>
