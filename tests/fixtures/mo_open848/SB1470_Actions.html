@@ -1,0 +1,333 @@
+
+
+<div class="actions-container" data-bill-identifier="Bill">
+    <div class="section-header">
+        <div class="section-header__title">
+            <p tabindex="0" aria-live="polite">Complete legislative action history for this bill:</p>
+        </div>
+        <div class="section-header__actions">
+            <button type="button" onclick="printActions()" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-printer"></i> Print Actions
+            </button>
+        </div>
+    </div>
+
+        <div class="table-responsive" id="actionsTable">
+            <table class="table table--hover">
+                <thead>
+                    <tr>
+                        <th class="col--date" tabindex="0" aria-live="polite">Date</th>
+                        <th tabindex="0" aria-live="polite">Action</th>
+                        <th class="col--journal" tabindex="0" aria-live="polite">Journal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">07/13/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Signed by Governor</td>
+                            <td>
+                                        <span tabindex="0" aria-live="polite">S1922</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">05/28/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Delivered to Governor</td>
+                            <td>
+                                        <a href="https://www.senate.mo.gov/26info/pdf-jrnl/DAY70.pdf#page=16" target="_blank" title="View Journal" tabindex="0" aria-live="polite">S1907</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">05/28/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Signed by House Speaker</td>
+                            <td>
+                                        <a href="https://house.mo.gov/billtracking/bills261/jrnpdf/jrn072.pdf#page=4" target="_blank" title="View Journal" tabindex="0" aria-live="polite">H2712</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">05/28/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Signed by Senate President Pro Tem</td>
+                            <td>
+                                        <a href="https://www.senate.mo.gov/26info/pdf-jrnl/DAY70.pdf#page=1" target="_blank" title="View Journal" tabindex="0" aria-live="polite">S1892</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">05/28/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Reported Duly Enrolled Rules, Joint Rules, Resolutions &amp; Ethics Committee</td>
+                            <td>
+                                        <a href="https://www.senate.mo.gov/26info/pdf-jrnl/DAY70.pdf#page=1" target="_blank" title="View Journal" tabindex="0" aria-live="polite">S1892</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">05/13/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Truly Agreed To and Finally Passed</td>
+                            <td>
+                                        <a href="https://www.senate.mo.gov/26info/pdf-jrnl/DAY66.pdf#page=6" target="_blank" title="View Journal" tabindex="0" aria-live="polite">S1673</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">05/13/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">S Third Read and Passed</td>
+                            <td>
+                                        <a href="https://www.senate.mo.gov/26info/pdf-jrnl/DAY66.pdf#page=6" target="_blank" title="View Journal" tabindex="0" aria-live="polite">S1673</a>
+                                    <span> / </span>
+                                        <a href="https://house.mo.gov/billtracking/bills261/jrnpdf/jrn069.pdf#page=90" target="_blank" title="View Journal" tabindex="0" aria-live="polite">H2518</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">05/13/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">S concurs in HCS, as amended</td>
+                            <td>
+                                        <a href="https://www.senate.mo.gov/26info/pdf-jrnl/DAY66.pdf#page=5" target="_blank" title="View Journal" tabindex="0" aria-live="polite">S1672-1673</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">05/12/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">H Third Read and Passed</td>
+                            <td>
+                                        <a href="https://house.mo.gov/billtracking/bills261/jrnpdf/jrn068.pdf#page=14" target="_blank" title="View Journal" tabindex="0" aria-live="polite">H2408-2409</a>
+                                    <span> / </span>
+                                        <a href="https://www.senate.mo.gov/26info/pdf-jrnl/DAY65.pdf#page=24" target="_blank" title="View Journal" tabindex="0" aria-live="polite">S1661-1662</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">05/12/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">HCS, as amended, H adopted --(6122H.02C)</td>
+                            <td>
+                                        <a href="https://house.mo.gov/billtracking/bills261/jrnpdf/jrn068.pdf#page=14" target="_blank" title="View Journal" tabindex="0" aria-live="polite">H2408</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">05/12/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">HA 3 to HCS H offered &amp; adopted (Steinhoff)--(6122H02.08H)</td>
+                            <td>
+                                        <a href="https://house.mo.gov/billtracking/bills261/jrnpdf/jrn068.pdf#page=14" target="_blank" title="View Journal" tabindex="0" aria-live="polite">H2408</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">05/12/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">HA 2 to HCS H offered &amp; defeated (Boyko)--(6122H02.07H)</td>
+                            <td>
+                                        <a href="https://house.mo.gov/billtracking/bills261/jrnpdf/jrn068.pdf#page=13" target="_blank" title="View Journal" tabindex="0" aria-live="polite">H2407</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">05/12/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">HA 1 to HCS H offered &amp; adopted (Cupps)--(6122H02.06H)</td>
+                            <td>
+                                        <a href="https://house.mo.gov/billtracking/bills261/jrnpdf/jrn068.pdf#page=12" target="_blank" title="View Journal" tabindex="0" aria-live="polite">H2406</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">05/12/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Reported Do Pass H Fiscal Review</td>
+                            <td>
+                                        <a href="https://house.mo.gov/billtracking/bills261/jrnpdf/jrn068.pdf#page=10" target="_blank" title="View Journal" tabindex="0" aria-live="polite">H2404</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">05/11/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Bill Placed on H Informal Calendar</td>
+                            <td>
+                                        <span tabindex="0" aria-live="polite">H2381</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">05/11/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Voted Do Pass H Fiscal Review</td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">05/05/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Referred H Fiscal Review Committee</td>
+                            <td>
+                                        <a href="https://house.mo.gov/billtracking/bills261/jrnpdf/jrn063.pdf#page=162" target="_blank" title="View Journal" tabindex="0" aria-live="polite">H2254</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">04/29/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">HCS Reported Do Pass H Rules - Legislative</td>
+                            <td>
+                                        <a href="https://house.mo.gov/billtracking/bills261/jrnpdf/jrn060.pdf#page=35" target="_blank" title="View Journal" tabindex="0" aria-live="polite">H2029</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">04/29/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">HCS Voted Do Pass H Rules - Legislative</td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">04/27/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">HCS Referred H Rules - Legislative</td>
+                            <td>
+                                        <a href="https://house.mo.gov/billtracking/bills261/jrnpdf/jrn058.pdf#page=11" target="_blank" title="View Journal" tabindex="0" aria-live="polite">H1967</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">04/23/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">HCS Reported Do Pass H Budget</td>
+                            <td>
+                                        <a href="https://house.mo.gov/billtracking/bills261/jrnpdf/jrn057.pdf#page=39" target="_blank" title="View Journal" tabindex="0" aria-live="polite">H1939</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">04/23/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">HCS Voted Do Pass H Budget</td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">04/15/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Hearing Conducted H Budget</td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">04/08/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Referred H Budget</td>
+                            <td>
+                                        <a href="https://house.mo.gov/billtracking/bills261/jrnpdf/jrn048.pdf#page=97" target="_blank" title="View Journal" tabindex="0" aria-live="polite">H1709</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">04/07/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">H Second Read</td>
+                            <td>
+                                        <a href="https://house.mo.gov/billtracking/bills261/jrnpdf/jrn047.pdf#page=3" target="_blank" title="View Journal" tabindex="0" aria-live="polite">H1589</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">04/02/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">H First Read</td>
+                            <td>
+                                        <a href="https://house.mo.gov/billtracking/bills261/jrnpdf/jrn046.pdf#page=40" target="_blank" title="View Journal" tabindex="0" aria-live="polite">H1580</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">04/02/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">S Third Read and Passed</td>
+                            <td>
+                                        <a href="https://www.senate.mo.gov/26info/pdf-jrnl/DAY44.pdf#page=9" target="_blank" title="View Journal" tabindex="0" aria-live="polite">S863</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">03/31/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Reported Truly Perfected S Rules, Joint Rules, Resolutions and Ethics Committee</td>
+                            <td>
+                                        <a href="https://www.senate.mo.gov/26info/pdf-jrnl/DAY42.pdf#page=5" target="_blank" title="View Journal" tabindex="0" aria-live="polite">S827</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">03/31/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Perfected</td>
+                            <td>
+                                        <a href="https://www.senate.mo.gov/26info/pdf-jrnl/DAY42.pdf#page=4" target="_blank" title="View Journal" tabindex="0" aria-live="polite">S826</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">03/25/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Reported from S Government Efficiency Committee</td>
+                            <td>
+                                        <a href="https://www.senate.mo.gov/26info/pdf-jrnl/DAY39.pdf#page=18" target="_blank" title="View Journal" tabindex="0" aria-live="polite">S789</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">03/23/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Voted Do Pass S Government Efficiency Committee</td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">02/23/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Hearing Conducted S Government Efficiency Committee</td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">02/05/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Second Read and Referred S Government Efficiency Committee</td>
+                            <td>
+                                        <a href="https://www.senate.mo.gov/26info/pdf-jrnl/DAY16.pdf#page=9" target="_blank" title="View Journal" tabindex="0" aria-live="polite">S306</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">01/07/2026</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">S First Read</td>
+                            <td>
+                                        <a href="https://www.senate.mo.gov/26info/pdf-jrnl/DAY01.pdf#page=95" target="_blank" title="View Journal" tabindex="0" aria-live="polite">S95</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col--date" tabindex="0" aria-live="polite">12/29/2025</td>
+                            <td class="col--action" tabindex="0" aria-live="polite">Prefiled</td>
+                            <td>
+                            </td>
+                        </tr>
+                </tbody>
+            </table>
+        </div>
+</div>
+
+<style>
+    .link-card-item:hover {
+        color: white !important;
+    }
+
+    /* Print styles */
+    @media print {
+        .section-header {
+            display: none !important;
+        }
+
+        .actions-container .table {
+            border: 1px solid #000;
+        }
+
+        .actions-container .table th {
+            background: none !important;
+            color: #000 !important;
+            border-bottom: 2px solid #000 !important;
+        }
+
+        .actions-container .table td {
+            border-bottom: 1px solid #000 !important;
+        }
+
+        .actions-container .table--hover tbody tr:hover {
+            background-color: transparent !important;
+        }
+    }
+</style>
+
+<script>
+    function printActions() {
+        var actionsContainer = document.querySelector('.actions-container');
+        var billTitle = actionsContainer?.getAttribute('data-bill-identifier') || 'Bill Actions';
+        var actionsTable = document.getElementById('actionsTable');
+        if (!actionsTable) return;
+
+        var cols = 3;
+        var rows = [];
+
+        var trs = actionsTable.querySelectorAll('tbody tr');
+        trs.forEach(function (tr) {
+            var cells = tr.querySelectorAll('td');
+            if (cells.length >= 2) {
+                rows.push('<tr><td>' + PrintUtil.esc(cells[0].textContent.trim())
+                        + '</td><td>' + PrintUtil.esc(cells[1].textContent.trim())
+                        + '</td><td>' + PrintUtil.esc((cells[2]?.textContent || '').trim())
+                        + '</td></tr>');
+            }
+        });
+
+        if (!rows.length) return;
+
+        PrintUtil.printTable({
+            title:     billTitle,
+            subtitles: ['Legislative Actions'],
+            columns:   ['Date', 'Action', 'Journal'],
+            rows:      rows
+        });
+    }
+</script>
