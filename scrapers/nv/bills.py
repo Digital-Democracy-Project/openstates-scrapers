@@ -511,6 +511,26 @@ class VotesTab(Utf8HtmlMixin, HtmlPage):
             return VoteList(dict(bill=bill, url=self.source.url), source=votes_url)
 
 
+# OPEN-865: a vote passes or fails by what NELIS says, not by yeas > nays: Nevada needs a
+# constitutional majority of the elected members (11 of 21 in the Senate, 22 of 42 in the
+# Assembly) or two thirds for some bills, so a vote can have more yeas than nays and still
+# fail. NELIS prints the outcome on each vote: the first line of the vote box reads "Passed" +
+# "Yes  (Constitutional Majority)" or "Passed" + "No  (2/3 of Elected Members)", or just
+# "Rescinded" when the chamber later voided the vote. Only when it says none of these (never
+# seen) does the count decide, as it did before.
+NELIS_OUTCOME_RE = re.compile(r"^(passed|rescinded)\b", re.I)
+
+
+def vote_result(outcome, yea, nay):
+    """'pass' or 'fail' for one vote, from NELIS's outcome text where it gives one."""
+    outcome = " ".join((outcome or "").split()).lower()
+    if outcome.startswith("passed yes"):
+        return "pass"
+    if outcome.startswith(("passed no", "rescinded")):
+        return "fail"
+    return "pass" if yea > nay else "fail"
+
+
 class VoteList(Utf8HtmlMixin, HtmlPage):
     example_source = (
         "https://www.leg.state.nv.us/App/NELIS/REL/82nd2023/Bill/"
@@ -546,9 +566,13 @@ class VoteList(Utf8HtmlMixin, HtmlPage):
 
             vote_options = {}
             start_date = None
+            outcome = ""
 
             for child_row in CSS("ul li", min_items=0).match(row):
                 content = child_row.text_content().strip()
+
+                if NELIS_OUTCOME_RE.match(" ".join(content.split())):
+                    outcome = " ".join(content.split())
 
                 vote_match = re.match(vote_re, content)
                 if vote_match:
@@ -570,16 +594,20 @@ class VoteList(Utf8HtmlMixin, HtmlPage):
             else:
                 date_motion_counts[date_motion] = 1
 
+            rescinded = outcome.lower().startswith("rescinded")
             vote = VoteEvent(
                 chamber=chamber,
                 motion_text=summary,
-                result="pass" if vote_options["yea"] > vote_options["nay"] else "fail",
+                result=vote_result(outcome, vote_options["yea"], vote_options["nay"]),
                 # OPEN-595: the rules live in config/motion_classification.yaml (nv block)
-                classification=classify_motion("nv", summary),
+                # OPEN-865: a rescinded vote was voided, so it is not a passage vote
+                classification=([] if rescinded else classify_motion("nv", summary)),
                 start_date=start_date,
                 bill=bill,
             )
             vote.add_source(vote_url)
+            if rescinded:
+                vote.extras["nelis_outcome"] = "Rescinded"
             for name, value in vote_options.items():
                 vote.set_count(VOTES_MAPPINGS.get(name, "other"), value)
 
