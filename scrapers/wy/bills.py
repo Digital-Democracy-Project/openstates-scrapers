@@ -157,7 +157,9 @@ class WYBillScraper(Scraper, LXMLMixin):
         except scrapelib.HTTPError:
             return None
 
-        chamber = "lower" if bill_json["bill"][0] else "upper"
+        # the bill number's first letter names its chamber (HB/HJ House, SF/SJ Senate), as in scrape_chamber; the old
+        # `"lower" if bill_json["bill"][0]` made every bill a House bill (OPEN-820)
+        chamber = self.chamber_abbrev_map[bill_json["bill"][0]]
 
         bill = Bill(
             identifier=bill_json["bill"],
