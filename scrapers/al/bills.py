@@ -15,8 +15,16 @@ from .actions import Categorizer
 AMENDMENT_ADOPTION = re.compile(r"\bmotion to adopt\b", re.I)
 
 
-def vote_classification(action_row: dict) -> list:
-    if action_row.get("amdSub") and AMENDMENT_ADOPTION.search(action_row["matter"]):
+# OPEN-863: ALISON leaves amdSub empty on some adoptions of an amendment or substitute (HB 605 Senate
+# "Chesteen motion to Adopt - Adopted Roll Call 1316", SB 146 Senate "Albritton motion to adopt-
+# Adopted Roll Call 813"). Those follow the row that offers the paper, the same day in the same chamber.
+PAPER_OFFERED = re.compile(r"\b(?:amendment|substitute) offered\b", re.I)
+
+
+def vote_classification(action_row: dict, after_offer: bool = False) -> list:
+    if (action_row.get("amdSub") or after_offer) and AMENDMENT_ADOPTION.search(
+        action_row["matter"]
+    ):
         return ["amendment"]
     # the rest of the rules live in config/motion_classification.yaml (al block)
     return classify_motion("al", action_row["matter"])
@@ -579,11 +587,18 @@ class ALBillScraper(Scraper):
     # row they ride on (HB2 2026RS: BIR "R 534" is the Third Reading's roll call 534), so only
     # the histories are read.
     def scrape_votes(self, bill: Bill, histories: list):
+        # (chamber, day) of each amendment or substitute offered and not yet voted on
+        offers = set()
         for row in histories:
+            key = (row.get("body"), row.get("calendarDate"))
+            if PAPER_OFFERED.search(row["matter"] or ""):
+                offers.add(key)
             if row.get("rollCallNbr") and row.get("body") in self.chamber_map:
-                yield from self.scrape_vote(bill, row)
+                after_offer = key in offers
+                offers.discard(key)
+                yield from self.scrape_vote(bill, row, after_offer)
 
-    def scrape_vote(self, bill: Bill, action_row: dict):
+    def scrape_vote(self, bill: Bill, action_row: dict, after_offer: bool = False):
         body = action_row["body"]
         roll_call = int(action_row["rollCallNbr"])
         session = action_row["sessionAbbreviation"]
@@ -644,7 +659,7 @@ class ALBillScraper(Scraper):
             result=vote_result(action_row["matter"], yeas, nays),
             chamber=self.chamber_map[body],
             bill=bill,
-            classification=vote_classification(action_row),
+            classification=vote_classification(action_row, after_offer),
         )
         vote.dedupe_key = vote_key
         # OPEN-863: ALISON gives a vote its day only; its roll-call number rises in the order the
