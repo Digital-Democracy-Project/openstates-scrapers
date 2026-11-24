@@ -526,6 +526,17 @@ class GABillScraper(Scraper):
                     vote.add_source(self.vsource, note="api")
                     # captions repeat on a bill and day, the roll call doesn't
                     vote.dedupe_key = f"{bill}#{date}#{identifier}"
+                    # OPEN-864: start_date is the day (the broker matches a stored vote on its date),
+                    # so the roll call's number goes in the extras key the broker reads into
+                    # Motion.rollcall_num to order two same-day votes in one chamber (as OPEN-628 did
+                    # for MI/WA and OPEN-685 for LA). GetVote's Number is the chamber's roll call
+                    # count for the session and agrees with the vote's Date time on all 47 of 2026_ss.
+                    if listed_vote["Number"] is not None:
+                        vote.extras[
+                            "senate-rollcall-num"
+                            if listed_vote["Branch"] == "Senate"
+                            else "house-rollcall-num"
+                        ] = str(listed_vote["Number"])
 
                     methods = {"Yea": "yes", "Nay": "no"}
 
