@@ -74,9 +74,17 @@ EARLIER_STAGE_RE = re.compile(
 )
 
 
+def counts_as_passage(motion):
+    """A roll call that is passage on its own, or an earlier-stage one (which counts unless a later one replaces it)."""
+    return "passage" in classify_motion("wy", motion) or bool(
+        EARLIER_STAGE_RE.search(motion)
+    )
+
+
 def vote_classification(motion, later_passage=False):
-    """The roll call's motion classification. `later_passage`: a later passage roll call of the same chamber is on
-    the bill, so an earlier-stage roll call (EARLIER_STAGE_RE) is not the one that counts."""
+    """The roll call's motion classification. `later_passage`: a later roll call of the same chamber that counts
+    (passage, or an earlier stage itself) is on the bill, so an earlier-stage roll call (EARLIER_STAGE_RE) is
+    not the one that counts."""
     classification = classify_motion("wy", motion)
     if not classification:
         for pattern, kind in OTHER_VOTE_KINDS:
@@ -403,7 +411,7 @@ class WYBillScraper(Scraper, LXMLMixin):
         return any(
             voting_chamber(other) == chamber
             and self._order(other) > order
-            and "passage" in classify_motion("wy", self._motion(other))
+            and counts_as_passage(self._motion(other))
             for other in roll_calls
         )
 

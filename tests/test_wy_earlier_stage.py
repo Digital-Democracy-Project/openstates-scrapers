@@ -133,3 +133,13 @@ def test_the_other_chambers_third_reading_does_not_replace_it():
         bill, house_intro[0], "2026", house_intro + senate_later
     )
     assert vote.motion_classification == ["passage", "reading-1"]
+
+
+def test_hb67_introduction_is_replaced_by_its_failed_cow_vote():
+    # HB 67 (House): introduced 45-10, then Committee of the Whole failed 24-25 and the bill died. Only the COW vote
+    # counts; the introduction roll call keeps its reading label.
+    votes = scrape("HB0067")
+    assert labels(votes, "H Introduced") == {
+        "H Introduced and Referred to H08 - Transportation 45-10-1-0-6": ["reading-1"]
+    }
+    assert labels(votes, "H COW:Failed") == {"H COW:Failed 24-25-7-0-6": ["passage"]}
