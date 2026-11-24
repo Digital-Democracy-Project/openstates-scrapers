@@ -223,7 +223,9 @@ def split_specific_votes(voters):
     # unparseable role placeholders instead of treating them as voters.
     merged = []
     for token in tokens:
-        token = token.strip()
+        # OPEN-879: the list's own full stop follows the last name's ("... Kidani, Lee, C.."), which kept
+        # "C.." from being an initial; it is one full stop
+        token = re.sub(r"\.{2,}$", ".", token.strip())
         if not token:
             continue
         if MIDDLE_INITIAL_RE.match(token) and merged:
