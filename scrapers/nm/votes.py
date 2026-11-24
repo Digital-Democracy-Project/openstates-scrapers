@@ -23,6 +23,16 @@ def rollcall_number(pdf_text_content):
     return found.group(1) if found else None
 
 
+# OPEN-818: Senate roll calls print a generational suffix after a comma ("SURNAME, JR."), which matches
+# no one; the stored name must be the surname alone, like every other Senate name. House names put
+# initials after the comma ("Surname, N.", "Surname, JF") and are left as they are.
+generational_suffix = re.compile(r",\s*(?:JR|SR|II|III|IV)\.?\s*$", re.IGNORECASE)
+
+
+def voter_name(name):
+    return generational_suffix.sub("", name) if isinstance(name, str) else name
+
+
 # Date regex for senate and house parser
 date_regex = re.compile(r"([0-1][0-9]/[0-3][0-9]/\d+)")
 
@@ -183,10 +193,11 @@ class NMVoteScraper(Scraper):
 
         # Get the voters by vote type
         for header in headers:
-            vote_record[header] = (
-                df_left[df_left[header].isin(["X"])]["name"].tolist()
+            vote_record[header] = [
+                voter_name(name)
+                for name in df_left[df_left[header].isin(["X"])]["name"].tolist()
                 + df_right[df_right[header].isin(["X"])]["name"].tolist()
-            )
+            ]
 
         return total_votes, vote_record
 
