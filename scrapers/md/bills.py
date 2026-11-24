@@ -62,6 +62,44 @@ def _classify_action(action):
 # so it is a document, not a version.
 ANALYSES = {"Racial Equity Impact Note"}
 
+# OPEN-813: a bill's printed texts are listed in its history table as "Text - <reader> - <bill title>"
+# ("Text - First - Motor Vehicles - Police Stops - ..."). The name was the reader plus the whole title, which
+# no version rule reads ("First - ..." and "Third - ..." had no stage), and words in a title ("Governor",
+# "Veto", "Chapter") gave others a wrong one. Each text is now named by its reader alone, as the General
+# Assembly defines them (Legislative Lingo, mgaleg.maryland.gov/pubs-current/current-legislative-lingo.pdf,
+# read 2026-11-24):
+#   First Reader: "A bill as printed for the first time with its assigned bill number" (<bill>f.pdf).
+#   Third Reader: "A bill that is printed after second reading in the chamber of origin, including adopted
+#   amendments" (<bill>t.pdf), the text the chamber of origin votes on at third reading. The bill is not
+#   reprinted for second reading, and the second chamber's amendments make the Enrolled bill instead.
+#   Enrolled: "A bill is an enrolled bill if it was amended in the opposite chamber" (<bill>e.pdf).
+#   Chapter: the law as signed, numbered by the Secretary of State (Chapters_noln/CH_<n>_<bill>.pdf), or an
+#   adopted joint resolution's resolution number (Chapters_noln/JR_<n>_<bill>.pdf).
+READER_NAMES = {
+    "First": "Introduced (First Reader)",
+    "Third": "Engrossed (Third Reader)",
+    "Enrolled": "Enrolled",
+}
+CHAPTER_FILE = re.compile(r"/Chapters_noln/(CH|JR)_(\d+)_", re.IGNORECASE)
+
+
+def version_name(link_text, url):
+    """The version name of a "Text - <reader> - <bill title>" link in a bill's history table.
+
+    "Introduced (First Reader)", "Engrossed (Third Reader)", "Enrolled", "Chapter <n>" or, for a joint
+    resolution, "Chapter (Joint Resolution <n>)"; any other reader keeps its own name, without the title.
+    """
+    parts = [part.strip() for part in link_text.split(" - ")]
+    reader = parts[1] if len(parts) > 1 else parts[0]
+    if reader == "Chapter":
+        number = CHAPTER_FILE.search(url or "")
+        if number is None:
+            return "Chapter"
+        if number[1].upper() == "JR":
+            return f"Chapter (Joint Resolution {number[2]})"
+        return f"Chapter {number[2]}"
+    return READER_NAMES.get(reader, reader)
+
 
 class MDBillScraper(Scraper):
     _TZ = pytz.timezone("US/Eastern")
@@ -343,14 +381,14 @@ class MDBillScraper(Scraper):
                 link = row.xpath("td[4]/a")[0]
                 link_text = link.text_content().strip()
                 if link_text.startswith("Text"):
-                    link_text = link_text.replace("Text - ", "")
+                    name = version_name(link_text, link.get("href"))
                     add_link = (
                         bill.add_document_link
-                        if link_text in ANALYSES
+                        if name in ANALYSES
                         else bill.add_version_link
                     )
                     add_link(
-                        link_text,
+                        name,
                         link.get("href"),
                         media_type="application/pdf",
                         on_duplicate="ignore",
