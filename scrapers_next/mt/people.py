@@ -22,7 +22,7 @@ class Legislators(HtmlListPage):
         url = str(name.xpath("a/@href")[0])
 
         person = ScrapePerson(
-            name=clean_name(name.text_content()),
+            name=clean_name(name.xpath("a")[0].text_content()),
             state="mt",
             party=party.text_content().strip(),
             chamber=("upper" if chamber == "SD" else "lower"),
