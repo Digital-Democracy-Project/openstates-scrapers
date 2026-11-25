@@ -402,6 +402,10 @@ jurisdictions:
   # "Emergency" (the emergency-clause roll call; the bill stands without it), "Advance" (Senate: advance
   # from General Order to third reading), "Reconsider Measure", "Appeal Of The Decision Of The Chair";
   # "Adopt Amendment" / "Table Amendment" are labelled amendment by the scraper.
+  # OPEN-885: two more passage votes need the bill itself, so the ok scraper (ok/bills.py) decides them, not
+  # a text rule here: the Senate's resolution adoption, whose text is just "Adopt" (only on a resolution), and
+  # the House's "Advance From General Order" when the bill's own history says the House passed it on a third
+  # reading that day and the page has no "Third Reading" roll call that day (the House's only vote on it).
   ok:
     passage:
       - '^(third|fourth)\s+reading$'
