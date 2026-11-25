@@ -25,6 +25,26 @@ from utils import presiding_officers
 # declared count this way. No member's name is written here.
 NAME_GAP = re.compile(r"\s{2,}")
 
+# OPEN-884: a roll call block prints its own chamber ("THE OKLAHOMA STATE SENATE", "OKLAHOMA HOUSE OF
+# REPRESENTATIVES"); a committee header on a House page often leaves it out, so only a block that names
+# the other chamber is read as the other chamber's.
+HEADER_CHAMBER = {
+    "upper": re.compile(r"\boklahoma\s+(?:state\s+)?senate\b", re.I),
+    "lower": re.compile(r"\boklahoma\s+house\s+of\s+representatives\b", re.I),
+}
+
+
+def is_other_chambers_block(header_text, page_chamber):
+    """True when a roll call block's header names the chamber that is not the page's. A bill's page
+    can carry a block of the other chamber's roll call (on another bill), which that chamber's own
+    page already holds."""
+    other = "lower" if page_chamber == "upper" else "upper"
+    return bool(
+        HEADER_CHAMBER[other].search(header_text)
+        and not HEADER_CHAMBER[page_chamber].search(header_text)
+    )
+
+
 # OPEN-687: a floor amendment roll call ("Adopt Amendment", "Table Amendment"), labelled
 # here because config/motion_classification.yaml only decides passage.
 AMENDMENT_VOTE = re.compile(r"\bamendment\b", re.I)
@@ -493,6 +513,18 @@ class OKBillScraper(Scraper):
                 else:
                     seen_rcs.add(rcs)
             else:
+                continue
+            # OPEN-884: the block's header text, down to its roll call number line
+            header_lines = [header.xpath("string()")]
+            for sib in header.xpath("following-sibling::p"):
+                header_lines.append(sib.xpath("string()"))
+                if sib is rcs_p:
+                    break
+            if is_other_chambers_block(" ".join(header_lines), chamber):
+                self.warning(
+                    "OPEN-884: %s RCS# %s is the other chamber's roll call, skipped"
+                    % (url, rcs)
+                )
                 continue
             committees = [
                 "Administrative Rules",
