@@ -1,4 +1,5 @@
 import re
+import json
 import datetime
 import collections
 import unicodedata
@@ -29,11 +30,34 @@ NAME_GAP = re.compile(r"\s{2,}")
 AMENDMENT_VOTE = re.compile(r"\bamendment\b", re.I)
 
 
-def vote_classification(motion, committee):
+# OPEN-885: two floor roll calls whose text does not say what they decide.
+# A resolution is adopted, not read three times, so the Senate's roll call on one is just "Adopt"
+# (the House's is "Adopt Resolution", a yaml rule); on a bill, "Adopt" is not seen.
+ADOPT_VOTE = re.compile(r"^adopt$", re.I)
+# The House can take a bill from General Order to passage in one roll call: the page then lists a
+# single "Advance From General Order" vote and no "Third Reading" one, and the legislature's own
+# history of the bill records that day "Third Reading, Measure and Emergency passed: Ayes: 80 Nays: 16".
+# The Senate's "Advance" roll call always comes before a separate counting one (115 of 115 stored).
+ADVANCE_VOTE = re.compile(r"^advance from general order$", re.I)
+THIRD_READING_VOTE = re.compile(r"^third reading$", re.I)
+THIRD_READING_PASSED = re.compile(r"^third reading\b.*\bpassed\b", re.I)
+
+
+def third_reading_passed(actions, chamber, day):
+    """True when the bill's history has `chamber` passing it on a third reading on `day`.
+    `actions` is (day, chamber, description) for each entry of the bill's history."""
+    return any(
+        a_day == day and a_chamber == chamber and THIRD_READING_PASSED.match(text)
+        for a_day, a_chamber, text in actions
+    )
+
+
+def vote_classification(motion, committee, resolution=False):
     """What a roll call decides. A committee roll call is committee-passage, whatever
     its text (the Senate's is often just the committee's name). A floor roll call is
     passage from the ok block of config/motion_classification.yaml, else "amendment"
-    for an amendment roll call, else nothing."""
+    for an amendment roll call, else nothing. `resolution` says the bill is a resolution,
+    whose adoption roll call is passage."""
     if committee:
         return ["committee-passage"]
     classification = classify_motion("ok", motion)
@@ -41,7 +65,33 @@ def vote_classification(motion, committee):
         return classification
     if AMENDMENT_VOTE.search(motion):
         return ["amendment"]
+    if resolution and ADOPT_VOTE.match(motion.strip()):
+        return ["passage"]
     return []
+
+
+def advance_is_passage(motion, chamber, day, actions, reading_days):
+    """True for a House "Advance From General Order" roll call that is the chamber's passage vote:
+    the bill's history says the House passed it on a third reading that day, and the page has no
+    "Third Reading" roll call of its own that day (`reading_days`), so no later vote is the passage."""
+    return (
+        chamber == "lower"
+        and bool(ADVANCE_VOTE.match(motion.strip()))
+        and day not in reading_days
+        and third_reading_passed(actions, chamber, day)
+    )
+
+
+def bill_history(bill):
+    """(day, chamber, description) for each action of a bill being scraped."""
+    return [
+        (
+            a["date"],
+            json.loads(a["organization_id"][1:])["classification"],
+            a["description"],
+        )
+        for a in bill.actions
+    ]
 
 
 # OPEN-704: the House page states each roll call's outcome on its own line above the
@@ -421,6 +471,7 @@ class OKBillScraper(Scraper):
 
             motions[motion_index] = motion_text
 
+        votes_out = []
         for header in headers_xpath:
             bad_vote = False
             # Each chamber has the motion name on a different line of the file
@@ -584,7 +635,9 @@ class OKBillScraper(Scraper):
                     chamber, motion, committee, stated, counts["yes"], counts["no"]
                 ),
                 bill=bill,
-                classification=vote_classification(motion, committee),
+                classification=vote_classification(
+                    motion, committee, "resolution" in " ".join(bill.classification)
+                ),
             )
             vote.set_count("yes", counts["yes"])
             for name in votes["yes"]:
@@ -617,6 +670,21 @@ class OKBillScraper(Scraper):
 
             vote.add_source(url)
 
+            votes_out.append(vote)
+
+        # OPEN-885: a House "Advance From General Order" that is the chamber's only vote on the bill
+        reading_days = {
+            v.start_date
+            for v in votes_out
+            if THIRD_READING_VOTE.match(v.motion_text.strip())
+        }
+        history = bill_history(bill)
+        page_chamber = "lower" if "house" in url.lower() else "upper"
+        for vote in votes_out:
+            if not vote.motion_classification and advance_is_passage(
+                vote.motion_text, page_chamber, vote.start_date, history, reading_days
+            ):
+                vote.motion_classification = ["passage"]
             yield vote
 
     def add_voter(self, vote, option, name, chamber, session):

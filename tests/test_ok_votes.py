@@ -219,4 +219,4 @@ def test_scraper_no_longer_hard_codes_passage():
         os.path.join(os.path.dirname(__file__), "..", "scrapers", "ok", "bills.py")
     ).read()
     assert 'classification="passage"' not in src
-    assert "classification=vote_classification(motion, committee)" in src
+    assert "classification=vote_classification(" in src
