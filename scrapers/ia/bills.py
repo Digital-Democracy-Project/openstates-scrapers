@@ -457,6 +457,12 @@ class IABillScraper(Scraper):
                     description=action, date=date, chamber=actor, classification=atype
                 )
 
+        # OPEN-894: the journal order lists a later "Explanation of vote" ahead of earlier days'
+        # actions (310 of 4,206 bills step backwards), so the bill's actions are stored oldest
+        # first; the sort is stable, so a day keeps the journal's order (Maine OPEN-839,
+        # Hawaii OPEN-823, Wyoming OPEN-780)
+        bill.actions.sort(key=lambda a: str(a["date"]))
+
         self.scrape_subjects(bill, bill_id, session)
 
         yield bill
