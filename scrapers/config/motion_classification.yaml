@@ -631,6 +631,10 @@ jurisdictions:
     passage:
       - '^(passage( as amended)?|as amended|in concurrence)( / (passage( as amended)?|as amended|in concurrence))*$'
       - '^consent calendar( #\d+)?$'
+      # OPEN-883: a reconsidered re-vote on passage ("Reconsider / Passage as Amended"): the chamber voted passage again
+      # after reconsidering, so it is the chamber's passage vote and replaces the earlier one. The vote to reconsider
+      # ("Reconsideration") and a reconsidered amendment vote ("Reconsider / Approval of Amendment") stay as they are.
+      - '^reconsider(ation)? / (passage( as amended)?|as amended|in concurrence)( / (passage( as amended)?|as amended|in concurrence))*$'
       # OPEN-873: a calendar item read and passed has no motion line, only its marker as the header's first line
       - '^(calendar|immediate consideration)$'
     default: null                                # anything else (an unseen line, a title fragment) stays unclassified

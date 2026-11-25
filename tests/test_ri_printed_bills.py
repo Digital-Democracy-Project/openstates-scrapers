@@ -80,7 +80,7 @@ def _scrape_votes(name, chamber, session, history=None):
         ("S_17769.html", "2026", "upper", "H 7127", "BUDGET H-7127 SUB A AA", []),
         # "House Bill No. 7127  SUB A aa", an amendment, then passage
         ("S_17782.html", "2026", "upper", "H 7127", "Passage", ["passage"]),
-        # Senate 6/11/2026: "SENATE BILL - S 2045 sub a ... Reconsider": a reconsideration, not passage
+        # Senate 6/11/2026: "SENATE BILL - S 2045 sub a ... Reconsider": the amendment vote redone, then passage (OPEN-883)
         (
             "S_18010.html",
             "2026",
@@ -95,7 +95,7 @@ def _scrape_votes(name, chamber, session, history=None):
             "upper",
             "S 2045",
             "Reconsider / Passage as Amended",
-            [],
+            ["passage"],  # OPEN-883: the re-vote after reconsidering (31-6) replaces the 32-6
         ),
         # "HOUSE BILL 2026 H-8611" (the year and the chamber letter)
         ("S_18037.html", "2026", "upper", "H 8611", "In Concurrence", ["passage"]),
@@ -281,7 +281,7 @@ def test_title_only_roll_call_stays_unlabelled_without_a_matching_passage(histor
             "upper",
             ("upper", "2045"),
             "Reconsider / Passage as Amended",
-            [],
+            ["passage"],  # OPEN-883: the re-vote after reconsidering (31-6) replaces the 32-6
         ),
         ("S_17782.html", "2026", "upper", ("lower", "7127"), "Passage", ["passage"]),
         (

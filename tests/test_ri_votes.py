@@ -350,3 +350,20 @@ def test_scraper_no_longer_hard_codes_passage():
     ).read()
     assert 'classification="passage"' not in src
     assert "classification=vote_classification(" in src
+
+
+def test_reconsidered_revote_on_passage_is_passage():
+    # OPEN-883: after a chamber reconsiders, the re-vote on passage is its passage vote
+    for motion in (
+        "Reconsider / Passage as Amended",
+        "Reconsider / Passage",
+        "Reconsideration / Passage",
+        "Reconsider / In Concurrence",
+    ):
+        assert vote_classification(motion) == ["passage"], motion
+    # a reconsidered amendment vote, the bare vote to reconsider and a ruling stay as they are
+    assert vote_classification("Reconsider / Approval of Amendment") == ["amendment"]
+    assert vote_classification("Reconsider / Passage of Amendment") == ["amendment"]
+    assert vote_classification("Reconsider") == []
+    assert vote_classification("Reconsideration") == []
+    assert vote_classification("Reconsider / Ruling of the Chair") == []
