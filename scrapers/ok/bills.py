@@ -1,11 +1,14 @@
 import re
 import json
+import time
 import datetime
+import ipaddress
 import collections
 import unicodedata
 
 from lxml import html
 from utils import checked_requests
+import requests
 import scrapelib
 
 from urllib import parse
@@ -163,6 +166,10 @@ def extract_names(line, limit):
     return names
 
 
+# OPEN-892: a plain-text lookup that answers with the caller's own address
+EGRESS_LOOKUP_URL = "https://api.ipify.org"
+
+
 class OKBillScraper(Scraper):
     bill_types = ["B", "JR", "CR", "R"]
     subject_map = collections.defaultdict(list)
@@ -203,6 +210,32 @@ class OKBillScraper(Scraper):
         "2027": "2700",
     }
 
+    def log_egress_address(self):
+        """OPEN-892: once per run, log the address our requests leave from (what a public
+        lookup service sees), so a connect timeout on the legislature's site can be told apart
+        from a dropped address or a network-path problem. Logs only: no rotation, and a failed
+        lookup never stops the scrape."""
+        try:
+            address = checked_requests.get(EGRESS_LOOKUP_URL, timeout=10).text.strip()
+            ipaddress.ip_address(address)
+        except (requests.exceptions.RequestException, ValueError) as e:
+            self.warning(f"OK egress address: lookup failed ({type(e).__name__})")
+            return
+        self.info(f"OK egress address: {address}")
+
+    def request(self, method, url, **kwargs):
+        """OPEN-892: when a request fails with a connection error (a connect timeout is one; after
+        scrapelib's own retries), log how long it was tried and the error, then re-raise."""
+        started = time.monotonic()
+        try:
+            return super().request(method, url, **kwargs)
+        except requests.exceptions.ConnectionError as e:  # includes ConnectTimeout
+            self.warning(
+                f"OK connection error: {type(e).__name__} after "
+                f"{time.monotonic() - started:.1f}s of tries: {method} {url}: {e}"
+            )
+            raise
+
     def listing_code(self, session):
         """The search form's code for the list the scrape of `session` reads (OPEN-758): a
         regular session reads its Legislature's newest list, which holds both years' bills."""
@@ -211,6 +244,7 @@ class OKBillScraper(Scraper):
         ]
 
     def scrape(self, chamber=None, session=None, only_bills=None):
+        self.log_egress_address()
         chambers = [chamber] if chamber else ["upper", "lower"]
         for chamber in chambers:
             yield from self.scrape_chamber(chamber, session, only_bills)
