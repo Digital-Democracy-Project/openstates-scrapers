@@ -38,6 +38,15 @@ def _combine_lines(lines):
         # OPEN-735: a count printed without a closing period ("Total--110", "Nays-0",
         # 2026 HB 1924 House override) also ends its line
         ended = lastline and (lastline[-1] in ".,:" or re.search(r"-+ ?\d+$", lastline))
+        # OPEN-899: a line that breaks after a member's first initial and goes on with the
+        # next ("... Simmons D." / "T. (12th), ...") is not at a name's end: the "." belongs
+        # to the initial
+        if (
+            ended
+            and re.search(r"\s[A-Z]\.$", lastline)
+            and re.match(r"\s*[A-Z]\.", line)
+        ):
+            ended = False
         if ended and not line.startswith("("):
             newlines.append(line)
             lastline = line
