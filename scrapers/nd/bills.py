@@ -28,6 +28,23 @@ def vote_classification(motion):
     return []
 
 
+ACTION_RESULT = re.compile(
+    r"\b(?P<word>passed|adopted|failed|lost)\b.*\byeas (?P<yes>\d+) nays (?P<no>\d+)\b",
+    re.I,
+)
+
+
+def result_from_action_row(row_text, yes, no):
+    """OPEN-901: the result the bill's own action row gives the roll call, when that row states it with this
+    roll call's tally ("Second reading, passed, yeas 59 nays 31"); otherwise None. The modal's status line
+    can describe the emergency clause instead: SB 2158's House roll call (59-31) reads "Failed in House"
+    because the clause needed two thirds, while the bill passed (its action row, and the governor signed it)."""
+    match = ACTION_RESULT.search(row_text)
+    if not match or (int(match["yes"]), int(match["no"])) != (yes, no):
+        return None
+    return "pass" if match["word"].lower() in ("passed", "adopted") else "fail"
+
+
 # OPEN-901: the legislature publishes a veto-override vote as a bill action with its tally and a journal page,
 # but no vote modal (so no names): "Veto sustained, yeas 45 nays 48" (the override failed) and "Passed over veto,
 # yeas 45 nays 2" (the chamber voted to override). ND needs two thirds of each house, which "sustained" records
@@ -336,6 +353,19 @@ class BillList(JsonPage):
                     .split(" ")[0]
                 )
 
+                # OPEN-901: the bill action row that holds this roll call decides its result when it
+                # states one with the same tally (the modal can speak for an emergency clause).
+                action_cells = vote_modal.xpath("ancestor::tr[1]/td[3]")
+                row_result = action_cells and result_from_action_row(
+                    " ".join(action_cells[0].text_content().split()),
+                    int(yes_count),
+                    int(no_count),
+                )
+                if row_result and row_result != vote.result:
+                    self.logger.warning(
+                        f"{bill_id} {modal_id}: the page's status says {vote.result}, its action row says {row_result}"
+                    )
+                    vote.result = row_result
                 vote.set_count("yes", int(yes_count))
                 vote.set_count("no", int(no_count))
                 vote.set_count("other", int(other_count))

@@ -1,0 +1,360 @@
+{
+ "bills": {
+  "2158": {
+   "name": "SB 2158",
+   "number": "2158",
+   "summary": "Relating to the distribution of the unobligated cash balance of a dissolved school district.",
+   "title": "AN ACT to amend and reenact section 15.1-12-29 of the North Dakota Century Code, relating to the distribution of the unobligated cash balance of a dissolved school district.",
+   "chamber": "Senate",
+   "session_id": "202501",
+   "session_name": "2025 Regular Session",
+   "url": "https://ndlegis.gov/assembly/69-2025/regular/bill-overview/bo2158.html",
+   "versions_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-index/bi2158.html",
+   "actions_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-actions/ba2158.html",
+   "video_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-video/bv2158.html",
+   "hearing_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-hearings/bh2158.html",
+   "testimony_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-testimony/bt2158.html",
+   "current_status": "Governor signed",
+   "last_action": "Filed with Secretary Of State 04/17",
+   "passed": true,
+   "agency": null,
+   "sponsors": [
+    {
+     "id": 3343,
+     "name": "Sen. Schaible, Donald",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": true
+    },
+    {
+     "id": 3395,
+     "name": "Rep. Hatlestad, Patrick R.",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    },
+    {
+     "id": 3362,
+     "name": "Rep. Monson, David",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    },
+    {
+     "id": 3345,
+     "name": "Sen. Myrdal, Janne",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    }
+   ],
+   "actions": [
+    {
+     "id": 469703,
+     "description": "Introduced, first reading, (emergency), referred Finance and Taxation Committee",
+     "date": "2025-01-07T23:59:59",
+     "category": "Introduced (emergency)",
+     "chamber": "Senate",
+     "bill_version": "25.0300.02000",
+     "roll_call": {}
+    },
+    {
+     "id": 469329,
+     "description": "Committee Hearing 02:00",
+     "date": "2025-01-13T14:00:00",
+     "category": "Committee hearing",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 471416,
+     "description": "Reported back amended, without recommendation 6 0 0",
+     "date": "2025-01-21T23:59:59",
+     "category": "Committee report",
+     "chamber": "Senate",
+     "bill_version": "25.0300.02001",
+     "roll_call": {}
+    },
+    {
+     "id": 471546,
+     "description": "Amendment adopted",
+     "date": "2025-01-22T23:59:59",
+     "category": "Amendment adopted",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 471873,
+     "description": "Amendment proposed on floor",
+     "date": "2025-01-23T23:59:59",
+     "category": "Amended on floor",
+     "chamber": "Senate",
+     "bill_version": "25.0300.03001",
+     "roll_call": {}
+    },
+    {
+     "id": 471874,
+     "description": "Amendment failed",
+     "date": "2025-01-23T23:59:59",
+     "category": "Amendment failed",
+     "chamber": "Senate",
+     "bill_version": "25.0300.03001",
+     "roll_call": {
+      "id": "202501S00103",
+      "chamber": "Senate",
+      "date": "2025-01-23T13:34:41",
+      "description": "Consideration of Amendments",
+      "division": null,
+      "passed": false,
+      "total_yeas": 12,
+      "total_nays": 35,
+      "total_absent": 0
+     }
+    },
+    {
+     "id": 471875,
+     "description": "Second reading, passed, yeas 38 nays 9, Emergency clause carried",
+     "date": "2025-01-23T23:59:59",
+     "category": "Passed",
+     "chamber": "Senate",
+     "bill_version": "25.0300.03000",
+     "roll_call": {
+      "id": "202501S00104",
+      "chamber": "Senate",
+      "date": "2025-01-23T13:35:29",
+      "description": "Final Passage",
+      "division": null,
+      "passed": true,
+      "total_yeas": 38,
+      "total_nays": 9,
+      "total_absent": 0
+     }
+    },
+    {
+     "id": 472045,
+     "description": "Received from Senate",
+     "date": "2025-01-24T23:59:59",
+     "category": "Received from Senate",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 474928,
+     "description": "Introduced, first reading, (emergency), referred Political Subdivisions Committee",
+     "date": "2025-02-13T23:59:59",
+     "category": "Introduced (emergency)",
+     "chamber": "House",
+     "bill_version": "25.0300.03000",
+     "roll_call": {}
+    },
+    {
+     "id": 476500,
+     "description": "Committee Hearing 11:00",
+     "date": "2025-03-07T11:00:00",
+     "category": "Committee hearing",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 480895,
+     "description": "Reported back, do not pass, placed on calendar 7 2 4",
+     "date": "2025-03-28T23:59:59",
+     "category": "Committee report",
+     "chamber": "House",
+     "bill_version": "25.0300.03000",
+     "roll_call": {}
+    },
+    {
+     "id": 481021,
+     "description": "Laid over three legislative days",
+     "date": "2025-03-31T23:59:59",
+     "category": "Laid over",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 481770,
+     "description": "Second reading, passed, yeas 59 nays 31",
+     "date": "2025-04-04T23:59:59",
+     "category": "Passed",
+     "chamber": "House",
+     "bill_version": "25.0300.03000",
+     "roll_call": {
+      "id": "202501H00941",
+      "chamber": "House",
+      "date": "2025-04-04T14:14:06",
+      "description": "Final Passage",
+      "division": null,
+      "passed": false,
+      "total_yeas": 59,
+      "total_nays": 31,
+      "total_absent": 4
+     }
+    },
+    {
+     "id": 481771,
+     "description": "Emergency clause failed",
+     "date": "2025-04-04T23:59:59",
+     "category": "Emergency clause failed",
+     "chamber": "House",
+     "bill_version": "25.0300.03000",
+     "roll_call": {}
+    },
+    {
+     "id": 481932,
+     "description": "Returned to Senate",
+     "date": "2025-04-07T23:59:59",
+     "category": "Returned to Senate",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 482480,
+     "description": "Signed by Speaker",
+     "date": "2025-04-11T23:59:59",
+     "category": "Speaker signed",
+     "chamber": "House",
+     "bill_version": "25.0300.05000",
+     "roll_call": {}
+    },
+    {
+     "id": 482678,
+     "description": "Signed by President",
+     "date": "2025-04-14T23:59:59",
+     "category": "President signed",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 482679,
+     "description": "Sent to Governor",
+     "date": "2025-04-14T23:59:59",
+     "category": "Delivered to Governor",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 483179,
+     "description": "Signed by Governor 04/15",
+     "date": "2025-04-17T23:59:59",
+     "category": "Governor signed",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 483213,
+     "description": "Filed with Secretary Of State 04/17",
+     "date": "2025-04-18T08:46:03",
+     "category": "Filed with Secretary of State",
+     "chamber": null,
+     "bill_version": null,
+     "roll_call": {}
+    }
+   ],
+   "versions": [
+    {
+     "lc_number": "25.0300.02000",
+     "description": "INTRODUCED",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0300-02000.pdf"
+    },
+    {
+     "lc_number": "25.0300.02001",
+     "description": "Adopted by the Senate Finance and Taxation Committee",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0300-02001m.pdf"
+    },
+    {
+     "lc_number": "25.0300.03000",
+     "description": "FIRST ENGROSSMENT",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0300-03000.pdf"
+    },
+    {
+     "lc_number": "25.0300.03001",
+     "description": "Prepared by the Legislative Council staff for Senator Powers",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0300-03001m.pdf"
+    },
+    {
+     "lc_number": "25.0300.05000",
+     "description": "Enrollment",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0300-05000.pdf"
+    }
+   ],
+   "hearings": [
+    {
+     "id": 39411,
+     "description": "SenateBill relating to the distribution of the unobligated cash balance of a dissolved school district; and to declare an emergency.",
+     "type": "Bill Hearing",
+     "date": "2025-01-13T14:00:00",
+     "committee": {
+      "id": 1962,
+      "name": "Senate Finance and Taxation"
+     },
+     "room": "Fort Totten"
+    },
+    {
+     "id": 39499,
+     "description": "Committee Work: Committee Work on SB 2158",
+     "type": "Committee Work",
+     "date": "2025-01-15T14:00:00",
+     "committee": {
+      "id": 1962,
+      "name": "Senate Finance and Taxation"
+     },
+     "room": "Fort Totten"
+    },
+    {
+     "id": 40360,
+     "description": "Committee Work: Committee Work on SB 2158",
+     "type": "Committee Work",
+     "date": "2025-01-20T11:43:00",
+     "committee": {
+      "id": 1962,
+      "name": "Senate Finance and Taxation"
+     },
+     "room": "Fort Totten"
+    },
+    {
+     "id": 42590,
+     "description": "Relating to the distribution of the unobligated cash balance of a dissolved school district; and to declare an emergency.",
+     "type": "Bill Hearing",
+     "date": "2025-03-07T11:00:00",
+     "committee": {
+      "id": 1957,
+      "name": "House Political Subdivisions"
+     },
+     "room": "327B"
+    },
+    {
+     "id": 43206,
+     "description": "Committee Work: Relating to the distribution of the unobligated cash balance of a dissolved school district; and to declare an emergency.",
+     "type": "Committee Work",
+     "date": "2025-03-13T09:37:00",
+     "committee": {
+      "id": 1957,
+      "name": "House Political Subdivisions"
+     },
+     "room": "327B"
+    },
+    {
+     "id": 44222,
+     "description": "Committee Work: Relating to the distribution of the unobligated cash balance of a dissolved school district; and to declare an emergency.",
+     "type": "Committee Work",
+     "date": "2025-03-28T09:01:00",
+     "committee": {
+      "id": 1957,
+      "name": "House Political Subdivisions"
+     },
+     "room": "327B"
+    }
+   ]
+  }
+ }
+}
