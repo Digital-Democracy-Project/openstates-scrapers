@@ -93,3 +93,15 @@ def test_ordinary_line_ends_still_split():
     # a closing period after a whole name, a total, a colon or a comma ends the line
     for first in ("Younger.", "Total--47.", "by the following vote:", "Rhodes,"):
         assert _combine_lines([first, "Next"]) == [first, "Next"]
+
+
+def test_a_line_ending_in_a_capital_letter_but_not_a_name_wrap_still_splits():
+    # "Amendment A." is a heading, not a member's initial: the next line is not an initial
+    assert _combine_lines(["Amendment A.", "Next section."]) == [
+        "Amendment A.",
+        "Next section.",
+    ]
+    assert _combine_lines(["Option A.", "Yeas--Barnett,"]) == [
+        "Option A.",
+        "Yeas--Barnett,",
+    ]
