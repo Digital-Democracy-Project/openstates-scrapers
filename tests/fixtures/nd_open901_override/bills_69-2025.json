@@ -1,0 +1,1999 @@
+{
+ "bills": {
+  "1540": {
+   "name": "HB 1540",
+   "number": "1540",
+   "summary": "Relating to an education savings account program for students who are not enrolled in public school or a homeschool program; to provide an appropriation; and to provide an effective date.",
+   "title": "AN ACT to create and enact a new chapter to title 15.1 of the North Dakota Century Code, relating to an education savings account program for students who are not enrolled in public school or a homeschool program; to provide an appropriation; and to provide an effective date.",
+   "chamber": "House",
+   "session_id": "202501",
+   "session_name": "2025 Regular Session",
+   "url": "https://ndlegis.gov/assembly/69-2025/regular/bill-overview/bo1540.html",
+   "versions_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-index/bi1540.html",
+   "actions_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-actions/ba1540.html",
+   "video_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-video/bv1540.html",
+   "hearing_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-hearings/bh1540.html",
+   "testimony_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-testimony/bt1540.html",
+   "current_status": "Veto sustained",
+   "last_action": "Filed with Secretary Of State 04/29",
+   "passed": false,
+   "agency": null,
+   "sponsors": [
+    {
+     "id": 3435,
+     "name": "Rep. Koppelman, Ben",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": true
+    },
+    {
+     "id": 3424,
+     "name": "Sen. Boehm, Keith",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    },
+    {
+     "id": 3352,
+     "name": "Sen. Clemens, David A.",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    },
+    {
+     "id": 3409,
+     "name": "Sen. Cory, Claire",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    },
+    {
+     "id": 3377,
+     "name": "Sen. Gerhardt, Justin",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    },
+    {
+     "id": 3312,
+     "name": "Rep. Hauck, Dori",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    },
+    {
+     "id": 3416,
+     "name": "Rep. Johnson, Jorin",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    },
+    {
+     "id": 3340,
+     "name": "Rep. Marschall, Andrew",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    },
+    {
+     "id": 3467,
+     "name": "Rep. Morton, Desiree",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    },
+    {
+     "id": 3331,
+     "name": "Rep. Rohr, Karen M.",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    },
+    {
+     "id": 3397,
+     "name": "Rep. Steiner, Vicky",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    },
+    {
+     "id": 3387,
+     "name": "Sen. Wobbema, Mike",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    }
+   ],
+   "actions": [
+    {
+     "id": 471122,
+     "description": "Introduced, first reading, referred Education Committee",
+     "date": "2025-01-20T23:59:59",
+     "category": "Introduced",
+     "chamber": "House",
+     "bill_version": "25.1055.02000",
+     "roll_call": {}
+    },
+    {
+     "id": 472779,
+     "description": "Committee Hearing 02:30",
+     "date": "2025-02-05T14:30:00",
+     "category": "Committee hearing",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 474264,
+     "description": "Reported back amended, do not pass, placed on calendar 8 6 0",
+     "date": "2025-02-11T23:59:59",
+     "category": "Committee report",
+     "chamber": "House",
+     "bill_version": "25.1055.02003",
+     "roll_call": {}
+    },
+    {
+     "id": 474424,
+     "description": "Amendment adopted, placed on calendar",
+     "date": "2025-02-12T23:59:59",
+     "category": "Amendment adopted",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 474802,
+     "description": "Second reading, passed, yeas 49 nays 38",
+     "date": "2025-02-13T23:59:59",
+     "category": "Passed",
+     "chamber": "House",
+     "bill_version": "25.1055.03000",
+     "roll_call": {
+      "id": "202501H00389",
+      "chamber": "House",
+      "date": "2025-02-13T14:05:11",
+      "description": "Final Passage",
+      "division": null,
+      "passed": true,
+      "total_yeas": 49,
+      "total_nays": 38,
+      "total_absent": 7
+     }
+    },
+    {
+     "id": 474803,
+     "description": "Reconsidered",
+     "date": "2025-02-13T23:59:59",
+     "category": "Reconsider",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 474804,
+     "description": "Rereferred to Appropriations",
+     "date": "2025-02-13T23:59:59",
+     "category": "Rereferred",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 476339,
+     "description": "Reported back amended, do not pass, placed on calendar 19 3 1",
+     "date": "2025-02-24T23:59:59",
+     "category": "Committee report",
+     "chamber": "House",
+     "bill_version": "25.1055.03002",
+     "roll_call": {}
+    },
+    {
+     "id": 476773,
+     "description": "Amendment adopted, placed on calendar",
+     "date": "2025-02-25T23:59:59",
+     "category": "Amendment adopted",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 476774,
+     "description": "Second reading, passed, yeas 51 nays 39",
+     "date": "2025-02-25T23:59:59",
+     "category": "Passed",
+     "chamber": "House",
+     "bill_version": "25.1055.04000",
+     "roll_call": {
+      "id": "202501H00663",
+      "chamber": "House",
+      "date": "2025-02-25T20:25:36",
+      "description": "Final Passage",
+      "division": null,
+      "passed": true,
+      "total_yeas": 51,
+      "total_nays": 39,
+      "total_absent": 3
+     }
+    },
+    {
+     "id": 476775,
+     "description": "Received from House",
+     "date": "2025-02-25T23:59:59",
+     "category": "Received from House",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 477478,
+     "description": "Introduced, first reading, referred Education Committee",
+     "date": "2025-03-07T23:59:59",
+     "category": "Introduced",
+     "chamber": "Senate",
+     "bill_version": "25.1055.04000",
+     "roll_call": {}
+    },
+    {
+     "id": 478190,
+     "description": "Committee Hearing 02:30",
+     "date": "2025-03-17T14:30:00",
+     "category": "Committee hearing",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 481522,
+     "description": "Reported back amended, do pass, amendment placed on calendar 4 2 0",
+     "date": "2025-04-03T23:59:59",
+     "category": "Committee report",
+     "chamber": "Senate",
+     "bill_version": "25.1055.04004",
+     "roll_call": {}
+    },
+    {
+     "id": 481711,
+     "description": "Amendment adopted",
+     "date": "2025-04-04T23:59:59",
+     "category": "Amendment adopted",
+     "chamber": "Senate",
+     "bill_version": "25.1055.05000",
+     "roll_call": {}
+    },
+    {
+     "id": 481712,
+     "description": "Rereferred to Appropriations",
+     "date": "2025-04-04T23:59:59",
+     "category": "Rereferred",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 482991,
+     "description": "Reported back amended, do pass, amendment placed on calendar 9 6 1",
+     "date": "2025-04-16T23:59:59",
+     "category": "Committee report",
+     "chamber": "Senate",
+     "bill_version": "25.1055.04010",
+     "roll_call": {}
+    },
+    {
+     "id": 483139,
+     "description": "Amendment adopted, placed on calendar",
+     "date": "2025-04-17T23:59:59",
+     "category": "Amendment adopted",
+     "chamber": "Senate",
+     "bill_version": "25.1055.06000",
+     "roll_call": {}
+    },
+    {
+     "id": 483140,
+     "description": "Amendment proposed on floor",
+     "date": "2025-04-17T23:59:59",
+     "category": "Amended on floor",
+     "chamber": "Senate",
+     "bill_version": "25.1055.04012",
+     "roll_call": {}
+    },
+    {
+     "id": 483141,
+     "description": "Amendment adopted",
+     "date": "2025-04-17T23:59:59",
+     "category": "Amendment adopted",
+     "chamber": "Senate",
+     "bill_version": "25.1055.04012",
+     "roll_call": {}
+    },
+    {
+     "id": 483142,
+     "description": "Amendment proposed on floor",
+     "date": "2025-04-17T23:59:59",
+     "category": "Amended on floor",
+     "chamber": "Senate",
+     "bill_version": "25.1055.04014",
+     "roll_call": {}
+    },
+    {
+     "id": 483143,
+     "description": "Amendment failed",
+     "date": "2025-04-17T23:59:59",
+     "category": "Amendment failed",
+     "chamber": "Senate",
+     "bill_version": "25.1055.04014",
+     "roll_call": {}
+    },
+    {
+     "id": 483144,
+     "description": "Second reading, passed as amended, yeas 27 nays 20",
+     "date": "2025-04-17T23:59:59",
+     "category": "Passed",
+     "chamber": "Senate",
+     "bill_version": "25.1055.07000",
+     "roll_call": {
+      "id": "202501S00967",
+      "chamber": "Senate",
+      "date": "2025-04-17T14:41:20",
+      "description": "Final Passage",
+      "division": null,
+      "passed": true,
+      "total_yeas": 27,
+      "total_nays": 20,
+      "total_absent": 0
+     }
+    },
+    {
+     "id": 483145,
+     "description": "Returned to House (12)",
+     "date": "2025-04-17T23:59:59",
+     "category": "Returned to House",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 483529,
+     "description": "Concurred",
+     "date": "2025-04-21T23:59:59",
+     "category": "Concurred",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 483530,
+     "description": "Second reading, passed, yeas 49 nays 43",
+     "date": "2025-04-21T23:59:59",
+     "category": "Passed",
+     "chamber": "House",
+     "bill_version": "25.1055.07000",
+     "roll_call": {
+      "id": "202501H01115",
+      "chamber": "House",
+      "date": "2025-04-21T13:54:42",
+      "description": "Final Passage",
+      "division": null,
+      "passed": true,
+      "total_yeas": 49,
+      "total_nays": 43,
+      "total_absent": 2
+     }
+    },
+    {
+     "id": 483727,
+     "description": "Motion to reconsider failed",
+     "date": "2025-04-22T23:59:59",
+     "category": "Reconsider",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 483834,
+     "description": "Signed by President",
+     "date": "2025-04-23T23:59:59",
+     "category": "President signed",
+     "chamber": "Senate",
+     "bill_version": "25.1055.09000",
+     "roll_call": {}
+    },
+    {
+     "id": 483835,
+     "description": "Signed by Speaker",
+     "date": "2025-04-23T23:59:59",
+     "category": "Speaker signed",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 483836,
+     "description": "Sent to Governor",
+     "date": "2025-04-23T23:59:59",
+     "category": "Delivered to Governor",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 484008,
+     "description": "Vetoed by Governor 04/23",
+     "date": "2025-04-24T23:59:59",
+     "category": "Vetoed by Governor",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 484172,
+     "description": "Consideration of Governor's veto",
+     "date": "2025-04-25T23:59:59",
+     "category": "Consideration of Governor's veto",
+     "chamber": "House",
+     "bill_version": "25.1055.09000",
+     "roll_call": {}
+    },
+    {
+     "id": 484173,
+     "description": "Veto sustained, yeas 45 nays 48",
+     "date": "2025-04-25T23:59:59",
+     "category": "Veto sustained",
+     "chamber": "House",
+     "bill_version": "25.1055.09000",
+     "roll_call": {}
+    },
+    {
+     "id": 484428,
+     "description": "Filed with Secretary Of State 04/29",
+     "date": "2025-04-29T23:59:59",
+     "category": "Filed with Secretary of State",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    }
+   ],
+   "versions": [
+    {
+     "lc_number": "25.1055.02000",
+     "description": "INTRODUCED",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1055-02000.pdf"
+    },
+    {
+     "lc_number": "25.1055.02003",
+     "description": "Adopted by the House Education Committee",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1055-02003m.pdf"
+    },
+    {
+     "lc_number": "25.1055.03000",
+     "description": "FIRST ENGROSSMENT",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1055-03000.pdf"
+    },
+    {
+     "lc_number": "25.1055.03002",
+     "description": "Prepared by the Legislative Council staff for Representative Koppelman",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1055-03002m.pdf"
+    },
+    {
+     "lc_number": "25.1055.04000",
+     "description": "SECOND ENGROSSMENT",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1055-04000.pdf"
+    },
+    {
+     "lc_number": "25.1055.04004",
+     "description": "Adopted by the Senate Education Committee",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1055-04004m.pdf"
+    },
+    {
+     "lc_number": "25.1055.05000",
+     "description": "SECOND ENGROSSMENT with Senate Amendments",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1055-05000.pdf"
+    },
+    {
+     "lc_number": "25.1055.04010",
+     "description": "Prepared by the Legislative Council staff for Senator Schaible",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1055-04010m.pdf"
+    },
+    {
+     "lc_number": "25.1055.06000",
+     "description": "SECOND ENGROSSMENT with Senate Amendments",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1055-06000.pdf"
+    },
+    {
+     "lc_number": "25.1055.04012",
+     "description": "Prepared by the Legislative Council staff for Senator Axtman",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1055-04012m.pdf"
+    },
+    {
+     "lc_number": "25.1055.07000",
+     "description": "SECOND ENGROSSMENT with Senate Amendments",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1055-07000.pdf"
+    },
+    {
+     "lc_number": "25.1055.04014",
+     "description": "Prepared by the Legislative Council staff for Representative Koppelman",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1055-04014m.pdf"
+    },
+    {
+     "lc_number": "25.1055.09000",
+     "description": "Enrollment",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1055-09000.pdf"
+    }
+   ],
+   "hearings": [
+    {
+     "id": 40735,
+     "description": "Relating to an education savings account program.",
+     "type": "Bill Hearing",
+     "date": "2025-02-05T14:30:00",
+     "committee": {
+      "id": 1950,
+      "name": "House Education"
+     },
+     "room": "Coteau AB"
+    },
+    {
+     "id": 41565,
+     "description": "Committee Work: Relating to an education savings account program.",
+     "type": "Committee Work",
+     "date": "2025-02-10T10:45:00",
+     "committee": {
+      "id": 1950,
+      "name": "House Education"
+     },
+     "room": "Coteau AB"
+    },
+    {
+     "id": 41574,
+     "description": "Committee Work: Relating to an education savings account program.",
+     "type": "Committee Work",
+     "date": "2025-02-10T14:15:00",
+     "committee": {
+      "id": 1950,
+      "name": "House Education"
+     },
+     "room": "Coteau AB"
+    },
+    {
+     "id": 41836,
+     "description": "Committee Work: Relating to an education savings account program; to provide an appropriation; and to provide an effective date. Rereferred from Education",
+     "type": "Committee Work",
+     "date": "2025-02-20T16:18:00",
+     "committee": {
+      "id": 1948,
+      "name": "House Appropriations"
+     },
+     "room": "Roughrider"
+    },
+    {
+     "id": 42423,
+     "description": "Committee Work: ",
+     "type": "Committee Work",
+     "date": "2025-02-20T19:09:00",
+     "committee": {
+      "id": 1948,
+      "name": "House Appropriations"
+     },
+     "room": "Roughrider"
+    },
+    {
+     "id": 43186,
+     "description": "Relating to an education savings account program; to provide an appropriation; and to provide an effective date.",
+     "type": "Bill Hearing",
+     "date": "2025-03-17T14:30:00",
+     "committee": {
+      "id": 1972,
+      "name": "Senate Education"
+     },
+     "room": "216"
+    },
+    {
+     "id": 44195,
+     "description": "Committee Work: Committee Work",
+     "type": "Committee Work",
+     "date": "2025-04-01T09:00:00",
+     "committee": {
+      "id": 1972,
+      "name": "Senate Education"
+     },
+     "room": "216"
+    },
+    {
+     "id": 44338,
+     "description": "Committee Work: ",
+     "type": "Committee Work",
+     "date": "2025-04-02T10:00:00",
+     "committee": {
+      "id": 1972,
+      "name": "Senate Education"
+     },
+     "room": "216"
+    },
+    {
+     "id": 44533,
+     "description": "Committee Work: Relating to an education savings account program; to provide an appropriation; and to provide an effective date.  Committee Work",
+     "type": "Committee Work",
+     "date": "2025-04-08T11:00:00",
+     "committee": {
+      "id": 1959,
+      "name": "Senate Appropriations - Education and Environment Division"
+     },
+     "room": "Sakakawea"
+    },
+    {
+     "id": 44648,
+     "description": "Committee Work: Relating to an education savings account program; to provide an appropriation; and to provide an effective date.  Committee Work",
+     "type": "Committee Work",
+     "date": "2025-04-10T10:00:00",
+     "committee": {
+      "id": 1959,
+      "name": "Senate Appropriations - Education and Environment Division"
+     },
+     "room": "Sakakawea"
+    },
+    {
+     "id": 44443,
+     "description": "Committee Work: Relating to an education savings account program; to provide an appropriation; and to provide an effective date.  Committee Work",
+     "type": "Committee Work",
+     "date": "2025-04-10T14:30:00",
+     "committee": {
+      "id": 1959,
+      "name": "Senate Appropriations - Education and Environment Division"
+     },
+     "room": "Sakakawea"
+    },
+    {
+     "id": 44445,
+     "description": "Committee Work: Relating to an education savings account program; to provide an appropriation; and to provide an effective date.  Committee Work",
+     "type": "Committee Work",
+     "date": "2025-04-11T09:30:00",
+     "committee": {
+      "id": 1959,
+      "name": "Senate Appropriations - Education and Environment Division"
+     },
+     "room": "Sakakawea"
+    },
+    {
+     "id": 44765,
+     "description": "Committee Work: Relating to an education savings account program; to provide an appropriation; and to provide an effective date.  Committee Work",
+     "type": "Committee Work",
+     "date": "2025-04-14T10:30:00",
+     "committee": {
+      "id": 1959,
+      "name": "Senate Appropriations - Education and Environment Division"
+     },
+     "room": "Sakakawea"
+    },
+    {
+     "id": 44746,
+     "description": "Committee Work: ***CANCELED***",
+     "type": "Committee Work",
+     "date": "2025-04-14T14:30:00",
+     "committee": {
+      "id": 1959,
+      "name": "Senate Appropriations - Education and Environment Division"
+     },
+     "room": "Sakakawea"
+    },
+    {
+     "id": 44791,
+     "description": "Committee Work: Relating to an education savings account program; to provide an appropriation.",
+     "type": "Committee Work",
+     "date": "2025-04-15T14:30:00",
+     "committee": {
+      "id": 1971,
+      "name": "Senate Appropriations"
+     },
+     "room": "Harvest"
+    }
+   ]
+  },
+  "2160": {
+   "name": "SB 2160",
+   "number": "2160",
+   "summary": "Relating to health insurance benefits coverage provided by the uniform group insurance program; to provide an appropriation; to provide for a statement of legislative intent; and to provide an effective date.",
+   "title": "AN ACT to amend and reenact sections 54-52.1-01, 54-52.1-02, and 54-52.1-03.1 of the North Dakota Century Code, relating to health insurance benefits coverage provided by the uniform group insurance program; to provide an appropriation; to provide for a statement of legislative intent; and to provide an effective date.",
+   "chamber": "Senate",
+   "session_id": "202501",
+   "session_name": "2025 Regular Session",
+   "url": "https://ndlegis.gov/assembly/69-2025/regular/bill-overview/bo2160.html",
+   "versions_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-index/bi2160.html",
+   "actions_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-actions/ba2160.html",
+   "video_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-video/bv2160.html",
+   "hearing_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-hearings/bh2160.html",
+   "testimony_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-testimony/bt2160.html",
+   "current_status": "Veto sustained",
+   "last_action": "Filed with Secretary Of State 05/01",
+   "passed": false,
+   "agency": null,
+   "sponsors": [
+    {
+     "id": 3351,
+     "name": "Sen. Davison, Kyle",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": true
+    },
+    {
+     "id": 3401,
+     "name": "Sen. Bekkedahl, Brad",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    },
+    {
+     "id": 3321,
+     "name": "Rep. Bosch, Glenn",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    },
+    {
+     "id": 3334,
+     "name": "Sen. Sorvaag, Ronald",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    },
+    {
+     "id": 3391,
+     "name": "Rep. Stemen, Gregory",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    }
+   ],
+   "actions": [
+    {
+     "id": 469856,
+     "description": "Introduced, first reading, referred Human Services Committee",
+     "date": "2025-01-10T23:59:59",
+     "category": "Introduced",
+     "chamber": "Senate",
+     "bill_version": "25.0142.02000",
+     "roll_call": {}
+    },
+    {
+     "id": 469747,
+     "description": "Committee Hearing 09:20",
+     "date": "2025-01-15T09:20:00",
+     "category": "Committee hearing",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 474463,
+     "description": "Reported back, do pass  6 0 0",
+     "date": "2025-02-12T23:59:59",
+     "category": "Committee report",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 474464,
+     "description": "Rereferred to Appropriations",
+     "date": "2025-02-12T23:59:59",
+     "category": "Rereferred",
+     "chamber": "Senate",
+     "bill_version": "25.0142.02000",
+     "roll_call": {}
+    },
+    {
+     "id": 476388,
+     "description": "Reported back amended, do pass, amendment placed on calendar 15 1 0",
+     "date": "2025-02-24T23:59:59",
+     "category": "Committee report",
+     "chamber": "Senate",
+     "bill_version": "25.0142.02007",
+     "roll_call": {}
+    },
+    {
+     "id": 476845,
+     "description": "Amendment adopted, placed on calendar",
+     "date": "2025-02-25T23:59:59",
+     "category": "Amendment adopted",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 476846,
+     "description": "Second reading, passed, yeas 44 nays 2",
+     "date": "2025-02-25T23:59:59",
+     "category": "Passed",
+     "chamber": "Senate",
+     "bill_version": "25.0142.03000",
+     "roll_call": {
+      "id": "202501S00445",
+      "chamber": "Senate",
+      "date": "2025-02-25T08:12:04",
+      "description": "Final Passage",
+      "division": null,
+      "passed": true,
+      "total_yeas": 44,
+      "total_nays": 2,
+      "total_absent": 1
+     }
+    },
+    {
+     "id": 476847,
+     "description": "Received from Senate",
+     "date": "2025-02-25T23:59:59",
+     "category": "Received from Senate",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 477582,
+     "description": "Introduced, first reading, referred Industry, Business and Labor Committee",
+     "date": "2025-03-07T23:59:59",
+     "category": "Introduced",
+     "chamber": "House",
+     "bill_version": "25.0142.03000",
+     "roll_call": {}
+    },
+    {
+     "id": 478233,
+     "description": "Committee Hearing 03:30",
+     "date": "2025-03-17T15:30:00",
+     "category": "Committee hearing",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 478995,
+     "description": "Committee Hearing 10:45",
+     "date": "2025-03-18T10:45:00",
+     "category": "Committee hearing",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 481773,
+     "description": "Reported back, do not pass, placed on calendar 7 4 3",
+     "date": "2025-04-04T23:59:59",
+     "category": "Committee report",
+     "chamber": "House",
+     "bill_version": "25.0142.03000",
+     "roll_call": {}
+    },
+    {
+     "id": 481934,
+     "description": "Rereferred to Industry, Business and Labor",
+     "date": "2025-04-07T23:59:59",
+     "category": "Rereferred",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 481946,
+     "description": "Committee Hearing 09:30",
+     "date": "2025-04-08T09:30:00",
+     "category": "Committee hearing",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 481947,
+     "description": "Committee Hearing 02:45",
+     "date": "2025-04-08T14:45:00",
+     "category": "Committee hearing",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 482255,
+     "description": "Reported back, do pass  10 3 1",
+     "date": "2025-04-09T23:59:59",
+     "category": "Committee report",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 482256,
+     "description": "Rereferred to Appropriations",
+     "date": "2025-04-09T23:59:59",
+     "category": "Rereferred",
+     "chamber": "House",
+     "bill_version": "25.0142.03000",
+     "roll_call": {}
+    },
+    {
+     "id": 482892,
+     "description": "Reported back amended, do pass, amendment placed on calendar 15 7 1",
+     "date": "2025-04-15T23:59:59",
+     "category": "Committee report",
+     "chamber": "House",
+     "bill_version": "25.0142.03004",
+     "roll_call": {}
+    },
+    {
+     "id": 483019,
+     "description": "Amendment adopted, placed on calendar",
+     "date": "2025-04-16T23:59:59",
+     "category": "Amendment adopted",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 483020,
+     "description": "Second reading, passed as amended, yeas 55 nays 37",
+     "date": "2025-04-16T23:59:59",
+     "category": "Passed",
+     "chamber": "House",
+     "bill_version": "25.0142.04000",
+     "roll_call": {
+      "id": "202501H01057",
+      "chamber": "House",
+      "date": "2025-04-16T13:41:40",
+      "description": "Final Passage",
+      "division": null,
+      "passed": true,
+      "total_yeas": 55,
+      "total_nays": 37,
+      "total_absent": 2
+     }
+    },
+    {
+     "id": 483021,
+     "description": "Returned to Senate (12)",
+     "date": "2025-04-16T23:59:59",
+     "category": "Returned to Senate",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 483588,
+     "description": "Concurred",
+     "date": "2025-04-21T23:59:59",
+     "category": "Concurred",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 483589,
+     "description": "Second reading, passed, yeas 39 nays 8",
+     "date": "2025-04-21T23:59:59",
+     "category": "Passed",
+     "chamber": "Senate",
+     "bill_version": "25.0142.04000",
+     "roll_call": {
+      "id": "202501S00994",
+      "chamber": "Senate",
+      "date": "2025-04-21T13:18:10",
+      "description": "Final Passage",
+      "division": null,
+      "passed": true,
+      "total_yeas": 39,
+      "total_nays": 8,
+      "total_absent": 0
+     }
+    },
+    {
+     "id": 483875,
+     "description": "Signed by Speaker",
+     "date": "2025-04-23T23:59:59",
+     "category": "Speaker signed",
+     "chamber": "House",
+     "bill_version": "25.0142.05000",
+     "roll_call": {}
+    },
+    {
+     "id": 483873,
+     "description": "Signed by President",
+     "date": "2025-04-23T23:59:59",
+     "category": "President signed",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 483874,
+     "description": "Sent to Governor",
+     "date": "2025-04-23T23:59:59",
+     "category": "Delivered to Governor",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 484471,
+     "description": "Vetoed by Governor 04/28",
+     "date": "2025-04-29T23:59:59",
+     "category": "Vetoed by Governor",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 484678,
+     "description": "Consideration of Governor's veto",
+     "date": "2025-05-01T23:59:59",
+     "category": "Consideration of Governor's veto",
+     "chamber": "Senate",
+     "bill_version": "25.0142.05000",
+     "roll_call": {}
+    },
+    {
+     "id": 484677,
+     "description": "Veto sustained, yeas 31 nays 15",
+     "date": "2025-05-01T23:59:59",
+     "category": "Veto sustained",
+     "chamber": "Senate",
+     "bill_version": "25.0142.05000",
+     "roll_call": {}
+    },
+    {
+     "id": 484679,
+     "description": "Filed with Secretary Of State 05/01",
+     "date": "2025-05-01T23:59:59",
+     "category": "Filed with Secretary of State",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    }
+   ],
+   "versions": [
+    {
+     "lc_number": "25.0142.02000",
+     "description": "INTRODUCED",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0142-02000.pdf"
+    },
+    {
+     "lc_number": "25.0142.02007",
+     "description": "Prepared by the Legislative Council staff for Senator Davison",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0142-02007m.pdf"
+    },
+    {
+     "lc_number": "25.0142.03000",
+     "description": "FIRST ENGROSSMENT",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0142-03000.pdf"
+    },
+    {
+     "lc_number": "25.0142.03004",
+     "description": "Prepared by the Legislative Council staff for House Appropriations Committee",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0142-03004m.pdf"
+    },
+    {
+     "lc_number": "25.0142.04000",
+     "description": "FIRST ENGROSSMENT with House Amendments",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0142-04000.pdf"
+    },
+    {
+     "lc_number": "25.0142.05000",
+     "description": "Enrollment",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0142-05000.pdf"
+    }
+   ],
+   "hearings": [
+    {
+     "id": 39447,
+     "description": "Relating to health insurance benefits coverage provided by the uniform group insurance program; and to provide an effective date.",
+     "type": "Bill Hearing",
+     "date": "2025-01-15T09:20:00",
+     "committee": {
+      "id": 1968,
+      "name": "Senate Human Services"
+     },
+     "room": "Fort Lincoln"
+    },
+    {
+     "id": 39890,
+     "description": "Committee Work: Relating to health insurance benefits coverage provided by the uniform group insurance program; and to provide an effective date.",
+     "type": "Committee Work",
+     "date": "2025-01-21T15:45:00",
+     "committee": {
+      "id": 1968,
+      "name": "Senate Human Services"
+     },
+     "room": "Fort Lincoln"
+    },
+    {
+     "id": 40459,
+     "description": "Committee Work: Relating to health insurance benefits coverage provided by the uniform group insurance program; and to provide an effective date.",
+     "type": "Committee Work",
+     "date": "2025-01-28T14:31:00",
+     "committee": {
+      "id": 1968,
+      "name": "Senate Human Services"
+     },
+     "room": "Fort Lincoln"
+    },
+    {
+     "id": 41080,
+     "description": "Committee Work: Relating to health insurance benefits coverage provided by the uniform group insurance program; and to provide an effective date.",
+     "type": "Committee Work",
+     "date": "2025-02-05T09:33:00",
+     "committee": {
+      "id": 1968,
+      "name": "Senate Human Services"
+     },
+     "room": "Fort Lincoln"
+    },
+    {
+     "id": 41661,
+     "description": "Committee Work: Relating to health insurance benefits coverage provided by the uniform group insurance program; and to provide an effective date.",
+     "type": "Committee Work",
+     "date": "2025-02-11T15:29:00",
+     "committee": {
+      "id": 1968,
+      "name": "Senate Human Services"
+     },
+     "room": "Fort Lincoln"
+    },
+    {
+     "id": 41688,
+     "description": "Committee Work: Relating to health insurance benefits coverage provided by the uniform group insurance program; and to provide an effective date.",
+     "type": "Committee Work",
+     "date": "2025-02-12T09:18:00",
+     "committee": {
+      "id": 1968,
+      "name": "Senate Human Services"
+     },
+     "room": "Fort Lincoln"
+    },
+    {
+     "id": 42033,
+     "description": "Committee Work: Committee Work 2160 - Relating to health insurance benefits coverage provided by the uniform group insurance program; and to provide an effective date",
+     "type": "Committee Work",
+     "date": "2025-02-20T08:30:00",
+     "committee": {
+      "id": 1964,
+      "name": "Senate Appropriations - Human Resources Division"
+     },
+     "room": "Harvest"
+    },
+    {
+     "id": 42379,
+     "description": "Committee Work: ",
+     "type": "Committee Work",
+     "date": "2025-02-20T16:04:00",
+     "committee": {
+      "id": 1964,
+      "name": "Senate Appropriations - Human Resources Division"
+     },
+     "room": "Harvest"
+    },
+    {
+     "id": 42400,
+     "description": "Committee Work: Committee Work SB 2160 - \tRelating to health insurance benefits coverage provided by the uniform group insurance program",
+     "type": "Committee Work",
+     "date": "2025-02-21T09:15:00",
+     "committee": {
+      "id": 1971,
+      "name": "Senate Appropriations"
+     },
+     "room": "Harvest"
+    },
+    {
+     "id": 42493,
+     "description": "Committee Work: Committee Work 2160 -",
+     "type": "Committee Work",
+     "date": "2025-02-24T08:00:00",
+     "committee": {
+      "id": 1971,
+      "name": "Senate Appropriations"
+     },
+     "room": "Harvest"
+    },
+    {
+     "id": 43281,
+     "description": "Relating to health insurance benefits coverage provided by the uniform group insurance program",
+     "type": "Bill Hearing",
+     "date": "2025-03-17T15:30:00",
+     "committee": {
+      "id": 1955,
+      "name": "House Industry, Business and Labor"
+     },
+     "room": "327C"
+    },
+    {
+     "id": 43551,
+     "description": "Relating to health insurance benefits coverage provided by the uniform group insurance program",
+     "type": "Bill Hearing",
+     "date": "2025-03-18T10:45:00",
+     "committee": {
+      "id": 1955,
+      "name": "House Industry, Business and Labor"
+     },
+     "room": "327C"
+    },
+    {
+     "id": 44317,
+     "description": "Committee Work: Relating to health insurance benefits coverage provided by the uniform group insurance program; to provide an appropriation; to provide for a statement of legislative intent; and to provide an effective date.",
+     "type": "Committee Work",
+     "date": "2025-04-01T14:17:00",
+     "committee": {
+      "id": 1955,
+      "name": "House Industry, Business and Labor"
+     },
+     "room": "327C"
+    },
+    {
+     "id": 44583,
+     "description": "Relating to health insurance benefits coverage provided by the uniform group insurance program",
+     "type": "Bill Hearing",
+     "date": "2025-04-08T09:30:00",
+     "committee": {
+      "id": 1955,
+      "name": "House Industry, Business and Labor"
+     },
+     "room": "327C"
+    },
+    {
+     "id": 44600,
+     "description": "Relating to health insurance benefits coverage provided by the uniform group insurance program",
+     "type": "Bill Hearing",
+     "date": "2025-04-08T14:45:00",
+     "committee": {
+      "id": 1955,
+      "name": "House Industry, Business and Labor"
+     },
+     "room": "327C"
+    },
+    {
+     "id": 44723,
+     "description": "Committee Work: Relating to health insurance benefits coverage provided by the uniform group insurance program; to provide an appropriation; to provide for a statement of legislative intent; and to provide an effective date. Rereferred from IBL",
+     "type": "Committee Work",
+     "date": "2025-04-14T08:30:00",
+     "committee": {
+      "id": 1948,
+      "name": "House Appropriations"
+     },
+     "room": "Roughrider"
+    },
+    {
+     "id": 44788,
+     "description": "Committee Work: Relating to health insurance benefits coverage provided by the uniform group insurance program; to provide an appropriation; to provide for a statement of legislative intent; and to provide an effective date.",
+     "type": "Committee Work",
+     "date": "2025-04-15T09:15:00",
+     "committee": {
+      "id": 1948,
+      "name": "House Appropriations"
+     },
+     "room": "Roughrider"
+    }
+   ]
+  },
+  "2261": {
+   "name": "SB 2261",
+   "number": "2261",
+   "summary": "Relating to a prison industries workforce development income tax credit; to provide for a legislative management study; and to provide an effective date.",
+   "title": "AN ACT to create and enact a new section to chapter 57-38 and a new subdivision to subsection 7 of section 57-38-30.3 of the North Dakota Century Code, relating to a prison industries workforce development income tax credit; to provide for a legislative management study; and to provide an effective date.",
+   "chamber": "Senate",
+   "session_id": "202501",
+   "session_name": "2025 Regular Session",
+   "url": "https://ndlegis.gov/assembly/69-2025/regular/bill-overview/bo2261.html",
+   "versions_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-index/bi2261.html",
+   "actions_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-actions/ba2261.html",
+   "video_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-video/bv2261.html",
+   "hearing_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-hearings/bh2261.html",
+   "testimony_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-testimony/bt2261.html",
+   "current_status": "Veto sustained",
+   "last_action": "Filed with Secretary Of State 04/08",
+   "passed": false,
+   "agency": null,
+   "sponsors": [
+    {
+     "id": 3400,
+     "name": "Sen. Klein, Jerry",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": true
+    },
+    {
+     "id": 3443,
+     "name": "Sen. Barta, Jeff",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    },
+    {
+     "id": 3410,
+     "name": "Sen. Kessel, Greg",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    },
+    {
+     "id": 3390,
+     "name": "Rep. Nelson, Jon O.",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    },
+    {
+     "id": 3357,
+     "name": "Rep. Schauer, Austen",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    }
+   ],
+   "actions": [
+    {
+     "id": 471254,
+     "description": "Introduced, first reading, referred Industry and Business Committee",
+     "date": "2025-01-20T23:59:59",
+     "category": "Introduced",
+     "chamber": "Senate",
+     "bill_version": "25.1273.01000",
+     "roll_call": {}
+    },
+    {
+     "id": 471765,
+     "description": "Committee Hearing 11:00",
+     "date": "2025-01-27T11:00:00",
+     "category": "Committee hearing",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 473128,
+     "description": "Reported back amended, do pass, amendment placed on calendar 5 0 0",
+     "date": "2025-01-31T23:59:59",
+     "category": "Committee report",
+     "chamber": "Senate",
+     "bill_version": "25.1273.01001",
+     "roll_call": {}
+    },
+    {
+     "id": 473273,
+     "description": "Amendment adopted, placed on calendar",
+     "date": "2025-02-03T23:59:59",
+     "category": "Amendment adopted",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 473274,
+     "description": "Second reading, passed, yeas 43 nays 3",
+     "date": "2025-02-03T23:59:59",
+     "category": "Passed",
+     "chamber": "Senate",
+     "bill_version": "25.1273.02000",
+     "roll_call": {
+      "id": "202501S00171",
+      "chamber": "Senate",
+      "date": "2025-02-03T13:20:20",
+      "description": "Final Passage",
+      "division": null,
+      "passed": true,
+      "total_yeas": 43,
+      "total_nays": 3,
+      "total_absent": 1
+     }
+    },
+    {
+     "id": 473393,
+     "description": "Received from Senate",
+     "date": "2025-02-04T23:59:59",
+     "category": "Received from Senate",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 475560,
+     "description": "Introduced, first reading, referred Finance and Taxation Committee",
+     "date": "2025-02-18T23:59:59",
+     "category": "Introduced",
+     "chamber": "House",
+     "bill_version": "25.1273.02000",
+     "roll_call": {}
+    },
+    {
+     "id": 477082,
+     "description": "Committee Hearing 09:30",
+     "date": "2025-03-12T09:30:00",
+     "category": "Committee hearing",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 478161,
+     "description": "Reported back, do pass, place on calendar 10 2 2",
+     "date": "2025-03-12T23:59:59",
+     "category": "Committee report",
+     "chamber": "House",
+     "bill_version": "25.1273.02000",
+     "roll_call": {}
+    },
+    {
+     "id": 478539,
+     "description": "Second reading, passed, yeas 56 nays 33",
+     "date": "2025-03-13T23:59:59",
+     "category": "Passed",
+     "chamber": "House",
+     "bill_version": "25.1273.02000",
+     "roll_call": {
+      "id": "202501H00749",
+      "chamber": "House",
+      "date": "2025-03-13T13:15:14",
+      "description": "Final Passage",
+      "division": null,
+      "passed": true,
+      "total_yeas": 56,
+      "total_nays": 33,
+      "total_absent": 5
+     }
+    },
+    {
+     "id": 478806,
+     "description": "Returned to Senate",
+     "date": "2025-03-14T23:59:59",
+     "category": "Returned to Senate",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 479266,
+     "description": "Signed by Speaker",
+     "date": "2025-03-18T23:59:59",
+     "category": "Speaker signed",
+     "chamber": "House",
+     "bill_version": "25.1273.03000",
+     "roll_call": {}
+    },
+    {
+     "id": 479267,
+     "description": "Signed by President",
+     "date": "2025-03-18T23:59:59",
+     "category": "President signed",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 479268,
+     "description": "Sent to Governor",
+     "date": "2025-03-18T23:59:59",
+     "category": "Delivered to Governor",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 480205,
+     "description": "Vetoed by Governor 03/21",
+     "date": "2025-03-24T23:59:59",
+     "category": "Vetoed by Governor",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 480744,
+     "description": "Consideration of Governor's veto",
+     "date": "2025-03-27T23:59:59",
+     "category": "Consideration of Governor's veto",
+     "chamber": "Senate",
+     "bill_version": "25.1273.03000",
+     "roll_call": {}
+    },
+    {
+     "id": 480745,
+     "description": "Passed over veto, yeas 45 nays 2",
+     "date": "2025-03-27T23:59:59",
+     "category": "Passed",
+     "chamber": "Senate",
+     "bill_version": "25.1273.03000",
+     "roll_call": {}
+    },
+    {
+     "id": 481563,
+     "description": "Consideration of Governor's veto",
+     "date": "2025-04-03T23:59:59",
+     "category": "Consideration of Governor's veto",
+     "chamber": "House",
+     "bill_version": "25.1273.03000",
+     "roll_call": {}
+    },
+    {
+     "id": 481564,
+     "description": "Veto sustained, yeas 15 nays 78",
+     "date": "2025-04-03T23:59:59",
+     "category": "Veto sustained",
+     "chamber": "House",
+     "bill_version": "25.1273.03000",
+     "roll_call": {}
+    },
+    {
+     "id": 482073,
+     "description": "Filed with Secretary Of State 04/08",
+     "date": "2025-04-08T23:59:59",
+     "category": "Filed with Secretary of State",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    }
+   ],
+   "versions": [
+    {
+     "lc_number": "25.1273.01000",
+     "description": "INTRODUCED",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1273-01000.pdf"
+    },
+    {
+     "lc_number": "25.1273.01001",
+     "description": "Adopted by the Senate Industry and Business Committee",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1273-01001m.pdf"
+    },
+    {
+     "lc_number": "25.1273.02000",
+     "description": "FIRST ENGROSSMENT",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1273-02000.pdf"
+    },
+    {
+     "lc_number": "25.1273.03000",
+     "description": "Enrollment",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-1273-03000.pdf"
+    }
+   ],
+   "hearings": [
+    {
+     "id": 40191,
+     "description": "A bill relating to a prison industries workforce development income tax credit; to provide for a legislative management study; and to provide an effective date.",
+     "type": "Bill Hearing",
+     "date": "2025-01-27T11:00:00",
+     "committee": {
+      "id": 1965,
+      "name": "Senate Industry and Business"
+     },
+     "room": "Fort Union"
+    },
+    {
+     "id": 40537,
+     "description": "Committee Work: Relating to a prison industries workforce development income tax credit; to provide for a legislative management study; and to provide an effective date.",
+     "type": "Committee Work",
+     "date": "2025-01-29T16:47:00",
+     "committee": {
+      "id": 1965,
+      "name": "Senate Industry and Business"
+     },
+     "room": "Fort Union"
+    },
+    {
+     "id": 42943,
+     "description": "Relating to a prison industries workforce development income tax credit; to provide for a legislative management study; and to provide an effective date",
+     "type": "Bill Hearing",
+     "date": "2025-03-12T09:30:00",
+     "committee": {
+      "id": 1952,
+      "name": "House Finance and Taxation"
+     },
+     "room": "327E"
+    }
+   ]
+  },
+  "2307": {
+   "name": "SB 2307",
+   "number": "2307",
+   "summary": "Relating to the definition of a public library, required safety policies and technology protection measures, and the state's attorney's review of public libraries, school districts, and state agencies for compliance with statutes protecting minors from explicit sexual material; to amend and reenact subsection\u00a05 of section 12.1\u201127.1\u201101, subsection\u00a02 of section 12.1\u201127.1\u201103.1, and sections 12.1\u201127.1\u201103.5 and 12.1\u201127.1\u201111 of the North Dakota Century Code, relating to obscenity control; to provide for a report to the legislative management; and to provide a penalty.",
+   "title": "AN ACT to create and enact a new subsection to section 12.1-27.1-01 and two new sections to chapter 12.1-27.1 of the North Dakota Century Code, relating to the definition of a public library, required safety policies and technology protection measures, and the state's attorney's review of public libraries, school districts, and state agencies for compliance with statutes protecting minors from explicit sexual material; to amend and reenact subsection 5 of section 12.1-27.1-01, subsection 2 of section 12.1-27.1-03.1, and sections 12.1-27.1-03.5 and 12.1-27.1-11 of the North Dakota Century Code, relating to obscenity control; to provide for a report to the legislative management; and to provide a penalty.",
+   "chamber": "Senate",
+   "session_id": "202501",
+   "session_name": "2025 Regular Session",
+   "url": "https://ndlegis.gov/assembly/69-2025/regular/bill-overview/bo2307.html",
+   "versions_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-index/bi2307.html",
+   "actions_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-actions/ba2307.html",
+   "video_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-video/bv2307.html",
+   "hearing_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-hearings/bh2307.html",
+   "testimony_url": "https://ndlegis.gov/assembly/69-2025/regular/bill-testimony/bt2307.html",
+   "current_status": "Veto sustained",
+   "last_action": "Filed with Secretary Of State 04/29",
+   "passed": false,
+   "agency": null,
+   "sponsors": [
+    {
+     "id": 3424,
+     "name": "Sen. Boehm, Keith",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": true
+    },
+    {
+     "id": 3316,
+     "name": "Sen. Erbele, Robert",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    },
+    {
+     "id": 3338,
+     "name": "Sen. Hogue, David",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    },
+    {
+     "id": 3397,
+     "name": "Rep. Steiner, Vicky",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    },
+    {
+     "id": 3330,
+     "name": "Rep. Tveit, Bill",
+     "type": "legislator",
+     "chamber": "House",
+     "primary": false
+    },
+    {
+     "id": 3442,
+     "name": "Sen. Weston, Kent",
+     "type": "legislator",
+     "chamber": "Senate",
+     "primary": false
+    }
+   ],
+   "actions": [
+    {
+     "id": 471300,
+     "description": "Introduced, first reading, referred Judiciary Committee",
+     "date": "2025-01-20T23:59:59",
+     "category": "Introduced",
+     "chamber": "Senate",
+     "bill_version": "25.0552.04000",
+     "roll_call": {}
+    },
+    {
+     "id": 473670,
+     "description": "Committee Hearing 02:30",
+     "date": "2025-02-10T14:30:00",
+     "category": "Committee hearing",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 475778,
+     "description": "Reported back amended, do pass, amendment placed on calendar 6 1 0",
+     "date": "2025-02-19T23:59:59",
+     "category": "Committee report",
+     "chamber": "Senate",
+     "bill_version": "25.0552.04003",
+     "roll_call": {}
+    },
+    {
+     "id": 475980,
+     "description": "Amendment adopted, placed on calendar",
+     "date": "2025-02-20T23:59:59",
+     "category": "Amendment adopted",
+     "chamber": "Senate",
+     "bill_version": "25.0552.05000",
+     "roll_call": {}
+    },
+    {
+     "id": 475981,
+     "description": "Amendment proposed on floor",
+     "date": "2025-02-20T23:59:59",
+     "category": "Amended on floor",
+     "chamber": "Senate",
+     "bill_version": "25.0552.05001",
+     "roll_call": {}
+    },
+    {
+     "id": 475982,
+     "description": "Amendment adopted",
+     "date": "2025-02-20T23:59:59",
+     "category": "Amendment adopted",
+     "chamber": "Senate",
+     "bill_version": "25.0552.05001",
+     "roll_call": {}
+    },
+    {
+     "id": 475983,
+     "description": "Second reading, passed, yeas 27 nays 20",
+     "date": "2025-02-20T23:59:59",
+     "category": "Passed",
+     "chamber": "Senate",
+     "bill_version": "25.0552.06000",
+     "roll_call": {
+      "id": "202501S00368",
+      "chamber": "Senate",
+      "date": "2025-02-20T12:59:54",
+      "description": "Final Passage",
+      "division": null,
+      "passed": true,
+      "total_yeas": 27,
+      "total_nays": 20,
+      "total_absent": 0
+     }
+    },
+    {
+     "id": 476175,
+     "description": "Received from Senate",
+     "date": "2025-02-21T23:59:59",
+     "category": "Received from Senate",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 476863,
+     "description": "Introduced, first reading, referred Judiciary Committee",
+     "date": "2025-02-25T23:59:59",
+     "category": "Introduced",
+     "chamber": "House",
+     "bill_version": "25.0552.06000",
+     "roll_call": {}
+    },
+    {
+     "id": 478253,
+     "description": "Committee Hearing 09:00",
+     "date": "2025-03-18T09:00:00",
+     "category": "Committee hearing",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 479275,
+     "description": "Reported back, do pass  12 1 1",
+     "date": "2025-03-18T23:59:59",
+     "category": "Committee report",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 479276,
+     "description": "Rereferred to Appropriations",
+     "date": "2025-03-18T23:59:59",
+     "category": "Rereferred",
+     "chamber": "House",
+     "bill_version": "25.0552.06000",
+     "roll_call": {}
+    },
+    {
+     "id": 482495,
+     "description": "Reported back, do not pass, placed on calendar 22 1 0",
+     "date": "2025-04-11T23:59:59",
+     "category": "Committee report",
+     "chamber": "House",
+     "bill_version": "25.0552.06000",
+     "roll_call": {}
+    },
+    {
+     "id": 482698,
+     "description": "Second reading, passed, yeas 49 nays 45",
+     "date": "2025-04-14T23:59:59",
+     "category": "Passed",
+     "chamber": "House",
+     "bill_version": "25.0552.06000",
+     "roll_call": {
+      "id": "202501H01031",
+      "chamber": "House",
+      "date": "2025-04-14T14:51:42",
+      "description": "Final Passage",
+      "division": null,
+      "passed": true,
+      "total_yeas": 49,
+      "total_nays": 45,
+      "total_absent": 0
+     }
+    },
+    {
+     "id": 482927,
+     "description": "Motion to reconsider failed",
+     "date": "2025-04-15T23:59:59",
+     "category": "Reconsider",
+     "chamber": "House",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 482926,
+     "description": "Returned to Senate",
+     "date": "2025-04-15T23:59:59",
+     "category": "Returned to Senate",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 483379,
+     "description": "Signed by Speaker",
+     "date": "2025-04-18T23:59:59",
+     "category": "Speaker signed",
+     "chamber": "House",
+     "bill_version": "25.0552.07000",
+     "roll_call": {}
+    },
+    {
+     "id": 483380,
+     "description": "Signed by President",
+     "date": "2025-04-18T23:59:59",
+     "category": "President signed",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 483381,
+     "description": "Sent to Governor",
+     "date": "2025-04-18T23:59:59",
+     "category": "Delivered to Governor",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 484099,
+     "description": "Vetoed by Governor 04/22",
+     "date": "2025-04-24T23:59:59",
+     "category": "Vetoed by Governor",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    },
+    {
+     "id": 484238,
+     "description": "Consideration of Governor's veto",
+     "date": "2025-04-25T23:59:59",
+     "category": "Consideration of Governor's veto",
+     "chamber": "Senate",
+     "bill_version": "25.0552.07000",
+     "roll_call": {}
+    },
+    {
+     "id": 484239,
+     "description": "Veto sustained, yeas 25 nays 20",
+     "date": "2025-04-25T23:59:59",
+     "category": "Veto sustained",
+     "chamber": "Senate",
+     "bill_version": "25.0552.07000",
+     "roll_call": {}
+    },
+    {
+     "id": 484482,
+     "description": "Filed with Secretary Of State 04/29",
+     "date": "2025-04-29T23:59:59",
+     "category": "Filed with Secretary of State",
+     "chamber": "Senate",
+     "bill_version": null,
+     "roll_call": {}
+    }
+   ],
+   "versions": [
+    {
+     "lc_number": "25.0552.04000",
+     "description": "INTRODUCED",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0552-04000.pdf"
+    },
+    {
+     "lc_number": "25.0552.04003",
+     "description": "Adopted by the Senate Judiciary Committee",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0552-04003m.pdf"
+    },
+    {
+     "lc_number": "25.0552.05000",
+     "description": "FIRST ENGROSSMENT",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0552-05000.pdf"
+    },
+    {
+     "lc_number": "25.0552.05001",
+     "description": "Prepared by the Legislative Council staff for Senator Paulson",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0552-05001m.pdf"
+    },
+    {
+     "lc_number": "25.0552.06000",
+     "description": "SECOND ENGROSSMENT",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0552-06000.pdf"
+    },
+    {
+     "lc_number": "25.0552.07000",
+     "description": "Enrollment",
+     "document_url": "https://ndlegis.gov/assembly/69-2025/regular/documents/25-0552-07000.pdf"
+    }
+   ],
+   "hearings": [
+    {
+     "id": 41324,
+     "description": "Relating to obscenity control; to provide for a report to the legislative management; and to provide a penalty",
+     "type": "Bill Hearing",
+     "date": "2025-02-10T14:30:00",
+     "committee": {
+      "id": 1963,
+      "name": "Senate Judiciary"
+     },
+     "room": "Peace Garden"
+    },
+    {
+     "id": 41664,
+     "description": "Committee Work: Relating to the definition of a public library, required safety policies and technology protection measures, and the attorney general's review of public libraries, school districts, and state agencies for compliance with statutes protecting minors from explicit sexual material; to amend and reenact ",
+     "type": "Committee Work",
+     "date": "2025-02-11T15:45:00",
+     "committee": {
+      "id": 1963,
+      "name": "Senate Judiciary"
+     },
+     "room": "Peace Garden"
+    },
+    {
+     "id": 42173,
+     "description": "Committee Work: Relating to the definition of a public library, required safety policies and technology protection measures, and the attorney general's review of public libraries, school districts, and state agencies for compliance with statutes protecting minors from explicit sexual material; to amend and reenact ",
+     "type": "Committee Work",
+     "date": "2025-02-18T09:05:00",
+     "committee": {
+      "id": 1963,
+      "name": "Senate Judiciary"
+     },
+     "room": "Peace Garden"
+    },
+    {
+     "id": 42204,
+     "description": "Committee Work: Relating to the definition of a public library, required safety policies and technology protection measures, and the attorney general's review of public libraries, school districts, and state agencies for compliance with statutes protecting minors from explicit sexual material; to amend and reenact ",
+     "type": "Committee Work",
+     "date": "2025-02-18T10:48:00",
+     "committee": {
+      "id": 1963,
+      "name": "Senate Judiciary"
+     },
+     "room": "Peace Garden"
+    },
+    {
+     "id": 43298,
+     "description": "Relating to obscenity control; to provide for a report to the legislative management; and to provide a penalty.",
+     "type": "Bill Hearing",
+     "date": "2025-03-18T09:00:00",
+     "committee": {
+      "id": 1956,
+      "name": "House Judiciary"
+     },
+     "room": "327B"
+    },
+    {
+     "id": 43570,
+     "description": "Committee Work: Relating to the definition of a public library, required safety policies and technology protection measures, and the state's attorney's review of public libraries, school districts, and state agencies for compliance with statutes protecting minors from explicit sexual material; to amend and reenact ",
+     "type": "Committee Work",
+     "date": "2025-03-18T14:36:00",
+     "committee": {
+      "id": 1956,
+      "name": "House Judiciary"
+     },
+     "room": "327B"
+    },
+    {
+     "id": 44449,
+     "description": "Committee Work: Relating to obscenity control; to provide for a report to the legislative management; and to provide a penalty. Rereferred from Judiciary",
+     "type": "Committee Work",
+     "date": "2025-04-10T08:30:00",
+     "committee": {
+      "id": 1948,
+      "name": "House Appropriations"
+     },
+     "room": "Roughrider"
+    },
+    {
+     "id": 44734,
+     "description": "Committee Work: Relating to the definition of a public library, required safety policies and technology protection measures, and the state's attorney's review of public libraries, school districts, and state agencies for compliance with statutes protecting minors from explicit sexual material; to amend and reenact ",
+     "type": "Committee Work",
+     "date": "2025-04-11T09:02:00",
+     "committee": {
+      "id": 1948,
+      "name": "House Appropriations"
+     },
+     "room": "Roughrider"
+    }
+   ]
+  }
+ }
+}

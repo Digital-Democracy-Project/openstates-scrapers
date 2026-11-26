@@ -711,10 +711,11 @@ jurisdictions:
   # passed/failed" roll call (North Dakota has no third reading), and is also the roll call taken again after
   # concurring in amendments or adopting a conference report. "Consideration of Amendments" (a division or
   # amendment roll call) is not passage: the nd scraper labels it "amendment" after this returns []
-  # (vote_classification() in nd/bills.py). Veto overrides are journal-only (no modal), so none reach here.
+  # (vote_classification() in nd/bills.py). A veto override has no modal (only a bill action with its tally): the scraper builds it as "Motion for Veto Override on <bill>" (OPEN-901).
   nd:
     passage:
       - '^motion for final passage on '         # passed or failed, as amended or not, after concurrence or a conference report
+      - '^motion for veto override on '         # OPEN-901: a whole-bill veto override, from the bill action ("Veto sustained, yeas 45 nays 48"); a line-item one is labelled veto-override by the scraper first
     default: null                                # an unseen title stays unclassified, never passage
 
   # OPEN-682 (Idaho, gate E). The motion text is the text in front of the tally on a bill page's action row
