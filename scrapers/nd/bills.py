@@ -33,7 +33,8 @@ def vote_classification(motion):
 # yeas 45 nays 2" (the chamber voted to override). ND needs two thirds of each house, which "sustained" records
 # as a failure. Every 2025 one is a whole-bill override (5 votes on HB 1540, SB 2160, SB 2261, SB 2307).
 OVERRIDE_ACTION = re.compile(
-    r"^(?P<outcome>veto sustained|passed over veto), yeas (?P<yes>\d+) nays (?P<no>\d+)$", re.I
+    r"^(?P<outcome>veto sustained|passed over veto), yeas (?P<yes>\d+) nays (?P<no>\d+)$",
+    re.I,
 )
 # A governor's item veto ("Signed by Governor, but item veto"): an override of it would be a line-item
 # override, which does not count as passage (Ramon, 2026-11-20), so it is labelled "veto-override" instead.
@@ -56,7 +57,9 @@ def override_votes(bill_id, bill_chamber, actions, action_url, session):
             motion_text=motion,
             result="pass" if match["outcome"].lower() == "passed over veto" else "fail",
             legislative_session=session,
-            classification=["veto-override"] if line_item else vote_classification(motion),
+            classification=["veto-override"]
+            if line_item
+            else vote_classification(motion),
             bill=bill_id,
             bill_chamber=bill_chamber,
         )
