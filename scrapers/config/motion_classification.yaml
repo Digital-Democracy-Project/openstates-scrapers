@@ -118,6 +118,10 @@ jurisdictions:
   # amendments is a voice action with no tally, so never a roll call here. A whole-bill veto override ("Veto
   # overridden - 2/3's vote: ...", HB 862 of 2021) is passage; no line-item override text was found, so one stays
   # unlabelled. No floor amendment roll call was seen (amendments are committee drafts, HD/SD/CD).
+  # OPEN-900: the same floor vote when it fails is "Failed to pass Third Reading" / "Failed to pass Final Reading"
+  # (6 on the stored data, one per measure: HB 1516, 1550, 1919, 2413, SB 319, SB 3263; no other), a lost passage vote (pa, al, nc, or).
+  # Only those two texts: a failed committee recommendation has its own text, a failed confirmation
+  # ("Nominee(s) failed to be confirmed.") is not a bill reading, and no failed adoption of a resolution was seen.
   hi:
     not_passage:
       - '^(reconsider: )?(report adopted; )?passed second reading\b'
@@ -127,6 +131,7 @@ jurisdictions:
       - '^(reconsider: )?the (conference )?committees?(\(s\))?\b.*\brecommends?(\(s\))? that the measure be passed\b'
     passage:
       - '^(reconsider: )?(report adopted; )?passed (third|final) reading\b'
+      - '^(reconsider: )?failed to pass (third|final) reading\b'   # a lost vote on the whole measure (OPEN-900)
       - '^(reconsider: )?(report and resolution )?adopted\b'
       - '^(reconsider: )?veto overridden\b'            # whole bill (HB 862 of 2021); no line-item override text seen
     default: null                                # anything not seen stays unclassified, never passage
