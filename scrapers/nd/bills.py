@@ -29,7 +29,8 @@ def vote_classification(motion):
 
 
 ACTION_RESULT = re.compile(
-    r"\b(?P<word>passed|adopted|failed|lost)\b.*\byeas (?P<yes>\d+) nays (?P<no>\d+)\b", re.I
+    r"\b(?P<word>passed|adopted|failed|lost)\b.*\byeas (?P<yes>\d+) nays (?P<no>\d+)\b",
+    re.I,
 )
 
 
