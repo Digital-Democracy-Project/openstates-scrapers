@@ -28,6 +28,45 @@ def vote_classification(motion):
     return []
 
 
+# OPEN-901: the legislature publishes a veto-override vote as a bill action with its tally and a journal page,
+# but no vote modal (so no names): "Veto sustained, yeas 45 nays 48" (the override failed) and "Passed over veto,
+# yeas 45 nays 2" (the chamber voted to override). ND needs two thirds of each house, which "sustained" records
+# as a failure. Every 2025 one is a whole-bill override (5 votes on HB 1540, SB 2160, SB 2261, SB 2307).
+OVERRIDE_ACTION = re.compile(
+    r"^(?P<outcome>veto sustained|passed over veto), yeas (?P<yes>\d+) nays (?P<no>\d+)$", re.I
+)
+# A governor's item veto ("Signed by Governor, but item veto"): an override of it would be a line-item
+# override, which does not count as passage (Ramon, 2026-11-20), so it is labelled "veto-override" instead.
+ITEM_VETO_ACTION = re.compile(r"\bitem veto\b", re.I)
+
+
+def override_votes(bill_id, bill_chamber, actions, action_url, session):
+    """One count-only vote per override action of a bill's history."""
+    line_item = any(ITEM_VETO_ACTION.search(a["description"]) for a in actions)
+    for action in actions:
+        match = OVERRIDE_ACTION.match(action["description"].strip())
+        if not match or not action["chamber"]:
+            continue
+        motion = f"Motion for Veto Override on {bill_id}"
+        date = parser.parse(action["date"]).strftime("%Y-%m-%d")
+        chamber = "lower" if action["chamber"] == "House" else "upper"
+        vote = VoteEvent(
+            chamber=chamber,
+            start_date=date,
+            motion_text=motion,
+            result="pass" if match["outcome"].lower() == "passed over veto" else "fail",
+            legislative_session=session,
+            classification=["veto-override"] if line_item else vote_classification(motion),
+            bill=bill_id,
+            bill_chamber=bill_chamber,
+        )
+        vote.dedupe_key = f"{action_url}#veto-override-{chamber}-{date}"
+        vote.add_source(action_url)
+        vote.set_count("yes", int(match["yes"]))
+        vote.set_count("no", int(match["no"]))
+        yield vote
+
+
 def site_session(session):
     """OPEN-746: the Legislative Assembly whose bill list holds a session's bills on ndlegis.gov
     ("69-2025") and the tag the site gives each of that session's bills (`session_id`, "202502"
@@ -317,6 +356,14 @@ class BillList(JsonPage):
                     vote.vote("other", voter_name)
 
                 yield vote
+
+            yield from override_votes(
+                bill_id,
+                "lower" if bill_id[0] == "H" else "upper",
+                action_list,
+                action_url,
+                self.input.get("session"),
+            )
 
 
 class NDBillScraper(Scraper):
