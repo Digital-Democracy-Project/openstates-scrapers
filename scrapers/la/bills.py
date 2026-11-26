@@ -412,7 +412,17 @@ class LABillScraper(Scraper, LXMLMixin):
                 author, classification="cosponsor", entity_type="person", primary=False
             )
 
+        # OPEN-902: a link on a documents subpage can come without an href. Skip it and say so
+        # (never guess a URL); one bad link used to raise KeyError and fail the whole run.
         for digest in digests:
+            if "href" not in digest.attrib:
+                self.warning(
+                    "LA OPEN-902: skipping digest link with no href on %s (%s): %r",
+                    bill.identifier,
+                    bill_url,
+                    digest.text,
+                )
+                continue
             bill.add_document_link(
                 note=digest.text,
                 url=digest.attrib["href"],
@@ -420,6 +430,14 @@ class LABillScraper(Scraper, LXMLMixin):
             )
 
         for version in versions:
+            if "href" not in version.attrib:
+                self.warning(
+                    "LA OPEN-902: skipping text link with no href on %s (%s): %r",
+                    bill.identifier,
+                    bill_url,
+                    version.text,
+                )
+                continue
             bill.add_version_link(
                 note=version.text,
                 url=version.attrib["href"],
