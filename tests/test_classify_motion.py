@@ -807,8 +807,13 @@ NC_CASES = [
     ("A2 Par\u00e9 Second Reading", []),
     ("A3 Budd Second Reading", []),
     ("A4 Morey R2 For Adoption", []),
-    # non-concurrence
-    ("M11 Not Concur", []),
+    # OPEN-920: a refusal to concur counts in both chambers (Ramon, 2026-11-26, BROKER-616), like the Senate's
+    # failed "Motion 9 To Concur" above; the R2 form has no R3 "Not Concur" after it, so it is the only roll call
+    ("M11 Not Concur", ["passage"]),
+    ("R2 Ruled Mat'l M11 Not Concur", ["passage"]),
+    # OPEN-920: the Senate's second reading of a House bill with unengrossed House amendments; the scraper
+    # decides it from the bill's later roll calls, like the bare "Second Reading"
+    ("Second Reading with unengrossed H Amends", []),
     # procedure
     ("Amendment 2  Motion 1 To Table", []),
     ("A1 Morey Second Reading M3 To Lay On The Table", []),
