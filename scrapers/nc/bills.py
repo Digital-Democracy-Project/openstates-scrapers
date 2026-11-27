@@ -70,7 +70,12 @@ def roll_call_votes(vdoc):
 
 
 # OPEN-572: a roll call on a reading of the bill itself (not an amendment or a motion made on that reading)
-READING_ROLL_CALL = re.compile(r"^(second|third) reading$", re.I)
+READING_ROLL_CALL = re.compile(
+    r"^(second reading( with unengrossed h amends)?|third reading)$", re.I
+)
+# OPEN-920: the Senate's second-reading roll call on a House bill whose House amendments are not yet engrossed
+# ("Second Reading with unengrossed H Amends") is the chamber's vote on the bill itself, like a bare "Second Reading"
+SECOND_READING = re.compile(r"^second reading( with unengrossed h amends)?$", re.I)
 
 
 def vote_classification(subject, rcs, roll_calls):
@@ -82,7 +87,7 @@ def vote_classification(subject, rcs, roll_calls):
     So a "Second Reading" roll call is passage only when no later second- or third-reading roll call of the
     same chamber follows it on the bill (OPEN-572, measured on all stored NC votes). Everything else is the
     nc block of config/motion_classification.yaml."""
-    if subject.strip().lower() == "second reading":
+    if SECOND_READING.match(subject.strip()):
         chamber, number = rcs.strip().split("-")
         for other_subject, other_rcs in roll_calls:
             other_chamber, other_number = other_rcs.strip().split("-")

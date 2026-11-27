@@ -602,8 +602,8 @@ jurisdictions:
       - "to (lay on the )?table"
       - "reconsider"                             # "M6 Reconsider"
       - "^second reading motion "                # "... Motion 9 To Concur" (third reading follows), "... Motion 12/Divide", "/Appeal Ruling of Chair"
-      - "not concur"                             # "M11 Not Concur": the House refuses the Senate's changes, a conference follows
-      - "^r2 ruled mat'l"                        # second-reading roll call on a conference report / concurrence ruled material
+      - "^second reading with unengrossed "      # Senate "Second Reading with unengrossed H Amends": a second reading, decided by the scraper like the bare one (OPEN-920)
+      - "^r2 ruled mat'l (?!m11 not concur)"     # second-reading roll call on a conference report / concurrence ruled material (a refusal is passage, below)
       - "^conference rpt second reading$"
     passage:
       - "^third reading$"
@@ -612,6 +612,7 @@ jurisdictions:
       - "^conference (report|rpt) motion 8 to adopt$"
       - "^(r3 ruled mat'l )?c rpt adoption$"     # House adopts a conference report, R3 = its third reading when ruled material
       - "^(r3 ruled mat'l )?m11 concur"          # House concurs in Senate amendments ("M11 Concur Sen. Amd. 1" too)
+      - "^(r2 ruled mat'l )?m11 not concur"   # House refuses the Senate's changes: counts like the Senate's failed "Motion 9 To Concur" (Ramon, 2026-11-26, BROKER-616; OPEN-920). Unlike "R2 Ruled Mat'l M11 Concur" no R3 "Not Concur" roll call follows an R2 one (HB 1220: straight to the conference report), so R2 is the refusal's only roll call
       - "^motion 9 to concur"                    # Senate concurs in House amendments ("... House Amend" too); a failed one is a lost passage vote
       - "^motion 8 to adopt$"                    # Senate adopts a simple resolution
       - "^r2 for adoption$"                      # House adopts a simple resolution (one reading)

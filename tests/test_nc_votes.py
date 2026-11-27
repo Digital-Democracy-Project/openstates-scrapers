@@ -61,14 +61,14 @@ HB116 = {
     "[S]-669": [],  # Conference Rpt Second Reading
     "[H]-784": [],  # R2 Ruled Mat'l C RPT Adoption
     "[S]-397": ["passage"],  # Conference Report Motion 8 To Adopt
-    "[H]-396": [],  # M11 Not Concur
+    "[H]-396": ["passage"],  # M11 Not Concur (OPEN-920: a refusal to concur counts)
     "[H]-24": ["passage"],  # Second Reading, the House's only reading roll call
 }
 # HB 377: the House passed it on second reading ([H]-111) alone; the Senate held both readings.
 HB377 = {
     "[H]-804": ["passage"],  # C RPT Adoption
     "[S]-702": ["passage"],  # Conference Rpt Motion 8 To Adopt
-    "[H]-748": [],  # M11 Not Concur
+    "[H]-748": ["passage"],  # M11 Not Concur (OPEN-920)
     "[S]-556": ["passage"],  # Third Reading
     "[S]-555": [],  # Amendment 2
     "[S]-553": [],  # Amendment 1
@@ -121,3 +121,43 @@ def test_scrape_votes_classifies_through_the_rule():
     assert {"[H]-802", "[H]-793"} <= set(got)
     for key, classification in got.items():
         assert classification == HB147[key]
+
+
+def test_a_senate_second_reading_with_unengrossed_house_amendments_is_the_senate_passage():
+    """OPEN-920, HB 1249 (2026-11-17): the House passed it with two amendments, the Senate passed it second and third
+    reading the same day on this one roll call (28-17)."""
+    calls = [("Second Reading with unengrossed H Amends", "[S]-1")]
+    assert vote_classification(calls[0][0], "[S]-1", calls) == ["passage"]
+
+
+def test_that_second_reading_is_superseded_by_a_later_senate_reading_roll_call_like_any_second_reading():
+    calls = [
+        ("Second Reading with unengrossed H Amends", "[S]-1"),
+        ("Third Reading", "[S]-2"),
+    ]
+    assert vote_classification(calls[0][0], "[S]-1", calls) == []
+    # and it supersedes an earlier second reading of the same chamber
+    calls = [
+        ("Second Reading", "[S]-1"),
+        ("Second Reading with unengrossed H Amends", "[S]-2"),
+    ]
+    assert vote_classification(calls[0][0], "[S]-1", calls) == []
+    assert vote_classification(calls[1][0], "[S]-2", calls) == ["passage"]
+
+
+def test_a_failed_second_reading_that_nothing_follows_is_passage_and_its_reconsider_vote_is_not():
+    """OPEN-920, HB 305 (2025-05-07): House second reading failed 54-57, the motion to reconsider carried 68-42 the same
+    day (the bill's actions: Failed 2nd Reading, Reconsidered 2nd Reading, Withdrawn From Cal, Re-ref Com), and the bill
+    passed second reading again on 06/17. The reconsider vote is a vote on a motion, not on the bill. The failed
+    reading is superseded by the later one (latest replaces earlier), exactly as it would be by a re-vote; with
+    nothing after it, it is the chamber's failed vote and counts."""
+    calls = [
+        ("Second Reading", "[H]-100"),
+        ("Second Reading M6 Reconsider", "[H]-101"),
+        ("A1 Blust Second Reading", "[H]-300"),
+        ("Second Reading", "[H]-301"),
+    ]
+    assert vote_classification("Second Reading", "[H]-100", calls) == []
+    assert vote_classification("Second Reading M6 Reconsider", "[H]-101", calls) == []
+    assert vote_classification("Second Reading", "[H]-301", calls) == ["passage"]
+    assert vote_classification("Second Reading", "[H]-100", calls[:2]) == ["passage"]
