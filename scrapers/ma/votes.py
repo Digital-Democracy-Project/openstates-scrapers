@@ -11,7 +11,7 @@ import re
 import pytz
 import datetime as dt
 
-from classify_motion import needs_two_thirds
+from classify_motion import classify_motion, needs_two_thirds
 
 from .voter_names import HOUSE_CELL_RE, house_voter_name
 
@@ -547,7 +547,9 @@ class HouseVoteRecordParser:
             motion_text=self.motion,
             bill=bill_id,
             result=vote_result(self.motion, self.total_yea, self.total_nay),
-            classification="passage",
+            # OPEN-921: every sheet vote used to be "passage", so an amendment's adoption ("H. 4271 On adoption of
+            # amendment #8") counted as the bill's passage. The question on the sheet decides, by the one rule list.
+            classification=classify_motion("ma", self.motion),
             bill_chamber=bill_chamber,
         )
 
