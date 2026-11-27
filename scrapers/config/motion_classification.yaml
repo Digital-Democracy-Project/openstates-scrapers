@@ -394,10 +394,15 @@ jurisdictions:
       # A failed vote is still a vote on passage, so "defeated" / "rejected" are included.
       # NOTE: patterns with \b are single-quoted on purpose. In a double-quoted YAML string
       # "\b" is a backspace character, not a word boundary (the old "^agree to\b" never matched).
-      - '^read third time and (passed|defeated)'          # "Read third time and passed House (96-Y 0-N 0-A)"
-      - '^passed (house|senate)\b'                         # "Passed Senate", "Passed Senate with substitute", "... Block Vote"
+      # OPEN-934: the same final votes also arrive with a lead-in the rules above did not allow, so a resolution's
+      # adoption or a bill's passage had no counted vote: "Read third time and agreed to by Senate" (a resolution
+      # on third reading), "VOTE: Agreed to by House" (a resolution, LIS's vote-line prefix) and "(S5020) Passed
+      # Senate with amendment Block Vote" (a Senate floor-substitute number in front of the text).
+      - '^read third time and (passed|defeated|agreed to)'  # "Read third time and passed House (96-Y 0-N 0-A)", "... agreed to by Senate (40-Y 0-N 0-A)"
+      - '^(\([hs]\d+\) )?passed (house|senate)\b'         # "Passed Senate", "Passed Senate with substitute", "... Block Vote", "(S5020) Passed Senate with amendment"
       - '^defeated by (house|senate)\b'
-      - '^agreed to by (house|senate)\b'                   # resolutions adopted
+      - '^failed to pass (house|senate)\b'                 # a lost floor vote on the bill, the same class as "defeated" above ("Failed to pass House (40-Y 59-N 0-A)")
+      - '^(vote: )?agreed to by (house|senate)\b'          # resolutions adopted
       - '^(house|senate) (substitute|amendments?)\b.*\b(agreed to|rejected) by (house|senate)\b'   # concurrence
       - '^conference report (agreed to|rejected) by (house|senate)\b'
       - '^(house|senate) concurred in governor'            # governor's recommendations
