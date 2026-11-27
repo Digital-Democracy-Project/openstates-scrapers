@@ -268,6 +268,10 @@ jurisdictions:
       - "^amendment"                             # amendment adopted/rejected
       - "^item .+ passed over veto"              # budget line-item veto override
     passage:
+      # OPEN-921: the House roll-call sheet (ma/votes.py) names the paper first, then the question: "H. 4994 On
+      # passing to be engrossed", "S. 3106 On Engrossment". Its other questions ("H. 4271 On adoption of amendment
+      # #8", "H. 61 Text of a further amendment to H.58") are not the bill's passage and stay unlabelled.
+      - "^[hs]\\. ?\\d+\\b.* on (passing to be engrossed|engrossment)$"
       - "^passed to be engrossed"
       - "^enacted"
       - "^adopted"

@@ -1316,6 +1316,13 @@ class MABillScraper(Scraper):
                             relation_type="related",
                         )
 
+            # OPEN-921: the action's text on one line. A long motion wraps in the source ("Consolidated amendment C
+            # (Public Safety, Judiciary and Housing)\r\nadopted -\r\n154 YEAS to 2 NAYS"), and `.` does not cross a
+            # line break, so reading the motion from the raw text kept only its last line ("adopted"), which the
+            # label rules read as a resolution's adoption: a budget amendment became the bill's passage. The
+            # action itself is still recorded as the source wrote it.
+            vote_line = " ".join(action_name.split())
+
             # House votes
             #
             # OPEN-169: the trigger used to be `"Supplement" in action_name` alone, and
@@ -1340,13 +1347,13 @@ class MABillScraper(Scraper):
             ) and not _QUORUM_RE.search(action_name):
                 actor = "lower"
 
-                if not re.findall(r"(.+)-\s*\d+\s*YEAS", action_name):
+                if not re.findall(r"(.+)-\s*\d+\s*YEAS", vote_line):
                     self.warning(
                         "vote {} did not match regex, skipping".format(action_name)
                     )
                     continue
 
-                vote_action = re.findall(r"(.+)-\s*\d+\s*YEAS", action_name)[0].strip()
+                vote_action = re.findall(r"(.+)-\s*\d+\s*YEAS", vote_line)[0].strip()
 
                 y = int(re.findall(r"(\d+)\s*YEAS", action_name)[0])
                 n = int(re.findall(r"(\d+)\s*NAYS", action_name)[0])
@@ -1432,7 +1439,7 @@ class MABillScraper(Scraper):
             if "Roll Call" in action_name and not _QUORUM_RE.search(action_name):
                 actor = "upper"
                 # placeholder
-                vote_action = action_name.split(" -")[0]
+                vote_action = vote_line.split(" -")[0]
                 # 2019 H86 Breaks our regex,
                 # Ordered to a third reading --
                 # see Senate   Roll Call #25 and House Roll Call 56
