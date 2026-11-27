@@ -7,7 +7,7 @@ from openstates.scrape import Bill, Scraper, VoteEvent
 from openstates.utils.ddp_manifest import manifest_value
 import pytz
 from collections import defaultdict
-from classify_motion import classify_motion
+from classify_motion import classify_motion, yes_is_against
 
 
 eastern = pytz.timezone("US/Eastern")
@@ -380,6 +380,9 @@ class NCBillScraper(Scraper):
                 classification=vote_classification(subject, rcs, roll_calls),
             )
             ve.dedupe_key = vote_dedupe_key(bill.legislative_session, rcs)
+            # OPEN-926: a House YES on "M11 Not Concur" is a vote against the bill; the broker reads this
+            if yes_is_against("nc", subject):
+                ve.extras["ddp_yes_is_against"] = True
             ve.set_count("yes", int(aye))
             ve.set_count("no", int(no))
             ve.set_count("not voting", int(nv))
