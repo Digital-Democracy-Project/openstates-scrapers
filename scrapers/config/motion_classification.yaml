@@ -275,6 +275,7 @@ jurisdictions:
       - "^passed to be engrossed"
       - "^enacted"
       - "^adopted"
+      - "^resolutions? adopted"                  # OPEN-923: the House's adoption of a resolution ("Resolutions adopted - 155 YEAS to 3 NAYS"); the Senate writes "Adopted"
       - "^committee of conference report accepted"
     default: null
     # OPEN-561: motions that need two thirds of the members present and voting. Read only by
