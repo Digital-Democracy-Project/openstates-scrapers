@@ -181,11 +181,17 @@ class SenateJournal(PdfPage):
     bill_id = r"(House|Senate),\s+No\.\s+(\d+)"
     bill_id_re = re.compile(bill_id, re.DOTALL)
 
+    # OPEN-922: a journal vote carries no tally and no member votes (parse_match reads them but never sets them),
+    # so it cannot be a counted passage vote. In the 194th each of them is also a Senate roll call that
+    # ma/bills.py stores with its tally and voters, on the number the legislature records it under: the journal
+    # names the bill as it stood when the question was put ("Senate, No. 2551, amended"), the legislature files
+    # the vote on its reprint (S 2559). Labelled "passage", the journal copy counted as a second Senate passage
+    # on the old number (nine bill-chambers in the 194th). These are left unlabelled, as classify_motion does.
     motion_classification = {
-        r"passing.+engross": "passage",
+        r"passing.+engross": None,
         r"adoption.+amendment": "amendment",
-        r"passing.+enacted": "passage",
-        r"approving.+plan": "passage",
+        r"passing.+enacted": None,
+        r"approving.+plan": None,
     }
 
     text = None
@@ -291,12 +297,14 @@ class SenateJournal(PdfPage):
         normalized_motion = single_line_motion.capitalize()
 
         vote_classification = None
+        known_question = False
         for pattern, classification in self.motion_classification.items():
             if re.compile(pattern).search(single_line_motion):
                 vote_classification = classification
+                known_question = True
                 break
 
-        if not vote_classification:
+        if not known_question:
             self.logger.warning(
                 f"""
                 No vote_classification from {single_line_motion}" in journal at {self.source.url}
