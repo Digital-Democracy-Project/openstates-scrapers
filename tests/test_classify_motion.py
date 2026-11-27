@@ -283,6 +283,14 @@ def test_wa_not_passage(text):
     ("Governor's amendment nos. 1 - 3 agreed to (96-Y 0-N 0-A)", ["passage"]),
     ("Governor's recommendation adopted (96-Y 0-N 0-A)", ["passage"]),
     ("Governor's recommendation nos. 1 - 3 passed by House (60-Y 38-N 0-A)", ["passage"]),
+    # OPEN-934: the final vote on a resolution, a lost floor vote, and a floor-substitute number in front
+    ("Read third time and agreed to by Senate (40-Y 0-N 0-A)", ["passage"]),
+    ("Read third time and agreed to by House (99-Y 0-N 0-A)", ["passage"]),
+    ("VOTE: Agreed to by House (99-Y 0-N 0-A) (99-Y 0-N 0-A)", ["passage"]),
+    ("(S5020) Passed Senate with amendment Block Vote (38-Y 0-N 0-A)", ["passage"]),
+    ("(H1234) Passed House with substitute (60-Y 38-N 0-A)", ["passage"]),
+    ("Failed to pass House (40-Y 59-N 0-A)", ["passage"]),
+    ("Failed to pass Senate (18-Y 21-N 0-A)", ["passage"]),
 ])
 def test_va_passage(text, expected):
     assert classify_motion("va", text) == expected
@@ -297,6 +305,11 @@ def test_va_passage(text, expected):
     "Reconsideration of Defeated action agreed to by Senate",
     "Passed by indefinitely in Finance and Appropriations (10-Y 4-N)",
     "Senate insisted on substitute (21-Y 19-N 0-A)",
+    # OPEN-934: the new lead-ins must not sweep in votes that are not on the bill itself
+    "VOTE: Waive reading of report (97-Y 0-N 0-A)",
+    "Subcommittee failed to recommend reporting (5-Y 3-N)",
+    "Failed to report (defeated) in Privileges and Elections (6-Y 8-N)",
+    "(S5020) Senate substitute rejected (10-Y 28-N 0-A)",
     "Senate insisted on substitute Block Vote (21-Y 19-N 0-A)",
     # amendments, elections, reading waivers and committee referrals are not passage
     "Floor Amendment Item 4-14 #2h offered by Delegate McNamara passed by (64-Y 33-N 0-A)",
