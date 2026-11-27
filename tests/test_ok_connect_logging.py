@@ -7,6 +7,7 @@ to an adapter that times out.  Addresses below are documentation-range examples 
 """
 import logging
 import os
+import subprocess
 import sys
 from types import SimpleNamespace
 from unittest import mock
@@ -62,40 +63,83 @@ def scraper(tmp_path):
     return s
 
 
-def fake_lookup(text=None, error=None):
-    def get(url, **kwargs):
-        assert url == "https://api.ipify.org"
-        assert kwargs.get("timeout")  # a hung lookup must not hold the scrape
-        if error:
-            raise error
-        return SimpleNamespace(text=text)
+# What the collector runs for a bills-only Oklahoma run (cloud_collector.py: `os-update <source>
+# --scrape bills session=<s> --cachedir .. --datadir ..`), here in a child process through
+# os-update's own main() so its real logging setup decides what reaches the log. The only fakes
+# are at the network edge: the address lookup answers a documentation-range address and the
+# legislature's site times out on connect, as in OPEN-887.
+ENTRY = """
+import sys, requests
+from requests.adapters import HTTPAdapter
+def send(self, request, **kwargs):
+    if "api.ipify.org" in request.url:
+        r = requests.Response()
+        r.status_code, r._content, r.url = 200, MODE_LOOKUP, request.url
+        if r._content is None:
+            raise requests.exceptions.ConnectTimeout("lookup timed out")
+        return r
+    raise requests.exceptions.ConnectTimeout(
+        "HTTPSConnectionPool(host='webapps.oklegislature.gov', port=443): "
+        "Max retries exceeded (Caused by ConnectTimeoutError(connect timeout=60))"
+    )
+HTTPAdapter.send = send
+from openstates.cli.update import main
+sys.argv = ["os-update", "ok", "--scrape", "bills", "session=2026",
+            "--cachedir", sys.argv[1], "--datadir", sys.argv[2]]
+sys.exit(main())
+"""
 
-    return mock.patch("ok.bills.checked_requests.get", side_effect=get)
+
+def run_collector_entry(tmp_path, lookup):
+    script = ENTRY.replace("MODE_LOOKUP", repr(lookup))
+    env = dict(
+        os.environ,
+        PYTHONPATH=os.path.join(os.path.dirname(__file__), "..", "scrapers"),
+        PYTHONDONTWRITEBYTECODE="1",
+    )
+    out = subprocess.run(
+        [sys.executable, "-c", script, str(tmp_path / "cache"), str(tmp_path / "data")],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    return out.returncode, out.stdout + out.stderr
 
 
-def test_the_address_is_logged_once_at_the_start_of_a_run(scraper, logs):
-    with fake_lookup("203.0.113.7\n"), mock.patch.object(
-        OKBillScraper, "scrape_chamber", return_value=iter(())
-    ):
-        list(scraper.scrape(session="2026"))
-    assert [m for m in logs() if "egress" in m] == ["OK egress address: 203.0.113.7"]
+def test_the_run_logs_the_address_and_the_first_requests_connection_error(tmp_path):
+    code, log = run_collector_entry(tmp_path, b"203.0.113.7\n")
+    assert code != 0  # the run fails on the timeout, as the real one did
+    lines = log.splitlines()
+    egress = [i for i, m in enumerate(lines) if "OK egress address: 203.0.113.7" in m]
+    error = [
+        i
+        for i, m in enumerate(lines)
+        if "OK connection error: ConnectTimeout after" in m
+    ]
+    assert len(egress) == 1  # once per run
+    assert len(error) == 1
+    assert egress[0] < error[0]
+    assert (
+        "GET https://webapps.oklegislature.gov/WebApplication3/WebForm1.aspx"
+        in lines[error[0]]
+    )
+    assert "connect timeout=60" in lines[error[0]]
 
 
-@pytest.mark.parametrize(
-    "kwargs",
-    [
-        {"error": requests.exceptions.ConnectTimeout("x")},
-        {"text": "<html>502 Bad Gateway</html>"},
-    ],
-)
-def test_a_failed_or_odd_lookup_is_logged_and_the_scrape_goes_on(scraper, logs, kwargs):
-    with fake_lookup(**kwargs), mock.patch.object(
-        OKBillScraper, "scrape_chamber", return_value=iter(())
-    ) as chamber:
-        list(scraper.scrape(session="2026"))
-    assert chamber.call_count == 2  # both chambers still scraped
-    assert any(m.startswith("OK egress address: lookup failed") for m in logs())
-    assert not any("Bad Gateway" in m for m in logs())
+def test_a_failed_address_lookup_is_logged_and_the_run_goes_on(tmp_path):
+    code, log = run_collector_entry(tmp_path, None)
+    assert "OK egress address: lookup failed (ConnectTimeout)" in log
+    assert (
+        "OK connection error: ConnectTimeout" in log
+    )  # still reached the session list
+
+
+def test_an_odd_lookup_answer_is_not_logged(tmp_path):
+    _, log = run_collector_entry(tmp_path, b"<html>502 Bad Gateway</html>")
+    assert "OK egress address: lookup failed (ValueError)" in log
+    assert "Bad Gateway" not in log
 
 
 def test_a_connection_error_logs_the_time_tried_and_still_raises(scraper, logs):

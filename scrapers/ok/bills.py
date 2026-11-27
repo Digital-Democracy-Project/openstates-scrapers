@@ -1,5 +1,7 @@
 import re
 import json
+import logging
+import contextlib
 import time
 import datetime
 import ipaddress
@@ -170,6 +172,40 @@ def extract_names(line, limit):
 EGRESS_LOOKUP_URL = "https://api.ipify.org"
 
 
+_log = logging.getLogger("openstates")
+
+
+def log_egress_address():
+    """OPEN-892: once per run, log the address our requests leave from (what a public lookup
+    service sees), so a connect timeout on the legislature's site can be told apart from a
+    dropped address or a network-path problem. Logs only: no rotation, and a failed lookup
+    never stops the scrape. OPEN-904: called from Oklahoma.get_session_list, because os-update
+    asks for that list (the run's first request) before it makes any scraper."""
+    try:
+        address = checked_requests.get(EGRESS_LOOKUP_URL, timeout=10).text.strip()
+        ipaddress.ip_address(address)
+    except (requests.exceptions.RequestException, ValueError) as e:
+        _log.warning(f"OK egress address: lookup failed ({type(e).__name__})")
+        return
+    _log.info(f"OK egress address: {address}")
+
+
+@contextlib.contextmanager
+def logged_connection_errors(method, url):
+    """OPEN-892: when a request fails with a connection error (a connect timeout is one; after
+    the retries), log how long it was tried and the error, then re-raise. OPEN-904: the scraper's
+    own requests and the session-list fetch (which runs before any scraper) both use this."""
+    started = time.monotonic()
+    try:
+        yield
+    except requests.exceptions.ConnectionError as e:  # includes ConnectTimeout
+        _log.warning(
+            f"OK connection error: {type(e).__name__} after "
+            f"{time.monotonic() - started:.1f}s of tries: {method} {url}: {e}"
+        )
+        raise
+
+
 class OKBillScraper(Scraper):
     bill_types = ["B", "JR", "CR", "R"]
     subject_map = collections.defaultdict(list)
@@ -210,31 +246,9 @@ class OKBillScraper(Scraper):
         "2027": "2700",
     }
 
-    def log_egress_address(self):
-        """OPEN-892: once per run, log the address our requests leave from (what a public
-        lookup service sees), so a connect timeout on the legislature's site can be told apart
-        from a dropped address or a network-path problem. Logs only: no rotation, and a failed
-        lookup never stops the scrape."""
-        try:
-            address = checked_requests.get(EGRESS_LOOKUP_URL, timeout=10).text.strip()
-            ipaddress.ip_address(address)
-        except (requests.exceptions.RequestException, ValueError) as e:
-            self.warning(f"OK egress address: lookup failed ({type(e).__name__})")
-            return
-        self.info(f"OK egress address: {address}")
-
     def request(self, method, url, **kwargs):
-        """OPEN-892: when a request fails with a connection error (a connect timeout is one; after
-        scrapelib's own retries), log how long it was tried and the error, then re-raise."""
-        started = time.monotonic()
-        try:
+        with logged_connection_errors(method, url):
             return super().request(method, url, **kwargs)
-        except requests.exceptions.ConnectionError as e:  # includes ConnectTimeout
-            self.warning(
-                f"OK connection error: {type(e).__name__} after "
-                f"{time.monotonic() - started:.1f}s of tries: {method} {url}: {e}"
-            )
-            raise
 
     def listing_code(self, session):
         """The search form's code for the list the scrape of `session` reads (OPEN-758): a
@@ -244,7 +258,6 @@ class OKBillScraper(Scraper):
         ]
 
     def scrape(self, chamber=None, session=None, only_bills=None):
-        self.log_egress_address()
         chambers = [chamber] if chamber else ["upper", "lower"]
         for chamber in chambers:
             yield from self.scrape_chamber(chamber, session, only_bills)

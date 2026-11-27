@@ -1,5 +1,5 @@
 from openstates.scrape import State
-from .bills import OKBillScraper
+from .bills import OKBillScraper, log_egress_address, logged_connection_errors
 from .events import OKEventScraper
 
 
@@ -326,10 +326,13 @@ class Oklahoma(State):
     def get_session_list(self):
         from utils import url_xpath
 
-        sessions = url_xpath(
-            "https://webapps.oklegislature.gov/WebApplication3/WebForm1.aspx",
-            "//select[@name='cbxSessionId']/option/text()",
-        )
+        # OPEN-904: os-update asks for this list before it makes any scraper, so it is the run's
+        # first request (and the first place a connect timeout happens): log the address and
+        # time the fetch here
+        url = "https://webapps.oklegislature.gov/WebApplication3/WebForm1.aspx"
+        log_egress_address()
+        with logged_connection_errors("GET", url):
+            sessions = url_xpath(url, "//select[@name='cbxSessionId']/option/text()")
         # OK Sometimes appends (Mainsys) to their session listings
         sessions = [
             s.replace("(Mainsys)", "").replace("(PROD)", "").strip() for s in sessions
