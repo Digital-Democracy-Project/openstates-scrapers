@@ -245,6 +245,15 @@ def senate_rollcall_url(action_name, session):
 
     OPEN-176: built from the roll-call number in the action's own text rather
     than from whichever link happens to sit first in the action cell.
+    """
+    number = senate_rollcall_number(action_name)
+    if number is None:
+        return None
+    return _SENATE_ROLLCALL_URL.format(re.sub(r"\D+$", "", session), number)
+
+
+def senate_rollcall_number(action_name):
+    """Return the Senate roll-call number an action cites (a string of digits), or None.
 
     Only ever returns a number this action attributes to the Senate:
 
@@ -272,7 +281,7 @@ def senate_rollcall_url(action_name, session):
             return None
         number = candidates.pop()
 
-    return _SENATE_ROLLCALL_URL.format(re.sub(r"\D+$", "", session), number)
+    return number
 
 
 def _house_vote_dedupe_key(housevote_pdf, n_supplement, bill_identifier):
@@ -1372,6 +1381,11 @@ class MABillScraper(Scraper):
                 )
                 cached_vote.set_count("yes", y)
                 cached_vote.set_count("no", n)
+                # OPEN-924: the House gives a vote its day only, so a conference report and the enactment on one
+                # day tie. The roll-call number ("YEA and NAY No. 56", then No. 57) rises in the order the votes
+                # were taken. The broker reads this key into Motion.rollcall_num to order same-day votes in one
+                # chamber (OPEN-685 did the same for Nebraska, Louisiana and New Mexico).
+                cached_vote.extras["house-rollcall-num"] = str(n_supplement)
 
                 # OPEN-169: the session goes into this URL WITHOUT its ordinal suffix.
                 # `bill.legislative_session` is "194th" and produced
@@ -1458,6 +1472,10 @@ class MABillScraper(Scraper):
                     )
                     cached_vote.set_count("yes", y)
                     cached_vote.set_count("no", n)
+                    # OPEN-924: the Senate's roll-call number, for the same reason as the House's above.
+                    senate_number = senate_rollcall_number(action_name)
+                    if senate_number is not None:
+                        cached_vote.extras["senate-rollcall-num"] = senate_number
 
                     # OPEN-176: derive the roll-call PDF from the number this
                     # action cites, not from the first link in the cell.
