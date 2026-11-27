@@ -14,6 +14,24 @@ digest_and_readability_score_regex = re.compile(
     r".+\(Flesch Readability Score: [0-9.]+\)\."
 )
 
+# Oregon prints text a bill deletes as a bracketed italic span, "[<i>...</i>]"; the
+# current summary is in <b>.
+deleted_summary_regex = re.compile(r"\[\s*<i>.*?</i>\s*\]", re.S | re.I)
+markup_tag_regex = re.compile(r"</?[bi]>", re.I)
+leading_junk_regex = re.compile(r"^[\s\]]+")
+
+
+def clean_measure_summary(abstract):
+    """Oregon's MeasureSummary markup out, current summary kept (OPEN-928).
+
+    Drops the deleted (bracketed italic) spans, then the leftover <b>/<i> tags, then the
+    stray "]" and spaces the digest cut leaves at the start, and squeezes spaces.
+    """
+    abstract = deleted_summary_regex.sub(" ", abstract)
+    abstract = markup_tag_regex.sub("", abstract)
+    abstract = re.sub(r"\s+", " ", abstract)
+    return leading_junk_regex.sub("", abstract).strip()
+
 
 class ORBillScraper(Scraper):
     tz = get_timezone()
@@ -75,8 +93,8 @@ class ORBillScraper(Scraper):
                 # the longer version seems more useful so just cutting out the "digest" text
                 abstract = measure["MeasureSummary"]
                 abstract = re.sub(digest_and_readability_score_regex, "", abstract)
-                abstract = re.sub(r"\s+", " ", abstract)
-                bill.add_abstract(abstract.strip(), note="summary")
+                abstract = clean_measure_summary(abstract)
+                bill.add_abstract(abstract, note="summary")
 
             if measure["RelatingTo"] is None:
                 self.warning("No bill title for {}, skipping.".format(bid))
