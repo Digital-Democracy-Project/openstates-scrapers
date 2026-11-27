@@ -256,7 +256,8 @@ def test_wa_not_passage(text):
     ("H VOTE:", ["passage"]),
     ("S VOTE:", ["passage"]),
     ("Passage-Enrolled Bill  R", ["passage"]),
-    # "Agree to R" was never matched: the pattern's \b was a backspace inside double quotes
+    # "Agree to R" was never matched: the pattern's \b was a backspace inside double quotes.
+    # OPEN-919: it is also "Agree to" on a joint resolution (SJ 140's Senate 40-0), which counts.
     ("Agree to  R", ["passage"]),
     # OPEN-416: LIS now sends the bill's own action text (with the tally) as the motion
     ("Read third time and passed House (96-Y 0-N 0-A)", ["passage"]),
@@ -275,8 +276,8 @@ def test_wa_not_passage(text):
     ("Senate substitute with amendment rejected by House (40-Y 55-N 0-A)", ["passage"]),
     ("Conference report agreed to by Senate (21-Y 18-N 0-A)", ["passage"]),
     ("Conference report agreed to by House (60-Y 38-N 0-A)", ["passage"]),
-    ("Senate acceded to request (40-Y 0-N 0-A)", ["passage"]),
-    ("Senate acceded to request  Block Vote (40-Y 0-N 0-A)", ["passage"]),
+    # OPEN-919: the vote that adopts the conference report is still passage; acceding is not (below)
+    ("Adopt Conference Committee Report  R", ["passage"]),
     ("House concurred in Governor's recommendation (60-Y 38-N 0-A)", ["passage"]),
     ("Senate concurred in Governor's recommendation nos 1 - 3 (21-Y 18-N 0-A)", ["passage"]),
     ("Governor's amendment nos. 1 - 3 agreed to (96-Y 0-N 0-A)", ["passage"]),
@@ -320,6 +321,12 @@ def test_va_passage(text, expected):
     "Conference Report released",
     "House requested conference committee",
     "Failed to Pass from conference",
+    # OPEN-919 (Ramon, 2026-11-26): acceding to a conference committee is procedural, not passage
+    "Accede Conference Committee   R",
+    "Accede Second Conference Committee  R",
+    "Senate acceded to request (40-Y 0-N 0-A)",
+    "Senate acceded to request  Block Vote (40-Y 0-N 0-A)",
+    "House acceded to request (98-Y 0-N 0-A)",
 ])
 def test_va_not_passage(text):
     assert classify_motion("va", text) == []

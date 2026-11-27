@@ -364,6 +364,13 @@ jurisdictions:
       - "^subcommittee recommends continuing"    # continued = not passage
       - "^subcommittee recommends referring"     # referred to another committee
       - "^subcommittee recommends incorporating" # incorporated into another bill
+      # OPEN-919 (Ramon, 2026-11-26): acceding to a conference committee is the chamber agreeing to go to
+      # conference, a procedural 40-0, not a vote on the bill. The Senate's "Accede Conference Committee R"
+      # and "Accede Second Conference Committee R" (90 votes in 2026) and the "(House|Senate) acceded to
+      # request" wording (not seen yet) are all this one class. The vote that adopts the conference
+      # report stays passage ("^adopt conference committee report").
+      - '^accede\b.*\bconference committee\b'
+      - '^(house|senate) acceded\b'
     committee_passage:
       - "^subcommittee recommends reporting"     # reported out of subcommittee
       - "^reported from"                         # reported out of full committee (motion_text fallback)
@@ -375,8 +382,8 @@ jurisdictions:
       - "^adopt governor"                        # adopting governor's recommendation
       - "^concur house"                          # concurrence in House amendments
       - "^concur senate"                         # concurrence in Senate amendments
-      - "^accede conference committee"           # accepting conference committee recommendation
-      - '^agree to\b'                            # "Agree to R" = adopted recommendation
+      # OPEN-919: "^accede conference committee" left this list (see not_passage above).
+      - '^agree to\b'                            # "Agree to R" = chamber adopts a resolution (incl. a joint resolution, SJ 140 in 2026)
       # OPEN-416: LIS now sends the bill's own action text as the vote's motion (it used to send
       # "H VOTE:" and the short "Passage R" family), usually with the tally in parentheses.
       # A failed vote is still a vote on passage, so "defeated" / "rejected" are included.
@@ -388,7 +395,6 @@ jurisdictions:
       - '^agreed to by (house|senate)\b'                   # resolutions adopted
       - '^(house|senate) (substitute|amendments?)\b.*\b(agreed to|rejected) by (house|senate)\b'   # concurrence
       - '^conference report (agreed to|rejected) by (house|senate)\b'
-      - '^(house|senate) acceded to request'               # "Accede Conference Committee R", new wording
       - '^(house|senate) concurred in governor'            # governor's recommendations
       # needs a disposition: LIS also logs "Governor's recommendation received by House" (not a vote)
       - '^governor''s (amendment|recommendation)s?\b.*\b(agreed to|adopted|rejected|passed by|defeated)'
