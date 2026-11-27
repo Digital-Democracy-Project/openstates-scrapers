@@ -161,3 +161,36 @@ def test_a_failed_second_reading_that_nothing_follows_is_passage_and_its_reconsi
     assert vote_classification("Second Reading M6 Reconsider", "[H]-101", calls) == []
     assert vote_classification("Second Reading", "[H]-301", calls) == ["passage"]
     assert vote_classification("Second Reading", "[H]-100", calls[:2]) == ["passage"]
+
+
+# OPEN-926 (Ramon, 2026-11-26): a House YES on "M11 Not Concur" refuses the Senate's changes, a vote AGAINST the
+# bill; the scraper marks it so the broker turns each member's round. The Senate's "Motion 9 To Concur" is not marked.
+@pytest.mark.parametrize(
+    "bill", ["H116", "H147", "H268", "H377", "H562", "H834", "H958", "S445"]
+)
+def test_only_the_house_m11_not_concur_roll_calls_are_marked_yes_is_against(bill):
+    scraper = NCBillScraper(jurisdiction="nc", datadir="/tmp")
+    b = Bill("HB 1", "2025", "A bill", chamber="lower")
+    transcript = mock.Mock(text="<html><body></body></html>")
+    with mock.patch.object(scraper, "get", return_value=transcript):
+        votes = list(scraper.scrape_votes(b, lxml.html.fromstring(page(bill))))
+    assert votes
+    for v in votes:
+        expected = v.motion_text.strip().lower().endswith("m11 not concur")
+        assert v.extras.get("ddp_yes_is_against", False) is expected, v.motion_text
+        if expected:
+            assert "lower" in v.organization
+
+
+def test_the_fixtures_hold_marked_roll_calls():
+    scraper = NCBillScraper(jurisdiction="nc", datadir="/tmp")
+    b = Bill("HB 1", "2025", "A bill", chamber="lower")
+    transcript = mock.Mock(text="<html><body></body></html>")
+    marked = []
+    with mock.patch.object(scraper, "get", return_value=transcript):
+        for bill in ["H116", "H268", "H377", "H562"]:
+            for v in scraper.scrape_votes(b, lxml.html.fromstring(page(bill))):
+                if v.extras.get("ddp_yes_is_against"):
+                    marked.append(v.dedupe_key)
+    assert "[H]-396" in marked and "[H]-748" in marked
+    assert len(marked) == 4

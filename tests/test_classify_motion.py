@@ -7,7 +7,7 @@ import os
 import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
-from classify_motion import needs_two_thirds, classify_motion, KNOWN_JURISDICTIONS, _config, _PREPROCESSORS
+from classify_motion import needs_two_thirds, yes_is_against, classify_motion, KNOWN_JURISDICTIONS, _config, _PREPROCESSORS
 
 
 # ---------------------------------------------------------------------------
@@ -1042,3 +1042,29 @@ WY_CASES = [
 @pytest.mark.parametrize("text,expected", WY_CASES)
 def test_wy(text, expected):
     assert classify_motion("wy", text) == expected
+
+
+# OPEN-926: a House YES on "M11 Not Concur" is a vote against the bill (the broker flips it); nothing else in NC is.
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        ("M11 Not Concur", True),
+        ("R2 Ruled Mat'l M11 Not Concur", True),
+        ("M11 Concur", False),
+        ("M11 Concur Sen. Amd. 1", False),
+        ("R2 Ruled Mat'l M11 Concur", False),
+        ("R3 Ruled Mat'l M11 Concur", False),
+        # the Senate's concurrence votes: a YES is for concurring, a failed one is only a lost vote
+        ("Motion 9 To Concur", False),
+        ("Motion 9 To Concur House Amend", False),
+        ("Second Reading Motion 9 To Concur", False),
+        ("Third Reading Motion 9 To Concur", False),
+        ("Third Reading", False),
+        ("Second Reading", False),
+        ("Veto Override", False),
+        ("C RPT Adoption", False),
+        ("Conference Report Motion 8 To Adopt", False),
+    ],
+)
+def test_nc_yes_is_against(text, expected):
+    assert yes_is_against("nc", text) is expected

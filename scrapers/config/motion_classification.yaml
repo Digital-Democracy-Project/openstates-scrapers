@@ -612,12 +612,18 @@ jurisdictions:
       - "^conference (report|rpt) motion 8 to adopt$"
       - "^(r3 ruled mat'l )?c rpt adoption$"     # House adopts a conference report, R3 = its third reading when ruled material
       - "^(r3 ruled mat'l )?m11 concur"          # House concurs in Senate amendments ("M11 Concur Sen. Amd. 1" too)
-      - "^(r2 ruled mat'l )?m11 not concur"   # House refuses the Senate's changes: counts like the Senate's failed "Motion 9 To Concur" (Ramon, 2026-11-26, BROKER-616; OPEN-920). Unlike "R2 Ruled Mat'l M11 Concur" no R3 "Not Concur" roll call follows an R2 one (HB 1220: straight to the conference report), so R2 is the refusal's only roll call
+      - &nc_m11_not_concur "^(r2 ruled mat'l )?m11 not concur"   # House refuses the Senate's changes: counts like the Senate's failed "Motion 9 To Concur" (Ramon, 2026-11-26, BROKER-616; OPEN-920). Unlike "R2 Ruled Mat'l M11 Concur" no R3 "Not Concur" roll call follows an R2 one (HB 1220: straight to the conference report), so R2 is the refusal's only roll call
       - "^motion 9 to concur"                    # Senate concurs in House amendments ("... House Amend" too); a failed one is a lost passage vote
       - "^motion 8 to adopt$"                    # Senate adopts a simple resolution
       - "^r2 for adoption$"                      # House adopts a simple resolution (one reading)
       - "veto override"                          # "Veto Override", "Motion 11 Veto Override": Ramon, 2026-11-16, "Veto overrides count as passage" (unlike ma, ne); "... M4 Previous Question" stays procedure
     default: null
+    # OPEN-926 (Ramon, 2026-11-26, BROKER-616 comment 23901): a House YES on "M11 Not Concur" refuses the Senate's changes,
+    # so it is a vote AGAINST the bill (as Maine's "Ought Not to Pass"). The nc scraper marks such a roll call (extras
+    # ddp_yes_is_against) and the broker's scorecards turn each legislator's round for it. The Senate's "Motion 9 To Concur"
+    # is not listed: a YES there is FOR concurring, a failed one is simply a lost vote.
+    yes_is_against:
+      - *nc_m11_not_concur
 
   # Nevada (OPEN-595). The scraper reads the first vote list on each bill's NELIS Votes tab, the one
   # headed "Final Passage" (GetBillVotes?voteTypeId=3): each chamber's third-reading roll call. Its
