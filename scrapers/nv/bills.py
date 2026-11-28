@@ -9,7 +9,7 @@ import lxml.html
 from openstates.scrape import Scraper, Bill, VoteEvent
 from classify_motion import classify_motion
 from .common import get_session_slug
-from spatula import HtmlListPage, HtmlPage, CSS, XPath, SelectorError, SkipItem
+from spatula import HtmlListPage, HtmlPage, CSS, XPath, SelectorError
 from scrapelib import HTTPError
 
 TZ = pytz.timezone("PST8PDT")
@@ -232,7 +232,8 @@ class BillTabDetail(Utf8HtmlMixin, HtmlPage):
     def process_error_response(self, exception: Exception) -> None:
         message = f"Encountered error fetching Bill Overview for {self.input.identifier}, skipping {self.input.source_url}"
         self.logger.warning(message)
-        raise SkipItem(message)
+        # Only log: spatula then raises HandledError itself and moves to the next item.
+        # Raising SkipItem here goes up through the scraper and ends the whole run.
 
     def get_column_div(self, name):
         # lots of places where we have a <div class='col-md-2 font-weight-bold'>
@@ -416,8 +417,16 @@ class BillTabText(Utf8HtmlMixin, HtmlPage):
         for row in CSS(".d-md-none p.h5 a").match(self.root, min_items=0):
             title = row.text_content()
             link = row.get("href")
+            # upstream #6028 (OPEN-936): a version link under /Amendments/ is an
+            # amendment paper. NELIS lists none among the texts (they are the
+            # documents below), so today this changes nothing; it keeps the line
+            # the same as upstream's for the next upstream merge
             bill.add_version_link(
-                title, link, media_type="application/pdf", on_duplicate="ignore"
+                title,
+                link,
+                classification="amendment" if "/Amendments/" in link else "",
+                media_type="application/pdf",
+                on_duplicate="ignore",
             )
         for row in CSS(".d-md-none p.text-wrap a").match(self.root, min_items=0):
             bill.add_document_link(
@@ -445,7 +454,8 @@ class ExhibitTabText(Utf8HtmlMixin, HtmlPage):
     def process_error_response(self, exception: Exception) -> None:
         message = f"Encountered error fetching Exhibits tab, skipping {self.source}"
         self.logger.warning(message)
-        raise SkipItem(message)
+        # Only log: spatula then raises HandledError itself and moves to the next item.
+        # Raising SkipItem here goes up through the scraper and ends the whole run.
 
     def process_page(self):
         bill = self.input
