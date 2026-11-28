@@ -455,7 +455,9 @@ class ExhibitTabText(Utf8HtmlMixin, HtmlPage):
             bill.add_document_link(
                 title, link, media_type="application/pdf", on_duplicate="ignore"
             )
-        fn_url = self.source.url.replace("Text", "FiscalNotes")
+        # OPEN-941 (upstream #6048): this URL says "Exhibits", not "Text", so the old
+        # replace("Text", "FiscalNotes") changed nothing and fiscal notes were never read.
+        fn_url = self.source.url.replace("Exhibits", "FiscalNotes")
         return FiscalTabText(bill, source=fn_url)
 
 
@@ -468,8 +470,8 @@ class FiscalTabText(Utf8HtmlMixin, HtmlPage):
     def process_page(self):
         bill = self.input
         for row in CSS("ul.list-unstyled li a").match(self.root, min_items=0):
-            title = row.text_content()
-            title = f"Fiscal Note: {title}"
+            # the site wraps the link text in whitespace
+            title = f"Fiscal Note: {row.text_content().strip()}"
             link = row.get("href")
             bill.add_document_link(
                 title, link, media_type="application/pdf", on_duplicate="ignore"
