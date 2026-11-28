@@ -55,6 +55,10 @@ REAL_2025 = [
     # a simple resolution's adoption (SR, HR): one floor vote, on second reading
     ("(S) 2nd Reading", "Do Adopt", P),  # 105 (2025 SR 33)
     ("(H) 2nd Reading", "Do Adopt", P),  # 6
+    # OPEN-953: the House's own action names for the same adoption (HR 2, 3, 5, 6; HR 7 lost; HR 1)
+    ("(H) Resolution Adopted", "Do Adopt", P),  # 4
+    ("(H) Resolution Failed", "Do Adopt", P),  # 1
+    ("(H) 2nd Reading Passed", "Do Adopt", P),  # 1
     # second reading: not passage (Utah precedent), whatever it votes on
     ("(H) 2nd Reading", "Do Pass", N),  # 753
     ("(S) 2nd Reading", "Do Concur", N),  # 600

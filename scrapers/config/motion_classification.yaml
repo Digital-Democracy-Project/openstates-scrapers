@@ -50,6 +50,11 @@ jurisdictions:
                                                  # archive "(H) 3rd Reading Passed", "(S) 3rd Reading Failed", "(H) 3rd Reading Passed as Amended by Senate"
       - '^\([hs]\) 2nd reading: do adopt$'       # a simple resolution (SR, HR) is adopted on second reading and has no third (111 of 2025)
       - '^\([hs]\) resolution adopted$'          # archive: the same resolution adoption
+      # OPEN-953: the bills API names a House adoption by its own action, not "2nd Reading": "(H) Resolution Adopted: Do Adopt"
+      # (4 of 2025), its failure "(H) Resolution Failed: Do Adopt" (1, HR 7), and one "(H) 2nd Reading Passed: Do Adopt"
+      # (HR 1). Only the simple resolution's adoption (or its failure, a lost passage vote) carries these action names.
+      - '^\([hs]\) resolution (adopted|failed): do adopt$'
+      - '^\([hs]\) 2nd reading passed: do adopt$'
       - '^\([hs]\) veto overrid(den by|e failed in) legislature$'   # archive: whole-bill veto override (Ramon, OPEN-677)
     default: null                                # second reading, motions, reconsiderations, cloture, re-referral: unlabelled
 
