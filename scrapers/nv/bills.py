@@ -455,8 +455,12 @@ class ExhibitTabText(Utf8HtmlMixin, HtmlPage):
             bill.add_document_link(
                 title, link, media_type="application/pdf", on_duplicate="ignore"
             )
-        am_url = self.source.url.replace("Text", "Amendments")
-        return AmendmentTabText(bill, source=am_url)
+        # OPEN-941 (upstream #6048, #6035): this URL says "Exhibits", not "Text", so the
+        # old Text -> Amendments -> FiscalNotes replaces changed nothing and every hop
+        # fetched the Exhibits tab again; fiscal notes were never read. Amendments are
+        # read from the Text tab (OPEN-830), so go straight to the FiscalNotes tab.
+        fn_url = self.source.url.replace("Exhibits", "FiscalNotes")
+        return FiscalTabText(bill, source=fn_url)
 
 
 class AmendmentTabText(Utf8HtmlMixin, HtmlPage):
@@ -474,7 +478,7 @@ class AmendmentTabText(Utf8HtmlMixin, HtmlPage):
                 title, link, media_type="application/pdf", on_duplicate="ignore"
             )
 
-        fn_url = self.source.url.replace("Text", "FiscalNotes")
+        fn_url = self.source.url.replace("Amendments", "FiscalNotes")
         return FiscalTabText(bill, source=fn_url)
 
 
@@ -487,8 +491,8 @@ class FiscalTabText(Utf8HtmlMixin, HtmlPage):
     def process_page(self):
         bill = self.input
         for row in CSS("ul.list-unstyled li a").match(self.root, min_items=0):
-            title = row.text_content()
-            title = f"Fiscal Note: {title}"
+            # the site wraps the link text in whitespace
+            title = f"Fiscal Note: {row.text_content().strip()}"
             link = row.get("href")
             bill.add_document_link(
                 title, link, media_type="application/pdf", on_duplicate="ignore"
