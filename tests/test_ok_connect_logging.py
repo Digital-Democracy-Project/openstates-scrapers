@@ -92,9 +92,13 @@ sys.exit(main())
 
 def run_collector_entry(tmp_path, lookup):
     script = ENTRY.replace("MODE_LOOKUP", repr(lookup))
+    # Scrapers folder first, then the parent's own path, so the child imports
+    # the same openstates core the test run does (not an older installed one).
+    scrapers = os.path.join(os.path.dirname(__file__), "..", "scrapers")
+    parent_path = os.environ.get("PYTHONPATH")
     env = dict(
         os.environ,
-        PYTHONPATH=os.path.join(os.path.dirname(__file__), "..", "scrapers"),
+        PYTHONPATH=os.pathsep.join([scrapers] + ([parent_path] if parent_path else [])),
         PYTHONDONTWRITEBYTECODE="1",
     )
     out = subprocess.run(
