@@ -590,6 +590,15 @@ class MSBillScraper(Scraper):
             bill=bill,
         )
         vote.dedupe_key = url + "#" + bill.identifier
+        # OPEN-943: a vote's day carries no time, so two votes of one chamber on one day (2026 SB 2416,
+        # Senate, 2026-02-12: passed 49-2, reconsidered, amended, passed 46-3) cannot be ordered. The vote
+        # sheet's 7-digit file name (legislative day + the chamber's sheet number of that day) rises through
+        # the day. The broker reads this key into Motion.rollcall_num (as OPEN-628 and OPEN-863 did).
+        sheet = re.search(r"/(\d{7})\.pdf$", url)
+        if sheet and chamber in ("upper", "lower"):
+            vote.extras[
+                "senate-rollcall-num" if chamber == "upper" else "house-rollcall-num"
+            ] = str(int(sheet.group(1)))
 
         vote.set_count("yes", yes_count)
         vote.set_count("no", no_count)
