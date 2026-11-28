@@ -530,6 +530,14 @@ class MEBillScraper(Scraper):
         vote.set_count("other", other_count)
         vote.add_source(url)
         vote.dedupe_key = url
+        # OPEN-948: a roll call's day carries no time, so two roll calls of one chamber on one day (LD 609:
+        # engrossment, then enactment) cannot be ordered. The page's own "Roll-call #" (the URL's serialnumber, also in
+        # the identifier) is the chamber's running count and rises through the sessions: on all 1,575 stored roll calls
+        # no number sits on two dates and none falls on an earlier date than a smaller number. The broker reads this
+        # key into Motion.rollcall_num (as OPEN-628, OPEN-924 and OPEN-943 did).
+        vote.extras[
+            "senate-rollcall-num" if chamber == "upper" else "house-rollcall-num"
+        ] = serial
         # BROKER-564: a YES on accepting an "Ought Not to Pass" report is a vote against the bill; the broker reads this
         if yes_is_against("me", motion):
             vote.extras["ddp_yes_is_against"] = True
