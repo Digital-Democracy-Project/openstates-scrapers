@@ -23,6 +23,7 @@ from me import Maine  # noqa: E402
 from me.bills import (  # noqa: E402
     FINAL_ROLL_CALL,
     OUGHT_TO_PASS_REPORT,
+    RECEDE_AND_CONCUR,
     MEBillScraper,
     vote_classification,
 )
@@ -124,7 +125,7 @@ REAL_UNLABELLED = [
     "recon of maj rep otp-am by ca-a",
     "SUBSTITUTE JOINT RES FOR COMMITTEE RPT",
     "INDEFINITELY POSTPONE",  # 13: the bill (12) or, once, an amendment (Senate RC 628)
-    "RECEDE AND CONCUR",  # 70: concurs in whatever the other chamber did
+    "RECEDE AND CONCUR",  # 70: unlabelled by its text; scrape_vote() makes a PASSED one passage (OPEN-948)
     "RECEDE",
     "INSIST",
     "INSIST/ASK FOR COMMITTEE OF CONFERENCE",
@@ -274,7 +275,8 @@ REAL_PAGES = [
     ("280095557_House_185", "ADOPT HAH-126 to CAS-44", ["amendment"], "fail"),
     ("280095829_House_4", "INDEF PP HAH-2 TO CAH-1", ["amendment"], "pass"),
     ("280095830_Senate_628", "INDEFINITELY POSTPONE", [], "pass"),
-    ("280095566_Senate_963", "RECEDE AND CONCUR", [], "pass"),
+    # OPEN-948: a passed concurrence is the chamber's deciding vote
+    ("280095566_Senate_963", "RECEDE AND CONCUR", ["passage"], "pass"),
 ]
 
 
@@ -424,6 +426,43 @@ def test_other_real_roll_calls_are_not_marked(fid, motion):
 
 
 # ---------------------------------------------------------------------------------------------------------------
+# OPEN-948 (BROKER-631): a passed "RECEDE AND CONCUR" is passage, a failed one (the chamber insisted) is not.
+# ---------------------------------------------------------------------------------------------------------------
+
+
+def _recede_and_concur(outcome, motion="RECEDE AND CONCUR"):
+    # SP 963 (132), Senate RC 963, which prevailed; a failed one is the same page with the outcome flipped
+    url = BASE + "rollcall.asp?ID=280095566&chamber=Senate&serialnumber=963"
+    html = _page("rollcall_280095566_Senate_963.html")
+    assert "PREVAILS" in html
+    scraper = _scraper({url: html.replace("PREVAILS", outcome)})
+    (vote,) = list(scraper.scrape_vote(_bill(), motion, url))
+    return vote
+
+
+def test_passed_recede_and_concur_is_passage():
+    vote = _recede_and_concur("PREVAILS")
+    assert (vote.result, vote.motion_classification) == ("pass", ["passage"])
+
+
+def test_failed_recede_and_concur_is_not_passage():
+    vote = _recede_and_concur("FAILS")
+    assert (vote.result, vote.motion_classification) == ("fail", [])
+
+
+@pytest.mark.parametrize(
+    "motion", ["RECEDE", "recede and concur with amendment", "INSIST"]
+)
+def test_other_recede_texts_stay_unlabelled_even_when_passed(motion):
+    assert _recede_and_concur("PREVAILS", motion).motion_classification == []
+
+
+def test_recede_and_concur_matches_the_class_of_text_not_one_case():
+    assert RECEDE_AND_CONCUR.search("Recede and Concur")
+    assert RECEDE_AND_CONCUR.search("RECEDE AND CONCUR")
+    assert not RECEDE_AND_CONCUR.search("RECEDE")
+
+
 # OPEN-948 (BROKER-631): the page's roll-call number orders two same-day roll calls of one chamber.
 # ---------------------------------------------------------------------------------------------------------------
 

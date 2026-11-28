@@ -46,6 +46,12 @@ FINAL_ROLL_CALL = re.compile(
     r"^(enact|final passage\b|passage( of emergency measure)?$|adoption$)", re.I
 )
 
+# OPEN-948 (BROKER-631, Ramon's rule "concurrence replaces third reading", 11-24): a chamber's "RECEDE AND
+# CONCUR" roll call is its vote to accept the other chamber's version. When it passed that is the chamber's
+# deciding vote, so it is passage; when it failed the chamber insisted and the vote decides nothing. Needs the
+# result, which one roll call's text cannot give, so it is decided in scrape_vote(). A bare "RECEDE" stays unlabelled.
+RECEDE_AND_CONCUR = re.compile(r"^recede and concur$", re.I)
+
 
 def first_action_date(html):
     """The earliest date in a dockets.asp page's action table, or None (OPEN-747)."""
@@ -517,6 +523,8 @@ class MEBillScraper(Scraper):
             classification=vote_classification(motion),
             bill=bill,
         )
+        if outcome == "PREVAILS" and RECEDE_AND_CONCUR.search(motion):
+            vote.motion_classification = ["passage"]
         vote.set_count("yes", yes_count)
         vote.set_count("no", no_count)
         vote.set_count("other", other_count)
