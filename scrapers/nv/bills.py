@@ -9,7 +9,7 @@ import lxml.html
 from openstates.scrape import Scraper, Bill, VoteEvent
 from classify_motion import classify_motion
 from .common import get_session_slug
-from spatula import HtmlListPage, HtmlPage, CSS, XPath, SelectorError, SkipItem
+from spatula import HtmlListPage, HtmlPage, CSS, XPath, SelectorError
 from scrapelib import HTTPError
 
 TZ = pytz.timezone("PST8PDT")
@@ -232,7 +232,8 @@ class BillTabDetail(Utf8HtmlMixin, HtmlPage):
     def process_error_response(self, exception: Exception) -> None:
         message = f"Encountered error fetching Bill Overview for {self.input.identifier}, skipping {self.input.source_url}"
         self.logger.warning(message)
-        raise SkipItem(message)
+        # Only log: spatula then raises HandledError itself and moves to the next item.
+        # Raising SkipItem here goes up through the scraper and ends the whole run.
 
     def get_column_div(self, name):
         # lots of places where we have a <div class='col-md-2 font-weight-bold'>
@@ -445,7 +446,8 @@ class ExhibitTabText(Utf8HtmlMixin, HtmlPage):
     def process_error_response(self, exception: Exception) -> None:
         message = f"Encountered error fetching Exhibits tab, skipping {self.source}"
         self.logger.warning(message)
-        raise SkipItem(message)
+        # Only log: spatula then raises HandledError itself and moves to the next item.
+        # Raising SkipItem here goes up through the scraper and ends the whole run.
 
     def process_page(self):
         bill = self.input
