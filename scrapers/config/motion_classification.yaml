@@ -141,10 +141,17 @@ jurisdictions:
     # the complete audit of this site found fewer than 12 non-passage texts
     # unknown future floor texts default to passage and surface in validate_scorecards check #9
     not_passage:
-      - "second reading"
+      # OPEN-945 (BROKER-630): rules written from all 12,105 stored Florida vote events. Four classes of text
+      # were labelled wrong. not_passage is checked before anything else, so an exception is a lookahead.
+      - '^(?!adoption, second reading$).*second reading'  # a resolution's adoption is plain "Adoption, Second Reading" (a vote on the measure: passage); an AMENDMENT's adoption has its id in front ("A - 160583, Adoption, Second Reading") and stays unlabelled
       - "2nd reading"
       - "placed on"
-      - "^amendment"                             # anchored so "Favorable with 1 amendment" still defaults to passage
+      - '^amendment(?!, conference committee report$)'  # anchored so "Favorable with 1 amendment" still defaults to passage; the Senate's "Amendment, Conference Committee Report" is the conference-report vote (passage)
+      - "co-introduc"                            # "Motion to Co-Introduce", "..., Third Reading": adding a co-introducer is not a vote on the bill (it tied with or replaced third reading)
+      - "^cosponsorship"                         # "Cosponsorship, Third Reading": same
+      - '^veto message, line item'               # a line-item veto is not a whole-bill veto override (Ramon: only whole-bill overrides count)
+      - '^specific appropriation .* motion to override'  # "Specific appropriation 602 of HB 5001 (2024), Motion to Override": same
+      - '\bline item \w+.*motion to override'    # the House's own line-item override votes: "HB 5001 (2024) – Line Item 2803, Page 412, Motion to Override": same
     default: passage                             # catch-all for floor-vote site
 
   # OPEN-590 (Georgia, gate E). The motion text is the roll call's Caption in Georgia's vote service

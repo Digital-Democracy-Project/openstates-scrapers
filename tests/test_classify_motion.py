@@ -171,6 +171,11 @@ def test_ut_not_passage(text):
     ("Third Reading", ["passage"]),
     ("Passage on Third Reading", ["passage"]),
     ("Third Reading En Bloc", ["passage"]),
+    # OPEN-945 (BROKER-630): a resolution's adoption and the Senate's conference-report vote are passage
+    ("Adoption, Second Reading", ["passage"]),
+    ("Adoption, Third Reading", ["passage"]),
+    ("Amendment, Conference Committee Report", ["passage"]),
+    ("Conference Committee Report, Passage", ["passage"]),
 ])
 def test_fl_passage(text, expected):
     assert classify_motion("fl", text) == expected
@@ -181,6 +186,21 @@ def test_fl_passage(text, expected):
     "2nd Reading",
     "Placed on Calendar",
     "Amendment No. 1",
+    # OPEN-945: an AMENDMENT's adoption has its id in front and is not passage
+    "A - 160583, Adoption, Second Reading",
+    "AA - 389103, Adoption, Second Reading",
+    # OPEN-945: adding a co-introducer or cosponsor is not a vote on the bill
+    "Motion to Co-Introduce",
+    "Motion to co-introduce",
+    "Motion to Co-Introduce, Third Reading",
+    "Motion to Co-Introduce, Second Reading",
+    "Cosponsorship, Third Reading",
+    # OPEN-945: a line-item veto vote is not a whole-bill veto override
+    "Veto Message, Line Item 2802",
+    "Specific appropriation 1732A of HB 5001 (2024), Motion to Override",
+    "HB 5001 (2024) \u2013 Line Item 2803, Page 412, Motion to Override",
+    # an amendment that is not the conference report stays unlabelled
+    "Amendment, Conference Committee Report No. 2",
 ])
 def test_fl_not_passage(text):
     assert classify_motion("fl", text) == []
