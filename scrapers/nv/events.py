@@ -66,7 +66,7 @@ class Meetings(HtmlPage):
                 "X-Requested-With": "XMLHttpRequest",
             },
         )
-        yield CurrentMeetings(source=session_link)
+        yield CurrentMeetings(self.input, source=session_link)
 
 
 class CurrentMeetings(HtmlPage):
@@ -126,7 +126,7 @@ class CurrentMeetings(HtmlPage):
 
                 # Start time and bills from the agenda PDF (one fetch)
                 agenda_start_time, agenda_bills = next(
-                    Agenda(source=agenda).do_scrape()
+                    Agenda(source=agenda).do_scrape(scraper=self.input)
                 )
 
             # NV seems to have a lot of problems with these event agenda URLs
@@ -215,4 +215,5 @@ class CurrentMeetings(HtmlPage):
 
 class NVEventScraper(Scraper, LXMLMixin):
     def scrape(self):
-        yield from Meetings().do_scrape()
+        # OPEN-937 (upstream #5981): the scraper is Meetings' input, so the agenda PDF pages use its settings too
+        yield from Meetings(self).do_scrape(scraper=self)

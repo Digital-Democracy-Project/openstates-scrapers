@@ -322,19 +322,16 @@ class BillTabDetail(Utf8HtmlMixin, HtmlPage):
         else:
             action_type = list(set(action_type))
 
-        related_entities = []
-        if "Committee on" in action:
-            committees = re.findall(r"Committee on ([a-zA-Z, ]*)\.", action)
-            for committee in committees:
-                related_entities.append({"type": "committee", "name": committee})
-
-        bill.add_action(
+        # OPEN-937 (upstream #5981): add_action drops related_entities=, so each committee the action names
+        # is added to the action it returns
+        act = bill.add_action(
             description=action,
             date=date,
             chamber=actor,
             classification=action_type,
-            related_entities=related_entities,
         )
+        for committee in re.findall(r"Committee on ([a-zA-Z, ]*)\.", action):
+            act.add_related_entity(committee, "organization")
 
     def process_page(self):
         chamber = "upper" if self.input.identifier.startswith("S") else "lower"
@@ -630,4 +627,5 @@ class NVBillScraper(Scraper):
         logging.getLogger("scrapelib").setLevel(logging.WARNING)
         session_slug = get_session_slug(self.jurisdiction, session)
         bill_list = BillList({"session": session, "session_slug": session_slug})
-        yield from bill_list.do_scrape()
+        # OPEN-937 (upstream #5981): the scraper's own timeout, retries and request rate, not a bare scrapelib.Scraper()
+        yield from bill_list.do_scrape(scraper=self)
