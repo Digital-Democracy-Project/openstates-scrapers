@@ -354,3 +354,50 @@ def test_unknown_action_does_not_stop_the_scrape(monkeypatch, tmp_path, warnings
     assert votes[UNKNOWN_ACTION].motion_classification == []
     assert votes["Passage"].motion_classification == ["passage"]
     assert len(warnings) == 1
+
+
+def scrape_with_url(monkeypatch, tmp_path, fixture, action, chamber, url):
+    text = open(os.path.join(FIXTURES, fixture), "rb").read()
+    scraper = MSBillScraper.__new__(MSBillScraper)
+
+    def urlretrieve(u, verify=False):
+        path = tmp_path / "vote.pdf"
+        path.write_bytes(b"")
+        return str(path), None
+
+    monkeypatch.setattr(scraper, "urlretrieve", urlretrieve, raising=False)
+    monkeypatch.setattr(ms.bills, "convert_pdf", lambda path, kind: text)
+    bill = Bill("SB 2416", legislative_session="2026", chamber=chamber, title="t")
+    (vote,) = scraper.scrape_votes(url, action, datetime(2026, 2, 12), chamber, bill)
+    return vote
+
+
+def test_same_day_senate_votes_get_rising_rollcall_numbers(monkeypatch, tmp_path):
+    """OPEN-943: SB 2416's two Senate votes of 2026-02-12 (sheets 0380032 then 0380041)."""
+    base = "http://billstatus.ls.state.ms.us/2026/pdf/votes/senate/%s.pdf"
+    first = scrape_with_url(
+        monkeypatch, tmp_path, "2026_senate_0590041.txt", "Passed", "upper",
+        base % "0380032",
+    )  # fmt: skip
+    second = scrape_with_url(
+        monkeypatch, tmp_path, "2026_senate_0230002.txt", "Passed As Amended", "upper",
+        base % "0380041",
+    )  # fmt: skip
+    assert first.extras == {"senate-rollcall-num": "380032"}
+    assert second.extras == {"senate-rollcall-num": "380041"}
+    assert int(first.extras["senate-rollcall-num"]) < int(
+        second.extras["senate-rollcall-num"]
+    )
+
+
+def test_house_vote_uses_house_key_and_odd_url_gets_none(monkeypatch, tmp_path):
+    house = scrape_with_url(
+        monkeypatch, tmp_path, "2026_house_0030003.txt", "Passed", "lower",
+        "http://billstatus.ls.state.ms.us/2026/pdf/votes/house/0030003.pdf",
+    )  # fmt: skip
+    assert house.extras == {"house-rollcall-num": "30003"}
+    odd = scrape_with_url(
+        monkeypatch, tmp_path, "2026_house_0030003.txt", "Passed", "lower",
+        "http://billstatus.ls.state.ms.us/x.pdf",
+    )  # fmt: skip
+    assert odd.extras == {}
