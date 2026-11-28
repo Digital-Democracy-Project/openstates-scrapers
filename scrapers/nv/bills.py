@@ -10,7 +10,6 @@ from openstates.scrape import Scraper, Bill, VoteEvent
 from classify_motion import classify_motion
 from .common import get_session_slug
 from spatula import HtmlListPage, HtmlPage, CSS, XPath, SelectorError
-from scrapelib import HTTPError
 
 TZ = pytz.timezone("PST8PDT")
 ACTION_CLASSIFIERS = (
@@ -436,13 +435,7 @@ class BillTabText(Utf8HtmlMixin, HtmlPage):
                 on_duplicate="ignore",
             )
         ex_url = self.source.url.replace("Text", "Exhibits")
-
-        try:
-            return ExhibitTabText(bill, source=ex_url)
-        except HTTPError:
-            self.warning(f"Failure on exhibit url {ex_url}")
-            am_url = self.source.url.replace("Text", "Amendments")
-            return AmendmentTabText(bill, source=am_url)
+        return ExhibitTabText(bill, source=ex_url)
 
 
 class ExhibitTabText(Utf8HtmlMixin, HtmlPage):
@@ -465,30 +458,9 @@ class ExhibitTabText(Utf8HtmlMixin, HtmlPage):
             bill.add_document_link(
                 title, link, media_type="application/pdf", on_duplicate="ignore"
             )
-        # OPEN-941 (upstream #6048, #6035): this URL says "Exhibits", not "Text", so the
-        # old Text -> Amendments -> FiscalNotes replaces changed nothing and every hop
-        # fetched the Exhibits tab again; fiscal notes were never read. Amendments are
-        # read from the Text tab (OPEN-830), so go straight to the FiscalNotes tab.
+        # OPEN-941 (upstream #6048): this URL says "Exhibits", not "Text", so the old
+        # replace("Text", "FiscalNotes") changed nothing and fiscal notes were never read.
         fn_url = self.source.url.replace("Exhibits", "FiscalNotes")
-        return FiscalTabText(bill, source=fn_url)
-
-
-class AmendmentTabText(Utf8HtmlMixin, HtmlPage):
-    example_source = (
-        "https://www.leg.state.nv.us/App/NELIS/REL/82nd2023/Bill/"
-        "FillSelectedBillTab?selectedTab=Amendments&billKey=10039"
-    )
-
-    def process_page(self):
-        bill = self.input
-        for row in CSS("col-11 col-md").match(self.root, min_items=0):
-            title = row.text_content()
-            link = row.get("href")
-            bill.add_version_link(
-                title, link, media_type="application/pdf", on_duplicate="ignore"
-            )
-
-        fn_url = self.source.url.replace("Amendments", "FiscalNotes")
         return FiscalTabText(bill, source=fn_url)
 
 
