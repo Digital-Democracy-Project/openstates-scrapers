@@ -67,6 +67,18 @@ def first_action_date(html):
     return min(dates).date() if dates else None
 
 
+def committee_first_date(html):
+    """The earliest date in a bill text page's committee docket (CDtab), or None (OPEN-850)."""
+    page = lxml.html.fromstring(html)
+    dates = []
+    for cell in page.xpath('//table[@name="CDtab"]/tr[td]/td[1]'):
+        try:
+            dates.append(dateutil.parser.parse(cell.text_content().strip()).date())
+        except (ValueError, OverflowError):
+            continue
+    return min(dates) if dates else None
+
+
 def vote_classification(motion):
     """What a floor roll call decides: passage from the me block of
     config/motion_classification.yaml, else "amendment" for an amendment roll call,
@@ -196,6 +208,10 @@ class MEBillScraper(Scraper):
                 docket_url = bill_url.replace("summary.asp", "dockets.asp")
                 docket = self.get(docket_url, retry_on_404=True).text
                 first_action = first_action_date(docket)
+                if first_action is None:
+                    # OPEN-850: a paper (a joint order, say) can have committee actions only; its
+                    # first dated action is then the first date of its committee docket
+                    first_action = self.committee_first_action(bill_url)
                 owner = session_for_bill(
                     self.jurisdiction.legislative_sessions, number, first_action
                 )
@@ -231,6 +247,21 @@ class MEBillScraper(Scraper):
             )
         else:
             self.logger.info(f"Found no bills at search StartWith {first_item}")
+
+    def committee_first_action(self, bill_url):
+        """First date of the committee docket on a paper's bill text page, or None. A page that
+        cannot be read leaves the paper skipped, as it was before OPEN-850."""
+        try:
+            summary = lxml.html.fromstring(self.get(bill_url).text)
+            links = summary.xpath("//a[contains(@href, 'display_ps.asp')]/@href")
+            if not links:
+                return None
+            text = self.get(
+                links[0].replace("http://www.", "https://www.", 1), retry_on_404=True
+            ).text
+        except (socket.timeout, requests.exceptions.HTTPError):
+            return None
+        return committee_first_date(text) if text else None
 
     def scrape_bill(self, bill: Bill, chamber):
         url = bill.sources[0]["url"]

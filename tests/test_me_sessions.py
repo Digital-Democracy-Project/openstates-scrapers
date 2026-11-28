@@ -23,12 +23,17 @@ import os
 import sys
 
 import pytest
+import requests
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scrapers"))
 
 import me  # noqa: E402
 from me import Maine  # noqa: E402
-from me.bills import MEBillScraper, first_action_date  # noqa: E402
+from me.bills import (  # noqa: E402
+    MEBillScraper,
+    committee_first_date,
+    first_action_date,
+)
 from me.events import MEEventScraper  # noqa: E402
 from me.sessions import session_for_bill  # noqa: E402
 from openstates.cli.update import check_session_list  # noqa: E402
@@ -440,3 +445,91 @@ def test_blacklisted_papers_are_skipped_in_every_session_of_their_legislature(tm
         assert (
             list(scraper._recursively_process_bills(Search(), "upper", session)) == []
         )
+
+
+# OPEN-850: a paper whose docket has no dated action (SP 720, a joint order with committee actions
+# only) takes its first date from the committee docket on its bill text page. Pages are the real ones.
+FIXTURES_850 = os.path.join(os.path.dirname(__file__), "fixtures", "me_open850")
+SP720 = "280098931"
+
+
+def _page_850(prefix):
+    (name,) = [f for f in os.listdir(FIXTURES_850) if f.startswith(prefix)]
+    with open(os.path.join(FIXTURES_850, name), encoding="utf-8") as f:
+        return f.read()
+
+
+class OfflineNoDocketBills(OfflineBills):
+    """OfflineBills that also serves the paper's summary and bill text pages, to the extent the
+    fallback reads them; `text` replaces the bill text page."""
+
+    def __init__(self, tmp_path, text=None):
+        super().__init__(tmp_path, {SP720: ("SP 720", _page_850("dockets_132_SP720"))})
+        self.text = _page_850("display_ps_132_SP720") if text is None else text
+
+    def get(self, url, **kwargs):
+        if url.startswith(BASE + "summary.asp"):
+            self.fetched.append(url)
+            return _Response(_page_850("summary_132_SP720"))
+        if "display_ps.asp" in url:
+            assert url.startswith("https://www.mainelegislature.org/"), url
+            self.fetched.append(url)
+            return _Response(self.text)
+        return super().get(url, **kwargs)
+
+    def paper_of(self, bill):
+        return SP720
+
+
+class _SPSearchSession(_SearchSession):
+    """The search row of a paper that has no LD number: its link reads "SP720"."""
+
+    def __init__(self):
+        row = f'<tr><td><b><a href="summary.asp?ID={SP720}">SP720</a></b></td></tr>'
+        self.pages = {1: f"<html><body><table>{row}</table></body></html>"}
+
+
+def _sp720_kept(tmp_path, session, text=None):
+    scraper = OfflineNoDocketBills(tmp_path, text)
+    scraper.dockets = {}
+    scraper.seen = set()
+    bills = list(
+        scraper._recursively_process_bills(_SPSearchSession(), "upper", session)
+    )
+    return [b.identifier for b in bills]
+
+
+def test_committee_docket_gives_the_first_date_of_a_paper_with_no_floor_action():
+    assert first_action_date(_page_850("dockets_132_SP720")) is None
+    first = committee_first_date(_page_850("display_ps_132_SP720"))
+    # Work Session Held and Voted on May 15, 2025; Reported Out on Jun 4, 2025
+    assert first == datetime.date(2025, 5, 15)
+    assert session_for_bill(Maine.legislative_sessions, 132, first) == "132S1"
+
+
+def test_paper_with_committee_actions_only_is_scraped_into_its_session(tmp_path):
+    assert _sp720_kept(tmp_path, "132S1") == ["SP 720"]
+    for session in ("132R1", "132R2"):
+        assert _sp720_kept(tmp_path, session) == []
+
+
+def test_paper_with_no_date_anywhere_is_still_skipped(tmp_path):
+    bare = (
+        "<html><body><table name='CDtab'><tr><td>none</td></tr></table></body></html>"
+    )
+    for text in (bare, ""):
+        for session in ("132R1", "132S1", "132R2"):
+            assert _sp720_kept(tmp_path, session, text) == []
+
+
+def test_unreadable_summary_page_leaves_the_paper_skipped(tmp_path, monkeypatch):
+    served = OfflineNoDocketBills.get
+
+    def refuse(self, url, **kwargs):
+        if url.startswith(BASE + "summary.asp"):
+            raise requests.exceptions.HTTPError("503")
+        return served(self, url, **kwargs)
+
+    monkeypatch.setattr(OfflineNoDocketBills, "get", refuse)
+    for session in ("132R1", "132S1", "132R2"):
+        assert _sp720_kept(tmp_path, session) == []
