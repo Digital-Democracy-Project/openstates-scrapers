@@ -46,6 +46,15 @@ def link_to_general_assembly(vote, sessions):
     return vote
 
 
+class PagedLine(str):
+    """A journal line that knows the journal page it is on (OPEN-951)."""
+
+    def __new__(cls, text, page=None):
+        line = super().__new__(cls, text)
+        line.page = page
+        return line
+
+
 class IAVoteScraper(Scraper):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -138,19 +147,25 @@ class IAVoteScraper(Scraper):
         ]
 
         # Do not process headers or completely empty lines
-        header_date_re = re.compile(r"\d+\w{2} Day\s+\w+DAY, \w+ \d{1,2}, \d{4}\s+\d+")
-        header_journal_re = re.compile(r"\d+\s+JOURNAL OF THE \w+\s+\d+\w{2} Day")
-        lines = iter(
-            [
-                line
-                for line in lines
-                if not (
-                    line == ""
-                    or header_date_re.match(line)
-                    or header_journal_re.match(line)
-                )
-            ]
+        # OPEN-951: the headers carry the journal page number (even pages "634  JOURNAL OF THE SENATE  72nd Day",
+        # odd pages "72nd Day  TUESDAY, MARCH 24, 2026  635"). A line keeps the number of its page; the first page
+        # has no header, so its number is the one before the first header's.
+        header_date_re = re.compile(
+            r"\d+\w{2} Day\s+\w+DAY, \w+ \d{1,2}, \d{4}\s+(\d+)"
         )
+        header_journal_re = re.compile(r"(\d+)\s+JOURNAL OF THE \w+\s+\d+\w{2} Day")
+        page = None
+        kept = []
+        for line in lines:
+            header = header_date_re.match(line) or header_journal_re.match(line)
+            if header:
+                if page is None:
+                    for earlier in kept:
+                        earlier.page = int(header.group(1)) - 1
+                page = int(header.group(1))
+            elif line != "":
+                kept.append(PagedLine(line, page))
+        lines = iter(kept)
 
         # OPEN-713: a bill number wrapped onto a line of its own (House 2026-04-30, "Shall amendment
         # H-8439, as amended, be adopted?" / "(H.F. 2783)") is joined back onto the question it ends,
@@ -159,7 +174,7 @@ class IAVoteScraper(Scraper):
         joined = []
         for line in lines:
             if joined and bill_only_re.match(line):
-                joined[-1] += f" {line}"
+                joined[-1] = PagedLine(f"{joined[-1]} {line}", joined[-1].page)
             else:
                 joined.append(line)
         lines = iter(joined)
@@ -251,7 +266,7 @@ class IAVoteScraper(Scraper):
                 bill_id = f"{in_hand[0][0]}F {in_hand[1]}"
 
             bill_chamber = dict(h="lower", s="upper")[bill_id.lower()[0]]
-            votes, passed = self.parse_votes(lines)
+            votes, passed, page = self.parse_votes(lines)
 
             # at the very least, there should be a majority
             # for the bill to have passed, so check that,
@@ -305,6 +320,16 @@ class IAVoteScraper(Scraper):
             # question is put more than once that day. That is the vote's dedupe_key, unique across sessions and
             # bills; the same journal read again (by both years of a General Assembly) gives the same key.
             vote.dedupe_key = f"{url}#{bill_id}#{motion_text}"
+            # OPEN-951: the journal page the roll call is printed on ("S.J. 1033", "H.J. 1212" in the legislature's
+            # bill history) rises in the order the votes were taken, which two votes on one bill on one day
+            # (SF 660, 2025-05-14: 43-0, then 39-0 after the Senate concurred in the House amendment) need; the
+            # broker reads this key into Motion.rollcall_num to order them (OPEN-628).
+            if page is not None:
+                vote.extras[
+                    "senate-rollcall-num"
+                    if chamber == "upper"
+                    else "house-rollcall-num"
+                ] = str(page)
             yield vote
 
     def parse_votes(self, lines):
@@ -351,6 +376,9 @@ class IAVoteScraper(Scraper):
             text = next(lines)
             if is_boundary(text):
                 break
+        # OPEN-951: the page the roll call is printed on, which is the one the legislature cites ("S.J. 1033"). A
+        # question put at the foot of a page has its tally on the next, so it is the tally's page, not the question's.
+        page = text.page
 
         """
         Second step:
@@ -410,7 +438,7 @@ class IAVoteScraper(Scraper):
                         [name.strip() for name in self.split_names(text)]
                     )
 
-        return counts, passed
+        return counts, passed, page
 
     def split_names(self, text):
         # Journal rolls are laid out in columns, so names are separated by 2+
