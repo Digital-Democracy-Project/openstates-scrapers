@@ -417,8 +417,16 @@ class BillTabText(Utf8HtmlMixin, HtmlPage):
         for row in CSS(".d-md-none p.h5 a").match(self.root, min_items=0):
             title = row.text_content()
             link = row.get("href")
+            # upstream #6028 (OPEN-936): a version link under /Amendments/ is an
+            # amendment paper. NELIS lists none among the texts (they are the
+            # documents below), so today this changes nothing; it keeps the line
+            # the same as upstream's for the next upstream merge
             bill.add_version_link(
-                title, link, media_type="application/pdf", on_duplicate="ignore"
+                title,
+                link,
+                classification="amendment" if "/Amendments/" in link else "",
+                media_type="application/pdf",
+                on_duplicate="ignore",
             )
         for row in CSS(".d-md-none p.text-wrap a").match(self.root, min_items=0):
             bill.add_document_link(
