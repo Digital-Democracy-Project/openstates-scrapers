@@ -179,6 +179,35 @@ def action_outcome(name: str, result, committee_passed: bool = False) -> tuple:
     return (f" {words}" if words else ""), labels
 
 
+# OPEN-952: a roll call's result is the outcome its bill action states, not yeas > nays. Some Montana bills need
+# more than a majority (a constitutional amendment, 2025 HB 316: 33-17 in the Senate is short of two thirds), and the
+# legislature records that vote as lost: "(S) 3rd Reading Failed; 2nd House Vote Required" (the archive API's words),
+# "(S) 3rd Reading; 2nd Chamber Vote Required" with no result (the bills API's, the second vote being the retry
+# of a first that fell short). Only a final vote (a passage roll call) and a bare floor motion take it; every other
+# roll call keeps yeas > nays (a motion to amend or concur is carried when its yeas win, whatever the amendment did).
+STATED_FAILED = re.compile(r"\b(?:Failed|Not (?:Passed|Concurred|Adopted)|Rejected)\b")
+STATED_PASSED = re.compile(r"\b(?:Passed|Concurred|Adopted|Carried)\b")
+# a floor motion on its own ("(H) Motion Failed": a motion to take a bill from a committee, which needs 60 votes)
+BARE_MOTION = re.compile(r"\((?:H|S)\) Motion (?:Failed|Carried)")
+SECOND_VOTE_REQUIRED = re.compile(r"; 2nd (?:House|Chamber) Vote Required")
+
+
+def vote_result(classification, action_text, yes, no) -> str:
+    """The result of a roll call, "pass" or "fail": a passage vote (or a bare floor motion) takes the outcome its action
+    text states, else (no outcome stated, or any other roll call) yeas > nays. An action that says a second vote
+    is required and states no outcome is a first vote that fell short."""
+    if action_text and (
+        "passage" in classification or BARE_MOTION.fullmatch(action_text)
+    ):
+        if STATED_FAILED.search(action_text):
+            return "fail"
+        if STATED_PASSED.search(action_text):
+            return "pass"
+        if SECOND_VOTE_REQUIRED.search(action_text):
+            return "fail"
+    return "pass" if yes > no else "fail"
+
+
 class MTBillScraper(Scraper):
     tz = pytz.timezone("America/Denver")
     results_per_page = 100
@@ -197,6 +226,8 @@ class MTBillScraper(Scraper):
     # legislator and action lookup tables for populating votes
     legislators_by_id = {}
     actions_by_id = {}
+    # OPEN-952: the same actions with the outcome words added ("(S) 3rd Reading Failed"), for a roll call's result
+    action_text_by_id = {}
 
     def scrape(self, session=None):
 
@@ -451,6 +482,7 @@ class MTBillScraper(Scraper):
 
             # we want to be able to look up the action name later for votes
             self.actions_by_id[str(action["id"])] = name
+            self.action_text_by_id[str(action["id"])] = f"{name}{words}"
 
     def scrape_extras(self, bill: Bill, row: dict):
         bill.extras["bill_draft_number"] = row["draft"]["draftNumber"]
@@ -571,15 +603,20 @@ class MTBillScraper(Scraper):
             )
 
             if action["yesVotes"] or action["noVotes"]:
-                passed = int(action["yesVotes"]) > int(action["noVotes"])
+                classification = vote_classification(name)
                 vote = VoteEvent(
                     start_date=when,
                     motion_text=name,
                     bill_action=name,
-                    result="pass" if passed else "fail",
+                    result=vote_result(
+                        classification,
+                        name,
+                        int(action["yesVotes"]),
+                        int(action["noVotes"]),
+                    ),
                     chamber=chamber,
                     bill=bill,
-                    classification=vote_classification(name),
+                    classification=classification,
                 )
 
                 vote.set_count("yes", int(action["yesVotes"]))
@@ -757,10 +794,11 @@ class MTBillScraper(Scraper):
                     else:
                         counts[v[vote_type_key]] += 1
 
-            passed = counts["YES"] > counts["NO"]
+            status_id = None  # the bill action this roll call belongs to, for its stated outcome
 
             # regular vs committee votes
             if "billStatus" in row and row["billStatus"] and "id" in row["billStatus"]:
+                status_id = str(row["billStatus"]["id"])
                 if str(row["billStatus"]["id"]) in self.actions_by_id:
                     bill_action = self.actions_by_id[str(row["billStatus"]["id"])]
                 else:
@@ -807,6 +845,7 @@ class MTBillScraper(Scraper):
                     == "HOUSE"
                     else "upper"
                 )
+                status_id = str(row["billStatusId"])
                 if str(row["billStatusId"]) in self.actions_by_id:
                     bill_action = self.actions_by_id[str(row["billStatusId"])]
                 else:
@@ -830,15 +869,21 @@ class MTBillScraper(Scraper):
             when = self.tz.localize(when)
             vote_id = f"{bill.legislative_session}-{bill.identifier}-{str(row['id'])}"
 
+            classification = vote_classification(bill_action, motion)
             vote = VoteEvent(
                 identifier=vote_id,
                 start_date=when,
                 motion_text=motion,
                 bill_action=bill_action,
-                result="pass" if passed else "fail",
+                result=vote_result(
+                    classification,
+                    self.action_text_by_id.get(status_id, bill_action),
+                    counts["YES"],
+                    counts["NO"],
+                ),
                 chamber=chamber,
                 bill=bill,
-                classification=vote_classification(bill_action, motion),
+                classification=classification,
             )
 
             vote.dedupe_key = dedupe_key
