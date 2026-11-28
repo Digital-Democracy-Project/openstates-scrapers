@@ -176,7 +176,16 @@ class IAVoteScraper(Scraper):
             "lower": re.compile(r'.*Shall.*(?:\?"?|")(\s{bill_re.pattern})?\s*'),
         }
 
+        # OPEN-951: the bill the chamber has in hand, as the journal last named it ("Senate File 593, a bill
+        # for an act ...", "House File 639 ..."): (type, number).
+        file_re = re.compile(r"\b(House|Senate) File (\d+)\b")
+        in_hand = None
+
         for line in lines:
+            named = file_re.findall(line)
+            if named:
+                in_hand = (named[-1][0], named[-1][1])
+
             # Go through with vote parse if any of
             # these conditions match.
             if not line.startswith("On the question") or "shall" not in line.lower():
@@ -223,6 +232,23 @@ class IAVoteScraper(Scraper):
                 bill_id = bill_id.replace(word, letter)
 
             bill_id = bill_id.replace(".", "")
+
+            # OPEN-951: a question's bill number is sometimes printed with the wrong file type (the House
+            # journals of 2025-05-12 and 2026-05-02 put "(H.F. 593)" and "(H.F. 639)" after Senate files 593
+            # and 639). When the file the chamber has in hand carries the same number and the other type, it
+            # is that file the vote is on, and the vote is filed under it, not under its companion.
+            kind, _, number = bill_id.partition(" ")
+            if (
+                in_hand
+                and kind in ("HF", "SF")
+                and number == in_hand[1]
+                and kind[0] != in_hand[0][0]
+            ):
+                self.logger.warning(
+                    f"{bill_id}: the journal names {in_hand[0]} File {in_hand[1]} in hand, "
+                    "filing the vote under it."
+                )
+                bill_id = f"{in_hand[0][0]}F {in_hand[1]}"
 
             bill_chamber = dict(h="lower", s="upper")[bill_id.lower()[0]]
             votes, passed = self.parse_votes(lines)
