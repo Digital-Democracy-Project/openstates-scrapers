@@ -22,6 +22,36 @@ AMENDMENT_VOTE = re.compile(
 # A vote on a ruling or a motion about an amendment is procedure, not the amendment itself:
 # "FLA Del. Miller /.../1 Ruled Out of Order Decision of the Chair", "... Motion to Lay Over".
 PROCEDURAL_VOTE = re.compile(r"decision of the chair|motion to lay over", re.I)
+# OPEN-954: the question the Senate prints under a floor amendment taken on a bill at its third reading
+# ("Floor Amendment", with no sponsor or number, then "Bill is on Third Reading for Final Passage."). The
+# last line is that bill's usual question, but the roll call decides the amendment.
+AMENDMENT_QUESTION = re.compile(
+    r"^((the )?bill (is )?on third reading for final passage|on third reading and final passage)\b",
+    re.I,
+)
+
+
+def amendment_motion(previous, line):
+    """The motion of a roll call whose last line is `line` and whose line above it is `previous`: the
+    two joined when `previous` names an amendment and `line` is the final passage question printed
+    under it (OPEN-954), else `line`."""
+    if AMENDMENT_VOTE.search(previous or "") and AMENDMENT_QUESTION.search(line):
+        return f"{previous.strip()} {line.strip()}"
+    return line
+
+
+def rollcall_number_extras(chamber, url):
+    """OPEN-954: a roll call's day carries no time, so two roll calls of one chamber on one day (a
+    third reading, its reconsideration, the third reading again) cannot be ordered by the date. The
+    legislature numbers each chamber's roll calls in the order they were taken ("SEQ NO. 1126" on
+    senate/1126.pdf, 1156 for the vote taken after it), restarting with each session. The broker reads
+    this key into Motion.rollcall_num (as OPEN-872, OPEN-943 and OPEN-948 did for other states)."""
+    found = re.search(r"/(\d+)\.(pdf|htm)", url)
+    if not found:
+        return {}
+    key = "senate-rollcall-num" if chamber == "upper" else "house-rollcall-num"
+    return {key: str(int(found.group(1)))}
+
 
 # OPEN-832: lines of a roll call's motion block that are not a new motion line: the motion's
 # tags printed alone on the next line ("(Emerg)", "(Const)", "(Emerg/Amend)"), and a member
@@ -281,7 +311,7 @@ class MDVoteScraper(Scraper, LXMLMixin):
                     if line.endswith("?"):
                         motion = motion + " " + line
                     else:
-                        motion = line
+                        motion = amendment_motion(motion, line)
             elif section == "votes":
                 if line.startswith("Voting Yea"):
                     how = "yes"
@@ -361,6 +391,7 @@ class MDVoteScraper(Scraper, LXMLMixin):
             # vote per bill, so its key adds the bill (as the bills scraper's parse_vote_pdf does)
             vote.dedupe_key = f"{url}#{bill_id}" if consent_bills else url
             vote.add_source(url)
+            vote.extras.update(rollcall_number_extras(chamber, url))
             vote.set_count("yes", yes_count)
             vote.set_count("no", no_count)
             vote.set_count("not voting", nv_count)

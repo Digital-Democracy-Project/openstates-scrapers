@@ -6,7 +6,12 @@ import lxml.html
 from openstates.scrape import Scraper, Bill, VoteEvent
 from openstates.utils import convert_pdf
 
-from .votes import final_vote_only, vote_classification
+from .votes import (
+    amendment_motion,
+    final_vote_only,
+    rollcall_number_extras,
+    vote_classification,
+)
 
 # http://mgaleg.maryland.gov/mgawebsite/Legislation/Details/hb0060?ys=2019RS&search=True
 # # passed all
@@ -236,6 +241,11 @@ class MDBillScraper(Scraper):
                 motion = "No motion given"
                 self.warning("No motion given")
 
+        # OPEN-954: a floor amendment's name printed above the third reading question
+        above = [line.strip() for line in lines[:page_index] if line.strip()][-2:]
+        if len(above) == 2 and above[1].startswith(motion.strip()):
+            motion = amendment_motion(above[0], motion)
+
         vote = VoteEvent(
             bill=bill,
             chamber=chamber,
@@ -244,6 +254,7 @@ class MDBillScraper(Scraper):
             classification=vote_classification(motion),
             result="pass" if passed else "fail",
         )
+        vote.extras.update(rollcall_number_extras(chamber, vote_url))
 
         # Include bill ID to avoid duplication for consent calendars
         vote.dedupe_key = "{}#{}".format(vote_url, bill.identifier)
