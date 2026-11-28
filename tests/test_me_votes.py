@@ -404,7 +404,7 @@ def test_a_real_ought_not_to_pass_roll_call_is_marked():
     scraper = _scraper({url: _page("rollcall_280095523_House_250.html")})
     (vote,) = list(scraper.scrape_vote(_bill(), "ACC MAJ OUGHT NOT TO PASS REP", url))
     assert vote.motion_classification == ["passage"]
-    assert vote.extras == {"ddp_yes_is_against": True}
+    assert vote.extras == {"ddp_yes_is_against": True, "house-rollcall-num": "250"}
 
 
 @pytest.mark.parametrize(
@@ -421,3 +421,46 @@ def test_other_real_roll_calls_are_not_marked(fid, motion):
     scraper = _scraper({url: _page(f"rollcall_{fid}.html")})
     (vote,) = list(scraper.scrape_vote(_bill(), motion, url))
     assert "ddp_yes_is_against" not in vote.extras
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# OPEN-948 (BROKER-631): the page's roll-call number orders two same-day roll calls of one chamber.
+# ---------------------------------------------------------------------------------------------------------------
+
+
+def _scrape_one(fid, motion):
+    paper, chamber, rc = fid.split("_")
+    url = BASE + f"rollcall.asp?ID={paper}&chamber={chamber}&serialnumber={rc}"
+    scraper = _scraper({url: _page(f"rollcall_{fid}.html")})
+    (vote,) = list(scraper.scrape_vote(_bill(), motion, url))
+    return vote
+
+
+def test_roll_call_number_is_the_pages_own_number_under_the_chamber_key():
+    # LD 100 (132): House RC 59 (accept OTP) and RC 64 (enactment); Senate RC 80
+    first = _scrape_one("280095665_House_59", "ACC MAJ OUGHT TO PASS REP")
+    second = _scrape_one("280095665_House_64", "Enactment")
+    senate = _scrape_one("280095665_Senate_80", "ACCEPT MAJORITY OUGHT TO PASS REPORT")
+    assert first.extras == {"house-rollcall-num": "59"}
+    assert second.extras == {"house-rollcall-num": "64"}
+    assert senate.extras == {"senate-rollcall-num": "80"}
+    assert int(first.extras["house-rollcall-num"]) < int(
+        second.extras["house-rollcall-num"]
+    )
+
+
+@pytest.mark.parametrize(
+    "fid,motion",
+    [
+        ("280095524_House_114", "Enactment"),
+        ("280095733_Senate_651", "ENACTMENT"),
+        ("280095523_Senate_270", "PASSAGE TO BE ENGROSSED AS AMENDED"),
+    ],
+)
+def test_roll_call_number_matches_the_identifier(fid, motion):
+    vote = _scrape_one(fid, motion)
+    (number,) = vote.extras.values()
+    assert vote.identifier.endswith(f"-RC {number}")
+    assert list(vote.extras) == [
+        "senate-rollcall-num" if vote.identifier[0] == "S" else "house-rollcall-num"
+    ]
