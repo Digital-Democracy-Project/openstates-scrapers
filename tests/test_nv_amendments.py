@@ -82,3 +82,49 @@ def test_amendments_are_documents_and_texts_are_versions(
     got_versions, got_documents = _texts(fixture, slug, bill_key)
     assert got_versions == [(n, f"{SESSION_URL}/{u}") for n, u in versions]
     assert got_documents == [(n, f"{SESSION_URL}/{u}") for n, u in documents]
+
+
+def _bill_for(fixture, slug, bill_key, html_edit=None):
+    bill = Bill("AB 1", "84", "t", chamber="lower", classification="bill")
+    url = (
+        f"https://www.leg.state.nv.us/App/NELIS/REL/{slug}/Bill/"
+        f"FillSelectedBillTab?selectedTab=Text&billKey={bill_key}"
+    )
+    html = (FIXTURES / fixture).read_bytes()
+    if html_edit:
+        html = html_edit(html)
+    page = BillTabText(bill, source=URL(url))
+    page.root = lxml.html.fromstring(html, parser=UTF8_PARSER)
+    page.root.make_links_absolute(url)
+    page.process_page()
+    return bill
+
+
+def test_real_nevada_texts_and_amendment_documents_get_no_amendment_class():
+    # OPEN-936 (upstream #6028): on the real Text tabs, no stored version is
+    # marked "amendment" (the amendment papers are documents, OPEN-830), so the
+    # change does not alter what Nevada stores
+    for fixture, slug, key in [
+        ("ab4_2025special36_text.html", "36th2025Special", 12994),
+        ("ab105_83_text.html", "83rd2025", 12000),
+        ("ab1_84_text.html", "84th2027", 13014),
+    ]:
+        bill = _bill_for(fixture, slug, key)
+        assert bill.versions
+        assert [v["classification"] for v in bill.versions] == [""] * len(
+            bill.versions
+        )
+        assert all(d["classification"] == "" for d in bill.documents)
+
+
+def test_a_version_link_under_amendments_is_classified_amendment():
+    # the rule upstream added: only the heading link is turned into an
+    # /Amendments/ one here, to prove the check reads the link, not the note
+    def edit(html):
+        return html.replace(
+            b"/Bills/AB/AB105_R1.pdf", b"/Bills/Amendments/A_AB105_R1_9.pdf"
+        )
+
+    bill = _bill_for("ab105_83_text.html", "83rd2025", 12000, edit)
+    got = {v["note"].strip(): v["classification"] for v in bill.versions}
+    assert got == {"As Introduced": "", "Reprint 1": "amendment", "As Enrolled": ""}
