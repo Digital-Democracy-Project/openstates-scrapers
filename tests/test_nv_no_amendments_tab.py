@@ -55,13 +55,9 @@ def test_the_amendments_tab_is_never_requested():
 
 def test_bill_output_is_what_it_was_with_the_amendments_request():
     # the golden file is this same walk run on fork main (c3ff46e14), where the
-    # Amendments page is asked for and adds nothing: 3 texts, 38 documents
+    # Amendments page is asked for and adds nothing: 3 texts, 38 documents, every field
     golden = json.loads(GOLDEN.read_text())
     bill, _ = _walk()
-    assert [[v["note"], v["links"][0]["url"]] for v in bill.versions] == golden[
-        "versions"
-    ]
-    assert [[d["note"], d["links"][0]["url"]] for d in bill.documents] == golden[
-        "documents"
-    ]
+    assert bill.versions == golden["versions"]
+    assert bill.documents == golden["documents"]
     assert len(golden["versions"]) == 3 and len(golden["documents"]) == 38
