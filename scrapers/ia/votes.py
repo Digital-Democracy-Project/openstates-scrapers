@@ -33,6 +33,18 @@ def vote_classification(motion):
     return []
 
 
+# OPEN-951: the line that opens a bill's turn on the floor, "Senate File 593, a bill for an act ... was taken
+# up for consideration." or, in the Senate, a heading of its own, "Senate File 639".
+TAKEN_UP = re.compile(r"^(House|Senate) File (\d+)(?:,|\s*$)")
+
+
+def bill_taken_up(line):
+    """The bill a journal line opens ("Senate File 593, a bill for ..." -> "SF 593"), else None."""
+    match = TAKEN_UP.match(line)
+    if match:
+        return f"{match.group(1)[0]}F {match.group(2)}"
+
+
 def link_to_general_assembly(vote, sessions):
     """OPEN-745: a roll call is filed under the session of its journal's date, but its bill
     may be filed under another session of the same General Assembly (a 2025 bill voted on in
@@ -176,7 +188,9 @@ class IAVoteScraper(Scraper):
             "lower": re.compile(r'.*Shall.*(?:\?"?|")(\s{bill_re.pattern})?\s*'),
         }
 
+        taken_up = None
         for line in lines:
+            taken_up = bill_taken_up(line) or taken_up
             # Go through with vote parse if any of
             # these conditions match.
             if not line.startswith("On the question") or "shall" not in line.lower():
@@ -223,6 +237,18 @@ class IAVoteScraper(Scraper):
                 bill_id = bill_id.replace(word, letter)
 
             bill_id = bill_id.replace(".", "")
+
+            # OPEN-951: the House journal sometimes prints the wrong letter in the question's bill number: it
+            # takes up "Senate File 593" and then asks 'Shall the bill pass?' (H.F. 593) (House 2025-05-12;
+            # House 2026-05-02, Senate File 639 asked as H.F. 639). The bill the House took up is the one voted
+            # on, so when the number is the same and only the letter differs, the bill taken up wins. A
+            # different number is never changed.
+            if (
+                taken_up
+                and taken_up != bill_id
+                and taken_up.split()[1] == bill_id.split()[1]
+            ):
+                bill_id = taken_up
 
             bill_chamber = dict(h="lower", s="upper")[bill_id.lower()[0]]
             votes, passed = self.parse_votes(lines)
