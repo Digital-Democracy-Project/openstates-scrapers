@@ -339,11 +339,12 @@ REAL_BILLS = {
         ("(H) Committee Executive Action", "do_pass", C, "pass"),
         ("(S) Committee Executive Action", "be_concurred_in", C, "pass"),
     ],
+    # 33-17 in the Senate is short of the two thirds a constitutional amendment needs (OPEN-952): the result is fail
     "HB316": [
         ("(H) 2nd Reading", "Do Pass", N, "pass"),
         ("(H) 3rd Reading", "Do Pass", P, "pass"),
         ("(S) 2nd Reading", "Do Concur", N, "pass"),
-        ("(S) 3rd Reading; 2nd Chamber Vote Required", "Do Concur", P, "pass"),
+        ("(S) 3rd Reading; 2nd Chamber Vote Required", "Do Concur", P, "fail"),
         ("(H) Committee Executive Action", "do_pass", C, "pass"),
         ("(S) Committee Executive Action", "be_concurred_in", C, "pass"),
     ],
